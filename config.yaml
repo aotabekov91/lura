@@ -1,0 +1,146 @@
+Window:
+  shortcuts:
+    focusMapView: 'Ctrl+1'
+    focusDocumentView: 'Ctrl+2'
+    focusBrowserView: 'Ctrl+3'
+    onlyMapView: 'Ctrl+Shift+1'
+    onlyDocumentView: 'Ctrl+Shift+2'
+    onlyBrowserView: 'Ctrl+Shift+3'
+
+DocumentView:
+  shortcuts: 
+    nextPage: 'Ctrl+j'
+    previousPage: 'Ctrl+k'
+    pageDown: j
+    pageUp: 'k'
+    toggleContinuousMode: c
+    fitToPageWidth: w
+    fitToPageSize: a
+    zoomIn: +
+    zoomOut: '-'
+    close: q
+    save: s
+
+MindMapView:
+  shortcuts:
+    go: g 
+    mark: m
+    filter: f
+    unfilter: 'Shift+f' 
+    toggleMapMenu: 'Shift+m'
+    toggleItemMenu: 'Shift+i'
+    toggleMetaMenu: 'Shift+t'
+    toggleSortMenu: 'Shift+s'
+    toggleChangeMenu: 'Shift+c'
+  MapMenu:
+    renameMap: r
+    updateMap: u 
+    addFolder: f
+    addDocument: d
+    addLiterature: l
+
+BrowserView:
+  shortcuts:
+    toggleActionsMenu: m
+  BrowserMenu:
+    toggleNavigation: n
+    close: q
+
+Plugins:
+
+  Fuzzy:
+    location: top
+    closeOnSelection: True
+    shortcuts:
+      moveDown: j
+      moveUp: k
+      onlyPreview: p
+      clearEditorFilter: c
+
+  Annotation:
+    showAnnotationOverlay: True
+    shortcuts:
+      open: o
+      toggleToggleMenu: 'Shift+t'
+      toggleChangeMenu: 'Shift+c'
+    colorSystem:
+      Focus: '#A4DE02'
+      Question: '#c8d9e8'
+      Definition: '#EEFC5E'
+      Literature: '#D3D3D3'
+
+  Bookmarks:
+    shortcuts:
+      deleteBookmark: d
+
+  Metadata:
+    shortcuts:
+      changeKind: c
+      searchMeta: m
+      save: s
+
+  Quickmarks:
+    shortcuts:
+      delete: d
+      setComment: c
+
+  Outline:
+    shortcuts:
+      expandAll: e
+      collapseAll: c
+      open: o
+
+  View:
+    Cursor:
+      height: 10
+      tolerance: 0.5
+
+
+  Anki:
+    shortcuts:
+      submit: s
+      changeDeck: d
+      changeModel: f
+      clearFields: c
+      activateTextSelector: t
+      activateImageSelector: i
+      addNewDeck: a
+
+  Search:
+    shortcuts:
+      jumpToNext: n
+      jumpToPrevious: p
+      showAll: s
+
+  Documents:
+    colorSystem:
+      book: '#90ee90'
+      paper: '#09bb09'
+      webpage: '#09aa09'
+
+  Pomodoro:
+    idealPlan: 10
+
+  MindMap:
+    shortcuts:
+      openMap: m
+      createMap: 'Shift+m'
+      deleteMap: d
+
+  Notes:
+    shortcuts:
+      toggleMapMenu: 'Shift+m'
+      toggleNoteMenu: 'Shift+n'
+      toggleChangeMenu: 'Shift+c'
+      toggleToggleMenu: 'Shift+t'
+    Menu:
+      add: a
+      open: o
+      delete: d
+      current: O
+  FileBrowser:
+    shortcuts:
+      toggleMenu: m
+    Menu:
+      choose: c
+
