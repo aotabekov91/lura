@@ -6,153 +6,115 @@ from PyQt5.QtCore import *
 
 from .connect import DatabaseConnector
 
-class Metadata(QStackedWidget):
+
+class Metadata(QWidget):
 
     def __init__(self, parent, settings):
         super().__init__(parent)
-        self.window=parent
-        self.db=DatabaseConnector(parent, settings)
-        self.location='right'
-        self.s_settings=settings
-        self.globalKeys={
-                'Ctrl+i': (
-                    self.toggle,
-                    self.window,
-                    Qt.WindowShortcut)
-                }
-        self.name='metadata'
+        self.window = parent
+        self.db = DatabaseConnector(parent, settings)
+        self.location = 'right'
+        self.s_settings = settings
+        self.globalKeys = {'Ctrl+i': (self.toggle, self.window, Qt.WindowShortcut)}
+        self.name = 'metadata'
         self.setup()
 
     def setup(self):
 
-        self.activated=False
-        self.kind=None
+        self.activated = False
 
-        self.shortcuts={v:k for k, v in self.s_settings['shortcuts'].items()}
+        self.dropdown = QComboBox(self)
+        self.stack = QStackedWidget(self)
 
-        self.book=['author', 'title', 'year', 'publisher', 'edition', 'address',
-                'kind']
-        self.paper=[ 'author', 'title', 'journal', 'year', 'volume', 'number',
-                'pages', 'kind']
-        self.website=['author', 'title', 'url', 'kind']
+        self.m_layout = QVBoxLayout(self)
+        self.m_layout.addWidget(self.dropdown)
+        self.m_layout.addWidget(self.stack)
 
-        self.window.viewChanged.connect(self.on_viewChanged)
+        for i in ['Book', 'Paper', 'Website']:
+            self.dropdown.addItem(i)
+
+        self.dropdown.currentTextChanged.connect(self.on_dropdown_changed)
+
+        self.book = ['author', 'title', 'year',
+                     'publisher', 'edition', 'address']
+        self.paper = ['author', 'title', 'journal',
+                      'year', 'volume', 'number', 'pages']
+        self.website = ['author', 'title', 'url']
 
         self.createWidgets()
 
-    def on_viewChanged(self):
-        if self.activated:
-            self.activated=not self.activated
-            self.toggle()
+        self.window.viewChanged.connect(self.on_viewChanged)
+        self.window.setTabLocation(self, self.location, self.name)
 
     def createWidgets(self):
 
-        self.bookTab=QWidget(self)
-        self.bookTab.layout=QFormLayout()
+        for k in ['book', 'paper', 'website']:
 
-        self.bookFields={}
-        for field in self.book:
-            qline=QLineEdit(self.bookTab)
-            qline.returnPressed.connect(self.commit)
-            self.bookTab.layout.addRow(field.title(), qline)
-            self.bookFields[field]=qline
-        self.bookTab.setLayout(self.bookTab.layout)
-        self.bookTabIndex=self.addWidget(self.bookTab)
+            setattr(self, f'{k}Tab', QWidget(self.stack))
+            tab = getattr(self, f'{k}Tab')
+            tab.layout = QFormLayout(tab)
 
-        self.paperTab=QWidget(self)
-        self.paperTab.layout=QFormLayout()
+            fields={}
+            for field in getattr(self, f'{k}'):
+                qline = MQLineEdit(tab, self, field, self.db)
+                tab.layout.addRow(field.title(), qline)
+                fields[field]=qline
+            setattr(self, f'{k}TabIndex', self.stack.addWidget(tab))
+            setattr(self, f'{k}Fields', fields)
 
-        self.paperFields={}
-        for field in self.paper:
-            qline=QLineEdit(self.paperTab)
-            qline.returnPressed.connect(self.commit)
-            self.paperTab.layout.addRow(field.title(), qline)
-            self.paperFields[field]=qline
-        self.paperTab.setLayout(self.paperTab.layout)
-        self.paperTabIndex=self.addWidget(self.paperTab)
+    def on_viewChanged(self):
+        if not self.activated:
+            return
+        self.activated = not self.activated
+        self.toggle()
 
-        self.websiteTab=QWidget(self)
-        self.websiteTab.layout=QFormLayout()
-
-        self.websiteFields={}
-        for field in self.website:
-            qline=QLineEdit(self.websiteTab)
-            qline.returnPressed.connect(self.commit)
-            self.websiteTab.layout.addRow(field.title(), qline)
-            self.websiteFields[field]=qline
-        self.websiteTab.setLayout(self.websiteTab.layout)
-        self.websiteTabIndex=self.addWidget(self.websiteTab)
-
-        self.paperTab.hide()
-        self.bookTab.hide()
-        self.websiteTab.hide()
-
-        self.window.setTabLocation(self, self.location, self.name) 
-
-    def commit(self):
-        if self.kind is not None:
-            fields=getattr(self, self.kind+'Fields')
-            for field, qline in fields.items():
-                if not hasattr(self.db, 'set{}'.format(field.title())): continue
-                func=getattr(self.db, 'set{}'.format(field.title()))
-                func(self.window.view().document(), qline.text())
-        self.setFocus()
+    def on_dropdown_changed(self):
+        kind = self.dropdown.currentText().lower()
+        self.db.setField('kind', kind, 'did', self.m_id)
+        self.setKind(self.m_id)
+        self.stack.setCurrentIndex(self.index)
 
     def toggle(self, forceShow=False):
 
+        if self.window.document() is None:
+            return
+
         if not self.activated or forceShow:
 
-            self.populateFields()
-            self.setCurrentIndex(self.index)
-            self.tab.show()
+            self.m_id = self.window.document().id()
+            self.setKind(self.m_id)
+            self.stack.setCurrentIndex(self.index)
             self.setFocus()
             self.window.activateTabWidget(self)
-            self.activated=True
+            self.activated = True
 
         else:
-           
-            self.tab.hide()
             self.window.deactivateTabWidget(self)
-            self.activated=False
+            self.activated = False
 
-    def populateFields(self):
-        did=self.window.document().id()
-        data=self.db.get(did)
-        self.setKind(data)
-        for field, qline in self.fields.items():
-            info=''
-            if data is not None:
-                info=str(dict(data).get(field, ''))
-            qline.setText(info)
+    def setKind(self, did):
+        self.kind = self.db.getField('kind', 'did', did)
+        if self.kind in [None, '']: self.kind = 'book'
 
-    def setKind(self, data):
-        if data is not None and data['kind']=='paper':
-            self.index=self.paperTabIndex
-            self.fields=self.paperFields
-            self.kind='paper'
-            self.tab=self.paperTab
-        elif data is not None and data['kind']=='website':
-            self.index=self.websiteTabIndex
-            self.fields=self.websiteFields
-            self.kind='website'
-            self.tab=self.websiteTab
-        else:
-            self.index=self.bookTabIndex
-            self.fields=self.bookFields
-            self.kind='book'
-            self.tab=self.bookTab
+        self.index = getattr(self, f'{self.kind}TabIndex')
+        fields = getattr(self, f'{self.kind}Fields')
 
-    def keyPressEvent(self, event):
-        key=event.text()
-
-        if key in self.shortcuts:
-            func=getattr(self, self.shortcuts[key])
-            func()
-        else:
-            self.window.keyPressEvent(event)
+        for field, qline in fields.items():
+            qline.setText(str(self.db.getField(field, 'did', did)))
 
     def register(self, document):
         self.db.register(document)
 
     def get(self, did):
         return self.db.get(did)
+
+class MQLineEdit(QTextEdit):
+    def __init__(self, parent, meta, field, metatable):
+        super().__init__(parent)
+        self.meta = meta
+        self.field = field
+        self.metatable = metatable
+        self.textChanged.connect(self.on_textChanged)
+
+    def on_textChanged(self):
+        self.metatable.setField(self.field, self.toPlainText().title(), 'did', self.meta.m_id)

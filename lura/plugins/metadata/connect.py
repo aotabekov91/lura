@@ -30,13 +30,18 @@ class DatabaseConnector(QObject):
             self.db.writeRow({'did':document.id()})
             self.db.setField('author', document.embeddedAuthor(), 'did', document.id()) 
             title=document.embeddedTitle()
-            if title=='': title=document.filePath().split('/')[-1]
+            if title=='': title=document.getField('filePath').split('/')[-1]
             self.db.setField('title', title, 'did', document.id()) 
 
     def get(self, did):
         r=self.db.getRow({'field':'did', 'value':did})
         if len(r)>0: return r[0]
 
+    def getField(self, *args, **kwargs):
+        return self.db.getField(*args, **kwargs)
+
+    def setField(self, *args, **kwargs):
+        return self.db.setField(*args, **kwargs)
 
 class MetadataTable(Table):
 
@@ -47,7 +52,7 @@ class MetadataTable(Table):
             'author text',
             'title text',
             'url text',
-            'jounal text',
+            'journal text',
             'year int',
             'volume int',
             'number int',

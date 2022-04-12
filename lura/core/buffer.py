@@ -7,7 +7,7 @@ from collections import OrderedDict
 from lura.render import loadDocument as load
 
 from lura.view.mapviewer import MapView
-from lura.view.webviewer import BrowserView
+# from lura.view.webviewer import BrowserView
 from lura.view.docviewer import DocumentView
 
 class BufferManager(QObject):
@@ -30,9 +30,9 @@ class BufferManager(QObject):
         
         if document is None: return 
 
-        if document.__class__.__name__=='WebDocument':
-            view=BrowserView(self.window, self.configuration.copy())
-        elif document.__class__.__name__ in ['PdfDocument']:
+        # if document.__class__.__name__=='WebDocument':
+            # view=BrowserView(self.window, self.configuration.copy())
+        if document.__class__.__name__ in ['PdfDocument']:
             view=DocumentView(self.window, self.configuration.copy())
         elif document.__class__.__name__=='MapDocument':
             view=MapView(self.window, self.configuration.copy())

@@ -214,7 +214,8 @@ class WindowManager(QMainWindow):
                 dockWidget.hide()
 
     def document(self):
-        return self.m_view.document()
+        if self.m_view is not None:
+            return self.m_view.document()
 
     def view(self):
         return self.m_view
