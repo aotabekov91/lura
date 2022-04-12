@@ -88,3 +88,10 @@ class Table:
         cur=self.execute(sql)
         return cur.fetchall()
 
+    def getField(self, fieldName, row_id_name, row_id_value):
+        found=self.getRow({'field':row_id_name, 'value':row_id_value})
+        if len(found)>0: return found[0][fieldName]
+
+    def setField(self, fieldName, fieldValue, row_id_name, row_id_value):
+        self.updateRow({'field':row_id_name, 'value':row_id_value}, {fieldName:fieldValue})
+

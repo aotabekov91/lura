@@ -54,7 +54,10 @@ class DatabaseConnector:
         return self.db.getRow({'field':'did', 'value':did})
 
     def title(self, annotation):
-        data=self.db.getRow({'field':'id', 'value':annotation.id()})
+        if type(annotation)==int:
+            data=self.db.getRow({'field':'id', 'value':annotation})
+        else:
+            data=self.db.getRow({'field':'id', 'value':annotation.id()})
         if len(data)==0: return
         return data[0]['title']
 

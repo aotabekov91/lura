@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 
 from lura.core.widgets import Menu
 from lura.core.widgets.tree import Item
+from lura.core.widgets.tree import TreeView
 from lura.core.widgets.tree import Container
 
 from lura.core.widgets.tree.menus import MapMenu
@@ -13,9 +14,6 @@ from lura.core.widgets.tree.menus import ItemMenu
 from lura.core.widgets.tree.menus import SortMenu
 from lura.core.widgets.tree.menus import ChangeMenu
 from lura.core.widgets.tree.menus import ToggleMenu
-
-from lura.core.widgets.tree import TreeView
-from lura.core.widgets.custom import CustomTreeMap
 
 from lura.core.widgets import Filter
 from lura.core.widgets import Quickmark
@@ -29,13 +27,13 @@ class MapView(QWidget):
 
         self.setup()
 
-    # def resizeEvent(self, event):
-    #     self.m_view.setFixedWidth()
+    def resizeEvent(self, event):
+        self.m_view.setFixedWidth()
 
     def setup(self):
 
         self.m_layout=QVBoxLayout(self)
-        self.m_view=CustomTreeMap(self)
+        self.m_view=TreeView(self)
 
         self.m_mapMenu=MapMenu(self)
         self.m_itemMenu=ItemMenu(self)
@@ -45,7 +43,7 @@ class MapView(QWidget):
         self.m_quickmark=Quickmark(self)
         self.m_filter=Filter(self)
 
-        # self.m_view.buttonClicked.connect(self.m_itemMenu.open)
+        self.m_view.buttonClicked.connect(self.m_itemMenu.open)
 
         self.m_layout.addWidget(self.m_view)
         self.m_layout.addWidget(self.m_mapMenu)
@@ -164,7 +162,7 @@ class MapView(QWidget):
 
         self.hide()
         self.m_view.hide()
-        self.m_view.setModel(self.m_document.m_model)
+        self.m_view.setModel(self.m_document)
 
         self.show()
         self.m_view.show()

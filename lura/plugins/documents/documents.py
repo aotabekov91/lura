@@ -72,6 +72,9 @@ class Documents(QObject):
     def getData(self, did):
         return self.db.getRow({'field':'id', 'value':did})[0]
 
+    def filePath(self, did):
+        return self.db.getRow({'field':'id', 'value':did})[0]['loc']
+
     def get(self, did):
         documentData=self.db.getRow({'field':'id', 'value':did})[0]
         return self.window.buffer.loadDocument(documentData['loc'])

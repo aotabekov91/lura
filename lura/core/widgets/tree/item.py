@@ -9,7 +9,7 @@ from .proxy import BaseProxyWidget
 class Item(QStandardItem):
 
     def __init__(self, data):
-        super().__init__()
+        super().__init__(data.getField('title'))
         self.m_data=data
         self.connect()
         self.setCreateTime(datetime.now().timestamp())

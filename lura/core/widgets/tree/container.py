@@ -11,28 +11,16 @@ class Container(QObject):
     def __init__(self, title):
         super().__init__()
         self.m_title=title
+        self.m_kind='container'
+        self.m_id=-999
 
-    def title(self):
-        return self.m_title
+    def getField(self, fieldName, *args):
+        return getattr(self, f'm_{fieldName}')
 
     def setTitle(self, title):
         self.m_title=title
         self.dataChanged.emit()
 
-    def widget(self):
-        return BaseTreeWidget(self)
-
-    def id(self):
-        return -999
-
-    def kind(self):
-        return 'container'
-
     def itemData(self):
         return self
 
-    def tags(self):
-        return ''
-
-    def setTags(self):
-        pass

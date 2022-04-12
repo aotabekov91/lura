@@ -97,30 +97,33 @@ class MapDocument(BaseMapDocument):
             if mapData['content']=='': return self.connectModel()
             xml = fromstring(mapData['content'])
 
-            p = self.parent().plugin
             for element in xml.iter():
 
                 if element.tag == 'Mindmap': continue
 
-                if element.tag == 'document':
+                # else:
+                    # item=Item(element)
 
-                    data = p.documents.get(int(element.attrib['id']))
+                # if element.tag == 'document':
 
-                elif element.tag == 'note':
+                #     data = p.documents.get(int(element.attrib['id']))
 
-                    data = p.notes.get(int(element.attrib['id']))
+                # elif element.tag == 'note':
 
-                elif element.tag == 'annotation':
+                #     data = p.notes.get(int(element.attrib['id']))
 
-                    data = p.annotation.get(aid=int(element.attrib['id']))
+                # elif element.tag == 'annotation':
 
-                elif element.tag == 'container':
+                #     data = p.annotation.get(aid=int(element.attrib['id']))
 
-                    data = Container(element.attrib['title'])
+                # elif element.tag == 'container':
 
-                if data is None: continue
+                #     data = Container(element.attrib['title'])
+
+                # if data is None: continue
 
                 if element.attrib['p_eid'] in items:
+                    data=Data(element, self.parent().plugin)
                     item=Item(data)
                     self.m_collection[data]=item
                     if hasattr(data, 'annotationAdded'):
@@ -150,3 +153,28 @@ class MapDocument(BaseMapDocument):
         self.rowsMoved.disconnect(self.update)
         self.rowsAboutToBeRemoved.disconnect(self.update)
         self.dataChanged.disconnect(self.update)
+
+class Data:
+    def __init__(self, element, plugins):
+        self.m_element=element
+        self.m_id=int(element.attrib['id'])
+        self.plugins=plugins
+
+        if element.tag == 'document':
+            self.m_plugin = plugins.tables.metadata
+            self.row_id_name='did'
+        elif element.tag == 'note':
+            self.m_plugin = plugins.tables.notes
+            self.row_id_name='id'
+        elif element.tag == 'annotation':
+            self.m_plugin = plugins.tables.annotations
+            self.row_id_name='id'
+        elif element.tag == 'container':
+            self.m_plugin = Container(element.attrib['title'])
+            self.row_id_name='id'
+
+    def getField(self, fieldName):
+        return self.m_plugin.getField(fieldName, self.row_id_name, self.m_id)
+
+    def filePath(self):
+        return self.plugins.documents.filePath(self.m_id)
