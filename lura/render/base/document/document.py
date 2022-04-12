@@ -43,9 +43,6 @@ class Document(QObject):
     def setKind(self, kind):
         self.m_db.setKind(self, kind)
 
-    def kind(self):
-        return 'document'
-
     def __eq__(self, other):
         return self.m_data==other.m_data
 
@@ -99,29 +96,21 @@ class Document(QObject):
     def data(self):
         return self.m_data
 
-    def title(self):
-        return self.m_db.title(self)
+    def getField(self, fieldName):
+        if fieldName=='kind':
+            return 'document'
+        elif fieldName=='filePath':
+            return self.m_filePath
+        return self.m_db.getField(fieldName, row_id_name='did', row_id_value=self.m_id)
 
-    def author(self):
-        return self.m_db.author(self)
-
-    def setAuthor(self, author):
-        self.m_db.setAuthor(self, author) 
-
-    def setTitle(self, title):
-        self.m_db.setTitle(self, title) 
+    def setField(self, fieldName, fieldValue):
+        self.m_db.setField(fieldName, fieldValue, row_id_name='did', row_id_value=self.m_id)
 
     def setFilePath(self, filePath):
         self.m_filePath = filePath
 
-    def filePath(self):
-        return self.m_filePath
-
     def readSuccess(self):
         return self.m_data is not None
-
-    def loadDocument(self):
-        raise
 
     def registered(self):
         return self.m_registered

@@ -80,13 +80,13 @@ class Documents(QObject):
         return self.window.buffer.loadDocument(documentData['loc'])
 
     def register(self, document):
-        data=self.getByLoc(document.filePath())
+        filePath=document.getField('filePath')
+        data=self.getByLoc(filePath)
         if len(data)==0: 
-            if not document.shouldRegister(): return
 
-            data= self.db.getRow({'field': 'loc', 'value': document.filePath()})
-            if len(data) == 0: self.db.writeRow({'loc': document.filePath()})
-            data= self.db.getRow({'field': 'loc', 'value': document.filePath()})
+            data= self.db.getRow({'field': 'loc', 'value': filePath})
+            if len(data) == 0: self.db.writeRow({'loc': filePath})
+            data= self.db.getRow({'field': 'loc', 'value': filePath})
 
         document.setId(data[0]['id'])
         self.window.documentRegistered.emit(document)

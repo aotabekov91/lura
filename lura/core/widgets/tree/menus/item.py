@@ -21,7 +21,7 @@ class ItemMenu(Menu):
         self.hide()
         item=self.m_tree.currentItem()
 
-        if item.itemData().kind()=='annotation':
+        if item.itemData().getField('kind')=='annotation':
 
             document=item.itemData().page().document()
             pageNumber=item.itemData().page().pageNumber()
@@ -30,8 +30,8 @@ class ItemMenu(Menu):
             left, top=item.itemData().leftTop()
             self.m_parent.window.view().jumpToPage(pageNumber, left, top)
 
-        elif item.itemData().kind()=='document':
-            self.m_parent.window.open(item.itemData().filePath())
+        elif item.itemData().getField('kind')=='document':
+            self.m_parent.window.open(item.itemData().getField('filePath'))
 
     def openInWeb(self):
         self.hide()

@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from .table import MetadataTable
+from lura.plugins.tables import Table 
 
 class DatabaseConnector(QObject):
 
@@ -22,77 +22,46 @@ class DatabaseConnector(QObject):
 
     def register(self, document):
         self.titleAndAuthor(document)
-        document.setDB(self)
+        document.setDB(self.db)
 
-    # def content(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['content']
-
-    # def setContent(self, document, content):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'content':content})
-
-    # def title(self, document):
-    #     if type(document)==int:
-    #         return self.db.getRow({'field':'did', 'value':document})[0]['title']
-    #     else:
-    #         if not document.registered(): return
-    #         return self.db.getRow({'field':'did', 'value':document.id()})[0]['title']
-
-    # def setTitle(self, document, title):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'title':title})
-
-    # def url(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['url']
-
-    # def setUrl(self, document, url):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'url':url})
-
-    # def kind(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['kind']
-
-    # def setKind(self, document, kind):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'kind':kind})
-
-    # def accessTime(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['accessTime']
-
-    # def setAccessTime(self, document, accessTime):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'accessTime':accessTime})
-
-    # def year(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['year']
-
-    # def setYear(self, document, year):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'year':year})
-
-    # def author(self, document):
-    #     if not document.registered(): return
-    #     return self.db.getRow({'field':'did', 'value':document.id()})[0]['author']
-
-    # def setAuthor(self, document, author):
-    #     if not document.registered(): return
-    #     self.db.updateRow({'field':'did', 'value':document.id()}, {'author':author})
-
-    # def titleAndAuthor(self, document):
-    #     data=self.db.getRow({'field':'did', 'value':document.id()})
-    #     if len(data)==0: 
-    #         self.db.writeRow({'did':document.id()})
-    #         author=document.embeddedAuthor()
-    #         title=document.embeddedTitle()
-    #         if title=='': title=document.filePath().split('/')[-1]
-    #         self.setAuthor(document, author) 
-    #         self.setTitle(document, title)
+    def titleAndAuthor(self, document):
+        data=self.db.getRow({'field':'did', 'value':document.id()})
+        if len(data)==0: 
+            self.db.writeRow({'did':document.id()})
+            self.db.setField('author', document.embeddedAuthor(), 'did', document.id()) 
+            title=document.embeddedTitle()
+            if title=='': title=document.filePath().split('/')[-1]
+            self.db.setField('title', title, 'did', document.id()) 
 
     def get(self, did):
         r=self.db.getRow({'field':'did', 'value':did})
         if len(r)>0: return r[0]
+
+
+class MetadataTable(Table):
+
+    def __init__(self):
+
+        self.fields=[
+            'id integer PRIMARY KEY AUTOINCREMENT', 
+            'author text',
+            'title text',
+            'url text',
+            'jounal text',
+            'year int',
+            'volume int',
+            'number int',
+            'edition int', 
+            'pages text',
+            'publisher text',
+            'address text',
+            'bibkey text',
+            'kind text',
+            'did int unique',
+            'citationCount int',
+            'impactFactor real',
+            'createTime datetime',
+            'accessTime datetime',
+            'foreign key(did) references documents(id)'
+            ]
+        super().__init__(table='metadata', fields=self.fields)

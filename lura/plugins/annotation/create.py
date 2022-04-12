@@ -70,10 +70,8 @@ class Creator(QObject):
         d=page.document()
         annotation=d.annotate(page, boundary, color, 'highlightAnnotation')
         self.m_parent.registerAnnotation(annotation)
-        annotation.setQuote(' '.join(self.cursor.getSelectionText()))
+        annotation.setField('quote', ' '.join(self.cursor.getSelectionText()))
         page.document().annotationAdded.emit(annotation)
-
-        self.window.view().save()
 
         return annotation
 

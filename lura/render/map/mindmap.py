@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from .base import BaseMapDocument
 
 from lura.core.widgets.tree import Item
+from lura.core.widgets.tree import Data
 from lura.core.widgets.tree import Container
 
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring, fromstring
@@ -153,28 +154,3 @@ class MapDocument(BaseMapDocument):
         self.rowsMoved.disconnect(self.update)
         self.rowsAboutToBeRemoved.disconnect(self.update)
         self.dataChanged.disconnect(self.update)
-
-class Data:
-    def __init__(self, element, plugins):
-        self.m_element=element
-        self.m_id=int(element.attrib['id'])
-        self.plugins=plugins
-
-        if element.tag == 'document':
-            self.m_plugin = plugins.tables.metadata
-            self.row_id_name='did'
-        elif element.tag == 'note':
-            self.m_plugin = plugins.tables.notes
-            self.row_id_name='id'
-        elif element.tag == 'annotation':
-            self.m_plugin = plugins.tables.annotations
-            self.row_id_name='id'
-        elif element.tag == 'container':
-            self.m_plugin = Container(element.attrib['title'])
-            self.row_id_name='id'
-
-    def getField(self, fieldName):
-        return self.m_plugin.getField(fieldName, self.row_id_name, self.m_id)
-
-    def filePath(self):
-        return self.plugins.documents.filePath(self.m_id)

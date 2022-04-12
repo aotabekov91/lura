@@ -21,3 +21,6 @@ class View:
 
     def close(self):
         pass
+
+    def save(self):
+        pass

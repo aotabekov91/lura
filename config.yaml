@@ -6,6 +6,7 @@ Window:
     onlyMapView: 'Ctrl+Shift+1'
     onlyDocumentView: 'Ctrl+Shift+2'
     onlyBrowserView: 'Ctrl+Shift+3'
+    close: q
 
 DocumentView:
   shortcuts: 
@@ -18,7 +19,6 @@ DocumentView:
     fitToPageSize: a
     zoomIn: +
     zoomOut: '-'
-    close: q
     save: s
 
 MindMapView:
@@ -44,7 +44,6 @@ BrowserView:
     toggleActionsMenu: m
   BrowserMenu:
     toggleNavigation: n
-    close: q
 
 Plugins:
 

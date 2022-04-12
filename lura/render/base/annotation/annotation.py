@@ -25,9 +25,6 @@ class Annotation(QObject):
     def proxyWidget(self):
         return AnnotationProxyWidget(self)
 
-    def kind(self):
-        return 'annotation'
-
     def __eq__(self, other):
         return self.id()==other.id()
 
@@ -61,27 +58,11 @@ class Annotation(QObject):
 
     def setId(self, aid):
         self.m_id=aid
-        if hasattr(self, 'm_color'): self.setColor(self.m_color)
-        if hasattr(self, 'm_boundary'): self.setPosition(self.getPosition())
-
-    def quote(self):
-        return self.m_db.quote(self)
-
-    def setQuote(self, quote):
-        self.m_db.setQuote(self, quote)
-        self.wasModified.emit(self)
-
-    def title(self):
-        return self.m_db.title(self)
+        if hasattr(self, 'm_color'): self.setField('color', self.m_color)
+        if hasattr(self, 'm_boundary'): self.setField('position', self.getPosition())
 
     def page(self):
         return self.m_page
-
-    def color(self):
-        return QColor(self.m_db.color(self))
-
-    def content(self):
-        return self.m_db.content(self)
 
     def getQuote(self):
         return ''
@@ -92,32 +73,19 @@ class Annotation(QObject):
     def setPage(self, page):
         self.m_page=page
 
-    def setTitle(self, title):
-        self.m_db.setTitle(self, title)
-        self.wasModified.emit(self)
-
-    def setColor(self, color):
-        self.m_db.setColor(self, color)
-        self.wasModified.emit(self)
-
-    def setContent(self, content):
-        self.m_db.setContent(self, content)
-        self.wasModified.emit(self)
-
-    def getKind(self):
-        self.m_db.getKind(self)
-
-    def position(self):
-        return self.m_db.position(self)
-
-    def setPosition(self, position):
-        self.m_db.setPosition(self, position)
-
     def getPosition(self):
         return self.m_data.getPosition()
 
-    def boundary(self):
-        return self.m_data.boundary()
-
     def setBoundary(self, boundary):
         self.m_boundary=boundary
+
+    def getField(self, fieldName):
+        if fieldName=='kind':
+            return 'annotation'
+        elif fieldName=='color':
+            return QColor(self.m_db.getField(
+                        fieldName, row_id_name='did', row_id_value=self.m_id))
+        return self.m_db.getField(fieldName, row_id_name='did', row_id_value=self.m_id)
+
+    def setField(self, fieldName, fieldValue):
+        self.m_db.setField(fieldName, fieldValue, row_id_name='did', row_id_value=self.m_id)

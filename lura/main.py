@@ -35,9 +35,6 @@ class App:
             config = yaml.safe_load(stream)
         return config
 
-    def keyPressEvent(self, event):
-        raise
-
 if __name__ == "__main__":
     parsed_args, unparsed_args = process_cl_args()
     qt_args = sys.argv[:1] + unparsed_args

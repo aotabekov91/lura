@@ -221,3 +221,7 @@ class WindowManager(QMainWindow):
 
     def setView(self, view):
         self.m_view=view
+
+    def close(self):
+        if self.m_view is not None: self.m_view.save()
+        super().close()

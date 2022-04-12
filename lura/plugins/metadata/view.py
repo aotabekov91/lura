@@ -12,6 +12,7 @@ class Metadata(QStackedWidget):
         super().__init__(parent)
         self.window=parent
         self.db=DatabaseConnector(parent, settings)
+        self.location='right'
         self.s_settings=settings
         self.globalKeys={
                 'Ctrl+i': (
@@ -86,7 +87,7 @@ class Metadata(QStackedWidget):
         self.bookTab.hide()
         self.websiteTab.hide()
 
-        self.window.setTabLocation(self, 'bottom', 'Metadata') 
+        self.window.setTabLocation(self, self.location, self.name) 
 
     def commit(self):
         if self.kind is not None:

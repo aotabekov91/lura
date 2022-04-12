@@ -174,6 +174,7 @@ class TreeView(QGraphicsView):
             self.remove(item.child(index))
 
     def on_rowsInserted(self, parentIndex, begin, end):
+        return 
         if parentIndex.model() is None:
             item = self.m_model.invisibleRootItem().child(begin)
         else:

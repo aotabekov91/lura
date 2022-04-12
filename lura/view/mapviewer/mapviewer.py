@@ -14,7 +14,7 @@ from lura.core.widgets.tree.menus import SortMenu
 from lura.core.widgets.tree.menus import ChangeMenu
 from lura.core.widgets.tree.menus import ToggleMenu
 
-from lura.core.widgets.tree import TreeView
+# from lura.core.widgets.tree import TreeView
 from lura.core.widgets.custom import CustomTreeMap
 
 from lura.core.widgets import Filter

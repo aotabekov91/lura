@@ -350,10 +350,6 @@ class DocumentView(QGraphicsView):
         else:
             self.parent().keyPressEvent(event)
 
-    def close(self):
-        self.save()
-        self.window.close()
-
     def scaleMode(self):
         return self.s_settings['scaleMode']['currentMode']
 
@@ -432,7 +428,7 @@ class DocumentView(QGraphicsView):
 
     def save(self, filePath=False, withChanges=True):
 
-        if filePath is False: filePath=self.m_document.filePath()
+        if filePath is False: filePath=self.m_document.getField('filePath')
 
         tFile=QTemporaryFile()
 

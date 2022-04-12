@@ -36,18 +36,8 @@ class Annotation(QObject):
         self.window.documentRegistered.connect(self.register)
         self.window.annotationCreated.connect(self.registerAnnotation)
 
-        self.window.hoverMoveEventOccured.connect(
-                self.on_page_hoverMoveEvent)
         self.window.mousePressEventOccured.connect(
                 self.on_page_mousePressEvent)
-
-    def on_page_hoverMoveEvent(self, event, pageItem, view):
-
-        annotation=self.findAnnotation(event, pageItem, view)
-
-        if annotation is not None:
-            pageItem.setCursor(Qt.PointingHandCursor)
-            QToolTip.showText(event.screenPos(), annotation.content())
 
     def on_page_mousePressEvent(self, event, pageItem, view):
 

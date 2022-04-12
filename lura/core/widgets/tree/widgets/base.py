@@ -19,7 +19,7 @@ class BaseTreeWidget(QWidget):
 
         layout=QVBoxLayout(self)
 
-        title=self.m_data.title()
+        title=self.m_data.getField('title')
         if title is None: title=''
         self.m_titleEdit=CQTextEdit(title.lower().title())
         self.m_titleEdit.textChanged.connect(self.on_titleChanged)
