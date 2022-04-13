@@ -11,9 +11,7 @@ class AnnotationsTable(Table):
             'position text',
             'title text',
             'content text',
-            'quote text',
             'color text',
-            'function text',
             'foreign key(did) references documents(id)',
             'constraint unique_ann unique (did, page, position)'
         ]

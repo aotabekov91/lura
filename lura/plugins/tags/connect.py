@@ -19,9 +19,6 @@ class DatabaseConnector:
             self.m_tags = self.m_parent.window.plugin.tables.tags
             self.m_tagged = self.m_parent.window.plugin.tables.tagged
 
-            self.m_parent.window.noteRegistered.connect(self.registerElement)
-            self.m_parent.window.documentRegistered.connect(self.registerElement)
-            self.m_parent.window.annotationRegistered.connect(self.registerElement)
         else:
             self.m_tags=TagsTable()
             self.m_tagged=TaggedTable()
@@ -60,14 +57,11 @@ class DatabaseConnector:
         for tag in tags:
             if tag!='': self.tag(uid, kind, tag)
 
-    def registerElement(self, element):
-        element.setTagDB(self)
-
     def elementTags(self, element):
-        return self.get(element.id(), element.kind()+'s')
+        return self.get(element.id(), element.getField('kind')+'s')
 
     def setElementTags(self, element, tags):
-        self.setTags(element.id(), element.kind()+'s', tags)
+        self.setTags(element.id(), element.getField('kind')+'s', tags)
         self.cleanUp()
 
     def cleanUp(self):

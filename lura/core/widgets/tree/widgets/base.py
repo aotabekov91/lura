@@ -61,26 +61,26 @@ class BaseTreeWidget(QWidget):
         if hasattr(edit, 'm_label'): edit.m_label.show()
 
     def addIDField(self):
-        self.m_idEdit=QLabel('{}/{}'.format(self.m_data.kind(), self.m_data.id()))
+        self.m_idEdit=QLabel('{}/{}'.format(self.m_data.getField('kind'), self.m_data.id()))
         self.m_idEdit.m_label=QLabel('ID')
         self.m_metaEdit.m_layout.addRow(self.m_idEdit.m_label, self.m_idEdit)
 
     def addContentField(self):
-        self.m_contentEdit=CQTextEdit(self.m_data.content())
+        self.m_contentEdit=CQTextEdit(self.m_data.getField('content'))
         self.m_contentEdit.textChanged.connect(self.on_contentChanged)
         self.m_contentEdit.sizeChanged.connect(self.sizeChanged)
         self.m_contentEdit.m_label=QLabel('Content')
         self.m_metaEdit.m_layout.addRow(self.m_contentEdit.m_label, self.m_contentEdit)
 
     def addQuoteField(self):
-        self.m_quoteEdit=CQTextEdit(self.m_data.quote())
+        self.m_quoteEdit=CQTextEdit(self.m_data.getField('quote'))
         self.m_quoteEdit.textChanged.connect(self.on_quoteChanged)
         self.m_quoteEdit.sizeChanged.connect(self.sizeChanged)
         self.m_quoteEdit.m_label=QLabel('Quote')
         self.m_metaEdit.m_layout.addRow(self.m_quoteEdit.m_label, self.m_quoteEdit)
 
     def addAuthorField(self):
-        self.m_authorEdit=CQTextEdit(self.m_data.author())
+        self.m_authorEdit=CQTextEdit(self.m_data.getField('author'))
         self.m_authorEdit.textChanged.connect(self.on_authorChanged)
         self.m_authorEdit.sizeChanged.connect(self.sizeChanged)
         self.m_authorEdit.m_label=QLabel('Authors')
@@ -152,7 +152,7 @@ class BaseTreeWidget(QWidget):
 
     def toggleColor(self):
         if not self.m_colored:
-            color=self.m_data.color()
+            color=self.m_data.getField('color')
             if color is not None:
                 color=color.name()
                 self.m_titleEdit.setStyleSheet(f'background-color:{color}')

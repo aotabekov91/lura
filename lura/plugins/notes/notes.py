@@ -2,7 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .note import Note
 from .display import Display
 from .connect import DatabaseConnector
 
@@ -13,29 +12,41 @@ class Notes(QObject):
         self.window=parent
         self.display=Display(self, settings)
         self.s_settings=settings
+        self.baseFolder=settings['baseFolder']
         self.location='left'
         self.name = 'notes'
         self.globalKeys={
                 'Ctrl+n': (
-                    self.display.toggle,
+                    self.toggle,
                     self.window,
-                    Qt.WindowShortcut)}
+                    Qt.WindowShortcut),
+                'Ctrl+Shift+n': (
+                    self.display.open,
+                    self.window,
+                    Qt.WindowShortcut),
+                    }
         self.setup()
 
     def setup(self):
         self.db = DatabaseConnector(self, self.window)
-        self.window.noteCreated.connect(self.on_noteCreated)
 
-    def get(self, nid):
-        return self.db.get(nid)
+        self.fuzzy = self.window.plugin.fuzzy
+        self.fuzzy.fuzzySelected.connect(self.actOnFuzzy)
 
-    def getByDid(self, did):
-        return self.db.getByDid(did)
+    def actOnFuzzy(self, selected, client):
+        if self!=client: return
+        self.fuzzy.deactivate(self)
+        self.display.open(selected)
 
-    def new(self):
-        note=Note()
-        self.db.register(note)
-        return note
+    def setFuzzyData(self):
 
-    def on_noteCreated(self, note):
-        self.db.register(note)
+        notes=self.window.plugin.tables.getAll('notes')
+        if len(notes)==0: return
+        names=[n['title'] for n in notes]
+        nids=[n['id'] for n in notes]
+
+        self.fuzzy.setData(self, nids, names)
+
+    def toggle(self):
+        self.setFuzzyData()
+        self.fuzzy.toggle(self)

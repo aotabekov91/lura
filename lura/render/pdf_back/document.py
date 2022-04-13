@@ -5,50 +5,35 @@ from PyQt5.QtWidgets import *
 from popplerqt5 import Poppler
 
 from .page import PdfPage
-from .annotation import PdfAnnotation
+from lura.render.base import Document
 
-class PdfDocument(QObject):
+class PdfDocument(Document):
 
     def __init__(self, filePath):
-        super().__init__()
-        self.m_filePath=filePath
-        self.loadDocument()
+        super().__init__(filePath)
         self.m_mutex=QMutex()
-
-    def loadDocument(self):
-        self.m_data = Poppler.Document.load(self.m_filePath)
-        if self.m_data is not None:
-            self.m_data.setRenderHint(Poppler.Document.Antialiasing)
-            self.m_data.setRenderHint(Poppler.Document.TextAntialiasing)
-            self.setPages()
-        else:
-            self.m_data=None
-
-    def filePath(self):
-        return self.m_filePath
-
-    def readSuccess(self):
-        return self.m_data is not None
+        self.loadDocument()
 
     def numberOfPages(self):
         return self.m_data.numPages()
 
-    def author(self):
+    def __eq__(self, other):
+        return hash(self.m_data)==hash(other.m_data)
+
+    def __hash__(self):
+        return hash(self.m_data)
+
+    def embeddedAuthor(self):
         return self.m_data.author()
 
-    def title(self):
+    def embeddedTitle(self):
         return self.m_data.title()
 
-    def page(self, index):
-        page = self.m_data.page(index)
-        if page is not None:
-            return PdfPage(page)
-
-    def annotations(self):
-        annotations=[]
-        for page in self.m_pages:
-            annotations+=page.annotations()
-        return annotations
+    def setAnnotations(self):
+        self.m_annotations=[]
+        for i, page in enumerate(self.pages()):
+            for annotation in page.annotations():
+                self.m_annotations+=[annotation]
 
     def save(self, filePath, withChanges):
 
@@ -60,17 +45,14 @@ class PdfDocument(QObject):
             pdfConverter.setPDFOptions(condition)
 
         return pdfConverter.convert()
-
-    def pages(self):
-        return self.m_pages
-
+        
     def setPages(self):
         self.m_pages= []
         for i in range(self.numberOfPages()):
             page=PdfPage(self.m_data.page(i))
-            page.setDocument(self)
             page.setPageNumber(i+1)
-            self.m_pages += [page]
+            page.setDocument(self)
+            self.m_pages+=[page]
 
     def search(self, text):
         found={}
@@ -81,8 +63,11 @@ class PdfDocument(QObject):
         return found
 
     def loadOutline(self):
+
         outlineModel=QStandardItemModel()
+
         toc=self.m_data.toc()
+
         if toc!=0:
             try:
                 self.outline(self.m_data, toc.firstChild(), outlineModel.invisibleRootItem())
@@ -158,14 +143,32 @@ class PdfDocument(QObject):
 
             self.outline(document, childNode, item)
 
-    def __eq__(self, other):
-        return self.m_data==other.m_data
+    def data(self):
+        return self.m_data
 
-    def __hash__(self):
-        return hash(self.m_data)
+    def loadDocument(self):
+        data = Poppler.Document.load(self.m_filePath)
+        if data is not None:
+            data.setRenderHint(Poppler.Document.Antialiasing)
+            data.setRenderHint(Poppler.Document.TextAntialiasing)
+            self.m_data = data
+            self.setPages()
+            self.setAnnotations()
+            return self
 
-    def id(self):
-        return self.m_id
+    def color(self):
+        if not hasattr(self, 'm_color'): return QColor('#23f2c3')
+        return self.m_color
 
-    def setId(self, m_id):
-        self.m_id=m_id
+    def setColor(self, color):
+        self.m_color=color
+
+    def getField(self, fieldName):
+        if fieldName=='kind':
+            return 'document'
+        elif fieldName=='filePath':
+            return self.m_filePath
+        return self.m_db.getField(fieldName, row_id_name='did', row_id_value=self.m_id)
+
+    def setField(self, fieldName, fieldValue):
+        self.m_db.setField(fieldName, fieldValue, row_id_name='did', row_id_value=self.m_id)

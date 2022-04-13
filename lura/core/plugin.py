@@ -10,16 +10,17 @@ from lura.plugins.filebrowser import FileBrowser
 from lura.plugins.tags import Tags
 from lura.plugins.bookmarks import Bookmarks
 from lura.plugins.annotation import Annotation
-# from lura.plugins.lookup import Lookup
 from lura.plugins.metadata import Metadata
-# from lura.plugins.quickmarks import Quickmarks
 from lura.plugins.links import Links 
-# from lura.plugins.outline import Outline
-# from lura.plugins.anki import Anki
 from lura.plugins.search import Search
-# from lura.plugins.finder import Finder
 from lura.plugins.notes import Notes
 from lura.plugins.mindmap import MindMap
+
+# from lura.plugins.lookup import Lookup
+# from lura.plugins.quickmarks import Quickmarks
+# from lura.plugins.outline import Outline
+# from lura.plugins.anki import Anki
+# from lura.plugins.finder import Finder
 # from lura.plugins.pomodoro import Pomodoro
 # from lura.plugins.pager import Pager
 # from lura.plugins.display import Display
@@ -49,7 +50,7 @@ class PluginManager(dict):
                     Annotation,
                     Bookmarks,
                     # Quickmarks,
-                    # Notes,
+                    Notes,
                     MindMap,
                     # Pomodoro,
                     # Pager,

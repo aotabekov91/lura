@@ -33,7 +33,8 @@ class Item(QStandardItem):
         self.m_proxy=BaseProxyWidget(widget, self)
 
     def proxy(self):
-        if self.m_proxy is None: self.setWidget(self.m_data.widget())
+        if self.m_proxy is None: 
+            self.setWidget(self.m_data.widget())
         return self.m_proxy
 
     def itemData(self):

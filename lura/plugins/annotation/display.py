@@ -2,104 +2,133 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import TreeView
-
-from lura.render.map import BaseMapDocument 
-
-from lura.core.widgets.tree.menus import ChangeMenu
-from lura.core.widgets.tree.menus import ToggleMenu
-
-class Display(QWidget):
+class Display(QScrollArea):
 
     def __init__(self, parent, settings):
         super().__init__(parent)
-        self.window=parent
-        self.s_settings=settings
-        self.location='right'
-        self.name='Annotations'
+        self.window = parent
+        self.colorCode=settings['colorSystem']
+        self.s_settings = settings
+        self.location = 'right'
+        self.name = 'Annotations'
         self.setup()
-
-    def resizeEvent(self, event):
-        self.m_view.setFixedWidth()
 
     def setup(self):
 
-        self.activated=False
+        self.activated = False
 
-        self.m_view=TreeView(self)
-        self.m_model=BaseMapDocument()
-        self.m_view.setModel(self.m_model)
+        
+        self.group=QWidget()
+        self.group.m_layout=QVBoxLayout(self.group)
 
-        layout=QVBoxLayout(self)
+        self.colorCombo = QComboBox()
+        for f in ['All', 'Main', 'Definition', 'Question', 'Source']:
+            self.colorCombo.addItem(f)
+        self.colorCombo.currentTextChanged.connect(self.on_colorComboChanged)
 
-        self.m_changeMenu=ChangeMenu(self)
-        self.m_toggleMenu=ToggleMenu(self)
+        self.scrollableWidget=QWidget()
+        self.scrollableWidget.m_layout=QVBoxLayout(self.scrollableWidget)
 
-        layout.addWidget(self.m_view)
-        layout.addWidget(self.m_changeMenu)
-        layout.addWidget(self.m_toggleMenu)
+        self.scrollableWidget.m_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.group.m_layout.addWidget(self.colorCombo)
+        self.group.m_layout.addWidget(self.scrollableWidget)
+        self.group.m_layout.addStretch(1)
+
+        self.group.m_layout.setContentsMargins(0, 0, 0, 0)
 
         self.window.viewChanged.connect(self.on_viewChanged)
         self.window.setTabLocation(self, self.location, self.name)
 
-        self.setActions()
-
-    def setActions(self):
-        self.actions=[]
-        for func, key in self.s_settings['shortcuts'].items():
-
-            m_action=QAction(f'({key}) {func}')
-            m_action.setShortcut(QKeySequence(key))
-            m_action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-            self.actions+=[m_action]
-            m_action.triggered.connect(getattr(self, func))
-            self.addAction(m_action)
-
-    def toggleToggleMenu(self):
-        self.hideMenus()
-        self.m_toggleMenu.toggle()
-
-    def toggleChangeMenu(self):
-        self.hideMenus()
-        self.m_changeMenu.toggle()
-
-    def open(self):
-        item=self.m_view.currentItem()
-        if item is None: return
-        if item.itemData().kind()=='annotation':
-            pageNumber=item.itemData().page().pageNumber()
-            document=item.itemData().page().document()
-            self.window.view().open(document)
-            self.window.view().jumpToPage(pageNumber)
-
-    def hideMenus(self):
-        self.m_toggleMenu.hide()
-        self.m_changeMenu.hide()
-        self.m_view.setFocus()
+    def on_colorComboChanged(self):
+        function = self.colorCombo.currentText()
+        self.update(self.window.view().document(), function)
 
     def on_viewChanged(self, view):
-        if not view.document().__class__.__name__ in ['PdfDocument', 'WebDocument']: return
-        if not view.document().registered(): return
-        self.m_model.clear()
-        item=Item(self.window.document())
-        self.m_model.appendRow(item)
 
-        for annotation in self.window.document().annotations():
-            item.appendRow(Item(annotation))
+        self.update(view.document())
+
+    def update(self, document, function='All'):
+
+        for i in reversed(range(self.scrollableWidget.m_layout.count())):
+            self.scrollableWidget.m_layout.itemAt(i).widget().setParent(None)
+
+        criteria={'did':document.id()}
+        if function!='All':
+            criteria['color']=self.colorCode[function]
+
+        annotations = self.window.plugin.tables.get(
+            'annotations', criteria, unique=False)
+
+        if annotations is None: return
+
+        self.m_annotations = sorted(
+            annotations,
+            key=lambda d: (d['page'], d['position'].split(':')[1])
+        )
+
+        for annotation in self.m_annotations:
+
+            aWidget = AQWidget(annotation['id'], self.window.plugin.tables)
+            self.scrollableWidget.m_layout.addWidget(aWidget)
+
+
+        self.setWidget(self.group)
+        self.setWidgetResizable(True)
 
     def toggle(self):
 
-        if self.window.view() is None: return
+        if self.window.view() is None:
+            return
 
         if not self.activated:
 
             self.window.activateTabWidget(self)
-            self.m_view.setFocus()
-            self.activated=True
+            self.activated = True
 
         else:
 
             self.window.deactivateTabWidget(self)
             self.window.view().setFocus()
-            self.activated=False
+            self.activated = False
+
+
+class AQWidget(QWidget):
+
+    def __init__(self, aid, data):
+        super().__init__()
+        self.m_id = aid
+        self.m_data = data
+        self.setup()
+
+    def setup(self):
+        self.layout = QVBoxLayout(self)
+
+        title = self.m_data.get('annotations', {'id': self.m_id}, 'title')
+        content = self.m_data.get('annotations', {'id': self.m_id}, 'content')
+
+        self.title = QLineEdit(title)
+        self.title.setFixedHeight(25)
+        self.title.textChanged.connect(self.on_titleChanged)
+
+        self.content = QTextEdit(content)
+        self.content.setMinimumHeight(80)
+        self.content.setMaximumHeight(140)
+        self.content.textChanged.connect(self.on_contentChanged)
+
+        color=self.m_data.get('annotations', {'id': self.m_id}, 'color')
+        if color is not None:
+            self.title.setStyleSheet(f'background-color: {color}')
+            self.content.setStyleSheet(f'background-color: {color}')
+
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        self.layout.addWidget(self.title)
+        self.layout.addWidget(self.content)
+
+    def on_titleChanged(self, text):
+        self.m_data.update('annotations', {'id':self.m_id}, {'title':text})
+
+    def on_contentChanged(self):
+        text=self.content.toPlainText()
+        self.m_data.update('annotations', {'id':self.m_id}, {'content':text})

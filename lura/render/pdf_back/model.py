@@ -10,6 +10,12 @@ class PdfAnnotation(QObject):
         super().__init__()
         self.m_data = annotationData
 
+    def id(self):
+        return self.m_id
+
+    def setId(self, m_id):
+        self.m_id=m_id
+
     def color(self):
         return self.m_data.style().color()
 
@@ -24,6 +30,13 @@ class PdfAnnotation(QObject):
 
     def boundary(self):
         return self.m_data.boundary().normalized()
+
+    def position(self):
+        return '{}:{}:{}:{}'.format(
+            round(self.boundary().x(), 8),
+            round(self.boundary().y(), 8),
+            round(self.boundary().width(), 8),
+            round(self.boundary().height(), 8))
 
     def content(self):
         return self.m_data.contents()
@@ -44,9 +57,6 @@ class PdfDocument:
 
     def numberOfPages(self):
         return self.m_data.numPages()
-
-    def online(self):
-        return False
 
     def author(self):
         return self.m_data.author()
@@ -76,19 +86,6 @@ class PdfDocument:
             pdfConverter.setPDFOptions(condition)
 
         return pdfConverter.convert()
-        
-    def wantsContinuousMode(self):
-        pageLayout = self.m_data.pageLayout()
-        condition1 = pageLayout == Poppler.Document.OneColumn
-        condition2 = pageLayout == Poppler.Document.TwoColumnLeft
-        condition3 = pageLayout == Poppler.Document.TwoColumnRight
-        return any([condition1, condition2, condition3])
-
-    def wantsSinglePageMode(self):
-        pageLayout = self.m_data.pageLayout()
-        return any([
-            pageLayout == Poppler.Document.SinglePage,
-            pageLayout == Poppler.Document.OneColumn])
 
     def pages(self):
         return self.m_pages
@@ -107,11 +104,8 @@ class PdfDocument:
         return found
 
     def loadOutline(self):
-
         outlineModel=QStandardItemModel()
-
         toc=self.m_data.toc()
-
         if toc!=0:
             try:
                 self.outline(self.m_data, toc.firstChild(), outlineModel.invisibleRootItem())
@@ -187,8 +181,17 @@ class PdfDocument:
 
             self.outline(document, childNode, item)
 
-    def data(self):
-        return self.m_data
+    def __eq__(self, other):
+        return self.m_data==other.m_data
+
+    def __hash__(self):
+        return hash(self.m_data)
+
+    def id(self):
+        return self.m_id
+
+    def setId(self, m_id):
+        self.m_id=m_id
 
 class PdfPage:
 

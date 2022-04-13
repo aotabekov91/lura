@@ -1,19 +1,8 @@
+import pathlib
+
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-
-from .note import Note
-
-from lura.core.widgets import Menu
-
-from lura.core.widgets.tree.menus import MapMenu
-from lura.core.widgets.tree.menus import ChangeMenu
-from lura.core.widgets.tree.menus import ToggleMenu
-
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import TreeView
-
-from lura.render.map import BaseMapDocument
 
 class Display(QWidget):
 
@@ -22,113 +11,41 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='left'
+        self.location='bottom'
         self.name='Notes'
         self.setup()
 
-    def resizeEvent(self, event):
-        self.m_view.setFixedWidth()
-
     def setup(self):
 
+        self.m_layout=QVBoxLayout(self)
+        self.m_layout.setContentsMargins(0, 0, 0, 0)
+
         self.activated=False
-
-        self.m_view=TreeView(self)
-        self.m_model=BaseMapDocument()
-        self.m_view.setModel(self.m_model)
-
-        mapping={getattr(self, f):v for f, v in self.s_settings['Menu'].items()}
-        self.m_noteMenu=Menu(self, mapping)
-        self.m_changeMenu=ChangeMenu(self)
-        self.m_toggleMenu=ToggleMenu(self)
-        self.m_mapMenu=MapMenu(self)
-
-        layout=QVBoxLayout(self)
-        layout.addWidget(self.m_view)
-        layout.addWidget(self.m_noteMenu)
-        layout.addWidget(self.m_changeMenu)
-        layout.addWidget(self.m_toggleMenu)
-        layout.addWidget(self.m_mapMenu)
-
-        self.fuzzy = self.window.plugin.fuzzy
-        self.fuzzy.fuzzySelected.connect(self.actOnFuzzy)
-
         self.window.setTabLocation(self, self.location, self.name)
-        self.setActions()
 
-    def hideMenus(self):
-        self.m_noteMenu.hide()
-        self.m_mapMenu.hide()
-        self.m_changeMenu.hide()
-        self.m_toggleMenu.hide()
-        self.m_view.setFocus()
+    def open(self, n_id=None):
+        if n_id is None:
+            noteNumber=len(self.window.plugin.tables.getAll('notes'))
+            title=f'Note_{noteNumber}'
+            loc=f'{self.m_parent.baseFolder}/{title}.md'
+            pathlib.Path(loc).touch()
+            self.window.plugin.tables.write('notes', {'title':title, 'loc':loc})
+            n_id=self.window.plugin.tables.get(
+                    'notes', {'title':title, 'loc':loc}, 'id')
 
-    def setActions(self):
-        self.actions=[]
-        for func, key in self.s_settings['shortcuts'].items():
+        noteWidget=NQWidget(n_id, self.window.plugin.tables)
 
-            m_action=QAction(f'({key}) {func}')
-            m_action.setShortcut(QKeySequence(key))
-            m_action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-            self.actions+=[m_action]
-            m_action.triggered.connect(getattr(self, func))
-            self.addAction(m_action)
+        for i in reversed(range(self.m_layout.count())):
+            self.m_layout.itemAt(i).widget().setParent(None)
 
-    def toggleNoteMenu(self):
-        self.hideMenus()
-        self.m_noteMenu.toggle()
-
-    def toggleMapMenu(self):
-        self.hideMenus()
-        self.m_mapMenu.toggle()
-
-    def toggleToggleMenu(self):
-        self.hideMenus()
-        self.m_toggleMenu.toggle()
-
-    def toggleChangeMenu(self):
-        self.hideMenus()
-        self.m_changeMenu.toggle()
-
-    def actOnFuzzy(self, selected, client):
-        if self!=client: return
-        self.fuzzy.deactivate(self)
-        self.setFocus()
-        if self.kind in ['open', 'add']:
-            self.openOrAdd(selected, client, self.kind)
-        elif self.kind=='delete':
-            self.delete(selected, client)
-
-    def setFuzzyData(self):
-
-        notes=self.m_parent.db.getAll()
-        names=[n['title'] for n in notes]
-        nids=[n['id'] for n in notes]
-
-        self.fuzzy.setData(self, nids, names)
-
-    def current(self):
-        
-        self.hideMenus()
-        if self.window.view() is None: return
-
-        self.m_model.clear()
-        did=self.window.document().id()
-        tag=f'did:{did}'
-        tagged=self.window.plugin.tags.getTagged(tag)
-        notes=[self.m_parent.get(t['uid']) for t in tagged if t['kind']=='notes']
-
-        for note in notes:
-            if note is None: continue
-            self.m_model.appendRow(Item(note))
+        self.m_layout.addWidget(noteWidget)
+        self.window.activateTabWidget(self)
 
     def toggle(self):
 
         if not self.activated:
 
             self.window.activateTabWidget(self)
-            self.m_view.setFocus()
-            self.toggleNoteMenu()
             self.activated=True
 
         else:
@@ -136,42 +53,48 @@ class Display(QWidget):
             self.window.deactivateTabWidget(self)
             self.activated=False
 
-    def add(self):
-        self.openOrAdd(kind='add')
+class NQWidget(QWidget):
 
-    def open(self):
-        self.openOrAdd(kind='open')
+    def __init__(self, m_id, data):
+        super().__init__()
+        self.m_id=m_id
+        self.m_data=data
+        self.setup()
 
-    def openOrAdd(self, selected=False, client=False, kind=False):
+    def setup(self):
 
-        self.hideMenus()
+        self.m_layout=QVBoxLayout(self)
+        self.m_layout.setContentsMargins(0, 0, 0, 0)
 
-        if selected is False:
+        widget=QWidget()
+        widget.m_layout=QHBoxLayout(widget)
+        widget.m_layout.setContentsMargins(0, 0, 0, 0)
 
-            self.setFuzzyData()
-            self.fuzzy.activate(self)
-            self.kind=kind
+        self.title=QLineEdit()
+        self.title.textChanged.connect(self.on_titleChanged)
 
-        else:
+        self.saveButton=QPushButton('Save')
+        self.saveButton.pressed.connect(self.on_saveButtonPressed)
 
-            if kind=='open': self.m_model.clear()
-            note=self.m_parent.db.get(selected)
-            self.m_model.appendRow(Item(note))
+        widget.m_layout.addWidget(self.title)
+        widget.m_layout.addWidget(self.saveButton)
+        
+        self.content=QTextEdit()
 
-    def delete(self, selected=False, client=False):
+        self.m_layout.addWidget(widget)
+        self.m_layout.addWidget(self.content)
 
-        self.hideMenus()
+        note=self.m_data.get('notes', {'id':self.m_id})
 
-        if selected is False:
+        self.title.setText(note['title'])
+        self.content.setPlainText(''.join(open(note['loc']).readlines()))
 
-            self.setFuzzyData()
-            self.fuzzy.activate(self)
-            self.kind='delete'
+    def on_titleChanged(self, text):
+        self.m_data.update('notes', {'id':self.m_id}, {'title':text})
 
-        else:
-
-            if hasattr(self, 'm_note'):
-                if selected==self.m_note.id():
-                    if self.m_layout.count()>1:
-                        self.m_layout.removeItem(self.m_layout.itemAt(0))
-            self.m_parent.db.delete(selected)
+    def on_saveButtonPressed(self):
+        text=self.content.toPlainText()
+        loc=self.m_data.get('notes', {'id':self.m_id}, 'loc')
+        nFile=open(loc, 'w')
+        for f in text:
+            nFile.write(f)

@@ -50,9 +50,8 @@ class BufferManager(QObject):
         if filePath in self.documents: return self.documents[filePath]
 
         document=load(filePath)
-        if document.readSuccess():
+        if document is not None and document.readSuccess():
             document.setParent(self.window)
-            # self.documents[filePath]=document
 
             if document.__class__.__name__ in ['PdfDocument', 'WebDocument']: 
                 self.window.documentCreated.emit(document)

@@ -63,10 +63,10 @@ Plugins:
       toggleToggleMenu: 'Shift+t'
       toggleChangeMenu: 'Shift+c'
     colorSystem:
-      Focus: '#A4DE02'
+      Main: '#a4de02'
+      Definition: '#eefc5e'
       Question: '#c8d9e8'
-      Definition: '#EEFC5E'
-      Literature: '#D3D3D3'
+      Source: '#d3d3d3'
 
   Bookmarks:
     shortcuts:
@@ -132,11 +132,7 @@ Plugins:
       toggleNoteMenu: 'Shift+n'
       toggleChangeMenu: 'Shift+c'
       toggleToggleMenu: 'Shift+t'
-    Menu:
-      add: a
-      open: o
-      delete: d
-      current: O
+    baseFolder: '/home/adam/sciebo/doc_notes'
   FileBrowser:
     shortcuts:
       toggleMenu: m

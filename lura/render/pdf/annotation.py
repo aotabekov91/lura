@@ -2,27 +2,46 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.render.base import Annotation
+class PdfAnnotation(QObject):
 
-class PdfAnnotation(Annotation):
-
-    def __init__(self):
+    def __init__(self, annotationData):
         super().__init__()
+        self.m_data = annotationData
 
-    def setAnnotationData(self, data):
-        self.m_color=data.style().color().name()
-        self.m_boundary=data.boundary().normalized()
-        self.m_type=data.subType()
+    def id(self):
+        return self.m_id
 
-    def getPosition(self):
-        return '{}:{}:{}:{}'.format(
-            round(self.m_boundary.x(), 8),
-            round(self.m_boundary.y(), 8),
-            round(self.m_boundary.width(), 8),
-            round(self.m_boundary.height(), 8))
+    def setId(self, m_id):
+        self.m_id=m_id
+
+    def page(self):
+        return self.m_page
+
+    def setPage(self, page):
+        self.m_page=page
+
+    def color(self):
+        return self.m_data.style().color().name()
+
+    def type(self):
+        return self.m_data.subType()
+
+    def data(self):
+        return self.m_data
+
+    def setData(self, data):
+        self.m_data=data
 
     def boundary(self):
-        if hasattr(self, 'm_boundary'): return self.m_boundary
-        position=self.position()
-        b=[float(e) for e in position.split(':')]
-        return QRectF(b[0], b[1], b[2], b[3])
+        return self.m_data.boundary()
+
+    def position(self):
+        return '{}:{}:{}:{}'.format(
+            round(self.boundary().x(), 8),
+            round(self.boundary().y(), 8),
+            round(self.boundary().width(), 8),
+            round(self.boundary().height(), 8))
+
+    def setColor(self, color):
+        style.setColor(color)
+        self.m_data.setStyle(style)

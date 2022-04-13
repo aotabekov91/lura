@@ -31,7 +31,10 @@ class ItemMenu(Menu):
             self.m_parent.window.view().jumpToPage(pageNumber, left, top)
 
         elif item.itemData().getField('kind')=='document':
-            self.m_parent.window.open(item.itemData().getField('filePath'))
+            filePath=self.m_parent.window.plugin.tables.get(
+                    'documents', {'id':item.itemData().id()}, 'loc')
+            if filePath is None: return
+            self.m_parent.window.open(filePath)
 
     def openInWeb(self):
         self.hide()

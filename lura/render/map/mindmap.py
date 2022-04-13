@@ -124,7 +124,10 @@ class MapDocument(BaseMapDocument):
                 # if data is None: continue
 
                 if element.attrib['p_eid'] in items:
-                    data=Data(element, self.parent().plugin)
+                    kind=element.tag
+                    m_id=element.attrib['id']
+                    title=element.attrib.get('title', '')
+                    data=Data(kind, m_id, title, self.parent().plugin)
                     item=Item(data)
                     self.m_collection[data]=item
                     if hasattr(data, 'annotationAdded'):

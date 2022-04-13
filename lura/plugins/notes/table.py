@@ -8,7 +8,7 @@ class NotesTable(Table):
             'id integer PRIMARY KEY AUTOINCREMENT',
             'did integer',
             'title text',
-            'content text',
+            'loc text',
             'foreign key(did) references documents(id)',
 
         ]

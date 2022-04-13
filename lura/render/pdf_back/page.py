@@ -1,30 +1,16 @@
 from PyQt5.QtCore import *
 from popplerqt5 import Poppler
 
+from lura.render.base import Page
 from .annotation import PdfAnnotation
 
-class PdfPage:
-
-    def __init__(self, popplerPage):
-        self.m_data = popplerPage
+class PdfPage(Page):
 
     def document(self):
         return self.m_document
 
     def setDocument(self, document):
         self.m_document=document
-
-    def pageNumber(self):
-        return self.m_pageNumber
-
-    def setPageNumber(self, number):
-        self.m_pageNumber=number
-
-    def pageItem(self):
-        return self.m_pageItem
-
-    def setPageItem(self, pageItem):
-        self.m_pageItem=pageItem
 
     def size(self):
         return self.m_data.pageSizeF()
@@ -48,9 +34,12 @@ class PdfPage:
 
     def annotate(self, boundary, color, kind, *args, **kwargs):
         if kind=='highlightAnnotation':
-            annotation=self.addHighlightAnnotation(boundary, color)
+            data= self.addHighlightAnnotation(boundary, color)
         elif kind=='textAnnotation':
-            annotation=self.addTextAnnotation(boundary, color)
+            data= self.addTextAnnotation(boundary, color)
+        print(data.contents())
+        annotation=PdfAnnotation()
+        annotation.setAnnotationData(data)
         annotation.setPage(self)
         return annotation
 
@@ -84,7 +73,7 @@ class PdfPage:
         annotation.setStyle(style)
         annotation.setBoundary(bound)
         self.m_data.addAnnotation(annotation)
-        return PdfAnnotation(annotation)
+        return annotation
 
     def addTextAnnotation(self, boundary, color):
 
@@ -101,27 +90,28 @@ class PdfPage:
         annotation.setPopup(popup)
 
         self.m_data.addAnnotation(annotation)
-        return PdfAnnotation(annotation)
+        return annotation
 
     def removeAnnotation(self, annotation):
-        for rAnnotation in self.annotations():
+        for rAnnotation in self.m_data.annotations():
             if rAnnotation.boundary()!=annotation.boundary(): continue
-            self.m_data.removeAnnotation(rAnnotation.data())
+            self.m_data.removeAnnotation(rAnnotation)
 
     def annotations(self):
 
         annotations = []
 
-        for annotation in self.m_data.annotations():
-            kind = annotation.subType()
+        for data in self.m_data.annotations():
+            kind = data.subType()
             cond = kind in [
                 Poppler.Annotation.AText,
                 Poppler.Annotation.AHighlight,
                 Poppler.Annotation.AFileAttachment]
-            if cond:
-                annotation=PdfAnnotation(annotation)
+            if cond: 
+                annotation=PdfAnnotation()
+                annotation.setAnnotationData(data)
                 annotation.setPage(self)
-                annotations.append(annotation)
+                annotations+=[annotation]
         return annotations
 
 
@@ -166,4 +156,3 @@ class PdfPage:
 
     def data(self):
         return self.m_data
-

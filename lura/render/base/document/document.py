@@ -1,5 +1,5 @@
 from .. import Page
-from lura.render.pdf.model import PdfPlugin
+# from lura.render.pdf.model import PdfPlugin
 
 from PyQt5.QtCore import *
 from lura.core.widgets.tree import DocumentTreeWidget
@@ -56,7 +56,6 @@ class Document(QObject):
         self.tagDB=db
 
     def tags(self):
-        print(self.kind(), self.id())
         return self.tagDB.elementTags(self)
 
     def setTags(self, tags):

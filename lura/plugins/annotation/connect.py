@@ -15,19 +15,21 @@ class DatabaseConnector:
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
         self.db = self.m_parent.window.plugin.tables.annotations
 
-    def get(self, did=None, aid=None):
-        if did is not None:
-            return self.db.getRow({'field':'did', 'value':did})
-        if aid is not None:
-            return self.db.getRow({'field':'aid', 'value':aid})[0]
+    # def get(self, did=None, aid=None):
+    #     if did is not None:
+    #         return self.db.getRow({'field':'did', 'value':did})
+    #     if aid is not None:
+    #         return self.db.getRow({'field':'aid', 'value':aid})[0]
+
+    def checkDocument(self, document):
+        for ann in document.annotations():
+            self.register(ann)
 
     def register(self, annotation):
 
-        annotation.setDB(self.db)
-
         did = annotation.page().document().id()
         page = annotation.page().pageNumber()
-        position=annotation.getPosition()
+        position=annotation.position()
 
         data = {'did': did, 'page': page, 'position': position}
         criteria=[{'field':k, 'value':v} for k,v in data.items()]
@@ -35,6 +37,22 @@ class DatabaseConnector:
         aData=self.db.getRow(criteria)
 
         if len(aData)==0: 
+
+            b=annotation.boundary()
+            size=annotation.page().size()
+            t=QTransform().scale(size.width(), size.height())
+            topLeft=b.topLeft()
+            bottomRight=b.bottomRight()
+            b.setTopLeft(t.map(topLeft))
+            b.setBottomRight(t.map(bottomRight))
+            text=annotation.page().text(b)
+
+            for f in ['"', '\n']:
+                text=text.replace(f, ' ')
+
+            data['content']=text
+            data['color']=annotation.color()
+
             self.db.writeRow(data)
             aData=self.db.getRow(criteria)
 

@@ -42,7 +42,7 @@ class Documents(QObject):
         names=[]
 
         for i, d in enumerate(data):
-            meta=self.window.plugin.metadata.get(d['id'])
+            meta=self.window.plugin.tables.get('metadata', {'did': d['id']})
             if meta is None:
                 names+=[locs[i]]
             else:
@@ -66,30 +66,14 @@ class Documents(QObject):
             self.window.open(filePath)
         self.toggle()
 
-    def getByLoc(self, filePath):
-        return self.db.getRow({'field':'loc', 'value':filePath})
-
-    def getData(self, did):
-        return self.db.getRow({'field':'id', 'value':did})[0]
-
-    def filePath(self, did):
-        return self.db.getRow({'field':'id', 'value':did})[0]['loc']
-
-    def get(self, did):
-        documentData=self.db.getRow({'field':'id', 'value':did})[0]
-        return self.window.buffer.loadDocument(documentData['loc'])
-
     def register(self, document):
-        filePath=document.getField('filePath')
-        data=self.getByLoc(filePath)
-        if len(data)==0: 
+        filePath=document.filePath()
+        data=self.window.plugin.tables.get('documents', {'loc':filePath})
 
-            data= self.db.getRow({'field': 'loc', 'value': filePath})
-            if len(data) == 0: self.db.writeRow({'loc': filePath})
-            data= self.db.getRow({'field': 'loc', 'value': filePath})
+        if data is None:
 
-        document.setId(data[0]['id'])
+            self.window.plugin.tables.write('documents', {'loc': filePath})
+            data=self.window.plugin.tables.get('documents', {'loc':filePath})
+
+        document.setId(data['id'])
         self.window.documentRegistered.emit(document)
-
-    def getAll(self):
-        return self.db.getAll()

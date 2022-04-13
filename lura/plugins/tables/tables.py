@@ -16,6 +16,49 @@ class Tables(OrderedDict):
             tableName=table.__class__.__name__.lower().replace('table', '') 
         setattr(self, tableName, table)
 
+    def getTable(self, tableName):
+        return getattr(self, tableName, None)
+
+    def getAll(self, tableName):
+        table=self.getTable(tableName)
+        if table is not None: return table.getAll()
+
+    def get(self, tableName, conDict, fieldName=None, unique=True):
+        table=self.getTable(tableName)
+        if table is None: return
+
+        conds=[]
+        for key in conDict.keys():
+            conds+=[{'field':key, 'value':conDict[key]}]
+        results=table.getRow(conds)
+
+        if len(results)==0: return
+
+        if len(results)>1:
+            if fieldName is None:
+                return results
+            else:
+                return [r[fieldName] for r in results]
+        else:
+            if not unique: return results
+
+            if fieldName is None:
+                return results[0]
+            else:
+                return results[0][fieldName]
+
+    def write(self, tableName, conDict):
+        table=self.getTable(tableName)
+        if table is None: return
+        table.writeRow(conDict, update=True)
+
+    def update(self, tableName, conDict, updateDict):
+        table=self.getTable(tableName)
+        if table is None: return
+        cond=[]
+        for key in conDict.keys():
+            cond+=[{'field':key, 'value':conDict[key]}]
+        table.updateRow(cond, updateDict)
 
 class Table:
 
@@ -35,8 +78,11 @@ class Table:
         con = connect(self.loc)
         con.row_factory = Row
         cur=con.cursor()
-        cur.execute(sql)
-        con.commit()
+        try:
+            cur.execute(sql)
+            con.commit()
+        except:
+            pass
         return cur
 
     def getCondition(self, criteria):

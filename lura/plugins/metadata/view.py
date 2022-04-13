@@ -105,9 +105,6 @@ class Metadata(QWidget):
     def register(self, document):
         self.db.register(document)
 
-    def get(self, did):
-        return self.db.get(did)
-
 class MQLineEdit(QTextEdit):
     def __init__(self, parent, meta, field, metatable):
         super().__init__(parent)

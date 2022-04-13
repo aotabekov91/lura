@@ -15,6 +15,7 @@ class Annotation(QObject):
         self.window=parent
         self.creator=Creator(self, settings)
         self.display=Display(self.window, settings)
+        self.db=DatabaseConnector(self)
         self.s_settings=settings
         self.globalKeys={
                 'Ctrl+h': (
@@ -30,14 +31,11 @@ class Annotation(QObject):
         self.setup()
 
     def setup(self):
-    
-        self.db=DatabaseConnector(self)
 
-        self.window.documentRegistered.connect(self.register)
-        self.window.annotationCreated.connect(self.registerAnnotation)
+        self.window.documentRegistered.connect(self.db.checkDocument)
+        self.window.annotationCreated.connect(self.db.register)
 
-        self.window.mousePressEventOccured.connect(
-                self.on_page_mousePressEvent)
+        self.window.mousePressEventOccured.connect(self.on_page_mousePressEvent)
 
     def on_page_mousePressEvent(self, event, pageItem, view):
 
@@ -81,17 +79,11 @@ class Annotation(QObject):
     def getBy(self, condition):
         return self.db.getBy(condition)
 
-    def registerAnnotation(self, annotation):
-        return self.db.register(annotation)
-
     def registrator(self):
         return self.db
 
     def addAnnotation(self, *args, **kwargs):
         return self.creator.addAnnotation(*args, **kwargs)
-
-    def register(self, document):
-        [self.registerAnnotation(a) for a in document.annotations()]
 
     def colorSystem(self):
         return self.creator.system

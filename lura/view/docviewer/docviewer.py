@@ -237,7 +237,7 @@ class DocumentView(QGraphicsView):
             self.m_pages = pages
             self.m_document = document
             self.preparePages()
-            self.prepareAnnotations()
+            # self.prepareAnnotations()
 
     def preparePages(self):
 
@@ -259,9 +259,9 @@ class DocumentView(QGraphicsView):
             pageItem.hoverMoveEventOccured.connect(self.on_hoverMoveEventOccured)
             pageItem.pageHasBeenJustPainted.connect(self.on_pageHasBeenJustPainted)
 
-    def prepareAnnotations(self):
-        for annotation in self.document().annotations():
-            annotation.wasModified.connect(annotation.page().pageItem().wasModified)
+    # def prepareAnnotations(self):
+    #     for annotation in self.document().annotations():
+    #         annotation.wasModified.connect(annotation.page().pageItem().wasModified)
 
     def on_mouseDoubleClickOccured(self, *args):
         self.mouseDoubleClickOccured.emit(*args, self)
@@ -428,7 +428,7 @@ class DocumentView(QGraphicsView):
 
     def save(self, filePath=False, withChanges=True):
 
-        if filePath is False: filePath=self.m_document.getField('filePath')
+        if filePath is False: filePath=self.m_document.filePath()
 
         tFile=QTemporaryFile()
 

@@ -29,9 +29,6 @@ class MapView(QWidget):
 
         self.setup()
 
-    # def resizeEvent(self, event):
-    #     self.m_view.setFixedWidth()
-
     def setup(self):
 
         self.m_layout=QVBoxLayout(self)
