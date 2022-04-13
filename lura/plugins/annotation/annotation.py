@@ -10,6 +10,14 @@ from .connect import DatabaseConnector
 
 class NQWidget(AQWidget):
 
+    def on_titleChanged(self, text):
+        super().on_titleChanged(text)
+        self.m_window.plugin.annotation.display.update()
+
+    def on_contentChanged(self):
+        super().on_contentChanged(text)
+        self.m_window.plugin.annotation.display.update()
+
     def keyPressEvent(self, event):
         if event.key()==Qt.Key_Escape:
             self.hide()

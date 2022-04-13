@@ -74,7 +74,7 @@ class Creator(QObject):
         annotation = page.annotate(boundary, color, 'highlightAnnotation')
         self.m_parent.db.register(annotation)
 
-        self.m_parent.display.update(page.document())
+        self.m_parent.display.load(page.document())
 
         return annotation
 

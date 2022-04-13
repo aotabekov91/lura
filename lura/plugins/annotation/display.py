@@ -24,6 +24,7 @@ class Display(QScrollArea):
         self.colorCombo = QComboBox()
         for f in ['All', 'Main', 'Definition', 'Question', 'Source']:
             self.colorCombo.addItem(f)
+        self.colorCombo.setCurrentText('All')
         self.colorCombo.currentTextChanged.connect(self.on_colorComboChanged)
 
         self.scrollableWidget=QWidget()
@@ -42,19 +43,21 @@ class Display(QScrollArea):
 
     def on_colorComboChanged(self):
         function = self.colorCombo.currentText()
-        self.update(self.window.view().document(), function)
+        self.load(self.window.view().document(), function)
 
     def on_viewChanged(self, view):
 
-        self.update(view.document())
+        self.load(view.document())
 
-    def update(self, document, function='All'):
+    def load(self, document=None, function=None):
+
+        if document is None: document=self.window.view().document()
 
         for i in reversed(range(self.scrollableWidget.m_layout.count())):
             self.scrollableWidget.m_layout.itemAt(i).widget().setParent(None)
 
         criteria={'did':document.id()}
-        if function!='All':
+        if function is not None:
             criteria['color']=self.colorCode[function]
 
         annotations = self.window.plugin.tables.get(
@@ -72,9 +75,12 @@ class Display(QScrollArea):
             aWidget = AQWidget(annotation['id'], self.window)
             self.scrollableWidget.m_layout.addWidget(aWidget)
 
-
         self.setWidget(self.group)
         self.setWidgetResizable(True)
+
+    def update(self):
+        for i in reversed(range(self.scrollableWidget.m_layout.count())):
+            self.scrollableWidget.m_layout.itemAt(i).widget().update()
 
     def toggle(self):
 
@@ -125,9 +131,14 @@ class AQWidget(QWidget):
             self.title.setStyleSheet(f'background-color: {color}')
             self.content.setStyleSheet(f'background-color: {color}')
 
-
         self.m_layout.addWidget(self.title)
         self.m_layout.addWidget(self.content)
+
+    def update(self):
+        self.title.setText(
+                self.m_data.get('annotations', {'id': self.m_id}, 'title'))
+        self.content.setPlainText(
+                self.m_data.get('annotations', {'id': self.m_id}, 'content'))
 
     def on_titleDoubleClick(self, event):
         aData=self.m_data.get('annotations', {'id':self.m_id})
@@ -136,7 +147,6 @@ class AQWidget(QWidget):
         b=aData['position'].split(':')
         topLeft=QPointF(float(b[0]), float(b[1]))
 
-        print(topLeft)
         self.m_window.view().jumpToPage(
                 pageNumber, topLeft.x(), .95*topLeft.y())
 
