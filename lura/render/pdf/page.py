@@ -104,9 +104,7 @@ class PdfPage:
         return PdfAnnotation(annotation)
 
     def removeAnnotation(self, annotation):
-        for rAnnotation in self.annotations():
-            if rAnnotation.boundary()!=annotation.boundary(): continue
-            self.m_data.removeAnnotation(rAnnotation.data())
+        self.m_data.removeAnnotation(annotation.data())
 
     def annotations(self):
 

@@ -69,7 +69,7 @@ class Display(QScrollArea):
 
         for annotation in self.m_annotations:
 
-            aWidget = AQWidget(annotation['id'], self.window.plugin.tables)
+            aWidget = AQWidget(annotation['id'], self.window)
             self.scrollableWidget.m_layout.addWidget(aWidget)
 
 
@@ -95,10 +95,11 @@ class Display(QScrollArea):
 
 class AQWidget(QWidget):
 
-    def __init__(self, aid, data):
+    def __init__(self, aid, window):
         super().__init__()
         self.m_id = aid
-        self.m_data = data
+        self.m_window=window
+        self.m_data = window.plugin.tables
         self.setup()
 
     def setup(self):
@@ -112,6 +113,7 @@ class AQWidget(QWidget):
         self.title = QLineEdit(title)
         self.title.setFixedHeight(25)
         self.title.textChanged.connect(self.on_titleChanged)
+        self.title.mouseDoubleClickEvent=self.on_titleDoubleClick
 
         self.content = QTextEdit(content)
         self.content.setMinimumHeight(80)
@@ -126,6 +128,17 @@ class AQWidget(QWidget):
 
         self.m_layout.addWidget(self.title)
         self.m_layout.addWidget(self.content)
+
+    def on_titleDoubleClick(self, event):
+        aData=self.m_data.get('annotations', {'id':self.m_id})
+        pageNumber=aData['page']
+
+        b=aData['position'].split(':')
+        topLeft=QPointF(float(b[0]), float(b[1]))
+
+        print(topLeft)
+        self.m_window.view().jumpToPage(
+                pageNumber, topLeft.x(), .95*topLeft.y())
 
     def on_titleChanged(self, text):
         self.m_data.update('annotations', {'id':self.m_id}, {'title':text})

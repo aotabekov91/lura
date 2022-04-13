@@ -78,7 +78,14 @@ class Creator(QObject):
 
         return annotation
 
-    def removeAnnotation(self, annotation):
+    def remove(self, annotation):
 
-        annotation.page().document().removeAnnotation(annotation)
+        aid=self.window.plugin.tables.get('annotations',
+                {'position':annotation.position(),
+                    'page':annotation.page().pageNumber(),
+                    'did': annotation.page().document().id()},
+                'id')
+        self.window.plugin.tables.remove('annotations', {'id': aid})
+        annotation.page().removeAnnotation(annotation)
+
         annotation.page().pageItem().refresh(dropCachedPixmap=True)

@@ -60,6 +60,14 @@ class Tables(OrderedDict):
             cond+=[{'field':key, 'value':conDict[key]}]
         table.updateRow(cond, updateDict)
 
+    def remove(self, tableName, conDict):
+        table=self.getTable(tableName)
+        if table is None: return
+        cond=[]
+        for key in conDict.keys():
+            cond+=[{'field':key, 'value':conDict[key]}]
+        table.removeRow(cond)
+
 class Table:
 
     def __init__(self, table, fields, loc='/home/adam/code/lura/lura.db'):
@@ -117,14 +125,12 @@ class Table:
 
     def removeRow(self, criteria):
         condition=self.getCondition(criteria)
-        sql = 'delete from {} where {}'.format(
-                self.table, condition) 
+        sql = f'delete from {self.table} where {condition}'
         self.execute(sql)
 
     def getRow(self, criteria):
         condition=self.getCondition(criteria)
-        sql = 'select * from {} where {}'.format(
-                self.table, condition)
+        sql = f'select * from {self.table} where {condition}'
         return self.query(sql)
 
     def getAll(self):

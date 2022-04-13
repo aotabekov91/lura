@@ -15,12 +15,6 @@ class DatabaseConnector:
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
         self.db = self.m_parent.window.plugin.tables.annotations
 
-    # def get(self, did=None, aid=None):
-    #     if did is not None:
-    #         return self.db.getRow({'field':'did', 'value':did})
-    #     if aid is not None:
-    #         return self.db.getRow({'field':'aid', 'value':aid})[0]
-
     def checkDocument(self, document):
         for ann in document.annotations():
             self.register(ann)

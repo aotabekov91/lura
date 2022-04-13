@@ -61,7 +61,7 @@ class Annotation(QObject):
             action=pageItem.m_menu.exec_(event.screenPos())
 
             if action!=deleteAction: return 
-            self.creator.removeAnnotation(annotation)
+            self.creator.remove(annotation)
 
     def activateProxyWidget(self, annotation, event, view):
 
@@ -71,7 +71,7 @@ class Annotation(QObject):
                     'did': annotation.page().document().id()},
                 'id')
 
-        widget=NQWidget(aid, self.window.plugin.tables)
+        widget=NQWidget(aid, self.window)
         annotation.page().pageItem().addProxy(
                 event.pos(), widget, widget.hide)
 
