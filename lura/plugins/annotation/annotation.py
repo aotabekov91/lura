@@ -5,8 +5,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from .create import Creator
-from .display import Display
+from .display import Display, AQWidget
 from .connect import DatabaseConnector
+
+class NQWidget(AQWidget):
+
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_Escape:
+            self.hide()
+        else:
+            super().keyPressEvent(event)
 
 class Annotation(QObject):
 
@@ -48,7 +56,7 @@ class Annotation(QObject):
 
         elif event.button()==Qt.RightButton:
 
-            deleteAction=QAction('Delete annotation')
+            deleteAction=QAction('Delete')
             pageItem.setActions([deleteAction])
             action=pageItem.m_menu.exec_(event.screenPos())
 
@@ -57,11 +65,15 @@ class Annotation(QObject):
 
     def activateProxyWidget(self, annotation, event, view):
 
-        widget=annotation.proxyWidget()
+        aid=self.window.plugin.tables.get('annotations',
+                {'position':annotation.position(),
+                    'page':annotation.page().pageNumber(),
+                    'did': annotation.page().document().id()},
+                'id')
+
+        widget=NQWidget(aid, self.window.plugin.tables)
         annotation.page().pageItem().addProxy(
-                event.pos(), widget, 
-                self.window.view().deactivateProxyWidget)
-        view.activateProxyWidget(widget)
+                event.pos(), widget, widget.hide)
 
     def findAnnotation(self, event, pageItem, view):
 

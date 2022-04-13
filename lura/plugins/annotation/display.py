@@ -102,7 +102,9 @@ class AQWidget(QWidget):
         self.setup()
 
     def setup(self):
-        self.layout = QVBoxLayout(self)
+        self.m_layout = QVBoxLayout(self)
+        self.m_layout.setContentsMargins(0, 0, 0, 0)
+        self.m_layout.setSpacing(0)
 
         title = self.m_data.get('annotations', {'id': self.m_id}, 'title')
         content = self.m_data.get('annotations', {'id': self.m_id}, 'content')
@@ -121,10 +123,9 @@ class AQWidget(QWidget):
             self.title.setStyleSheet(f'background-color: {color}')
             self.content.setStyleSheet(f'background-color: {color}')
 
-        self.layout.setContentsMargins(0, 0, 0, 0)
 
-        self.layout.addWidget(self.title)
-        self.layout.addWidget(self.content)
+        self.m_layout.addWidget(self.title)
+        self.m_layout.addWidget(self.content)
 
     def on_titleChanged(self, text):
         self.m_data.update('annotations', {'id':self.m_id}, {'title':text})

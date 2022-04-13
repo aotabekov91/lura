@@ -344,12 +344,6 @@ class DocumentView(QGraphicsView):
                     visibleHeight=intersected.height()
                     self.m_currentPage=item.index()+1
 
-    def keyPressEvent(self, event):
-        if self.proxyWidget:
-            self.proxyWidget.keyPressEvent(event)
-        else:
-            self.parent().keyPressEvent(event)
-
     def scaleMode(self):
         return self.s_settings['scaleMode']['currentMode']
 
@@ -409,14 +403,6 @@ class DocumentView(QGraphicsView):
     def activateRubberBand(self, listener=None):
         for page in self.m_pageItems:
             page.activateRubberBand(listener)
-
-    def activateProxyWidget(self, widget):
-        self.proxyWidget=widget
-        widget.setFocus()
-
-    def deactivateProxyWidget(self):
-        self.proxyWidget=None
-        self.setFocus()
 
     def updateSceneAndView(self, left=0., top=0.):
 
