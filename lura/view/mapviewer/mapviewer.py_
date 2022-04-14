@@ -252,6 +252,5 @@ class MapView(QWidget):
         pass
 
     def keyPressEvent(self, event):
-        print(self.__class__.__name__)
         if event.key()==Qt.Key_Q:
             self.window.close()

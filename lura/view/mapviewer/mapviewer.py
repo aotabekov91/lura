@@ -4,22 +4,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.widgets import Menu
 from lura.core.widgets.tree import Item
 from lura.core.widgets.tree import Container
 
-from lura.core.widgets.tree.menus import MapMenu
-from lura.core.widgets.tree.menus import ItemMenu
-from lura.core.widgets.tree.menus import SortMenu
-from lura.core.widgets.tree.menus import ChangeMenu
-from lura.core.widgets.tree.menus import ToggleMenu
-
-# from lura.core.widgets.tree import TreeView
 from lura.core.widgets.custom import CustomTreeMap
-
-from lura.core.widgets import Filter
-from lura.core.widgets import Quickmark
-
 
 class MapView(QWidget):
 
@@ -34,14 +22,19 @@ class MapView(QWidget):
 
         self.m_layout = QVBoxLayout(self)
         self.m_layout.setSpacing(0)
+        self.m_layout.setContentsMargins(0,0,0,0)
         self.m_title = QLineEdit('Mindmap')
         self.m_view = CustomTreeMap(self)
+
+        commandList=['addFolder', 'addDocument']
+        self.m_menu=Menu(self, commandList)
 
         self.m_view.open = self.openNode
         self.m_view.update = self.updateMap
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
+        self.m_layout.addWidget(self.m_menu)
 
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
@@ -184,3 +177,56 @@ class MapView(QWidget):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
+
+    def menu(self):
+        self.m_menu.toggle()
+
+class Menu(QWidget):
+
+    def __init__(self, parent, commandList):
+        super().__init__(parent)
+        self.m_parent=parent
+        self.m_commands=commandList
+        self.hide()
+        self.setup()
+
+    def setup(self):
+        self.m_layout=QVBoxLayout(self)
+        self.m_layout.setSpacing(0)
+        self.m_layout.setContentsMargins(0, 0,0,0)
+
+        self.list=QListWidget()
+        self.edit=QLineEdit()
+        self.edit.textChanged.connect(self.on_textChanged)
+
+        self.m_layout.addWidget(self.list)
+        self.m_layout.addWidget(self.edit)
+
+        self.addCommands()
+
+    def on_textChanged(self, text):
+        if self.list.count()==1:
+            command=self.list.item(0).text()
+            self.hide()
+            self.m_parent.setFocus()
+            func=getattr(self.m_parent, command)
+            return func()
+        self.list.clear()
+        for command in self.m_commands:
+            if text in command:
+                self.list.addItem(command)
+
+    def addCommands(self):
+
+        for command in self.m_commands:
+            self.list.addItem(command)
+
+    def toggle(self):
+        if self.isVisible():
+            self.hide()
+        else:
+            self.show()
+            self.list.clear()
+            self.addCommands()
+            self.edit.clear()
+            self.edit.setFocus()

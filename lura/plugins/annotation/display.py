@@ -17,9 +17,10 @@ class Display(QScrollArea):
 
         self.activated = False
 
-        
         self.group=QWidget()
         self.group.m_layout=QVBoxLayout(self.group)
+        self.group.m_layout.setContentsMargins(0, 0, 0, 0)
+        self.setStyleSheet("background-color: white;")
 
         self.colorCombo = QComboBox()
         for f in ['All', 'Main', 'Definition', 'Question', 'Source']:
@@ -29,14 +30,11 @@ class Display(QScrollArea):
 
         self.scrollableWidget=QWidget()
         self.scrollableWidget.m_layout=QVBoxLayout(self.scrollableWidget)
-
         self.scrollableWidget.m_layout.setContentsMargins(0, 0, 0, 0)
 
         self.group.m_layout.addWidget(self.colorCombo)
         self.group.m_layout.addWidget(self.scrollableWidget)
         self.group.m_layout.addStretch(1)
-
-        self.group.m_layout.setContentsMargins(0, 0, 0, 0)
 
         self.window.viewChanged.connect(self.on_viewChanged)
         self.window.setTabLocation(self, self.location, self.name)
@@ -57,7 +55,7 @@ class Display(QScrollArea):
             self.scrollableWidget.m_layout.itemAt(i).widget().setParent(None)
 
         criteria={'did':document.id()}
-        if function is not None:
+        if function is not None and function!='All':
             criteria['color']=self.colorCode[function]
 
         annotations = self.window.plugin.tables.get(

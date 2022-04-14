@@ -37,7 +37,6 @@ class PdfPage(Page):
             data= self.addHighlightAnnotation(boundary, color)
         elif kind=='textAnnotation':
             data= self.addTextAnnotation(boundary, color)
-        print(data.contents())
         annotation=PdfAnnotation()
         annotation.setAnnotationData(data)
         annotation.setPage(self)

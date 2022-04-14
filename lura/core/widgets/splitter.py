@@ -12,12 +12,18 @@ class DisplaySplitter(QSplitter):
 
         self.leftSP=QSplitter(Qt.Vertical, self)
         self.left=QVBoxLayout(self.leftSP)
+        self.left.setContentsMargins(0,0,0,0)
+        self.left.setSpacing(0)
 
         self.centerSP=QSplitter(Qt.Vertical, self)
         self.center=QVBoxLayout(self.centerSP)
+        self.center.setContentsMargins(0,0,0,0)
+        self.center.setSpacing(0)
 
         self.rightSP=QSplitter(Qt.Vertical, self)
         self.right=QVBoxLayout(self.rightSP)
+        self.right.setContentsMargins(0,0,0,0)
+        self.right.setSpacing(0)
 
     def clear(self, layout):
         for index in range(layout.count()):

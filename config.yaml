@@ -21,10 +21,9 @@ DocumentView:
 
 MindMapView:
   shortcuts:
-    update: u 
-    # addWatch: c
+    menu: m
     addFolder: y
-    addDocument: w
+    addDocument: D
 
 BrowserView:
   shortcuts:

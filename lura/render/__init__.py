@@ -9,8 +9,6 @@ from .pdf import PdfAnnotation
 from .map import MapDocument
 
 def loadDocument(filePath):
-    print(filePath)
-    if not type(filePath)==str: print(dict(filePath))
     if filePath.lower().endswith('pdf'): 
         return PdfDocument(filePath)
     # if filePath.lower().startswith('http'): 

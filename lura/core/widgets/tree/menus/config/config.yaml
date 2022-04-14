@@ -1,7 +1,4 @@
 ToggleMenu:
   toggleColor: r
-PasteMenu:
-  pasteBelow: p
-  pasteAbove: P 
 SortMenu:
   sortByTitle: t

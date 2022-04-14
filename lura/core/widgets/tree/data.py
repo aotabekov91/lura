@@ -122,9 +122,6 @@ class BaseTreeWidget(QWidget):
             if self.m_quoteEdit.isVisible(): height+=self.m_quoteEdit.height()+2
         return height
 
-    def keyPressEvent(self, event):
-        print(self.__class__.__name__)
-
     def change(self, kind):
         if not hasattr(self, f'm_{kind}Edit'): return
         edit=getattr(self, f'm_{kind}Edit')
@@ -183,7 +180,6 @@ class CQTextEdit(QPlainTextEdit):
             self.sizeChanged.emit()
 
     def keyPressEvent(self, event):
-        print(self.__class__.__name__)
         if event.key()==Qt.Key_Escape:
             self.parent().setFocus()
             event.accept()

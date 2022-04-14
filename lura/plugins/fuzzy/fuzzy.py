@@ -28,13 +28,16 @@ class Fuzzy(QWidget):
         self.window.setTabLocation(self, self.location, self.name)
 
         self.list = QListWidget(self)
+        self.list.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.list.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.editor = QLineEdit(self)
 
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0,0,0,0)
         self.layout.addWidget(self.editor)
         self.layout.addWidget(self.list)
-        self.setLayout(self.layout)
 
         self.editor.returnPressed.connect(self.act)
         self.editor.textChanged.connect(self.compare)
@@ -285,7 +288,6 @@ class Fuzzy(QWidget):
         self.toggle(client)
 
     def keyPressEvent(self, event):
-        print(self.__class__.__name__)
         if event.key()==Qt.Key_Escape:
             if hasattr(self.client, 'setFocus'):
                 self.client.setFocus()

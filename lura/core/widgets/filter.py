@@ -50,8 +50,6 @@ class Filter(QWidget):
             child=parent.child(index)
 
             if conditions.tag:
-                print(conditions.tag)
-                print(child.itemData().tags())
                 if not conditions.tag in child.itemData().tags():
                     self.m_tree.filterOut(child)
 

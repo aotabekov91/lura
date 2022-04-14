@@ -76,7 +76,6 @@ class SortMenu(Menu):
             if not hasattr(item.child(index).itemData, 'page'): return
             pageNumbers+=[item.child(index).itemData().page().pageNumber()]
 
-        print(pageNumbers)
         sortedChildren=[x for _, x in sorted(zip(pageNumbers, children), key=lambda pair: pair[0])]
 
         copy=item.copy(shallow=True)
