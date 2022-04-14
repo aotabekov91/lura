@@ -57,8 +57,10 @@ class WindowManager(QMainWindow):
         # TODO: settings -> config.ini
         # self.settings=settings
         self.m_view=None
-        self.setStyleSheet("background-color: white;")
-        self.setStyleSheet("separator{ width:0px}")
+        # self.setStyleSheet("background-color: black;")
+        self.setStyleSheet("QWidget {color:white; background-color:black}")
+        # self.setStyleSheet("QScrollArea {color:white; background-color:black}")
+        # self.setStyleSheet("color:white")
 
         self.setAcceptDrops(True)
         self.statusBar().setSizeGripEnabled(False)
@@ -140,11 +142,11 @@ class WindowManager(QMainWindow):
         for name, loc in locs.items():
 
             dockWidget = QDockWidget(self)
-            dockWidget.setStyleSheet("background-color: white;")
+            # dockWidget.setStyleSheet("background-color: white;")
             # dockWidget.setFeatures(QDockWidget.NoDockWidgetFeatures)
 
             stackWidget= QStackedWidget(self)
-            stackWidget.setStyleSheet("background-color: white;")
+            # stackWidget.setStyleSheet("background-color: white;")
 
             dockWidget.setWidget(stackWidget)
 

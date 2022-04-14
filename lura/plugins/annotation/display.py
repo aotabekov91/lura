@@ -20,7 +20,7 @@ class Display(QScrollArea):
         self.group=QWidget()
         self.group.m_layout=QVBoxLayout(self.group)
         self.group.m_layout.setContentsMargins(0, 0, 0, 0)
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("background-color: black; color: white")
 
         self.colorCombo = QComboBox()
         for f in ['All', 'Main', 'Definition', 'Question', 'Source']:
@@ -126,8 +126,8 @@ class AQWidget(QWidget):
 
         color=self.m_data.get('annotations', {'id': self.m_id}, 'color')
         if color is not None:
-            self.title.setStyleSheet(f'background-color: {color}')
-            self.content.setStyleSheet(f'background-color: {color}')
+            self.title.setStyleSheet(f'background-color: {color}; color: black')
+            self.content.setStyleSheet(f'background-color: {color}; color: black')
 
         self.m_layout.addWidget(self.title)
         self.m_layout.addWidget(self.content)
