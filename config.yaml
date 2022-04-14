@@ -22,8 +22,6 @@ DocumentView:
 MindMapView:
   shortcuts:
     menu: m
-    addFolder: y
-    addDocument: D
 
 BrowserView:
   shortcuts:

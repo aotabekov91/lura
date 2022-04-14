@@ -170,6 +170,13 @@ class MapView(QWidget):
         for index in range(item.rowCount()):
             self.updateMap(item.child(index))
         if item!=self.m_view.model().invisibleRootItem():
+            if item.kind()!='container':
+                r=self.window.plugin.tables.get(
+                        item.kind(), {'id':item.id()}, 'id')
+                if r is None:
+                    parent=item.parent()
+                    if parent is None: parent=self.m_view.model().invisibleRootItem()
+                    parent.takeRow(item.row())
             if item.kind()=='document':
                 self.addAnnotations(item)
 

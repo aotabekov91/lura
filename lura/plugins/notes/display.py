@@ -18,6 +18,7 @@ class Display(QWidget):
     def setup(self):
 
         self.m_layout=QVBoxLayout(self)
+        self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0, 0, 0, 0)
 
         self.activated=False
@@ -64,11 +65,13 @@ class NQWidget(QWidget):
     def setup(self):
 
         self.m_layout=QVBoxLayout(self)
-        self.m_layout.setContentsMargins(10, 10, 10, 10)
+        self.m_layout.setContentsMargins(0, 0, 0, 0)
+        self.m_layout.setSpacing(0)
 
         widget=QWidget()
         widget.m_layout=QHBoxLayout(widget)
         widget.m_layout.setContentsMargins(0, 0, 0, 0)
+        widget.m_layout.setSpacing(0)
 
         self.title=QLineEdit()
         self.title.textChanged.connect(self.on_titleChanged)

@@ -58,6 +58,7 @@ class WindowManager(QMainWindow):
         # self.settings=settings
         self.m_view=None
         self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("separator{ width:0px}")
 
         self.setAcceptDrops(True)
         self.statusBar().setSizeGripEnabled(False)
