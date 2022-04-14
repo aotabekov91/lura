@@ -5,6 +5,7 @@ Window:
     onlyMapView: 'Ctrl+Shift+1'
     onlyDocumentView: 'Ctrl+Shift+2'
     close: q
+    save: s
 
 DocumentView:
   shortcuts: 
@@ -17,11 +18,11 @@ DocumentView:
     fitToPageSize: a
     zoomIn: +
     zoomOut: '-'
-    save: s
 
 MindMapView:
   shortcuts:
-    updateMap: u 
+    update: u 
+    # addWatch: c
     addFolder: y
     addDocument: w
 

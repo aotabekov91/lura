@@ -36,7 +36,9 @@ class MapView(QWidget):
         self.m_layout.setSpacing(0)
         self.m_title = QLineEdit('Mindmap')
         self.m_view = CustomTreeMap(self)
+
         self.m_view.open = self.openNode
+        self.m_view.update = self.updateMap
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
@@ -57,10 +59,6 @@ class MapView(QWidget):
             m_action.triggered.connect(getattr(self, func))
             self.m_view.addAction(m_action)
 
-    def updateMap(self):
-        dItems = self.m_document.findItemByKind('document')
-        for dItem in dItems:
-            self.addAnnotations(dItem)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -69,14 +67,13 @@ class MapView(QWidget):
             return
         for a in annotations:
             aItem = Item('annotation', a['id'], self.window)
-            if self.isChild(aItem, item):
-                continue
+            if self.isChild(aItem, item): continue
             item.appendRow(aItem)
 
     def isChild(self, child, possibleParent):
         for index in range(possibleParent.rowCount()):
-            if child == possibleParent.child(index):
-                return True
+            p=possibleParent.child(index)
+            if child == p: return True
         return False
 
     def readjust(self):
@@ -141,12 +138,12 @@ class MapView(QWidget):
                 document = self.window.buffer.loadDocument(selected)
                 did = document.id()
             dItem = Item('document', did, self.window)
-            print(did)
             item = self.m_view.currentItem()
             if item is None:
                 item = self.m_view.model().invisibleRootItem()
-            item.appendRow(dItem)
+            if self.isChild(dItem, item): return
 
+            item.appendRow(dItem)
             self.addAnnotations(dItem)
 
     def save(self):
@@ -173,6 +170,15 @@ class MapView(QWidget):
             filePath = self.window.plugin.tables.get(
                 'documents', {'id': item.id()}, 'loc')
             self.window.open(filePath)
+
+    def updateMap(self, item=None):
+        if item is None:
+            item=self.m_view.model().invisibleRootItem()
+        for index in range(item.rowCount()):
+            self.updateMap(item.child(index))
+        if item!=self.m_view.model().invisibleRootItem():
+            if item.kind()=='document':
+                self.addAnnotations(item)
 
     def on_itemChanged(self, item):
         item.update()

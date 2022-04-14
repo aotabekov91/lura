@@ -9,7 +9,7 @@ class Item(QStandardItem):
     def __init__(self, kind, m_id, window, title=None):
         super().__init__()
         self.m_kind = kind.lower()
-        self.m_id = m_id
+        self.m_id = -99 if m_id=='None' else int(m_id)
         self.m_window = window
         self.m_data = window.plugin.tables
         self.setup(title)
@@ -57,4 +57,4 @@ class Item(QStandardItem):
         return self.m_id
 
     def __eq__(self, other):
-        return self.id()==other.id() and self.kind()==other.kind()
+        return self.kind()==other.kind() and self.id()==other.id()

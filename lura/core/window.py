@@ -226,3 +226,7 @@ class WindowManager(QMainWindow):
     def close(self):
         if self.m_view is not None: self.m_view.save()
         super().close()
+
+    def save(self):
+        if self.m_view is not None: self.m_view.save()
+

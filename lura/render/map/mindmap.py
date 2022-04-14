@@ -28,9 +28,6 @@ class MapDocument(BaseMapDocument):
         self.m_block=False
         self.m_collection={}
 
-    def isOnline(self):
-        return False
-
     def readSuccess(self):
         return True
 

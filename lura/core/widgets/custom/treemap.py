@@ -87,6 +87,9 @@ class CustomTreeMap(QTreeView):
             self.moveToUncle()
         elif event.key()==Qt.Key_O:
             self.open()
+        elif event.key()==Qt.Key_Period:
+            self.update()
+
 
     def unselect(self, item=None):
         if item is None: item = self.currentItem()
@@ -179,4 +182,7 @@ class CustomTreeMap(QTreeView):
             self.setCurrentIndex(first.index())
 
     def open(self):
+        pass
+
+    def update(self):
         pass
