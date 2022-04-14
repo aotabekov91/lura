@@ -2,10 +2,8 @@ Window:
   shortcuts:
     focusMapView: 'Ctrl+1'
     focusDocumentView: 'Ctrl+2'
-    focusBrowserView: 'Ctrl+3'
     onlyMapView: 'Ctrl+Shift+1'
     onlyDocumentView: 'Ctrl+Shift+2'
-    onlyBrowserView: 'Ctrl+Shift+3'
     close: q
 
 DocumentView:
@@ -23,21 +21,9 @@ DocumentView:
 
 MindMapView:
   shortcuts:
-    go: g 
-    mark: m
-    filter: f
-    unfilter: 'Shift+f' 
-    toggleMapMenu: 'Shift+m'
-    toggleItemMenu: 'Shift+i'
-    toggleMetaMenu: 'Shift+t'
-    toggleSortMenu: 'Shift+s'
-    toggleChangeMenu: 'Shift+c'
-  MapMenu:
-    renameMap: r
     updateMap: u 
-    addFolder: f
-    addDocument: d
-    addLiterature: l
+    addFolder: y
+    addDocument: w
 
 BrowserView:
   shortcuts:

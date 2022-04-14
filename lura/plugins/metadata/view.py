@@ -84,12 +84,11 @@ class Metadata(QWidget):
 
     def toggle(self, forceShow=False):
 
-        if self.window.document() is None:
-            return
+        if self.window.document() is None: return
 
         if not self.activated or forceShow:
 
-            self.m_id = self.window.document().id()
+            self.m_id = self.window.view().document().id()
             self.setKind(self.m_id)
             self.stack.setCurrentIndex(self.index)
             self.setFocus()
@@ -102,6 +101,7 @@ class Metadata(QWidget):
 
     def setKind(self, did):
         self.kind = self.window.plugin.tables.get('metadata', {'did':did}, 'kind')
+        if self.kind==None: self.kind='paper'
         self.dropdown.setCurrentText(self.kind.title())
         self.title.setPlainText(
                 self.window.plugin.tables.get(

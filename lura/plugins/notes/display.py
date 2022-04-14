@@ -11,7 +11,7 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='bottom'
+        self.location='left'
         self.name='Notes'
         self.setup()
 

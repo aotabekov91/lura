@@ -1,69 +1,60 @@
-from datetime import datetime
-
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .proxy import BaseProxyWidget
+from .container import Container
 
 class Item(QStandardItem):
 
-    def __init__(self, data):
-        super().__init__(data.getField('title'))
-        self.m_data=data
-        self.connect()
-        self.setCreateTime(datetime.now().timestamp())
-        self.setup()
+    def __init__(self, kind, m_id, window, title=None):
+        super().__init__()
+        self.m_kind = kind.lower()
+        self.m_id = m_id
+        self.m_window = window
+        self.m_data = window.plugin.tables
+        self.setup(title)
 
-    def setup(self):
-        self.m_proxy=None
+    def setup(self, title):
+        if self.m_kind == 'container':
+            self.m_plugin = Container(title)
+        elif self.m_kind == 'document':
+            self.m_table='metadata'
+            self.m_idName = 'did'
+        else:
+            self.m_table=self.m_kind+'s'
+            self.m_idName = 'id'
 
-    def setCreateTime(self, time):
-        self.m_createTime=time
+        title=self.get('title')
+        if title in ['', None]: title=f'{self.m_kind}: No title'
+        self.setText(title)
 
-    def createTime(self):
-        return self.m_createTime
-
-    def connect(self):
-        if hasattr(self.m_data, 'dataChanged'):
-            self.m_data.dataChanged.connect(self.emitDataChanged)
-
-    def setWidget(self, widget):
-        widget.sizeChanged.connect(self.emitDataChanged)
-        self.m_proxy=BaseProxyWidget(widget, self)
-
-    def proxy(self):
-        if self.m_proxy is None: 
-            self.setWidget(self.m_data.widget())
-        return self.m_proxy
-
-    def itemData(self):
-        return self.m_data
-
-    def copy(self, parent=None, shallow=False):
-        copy=Item(self.itemData())
-        if shallow: return copy
-        if parent is not None: parent.appendRow(copy)
-        for index in range(self.rowCount()):
-            self.child(index).copy(copy)
-        return copy
-
-    def isEqual(self, other):
-        if self.itemData().kind()==other.itemData().kind():
-            if self.itemData().id()==other.itemData().id():
-                return True
-        return False
-
-    def hide(self):
-        if self.m_proxy is None: self.setWidget(self.m_data.widget())
-        self.m_proxy.hide()
-
-    def show(self):
-        if self.m_proxy is None: self.setWidget
-        self.m_proxy.show()
+    def get(self, *args, **kwargs):
+        if self.m_kind == 'container':
+            return self.m_plugin.title()
+        else:
+            return self.m_data.get(
+                self.m_table, {self.m_idName: self.m_id}, *args, **kwargs)
 
     def update(self):
-        self.m_proxy.update()
+        if self.m_kind=='container':
+            self.m_plugin.setTitle(self.text())
+        else:
+            updateDict={'title':self.text()}
+            self.m_data.update(
+                self.m_table, {self.m_idName:self.m_id}, updateDict)
 
-    def isVisible(self):
-        return self.proxy().isVisible()
+    def copy(self, parent=None):
+        copy=Item(self.kind(), self.id(), self.m_window, self.get('title'))
+        if parent is not None: parent.appendRow(copy)
+        for index in range(self.rowCount()):
+            self.child(index).copy(parent=copy)
+        return copy
+
+    def kind(self):
+        return self.m_kind
+
+    def id(self):
+        return self.m_id
+
+    def __eq__(self, other):
+        return self.id()==other.id() and self.kind()==other.kind()

@@ -5,7 +5,6 @@ from PyQt5.QtCore import *
 from .base import BaseMapDocument
 
 from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import Data
 from lura.core.widgets.tree import Container
 
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring, fromstring
@@ -51,12 +50,11 @@ class MapDocument(BaseMapDocument):
 
         else:
 
-            element = SubElement(parentElement, item.itemData().kind())
-            element.set('id', str(item.itemData().id()))
+            element = SubElement(parentElement, item.kind())
+            element.set('id', str(item.id()))
             element.set('p_eid', parentElement.attrib['eid'])
-            element.set('createTime', str(item.createTime()))
-            if item.itemData().kind() == 'container':
-                element.set('title', item.itemData().title())
+            if item.kind() == 'container':
+                element.set('title', item.get('title'))
 
         self.m_count += 1
         element.set('eid', str(self.m_count))
@@ -102,46 +100,17 @@ class MapDocument(BaseMapDocument):
 
                 if element.tag == 'Mindmap': continue
 
-                # else:
-                    # item=Item(element)
-
-                # if element.tag == 'document':
-
-                #     data = p.documents.get(int(element.attrib['id']))
-
-                # elif element.tag == 'note':
-
-                #     data = p.notes.get(int(element.attrib['id']))
-
-                # elif element.tag == 'annotation':
-
-                #     data = p.annotation.get(aid=int(element.attrib['id']))
-
-                # elif element.tag == 'container':
-
-                #     data = Container(element.attrib['title'])
-
-                # if data is None: continue
-
                 if element.attrib['p_eid'] in items:
                     kind=element.tag
                     m_id=element.attrib['id']
                     title=element.attrib.get('title', '')
-                    data=Data(kind, m_id, title, self.parent().plugin)
-                    item=Item(data)
-                    self.m_collection[data]=item
-                    if hasattr(data, 'annotationAdded'):
-                        data.annotationRegistered.connect(self.on_annotationAdded)
+                    item=Item(kind, m_id, self.parent(), title)
                     items[element.attrib['p_eid']].appendRow(item)
                     items[element.attrib['eid']] = item
                     time=getattr(element.attrib, 'createTime', None)
                     if time is not None: item.setCreateTime(float(time))
 
             self.connectModel()
-
-
-    def on_annotationAdded(self, data):
-        self.annotationAdded.emit(self.m_collection[data])
 
     def connectModel(self):
         super().connectModel()

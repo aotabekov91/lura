@@ -11,9 +11,7 @@ class Notes(QObject):
         super().__init__(parent)
         self.window=parent
         self.display=Display(self, settings)
-        self.s_settings=settings
         self.baseFolder=settings['baseFolder']
-        self.location='left'
         self.name = 'notes'
         self.globalKeys={
                 'Ctrl+n': (

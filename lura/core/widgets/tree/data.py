@@ -2,43 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .container import Container
-
-class Data:
-    def __init__(self, kind, m_id, title, plugins):
-        self.kind=kind
-        self.m_id=m_id
-        self.plugins=plugins
-
-        if self.kind == 'document':
-            self.m_plugin = plugins.tables.metadata
-            self.row_id_name='did'
-        elif self.kind == 'note':
-            self.m_plugin = plugins.tables.notes
-            self.row_id_name='id'
-        elif self.kind == 'annotation':
-            self.m_plugin = plugins.tables.annotations
-            self.row_id_name='id'
-        elif self.kind == 'container':
-            self.m_plugin = Container(title)
-            self.row_id_name='id'
-
-    def getField(self, fieldName):
-        if fieldName=='filePath':
-            return self.plugins.documents.filePath(self.m_id)
-        elif fieldName=='kind':
-            return self.kind
-        else:
-            return self.m_plugin.getField(fieldName, self.row_id_name, self.m_id)
-
-
-    def tags(self):
-        return ''
-
-    def id(self):
-        return self.m_id
-
-
 class BaseTreeWidget(QWidget):
 
     sizeChanged=pyqtSignal()

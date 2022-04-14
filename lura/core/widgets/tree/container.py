@@ -14,13 +14,14 @@ class Container(QObject):
         self.m_kind='container'
         self.m_id=-999
 
-    def getField(self, fieldName, *args):
-        return getattr(self, f'm_{fieldName}')
+    def kind(self):
+        return self.m_kind
+
+    def id(self):
+        return self.m_id
+
+    def title(self):
+        return self.m_title
 
     def setTitle(self, title):
         self.m_title=title
-        self.dataChanged.emit()
-
-    def itemData(self):
-        return self
-

@@ -43,13 +43,10 @@ class Documents(QObject):
 
         for i, d in enumerate(data):
             meta=self.window.plugin.tables.get('metadata', {'did': d['id']})
-            if meta is None:
+            if meta is None or meta['title']=='':
                 names+=[locs[i]]
             else:
-                if meta['title']=='':
-                    names+=[locs[i]]
-                else:
-                    names+=[meta['title']]
+                names+=[meta['title']]
 
         self.fuzzy.setData(client, filePaths, names)
 

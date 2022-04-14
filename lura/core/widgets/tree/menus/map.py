@@ -7,14 +7,14 @@ class MapMenu(Menu):
 
     def __init__(self, parent):
         super().__init__(parent, commando=getConfiguration('MapMenu'))
+        self.m_parent=parent
         self.m_tree=parent.m_view
         self.setHeight(200)
 
     def addContainer(self):
         self.hide()
         item=self.m_tree.currentItem()
-        if item is None: item=self.m_tree.model().invisibleRootItem()
-        self.m_tree.model().addContainer(item)
+        self.m_parent.addContainer(item)
         self.m_tree.setFocus()
 
     def addNote(self):

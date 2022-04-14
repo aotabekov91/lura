@@ -1,29 +1,7 @@
-MapMenu:
-  addNote: n
-  addContainer: c
-ItemMenu:
-  open: o
-  openInWeb: w
-  openWithFocus: O
-  delete: d
-ChangeMenu:
-  changeTag: t 
-  changeTitle: T
-  changeAuthor: a
-  changeContent: c
 ToggleMenu:
-  toggleId: i
-  toggleTag: t
-  toggleMeta: m
   toggleColor: r
-  toggleQuote: q 
-  toggleAuthor: a
-  toggleContent: c
 PasteMenu:
   pasteBelow: p
   pasteAbove: P 
-  pasteInside: i
 SortMenu:
   sortByTitle: t
-  sortByContent: c
-  sortByPageNumber: p

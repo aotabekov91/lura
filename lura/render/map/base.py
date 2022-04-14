@@ -45,9 +45,6 @@ class BaseMapDocument(Document):
         if len(containers)>0: 
             if len(containers)>1: raise
             return containers[0]
-        cItem=Item(Container(title))
-        item.appendRow(cItem)
-        return cItem
 
     def findContainer(self, title, item):
 
