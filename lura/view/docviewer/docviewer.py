@@ -312,6 +312,24 @@ class DocumentView(QGraphicsView):
                 return {}
             return kind
 
+    def pageSmallUp(self):
+        visibleHeight=self.m_layout.visibleHeight(self.size().height())*.05
+        dx=self.verticalScrollBar().value() - visibleHeight
+        if dx>=0:
+            self.verticalScrollBar().setValue(int(dx+0.5))
+        else:
+            self.verticalScrollBar().setValue(0)
+        self.setCurrentPageFromVisiblePages()
+
+    def pageSmallDown(self):
+        visibleHeight=self.m_layout.visibleHeight(self.size().height())*.05
+        dx=self.verticalScrollBar().value() + visibleHeight
+        if dx<=self.scene().sceneRect().height():
+            self.verticalScrollBar().setValue(int(dx-0.5))
+        else:
+            self.verticalScrollBar().setValue(int(self.scene().sceneRect().height()))
+        self.setCurrentPageFromVisiblePages()
+
     def pageUp(self):
         visibleHeight=self.m_layout.visibleHeight(self.size().height())
         dx=self.verticalScrollBar().value() - visibleHeight

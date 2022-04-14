@@ -11,8 +11,10 @@ DocumentView:
   shortcuts: 
     nextPage: 'Ctrl+j'
     previousPage: 'Ctrl+k'
-    pageDown: j
-    pageUp: 'k'
+    pageDown: 'Shift+j' 
+    pageUp: 'Shift+k'
+    pageSmallDown: j 
+    pageSmallUp: k
     toggleContinuousMode: c
     fitToPageWidth: w
     fitToPageSize: a
