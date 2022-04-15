@@ -15,6 +15,7 @@ from lura.plugins.links import Links
 from lura.plugins.search import Search
 from lura.plugins.notes import Notes
 from lura.plugins.mindmap import MindMap
+from lura.plugins.command import Command
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.quickmarks import Quickmarks
@@ -39,19 +40,20 @@ class PluginManager(dict):
                     View,
                     Fuzzy,
                     Tables,
+                    Command,
                     Documents,
                     FileBrowser,
-                    # Lookup,
                     Metadata,
-                    # Buffers,
                     Tags,
                     Links,
-                    # Finder,
                     Annotation,
                     Bookmarks,
-                    # Quickmarks,
                     Notes,
                     MindMap,
+                    # Lookup,
+                    # Buffers,
+                    # Quickmarks,
+                    # Finder,
                     # Pomodoro,
                     # Pager,
                     # Outline,

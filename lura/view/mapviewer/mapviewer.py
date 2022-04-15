@@ -14,8 +14,6 @@ class MapView(QWidget):
     def __init__(self, parent, settings):
         super().__init__(parent)
         self.window = parent
-        self.s_settings = settings['MindMapView']
-
         self.setup()
 
     def setup(self):
@@ -26,32 +24,17 @@ class MapView(QWidget):
         self.m_title = QLineEdit('Mindmap')
         self.m_view = CustomTreeMap(self)
 
-        commandList=['addFolder', 'addDocument']
-        self.m_menu=Menu(self, commandList)
+        commandList=[('maf', 'addFolder'), ('mad', 'addDocument')]
+        self.window.plugin.command.addCommands(commandList, self)
 
         self.m_view.open = self.openNode
         self.m_view.update = self.updateMap
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
-        self.m_layout.addWidget(self.m_menu)
 
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
-
-        self.setActions()
-
-    def setActions(self):
-        self.actions = []
-        for func, key in self.s_settings['shortcuts'].items():
-
-            m_action = QAction(f'({key}) {func}')
-            m_action.setShortcut(QKeySequence(key))
-            m_action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
-            self.actions += [m_action]
-            m_action.triggered.connect(getattr(self, func))
-            self.m_view.addAction(m_action)
-
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -97,6 +80,8 @@ class MapView(QWidget):
 
     def addFolder(self, path=False):
 
+        if not self.isVisible(): return
+
         if not path:
 
             self.window.plugin.fileBrowser.pathChosen.connect(self.addFolder)
@@ -114,8 +99,10 @@ class MapView(QWidget):
             else:
                 self.addDocument(path, client=self)
 
-
     def addDocument(self, selected=False, client=False):
+
+        if not self.isVisible(): return
+
         if not selected:
 
             self.window.plugin.documents.getFuzzy(self)
@@ -184,56 +171,3 @@ class MapView(QWidget):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
-
-    def menu(self):
-        self.m_menu.toggle()
-
-class Menu(QWidget):
-
-    def __init__(self, parent, commandList):
-        super().__init__(parent)
-        self.m_parent=parent
-        self.m_commands=commandList
-        self.hide()
-        self.setup()
-
-    def setup(self):
-        self.m_layout=QVBoxLayout(self)
-        self.m_layout.setSpacing(0)
-        self.m_layout.setContentsMargins(0, 0,0,0)
-
-        self.list=QListWidget()
-        self.edit=QLineEdit()
-        self.edit.textChanged.connect(self.on_textChanged)
-
-        self.m_layout.addWidget(self.list)
-        self.m_layout.addWidget(self.edit)
-
-        self.addCommands()
-
-    def on_textChanged(self, text):
-        if self.list.count()==1:
-            command=self.list.item(0).text()
-            self.hide()
-            self.m_parent.setFocus()
-            func=getattr(self.m_parent, command)
-            return func()
-        self.list.clear()
-        for command in self.m_commands:
-            if text in command:
-                self.list.addItem(command)
-
-    def addCommands(self):
-
-        for command in self.m_commands:
-            self.list.addItem(command)
-
-    def toggle(self):
-        if self.isVisible():
-            self.hide()
-        else:
-            self.show()
-            self.list.clear()
-            self.addCommands()
-            self.edit.clear()
-            self.edit.setFocus()

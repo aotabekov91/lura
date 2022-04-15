@@ -10,7 +10,7 @@ class WindowManager(QMainWindow):
 
     continuousModeChanged = pyqtSignal(bool, object)
     documentModified = pyqtSignal(object)
-    currentPageChanged = pyqtSignal(object, int, object)
+    currentPageChanged = pyqtSignal(object, int)
     layoutModeChanged = pyqtSignal(object, object)
     rubberBandModeChanged = pyqtSignal(str, object)
     scaleFactorChanged = pyqtSignal([float, object], [int, object])

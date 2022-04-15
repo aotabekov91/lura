@@ -14,18 +14,21 @@ class DocumentView(QGraphicsView):
 
     continuousModeChanged = pyqtSignal(bool, object)
     documentModified = pyqtSignal(object)
-    currentPageChanged = pyqtSignal(object, int, object)
+    currentPageChanged = pyqtSignal(object, int)
+
     layoutModeChanged = pyqtSignal(object, object)
     rubberBandModeChanged = pyqtSignal(str, object)
     scaleFactorChanged = pyqtSignal([float, object], [int, object])
     scaleModeChanged = pyqtSignal(str, object)
     rubberBandReady = pyqtSignal(
         object, 'QRectF', 'QRectF', object, object, object)
+
     mouseDoubleClickOccured = pyqtSignal(object, object, object)
     mouseReleaseEventOccured = pyqtSignal(object, object, object)
     mouseMoveEventOccured = pyqtSignal(object, object, object)
     mousePressEventOccured = pyqtSignal(object, object, object)
     hoverMoveEventOccured = pyqtSignal(object, object, object)
+
     pageItemHasBeenJustCreated = pyqtSignal(object, object)
     pageHasBeenJustPainted = pyqtSignal(object, object, object, object,
             object)
@@ -147,10 +150,9 @@ class DocumentView(QGraphicsView):
             self.prepareDocument(document, pages)
             self.updateSceneAndView()
 
-            # self.numberOfPagesChanged.emit(len(self.m_pages))
-            # self.currentPageChanged.emit(self.m_document, self.m_currentPage)
-            # self.canJumpChanged.emit(False, False)
+            self.currentPageChanged.emit(self.m_document, self.m_currentPage)
 
+            # self.canJumpChanged.emit(False, False)
             # self.continuousModeChanged.emit(self.s_settings['continuousMode'])
             # self.layoutModeChanged.emit(self.m_layout.layoutMode())
 
@@ -360,7 +362,7 @@ class DocumentView(QGraphicsView):
                 intersected=item.boundingRect().intersected(viewportRectF)
                 if intersected.height()>visibleHeight:
                     visibleHeight=intersected.height()
-                    self.m_currentPage=item.index()+1
+                    self.setCurrentPage(item.index()+1)
 
     def scaleMode(self):
         return self.s_settings['scaleMode']['currentMode']
@@ -458,6 +460,7 @@ class DocumentView(QGraphicsView):
 
     def setCurrentPage(self, pageNumber):
         self.m_currentPage=pageNumber
+        self.currentPageChanged.emit(self.m_document, self.m_currentPage)
 
     def event(self, event):
         if event.type()==QEvent.Enter: self.window.setView(self)

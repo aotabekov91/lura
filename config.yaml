@@ -21,10 +21,6 @@ DocumentView:
     zoomIn: +
     zoomOut: '-'
 
-MindMapView:
-  shortcuts:
-    menu: m
-
 BrowserView:
   shortcuts:
     toggleActionsMenu: m
