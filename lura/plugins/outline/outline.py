@@ -2,9 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-# from lura.core.widgets.miscel import CustomQTreeView
-from lura.core.widgets.custom import CustomTreeMap
-
 class Outline(QTreeView):
     
     def __init__(self, parent, settings):
@@ -29,7 +26,6 @@ class Outline(QTreeView):
         self.m_expansionRole=Qt.UserRole+4
         self.m_expansionIDRole=Qt.UserRole+5
 
-        self.setAlternatingRowColors(True)
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)

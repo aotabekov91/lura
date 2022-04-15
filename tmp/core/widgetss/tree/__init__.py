@@ -1,6 +1,6 @@
 from .item import Item
 from .view import TreeView
-from .container import Container
+# from .container import Container
 
 from .widgets import BaseTreeWidget
 from .widgets import NoteTreeWidget

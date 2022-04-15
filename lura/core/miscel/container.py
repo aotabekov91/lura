@@ -2,17 +2,17 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .widgets import BaseTreeWidget
-
 class Container(QObject):
 
+    count=-1
     dataChanged=pyqtSignal()
 
     def __init__(self, title):
         super().__init__()
         self.m_title=title
         self.m_kind='container'
-        self.m_id=-999
+        Container.count+=1
+        self.m_id=Container.count
 
     def kind(self):
         return self.m_kind

@@ -2,12 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import Container
-
-from lura.render.base import Document
-
-class BaseMapDocument(Document):
+class BaseMapDocument(QObject):
 
     rowsInserted = pyqtSignal('QModelIndex', int, int)
     rowsRemoved = pyqtSignal('QModelIndex', int, int)
@@ -20,6 +15,13 @@ class BaseMapDocument(Document):
         super().__init__()
         self.m_model = QStandardItemModel()
         self.connectModel()
+
+    def id(self):
+        return self.m_id
+
+    def setId(self, did):
+        self.m_id=did
+        if did is not None: self.setRegistered(True)
 
     def itemFromIndex(self, index):
         return self.m_model.itemFromIndex(index)
@@ -84,10 +86,6 @@ class BaseMapDocument(Document):
             self.findItemByKind(kind, item.child(index), found)
 
         return found
-
-    def addContainer(self, item):
-        if item is None: item=self.invisibleRootItem()
-        self.itemParent(item).insertRow(item.row()+1, Item(Container('Container')))
 
     def itemParent(self, item):
         if item is None: return self.invisibleRootItem()

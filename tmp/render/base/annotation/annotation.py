@@ -2,9 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core.widgets import AnnotationProxyWidget
-from lura.core.widgets.tree import AnnotationTreeWidget
-
 class Annotation(QObject):
 
     wasModified = pyqtSignal(object)
@@ -18,12 +15,6 @@ class Annotation(QObject):
     def setAnnotationData(self, data):
         self.m_color=data.style().color().name()
         self.m_boundary=data.boundary()
-
-    def widget(self):
-        return AnnotationTreeWidget(self)
-
-    def proxyWidget(self):
-        return AnnotationProxyWidget(self)
 
     def __eq__(self, other):
         return self.id()==other.id()

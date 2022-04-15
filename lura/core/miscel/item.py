@@ -6,8 +6,9 @@ from .container import Container
 
 class Item(QStandardItem):
 
-    def __init__(self, kind, m_id, window, title=None):
+    def __init__(self, kind, m_id, window, title=None, path=None):
         super().__init__()
+        self.m_path=path
         self.m_kind = kind.lower()
         self.m_id = -99 if m_id in ['None', None, ''] else int(m_id)
         self.m_window = window
@@ -17,6 +18,7 @@ class Item(QStandardItem):
     def setup(self, title):
         if self.m_kind == 'container':
             self.m_plugin = Container(title)
+            self.m_id=self.m_plugin.id()
         elif self.m_kind == 'document':
             self.m_table='metadata'
             self.m_idName = 'did'
@@ -58,3 +60,9 @@ class Item(QStandardItem):
 
     def __eq__(self, other):
         return self.kind()==other.kind() and self.id()==other.id()
+
+    def watchFolder(self):
+        return self.m_path
+
+    def setWatchFolder(self, path):
+        self.m_path=path

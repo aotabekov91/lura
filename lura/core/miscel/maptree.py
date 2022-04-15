@@ -2,10 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import Container
+from lura.core.miscel import Item
 
-class CustomTreeMap(QTreeView):
+class MapTree(QTreeView):
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -177,6 +176,7 @@ class CustomTreeMap(QTreeView):
 
     def setModel(self, model):
         super().setModel(model)
+        if not hasattr(self.model(), 'invisibleRootItem'): return 
         if self.model().invisibleRootItem().rowCount()>0:
             first=self.model().invisibleRootItem().child(0)
             self.setCurrentIndex(first.index())

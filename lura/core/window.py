@@ -2,9 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.buffer import BufferManager
-from lura.core.plugin import PluginManager
-from lura.core.widgets import DisplaySplitter
+from lura.core import BufferManager
+from lura.core import PluginManager
+from lura.core import DisplaySplitter
 
 class WindowManager(QMainWindow):
 

@@ -4,9 +4,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core.widgets.custom import CustomTree
+from lura.core import MapTree
 
-class TreeFileBrowser(CustomTree):
+class TreeFileBrowser(MapTree):
 
     def __init__(self, parent, configuration):
         super().__init__(parent)
@@ -54,4 +54,3 @@ class TreeFileBrowser(CustomTree):
     def currentPath(self):
         if self.currentIndex() is None: return
         return self.m_model.filePath(self.currentIndex())
-

@@ -2,12 +2,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from lura.core import Item
 from .base import BaseMapDocument
 
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import Container
-
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring, fromstring
+from xml.etree.ElementTree import Element, SubElement, tostring, fromstring
 
 class MapDocument(BaseMapDocument):
 
@@ -52,6 +50,8 @@ class MapDocument(BaseMapDocument):
             element.set('p_eid', parentElement.attrib['eid'])
             if item.kind() == 'container':
                 element.set('title', item.get('title'))
+            if item.watchFolder() is not None:
+                elemement.set('watch', item.watchFolder())
 
         self.m_count += 1
         element.set('eid', str(self.m_count))
@@ -98,14 +98,17 @@ class MapDocument(BaseMapDocument):
                 if element.tag == 'Mindmap': continue
 
                 if element.attrib['p_eid'] in items:
+
                     kind=element.tag
                     m_id=element.attrib['id']
                     title=element.attrib.get('title', '')
+                    watchFolder=element.attrib.get('watch', None)
+
                     item=Item(kind, m_id, self.parent(), title)
+                    item.setWatchFolder(watchFolder)
+
                     items[element.attrib['p_eid']].appendRow(item)
                     items[element.attrib['eid']] = item
-                    time=getattr(element.attrib, 'createTime', None)
-                    if time is not None: item.setCreateTime(float(time))
 
             self.connectModel()
 

@@ -101,24 +101,5 @@ Plugins:
       paper: '#09bb09'
       webpage: '#09aa09'
 
-  Pomodoro:
-    idealPlan: 10
-
-  MindMap:
-    shortcuts:
-      openMap: m
-      createMap: 'Shift+m'
-      deleteMap: d
-
   Notes:
-    shortcuts:
-      toggleMapMenu: 'Shift+m'
-      toggleNoteMenu: 'Shift+n'
-      toggleChangeMenu: 'Shift+c'
-      toggleToggleMenu: 'Shift+t'
     baseFolder: '/home/adam/sciebo/doc_notes'
-  FileBrowser:
-    shortcuts:
-      toggleMenu: m
-    Menu:
-      choose: c

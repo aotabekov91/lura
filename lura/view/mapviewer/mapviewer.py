@@ -4,10 +4,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.widgets.tree import Item
-from lura.core.widgets.tree import Container
+from lura.core import Item
 
-from lura.core.widgets.custom import CustomTreeMap
+from lura.core import MapTree 
 
 class MapView(QWidget):
 
@@ -22,7 +21,7 @@ class MapView(QWidget):
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
         self.m_title = QLineEdit('Mindmap')
-        self.m_view = CustomTreeMap(self)
+        self.m_view = MapTree(self)
 
         commandList=[('maf', 'addFolder'), ('mad', 'addDocument')]
         self.window.plugin.command.addCommands(commandList, self)
