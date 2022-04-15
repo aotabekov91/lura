@@ -94,6 +94,8 @@ Plugins:
       showAll: s
 
   Documents:
+    watchFolders:
+      - '/home/adam/docs'
     colorSystem:
       book: '#90ee90'
       paper: '#09bb09'

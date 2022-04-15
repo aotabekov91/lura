@@ -19,7 +19,9 @@ class DatabaseConnector(QObject):
         self.window.plugin.tables.addTable(MetadataTable)
         self.db=self.window.plugin.tables.metadata
         self.window.documentRegistered.connect(self.register)
-        self.addTitle()
+
+        self.window.plugin.command.addCommands(
+                [('iad - meta add title', 'addTitle')], self)
 
     def addTitle(self):
         allDocuments=self.window.plugin.tables.getAll('documents')

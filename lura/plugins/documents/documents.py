@@ -8,9 +8,10 @@ from .table import DocumentsTable
 
 class Documents(QObject):
 
-    def __init__(self, parent, configuration):
+    def __init__(self, parent, settings):
         super().__init__(parent)
         self.window=parent
+        self.m_watchFolders=settings['watchFolders']
         self.name = 'documents'
         self.globalKeys={
                 'Ctrl+d': (
@@ -32,6 +33,38 @@ class Documents(QObject):
         self.fuzzy.fuzzySelected.connect(self.act)
 
         self.window.documentCreated.connect(self.register)
+
+        self.window.plugin.command.addCommands(
+                [('dcd - check documents', 'checkDocuments'),
+                    ('dwf - watch folders', 'watchFolders')], self)
+
+    def watchFolders(self):
+
+        # TODO: refactor as a separate process
+        for path in self.m_watchFolders:
+
+            qIterator = QDirIterator(
+                path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
+
+            while qIterator.hasNext():
+                loc=qIterator.next()
+                r=self.window.plugin.tables.get('documents',
+                    {'loc':loc})
+                if r is None:
+                    self.window.buffer.loadDocument(loc)
+
+    def checkDocuments(self):
+
+        # TODO: refactor as a separate process
+        allDocs=self.window.plugin.tables.getAll('documents')
+
+        for doc in allDocs:
+            loc=doc['loc']
+            if not os.path.exists(loc):
+                self.window.plugin.tables.remove(
+                        'metadata', {'did': doc['id']})
+                self.window.plugin.tables.remove(
+                        'documents', {'id': doc['id']})
 
     def setFuzzyData(self, client=None):
         if client is None: client=self

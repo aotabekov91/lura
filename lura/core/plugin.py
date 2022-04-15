@@ -16,10 +16,10 @@ from lura.plugins.search import Search
 from lura.plugins.notes import Notes
 from lura.plugins.mindmap import MindMap
 from lura.plugins.command import Command
+from lura.plugins.outline import Outline
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.quickmarks import Quickmarks
-# from lura.plugins.outline import Outline
 # from lura.plugins.anki import Anki
 # from lura.plugins.finder import Finder
 # from lura.plugins.pomodoro import Pomodoro
@@ -50,13 +50,13 @@ class PluginManager(dict):
                     Bookmarks,
                     Notes,
                     MindMap,
+                    Outline,
                     # Lookup,
                     # Buffers,
                     # Quickmarks,
                     # Finder,
                     # Pomodoro,
                     # Pager,
-                    # Outline,
                     # Anki,
                     # Search,
                     ]

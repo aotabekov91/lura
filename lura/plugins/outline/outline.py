@@ -2,16 +2,16 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core.widgets.miscel import CustomQTreeView
+# from lura.core.widgets.miscel import CustomQTreeView
+from lura.core.widgets.custom import CustomTreeMap
 
-class Outline(CustomQTreeView):
+class Outline(QTreeView):
     
     def __init__(self, parent, settings):
-        # super().__init__(Qt.UserRole+4, Qt.UserRole+5, parent)
-        super().__init__(parent)
+        super().__init__()
         self.window=parent
         self.s_settings=settings
-        self.location='left'
+        self.location='right'
         self.name='outline'
         self.globalKeys={
                 'Ctrl+o': (
@@ -26,8 +26,6 @@ class Outline(CustomQTreeView):
         self.outlines={}
         self.activated=False
 
-        self.shortcuts={v:k for k,v in self.s_settings['shortcuts'].items()}
-
         self.m_expansionRole=Qt.UserRole+4
         self.m_expansionIDRole=Qt.UserRole+5
 
@@ -36,7 +34,7 @@ class Outline(CustomQTreeView):
         self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
         
-        self.window.setTabLocation(self, 'left', 'Outline')
+        self.window.setTabLocation(self, self.location, self.name)
 
         self.window.viewChanged.connect(self.on_viewChanged)
         self.window.documentRegistered.connect(self.register)
@@ -55,7 +53,7 @@ class Outline(CustomQTreeView):
         left=index.data(Qt.UserRole+2)
         top=index.data(Qt.UserRole+3)
 
-        self.window.view.jumpToPage(page, left, top)
+        self.window.view().jumpToPage(page, left, top)
 
     def expandAll(self, index=None):
         if index is None:
@@ -147,7 +145,7 @@ class Outline(CustomQTreeView):
 
         if not self.activated or forceShow:
 
-            document=self.window.view.m_document
+            document=self.window.view().document()
             outline=self.outlines[document]
             self.setModel(outline)
 
@@ -173,24 +171,9 @@ class Outline(CustomQTreeView):
         left=index.data(Qt.UserRole+2)
         top=index.data(Qt.UserRole+3)
 
-        self.window.view.jumpToPage(page, left, top)
+        self.window.view().jumpToPage(page, left, top)
 
     def register(self, document):
         outline=document.loadOutline()
         outline.setHorizontalHeaderLabels(['Content', 'Page'])
         self.outlines[document]=outline
-
-    def keyPressEvent(self, event):
-        key=event.text()
-
-        if event.key()==Qt.Key_Escape:
-            self.toggle()
-
-        elif key in self.shortcuts:
-            func=getattr(self, self.shortcuts[key])
-            func()
-
-        else:
-            super().keyPressEvent(event)
-
-
