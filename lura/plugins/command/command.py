@@ -131,7 +131,6 @@ class Command(QObject):
         # self.hide()
         func=getattr(self, 'customClientFunc', None)
         if func is None: return
-        raise
         self.customClientFunc(text)
 
     def addCommands(self, commandList, client):
