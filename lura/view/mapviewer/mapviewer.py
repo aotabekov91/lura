@@ -42,6 +42,7 @@ class MapView(QWidget):
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
 
+        self.window.titleChanged.connect(self.updateTitles)
         self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
 
     def addAnnotations(self, item):
@@ -273,10 +274,24 @@ class MapView(QWidget):
             if item.kind()=='document':
                 self.addAnnotations(item)
 
+    def updateTitles(self, sender):
+        if sender==self: return
+        self._updateTitles(sender=sender)
+
+    def _updateTitles(self, item=None, sender=None):
+        if not self.m_view.isVisible(): return
+        if item is None:
+            item=self.m_view.model().invisibleRootItem()
+        for index in range(item.rowCount()):
+            self._updateTitles(item.child(index), sender)
+        if item!=self.m_view.model().invisibleRootItem():
+            item.setTitle()
+
     def on_itemChanged(self, item):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
+        self.window.titleChanged.emit(self)
 
 class MQLineEdit(QLineEdit):
 

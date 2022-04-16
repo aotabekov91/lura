@@ -9,6 +9,8 @@ from .connect import DatabaseConnector
 
 class Metadata(QWidget):
 
+    titleChanged=pyqtSignal(object)
+
     def __init__(self, parent, settings):
         super().__init__(parent)
         self.window = parent
@@ -26,6 +28,7 @@ class Metadata(QWidget):
 
         self.dropdown = QComboBox(self)
         self.title=MQTextEdit('title', self.window.plugin.tables, self)
+        self.window.titleChanged.connect(self.title.on_titleChanged)
         self.stack = QStackedWidget(self)
 
         self.m_layout = QVBoxLayout(self)
@@ -49,6 +52,7 @@ class Metadata(QWidget):
         self.createWidgets()
 
         self.window.viewChanged.connect(self.on_viewChanged)
+        self.titleChanged.connect(self.window.titleChanged)
         self.window.setTabLocation(self, self.location, self.name)
 
     def createWidgets(self):
@@ -128,11 +132,18 @@ class MQTextEdit(QPlainTextEdit):
         self.textChanged.connect(self.on_textChanged)
         self.setFixedHeight(60)
 
+    def on_titleChanged(self, sender):
+        if self==sender: return
+        title=self.meta.window.plugin.tables.get(
+                    'metadata', {'did':self.meta.m_id}, 'title')
+        self.setPlainText(title)
+
     def on_textChanged(self):
         self.m_data.update(
                 'metadata', 
                 {'did':self.meta.m_id}, 
                 {self.field:self.toPlainText().lower().title()})
+        self.meta.titleChanged.emit(self)
 
 class MQLineEdit(QLineEdit):
     def __init__(self, field, data, meta):

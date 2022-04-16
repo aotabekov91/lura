@@ -26,9 +26,7 @@ class Item(QStandardItem):
             self.m_table=self.m_kind+'s'
             self.m_idName = 'id'
 
-        title=self.get('title')
-        if title in ['', None]: title=f'{self.m_kind}: No title'
-        self.setText(title)
+        self.setTitle()
 
     def get(self, *args, **kwargs):
         if self.m_kind == 'container':
@@ -36,6 +34,11 @@ class Item(QStandardItem):
         else:
             return self.m_data.get(
                 self.m_table, {self.m_idName: self.m_id}, *args, **kwargs)
+
+    def setTitle(self):
+        title=self.get('title')
+        if title in ['', None]: title=f'{self.m_kind}: No title'
+        if title!=self.text(): self.setText(title)
 
     def update(self):
         if self.m_kind=='container':
