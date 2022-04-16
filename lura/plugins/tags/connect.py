@@ -6,72 +6,54 @@ from lura.plugins.tables import Table
 
 class DatabaseConnector:
     def __init__(self, parent=None):
+        self.window=parent.window
         self.m_parent=parent
-        if parent is not None: 
-            self.setup()
-        else:
-            self.setup(standAlone=True)
+        self.setup()
 
-    def setup(self, standAlone=False):
-        if not standAlone:
-            self.m_parent.window.plugin.tables.addTable(TagsTable)
-            self.m_parent.window.plugin.tables.addTable(TaggedTable)
-            self.m_tags = self.m_parent.window.plugin.tables.tags
-            self.m_tagged = self.m_parent.window.plugin.tables.tagged
-
-        else:
-            self.m_tags=TagsTable()
-            self.m_tagged=TaggedTable()
-
-    def getTagged(self, tag):
-        tagData=self.m_tags.getRow({'field':'tag', 'value':tag})
-        if len(tagData)>0:
-            return self.m_tagged.getRow({'field': 'tid', 'value': tagData[0]['id']})
+    def setup(self):
+        self.m_parent.window.plugin.tables.addTable(TagsTable)
+        self.m_parent.window.plugin.tables.addTable(TaggedTable)
 
     def get(self, uid, kind):
-        tids=self.m_tagged.getRow([{'field':'uid', 'value':uid},
-            {'field':'kind', 'value':kind}])
+        tids=self.window.plugin.tables.get(
+                'tagged', {'uid':uid, 'kind':kind}, 'tid', unique=False)
+
         tags=[]
-        for tid in [t['tid'] for t in tids]:
-            tags+=[self.m_tags.getRow({'field':'id', 'value':tid})[0]['tag']]
-        return '; '.join(tags)
+        for tid in tids:
+            tags+=self.window.plugin.tables.get(
+                    'tags', {'id':tid}, 'tag', unique=False)
+        return tags
 
-    def register(self, tag):
-        data=self.m_tags.getRow({'field':'tag', 'value':tag})
-        if len(data)==0: self.m_tags.writeRow({'tag':tag})
-        return self.m_tags.getRow({'field':'tag', 'value':tag})[0]['id']
+    def set(self, uid, kind, tags):
 
-    def tag(self, uid, kind, tag):
-        tid=self.register(tag)
-        self.m_tagged.writeRow({'tid':tid, 'uid':uid, 'kind':kind})
+        self.window.plugin.tables.remove('tagged', {'uid':uid})
 
-    def setTags(self, uid, kind, tags):
-        condition= [{'field':'uid', 'value':uid}, {'field':'kind', 'value':kind}]
-        self.m_tagged.removeRow(condition)
-        if '::' in tags:
-            tags=[f.strip() for f in tags.split('::')]
-        elif ';' in tags:
-            tags=[f.strip() for f in tags.split(';')]
-        else:
-            tags=[tags]
         for tag in tags:
-            if tag!='': self.tag(uid, kind, tag)
+            if tag=='': continue
 
-    def elementTags(self, element):
-        return self.get(element.id(), element.getField('kind')+'s')
+            tid=self.window.plugin.tables.get('tags', {'tag':tag}, 'id')
+            if tid is None:
+                self.window.plugin.tables.write('tags', {'tag':tag})
+                tid=self.window.plugin.tables.get('tags', {'tag':tag}, 'id')
 
-    def setElementTags(self, element, tags):
-        self.setTags(element.id(), element.getField('kind')+'s', tags)
+            self.window.plugin.tables.write(
+                    'tagged', {'tid':tid, 'uid':uid, 'kind':kind})
+
         self.cleanUp()
 
     def cleanUp(self):
-        tagged=set([f['tid'] for f in self.m_tagged.getAll()])
-        tags=[f['id'] for f in self.m_tags.getAll()]
-        toBeDeleted=tags.copy()
-        for tid in tags:
-            if tid in tagged: toBeDeleted.pop(toBeDeleted.index(tid))
+        allTagged=self.window.plugin.tables.get('tagged')
+        allTags=self.window.plugin.tables.get('tags')
+
+        taggedIds=set([t['tid'] for t in allTagged])
+        tagIds=[t['id'] for t in allTags]
+
+        toBeDeleted=tagIds.copy()
+        for tid in tagIds:
+            if tid in taggedIds: toBeDeleted.pop(toBeDeleted.index(tid))
+
         for tid in toBeDeleted:
-            self.m_tags.removeRow({'field':'id', 'value':tid})
+            self.window.plugin.tables.remove('tags', {'id':tid})
 
 
 class TaggedTable(Table):

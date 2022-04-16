@@ -28,12 +28,15 @@ class Metadata(QWidget):
 
         self.dropdown = QComboBox(self)
         self.title=MQTextEdit('title', self.window.plugin.tables, self)
+        self.tags=MQTextEdit('tags', self.window.plugin.tables, self)
         self.window.titleChanged.connect(self.title.on_titleChanged)
         self.stack = QStackedWidget(self)
 
         self.m_layout = QVBoxLayout(self)
         self.m_layout.addWidget(self.dropdown)
         self.m_layout.addWidget(self.title)
+        self.m_layout.addWidget(QLabel('Tags:'))
+        self.m_layout.addWidget(self.tags)
         self.m_layout.addWidget(self.stack)
 
         self.m_layout.addStretch(1)
@@ -110,6 +113,16 @@ class Metadata(QWidget):
         self.title.setPlainText(
                 self.window.plugin.tables.get(
                     'metadata', {'did':did}, 'title'))
+        tids=self.window.plugin.tables.get(
+                'tagged', {'uid':did}, 'tid', unique=False)
+        if tids is not None or len(tids)>0:
+            tags=[]
+            print(tids)
+            for tid in tids:
+                tags+=[self.window.plugin.tables.get(
+                        'tags', {'id':tid}, 'tag')]
+            self.tags.setPlainText('; '.join(tags))
+
         if self.kind in [None, '']: self.kind = 'book'
 
         self.index = getattr(self, f'{self.kind}TabIndex')
@@ -134,16 +147,22 @@ class MQTextEdit(QPlainTextEdit):
 
     def on_titleChanged(self, sender):
         if self==sender: return
+
         title=self.meta.window.plugin.tables.get(
                     'metadata', {'did':self.meta.m_id}, 'title')
         self.setPlainText(title)
 
     def on_textChanged(self):
-        self.m_data.update(
-                'metadata', 
-                {'did':self.meta.m_id}, 
-                {self.field:self.toPlainText().lower().title()})
-        self.meta.titleChanged.emit(self)
+        if self.field=='title':
+            self.m_data.update(
+                    'metadata', 
+                    {'did':self.meta.m_id}, 
+                    {self.field:self.toPlainText().lower().title()})
+            self.meta.titleChanged.emit(self)
+        elif self.field=='tags':
+            tags=[a.strip() for a in self.toPlainText().split(';')]
+            self.meta.window.plugin.tags.set(
+                    self.meta.m_id, 'document', tags)
 
 class MQLineEdit(QLineEdit):
     def __init__(self, field, data, meta):
