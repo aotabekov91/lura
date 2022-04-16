@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from lura.core import MapTree
+from lura.view.docviewer import DocumentView
 
 class Outline(MapTree):
     
@@ -23,7 +24,6 @@ class Outline(MapTree):
     def setup(self):
 
         self.outlines={}
-        self.activated=False
 
         self.m_expansionRole=Qt.UserRole+4
         self.m_expansionIDRole=Qt.UserRole+5
@@ -93,12 +93,10 @@ class Outline(MapTree):
 
         if outline is not None:
 
-            match=self.synchronizeOutlineView(page, outline, QModelIndex()) 
+            found=self.synchronizeOutlineView(page, outline, QModelIndex()) 
 
-            if match.isValid():
-                self.collapseAll()
-                self.expandAbove(match)
-                self.setCurrentIndex(match)
+            if found.isValid():
+                self.setCurrentIndex(found)
 
     def expandAbove(self, child):
 
@@ -144,26 +142,28 @@ class Outline(MapTree):
 
         if self.window.view() is None: return
 
-        if not self.activated or forceShow:
+        if not self.isVisible():
 
             document=self.window.view().document()
-            outline=self.outlines[document]
-            self.setModel(outline)
-
-            self.window.activateTabWidget(self)
-
-            self.setFocus()
-            self.activated=True
+            outline=self.outlines.get(document, None)
+            if outline:
+                self.setModel(outline)
+                self.window.activateTabWidget(self)
+                self.show()
+                self.setFocus()
 
         else:
 
             self.window.deactivateTabWidget(self)
-            self.activated=False
 
     def on_viewChanged(self, view):
-        if not self.activated: return
-        self.activated=not self.activated
-        self.toggle()
+        if not self.isVisible(): return
+        outline=self.outlines.get(document, None)
+        if not outlines: self.setModel(outline)
+
+    def setModel(self, model):
+        super().setModel(model)
+        self.expandAll()
 
     def open(self):
         index=self.currentIndex()

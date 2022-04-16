@@ -51,14 +51,11 @@ class PluginManager(dict):
                     Notes,
                     MindMap,
                     Outline,
-                    # Lookup,
-                    # Buffers,
                     # Quickmarks,
-                    # Finder,
-                    # Pomodoro,
-                    # Pager,
-                    # Anki,
                     # Search,
+                    # Anki,
+                    # Lookup,
+                    # Pager,
                     ]
 
         for Plugin in plugins:

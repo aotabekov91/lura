@@ -31,7 +31,6 @@ class MapView(QWidget):
                 ('mdd', 'deleteDocument'),
                 ('maw', 'addWatchFolder'),
                 ('muw', 'updateWatchFolder'),
-                # ('mum', 'updateMap'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
@@ -52,14 +51,14 @@ class MapView(QWidget):
         if annotations is None: return
         for a in annotations:
             aItem = Item('annotation', a['id'], self.window)
-            if self.isChild(aItem, item): continue
-            item.appendRow(aItem)
+            if not self.isChild(aItem, item): 
+                item.appendRow(aItem)
 
     def isChild(self, child, possibleParent):
         for index in range(possibleParent.rowCount()):
             p=possibleParent.child(index)
-            if child == p: return True
-        return False
+            if child == p: return p
+        return None
 
     def readjust(self):
         pass
@@ -218,19 +217,22 @@ class MapView(QWidget):
             if client != self: return
             self.fuzzy.deactivate(self)
 
-            did = self.window.plugin.tables.get(
-                'documents', {'loc': selected}, 'id')
-            if did is None:
-                document = self.window.buffer.loadDocument(selected)
-                did = document.id()
-            dItem = Item('document', did, self.window)
+            document = self.window.buffer.loadDocument(selected)
+            if document is None: return
+            self.window.plugin.annotation.checkDocument(document)
+            did = document.id()
+
             if item is None:
                 item = self.m_view.currentItem()
                 if item is None:
                     item = self.m_view.model().invisibleRootItem()
-            if not self.isChild(dItem, item):
+            dItem = Item('document', did, self.window)
+
+            myDItem=self.isChild(dItem, item)
+            if myDItem is None: 
                 item.appendRow(dItem)
-            self.addAnnotations(dItem)
+                myDItem=dItem
+            self.addAnnotations(myDItem)
 
     def save(self):
         pass

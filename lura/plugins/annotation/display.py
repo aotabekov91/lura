@@ -15,8 +15,6 @@ class Display(QScrollArea):
 
     def setup(self):
 
-        self.activated = False
-
         self.group=QWidget()
         self.group.m_layout=QVBoxLayout(self.group)
         self.group.m_layout.setContentsMargins(0, 0, 0, 0)
@@ -82,19 +80,16 @@ class Display(QScrollArea):
 
     def toggle(self):
 
-        if self.window.view() is None:
-            return
+        if self.window.view() is None: return
 
-        if not self.activated:
+        if not self.isVisible():
 
             self.window.activateTabWidget(self)
-            self.activated = True
 
         else:
 
             self.window.deactivateTabWidget(self)
             self.window.view().setFocus()
-            self.activated = False
 
 
 class AQWidget(QWidget):

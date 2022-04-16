@@ -17,23 +17,14 @@ class BufferManager(QObject):
         self.window=parent
         self.configuration=configuration
         self.views=OrderedDict()
-        self.documents=OrderedDict()
 
     def addView(self, filePath):
 
         if filePath in self.views: return self.views[filePath]
 
-        if filePath in self.documents:
-            document=self.documents[filePath]
-        else:
-            document=self.loadDocument(filePath)
-        
+        document=self.loadDocument(filePath)
         if document is None: return 
 
-
-        self.documents[filePath]=document
-        # if document.__class__.__name__=='WebDocument':
-            # view=BrowserView(self.window, self.configuration.copy())
         if document.__class__.__name__ in ['PdfDocument']:
             view=DocumentView(self.window, self.configuration.copy())
         elif document.__class__.__name__=='MapDocument':
@@ -49,8 +40,6 @@ class BufferManager(QObject):
 
     def loadDocument(self, filePath):
         
-        if filePath in self.documents: return self.documents[filePath]
-
         document=load(filePath)
         if document is not None and document.readSuccess():
             document.setParent(self.window)
@@ -79,8 +68,6 @@ class BufferManager(QObject):
 
     def close(self, filePath):
         if not filePath in self.views: return
-        print(self.documents)
-        self.documents.pop(filePath)
         return self.views.pop(filePath)
 
     def hideViews(self):

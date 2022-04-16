@@ -48,7 +48,7 @@ class Annotation(QObject):
 
     def setup(self):
 
-        self.window.documentRegistered.connect(self.db.checkDocument)
+        self.window.documentRegistered.connect(self.checkDocument)
         self.window.annotationCreated.connect(self.db.register)
 
         self.window.mousePressEventOccured.connect(self.on_page_mousePressEvent)
@@ -90,20 +90,6 @@ class Annotation(QObject):
             if annotation.page().pageItem()!=pageItem: continue
             if annotation.boundary().contains(pos): return annotation
 
-    def getAll(self, did):
-        return self.db.getAll(did)
-
-    def get(self, aid): 
-        return self.db.get(aid)
-
-    def getBy(self, condition):
-        return self.db.getBy(condition)
-
-    def registrator(self):
-        return self.db
-
-    def addAnnotation(self, *args, **kwargs):
-        return self.creator.addAnnotation(*args, **kwargs)
-
-    def colorSystem(self):
-        return self.creator.system
+    def checkDocument(self, document):
+        for ann in document.annotations():
+            self.db.register(ann)

@@ -29,8 +29,10 @@ class MapTree(QTreeView):
         if self.currentIndex() is None: return
         self.customMove('MoveDown')
 
-    def expand(self):
-        if self.currentIndex() is None: return
+    def expand(self, index=None):
+        if index is None:
+            if self.currentIndex() is None: return
+            index=self.currentIndex()
         super().expand(self.currentIndex())
 
     def collapse(self):

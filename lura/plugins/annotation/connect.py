@@ -14,9 +14,6 @@ class DatabaseConnector:
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
         self.db = self.m_parent.window.plugin.tables.annotations
 
-    def checkDocument(self, document):
-        for ann in document.annotations():
-            self.register(ann)
 
     def register(self, annotation):
 
