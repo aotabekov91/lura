@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .table import NotesTable
+from lura.plugins.tables import Table
 
 class DatabaseConnector:
 
@@ -21,3 +21,18 @@ class DatabaseConnector:
         nid=self.window.plugin.tables.get(
                 'notes', {'loc':note.filePath()}, 'id')
         note.setId(nid)
+
+
+class NotesTable(Table):
+
+    def __init__(self):
+
+        self.fields = [
+            'id integer PRIMARY KEY AUTOINCREMENT',
+            'did integer',
+            'title text',
+            'loc text',
+            'foreign key(did) references documents(id)',
+
+        ]
+        super().__init__(table='notes', fields=self.fields)

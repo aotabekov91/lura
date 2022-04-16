@@ -15,12 +15,10 @@ class MindMap(QObject):
     def setup(self):
 
         self.activated=False
-
         self.db=DatabaseConnector(self, self.window)
 
         self.fuzzy=self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.on_fuzzySelected)
-        self.setFuzzyData()
 
         commandList=[('mo - open a map', 'openMap'),
                     ('mc - create a map', 'createMap'),
@@ -29,12 +27,13 @@ class MindMap(QObject):
         self.window.plugin.command.addCommands(commandList, self)
 
     def setFuzzyData(self):
-        maps = self.db.getAll()
+        maps = self.window.plugin.tables.get('maps')
         names = [m['title'] for m in maps]
         self.fuzzy.setData(self, maps, names)
 
     def openMap(self):
         self.mode='open'
+        self.setFuzzyData()
         self.fuzzy.activate(self)
 
     def createMap(self):
@@ -42,6 +41,7 @@ class MindMap(QObject):
 
     def deleteMap(self):
         self.mode='delete'
+        self.setFuzzyData()
         self.fuzzy.activate(self)
 
     def on_fuzzySelected(self, selected, client):
@@ -51,6 +51,7 @@ class MindMap(QObject):
             filePath='map:{}'.format(selected['id'])
             self.window.open(filePath)
         elif self.mode=='delete':
-            self.db.delete(selected['id'])
+            self.window.plugin.tables.remove(
+                    'maps', {'id': selected['id']})
             self.setFuzzyData()
             self.fuzzy.activate(self)

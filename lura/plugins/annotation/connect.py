@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from .table import AnnotationsTable
+from lura.plugins.tables import Table
 
 class DatabaseConnector:
 
@@ -52,3 +52,20 @@ class DatabaseConnector:
         annotation.setId(aData[0]['id'])
         self.m_parent.window.annotationRegistered.emit(annotation)
         return annotation
+
+class AnnotationsTable(Table):
+
+    def __init__(self):
+
+        self.fields = [
+            'id integer PRIMARY KEY AUTOINCREMENT',
+            'did int',
+            'page int',
+            'position text',
+            'title text',
+            'content text',
+            'color text',
+            'foreign key(did) references documents(id)',
+            'constraint unique_ann unique (did, page, position)'
+        ]
+        super().__init__(table='annotations', fields=self.fields)

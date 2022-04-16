@@ -22,21 +22,6 @@ class TreeFileBrowser(MapTree):
         for i in range(1, 4):
             self.hideColumn(i)
 
-    def tree(self, path=None):
-
-        if path is None: path = os.path.abspath('.')
-
-        self.m_model.setRootPath(path)
-        self.setRootIndex(self.m_model.index(path))
-        self.setFocus()
-
-    def expand(self):
-        currentIndex = self.currentIndex()
-        path = self.m_model.filePath(currentIndex)
-        if not self.m_model.isDir(currentIndex):
-            self.window.open(path)
-        else:
-            super().expand()
 
     def makeRoot(self):
         self.m_model.setRootPath(self.m_model.filePath(self.currentIndex()))
@@ -51,6 +36,3 @@ class TreeFileBrowser(MapTree):
         self.setRootIndex(self.m_model.index(parent))
         self.setFocus()
 
-    def currentPath(self):
-        if self.currentIndex() is None: return
-        return self.m_model.filePath(self.currentIndex())

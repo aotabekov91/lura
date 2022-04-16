@@ -40,13 +40,23 @@ class MapTree(QTreeView):
     def makeRoot(self):
         if self.currentIndex() is None: return
         self.setRootIndex(self.currentIndex())
+        if hasattr(self.model(), 'setRootPath'):
+            path=self.model().filePath(self.currentIndex())
+            self.model().setRootPath(path)
 
     def rootUp(self):
-        rootItem=self.model().itemFromIndex(self.rootIndex())
-        if rootItem is None: return
-        parent=rootItem.parent()
-        if parent is None: parent=self.model().invisibleRootItem()
-        self.setRootIndex(parent.index())
+        if hasattr(self.model(), 'itemFromIndex'):
+            rootItem=self.model().itemFromIndex(self.rootIndex())
+            if rootItem is None: return
+            parent=rootItem.parent()
+            if parent is None: parent=self.model().invisibleRootItem()
+            self.setRootIndex(parent.index())
+        elif hasattr(self.model(), 'rootPath'):
+            path=self.model().rootPath()
+            if not '/' in path: return
+            parent=path.rsplit('/', 1)[0]
+            self.model().setRootPath(parent)
+            self.setRootIndex(self.model().index(parent))
 
     def customMove(self, direction):
         action=getattr(QAbstractItemView, direction)
@@ -123,7 +133,6 @@ class MapTree(QTreeView):
         if parent is None: return
         if parent.rowCount()==item.row()+1: return
         self.setCurrentIndex(parent.child(item.row()+1).index())
-
 
     def delete(self, item=None):
         if item is None: item=self.currentItem()

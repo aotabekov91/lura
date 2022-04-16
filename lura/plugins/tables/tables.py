@@ -16,16 +16,11 @@ class Tables(OrderedDict):
             tableName=table.__class__.__name__.lower().replace('table', '') 
         setattr(self, tableName, table)
 
-    def getTable(self, tableName):
-        return getattr(self, tableName, None)
-
-    def getAll(self, tableName):
-        table=self.getTable(tableName)
-        if table is not None: return table.getAll()
-
-    def get(self, tableName, conDict, fieldName=None, unique=True):
-        table=self.getTable(tableName)
+    def get(self, tableName, conDict=None, fieldName=None, unique=True):
+        table=getattr(self, tableName, None)
         if table is None: return
+
+        if conDict is None: return table.getAll()
 
         conds=[]
         for key in conDict.keys():
@@ -48,12 +43,12 @@ class Tables(OrderedDict):
                 return results[0][fieldName]
 
     def write(self, tableName, conDict):
-        table=self.getTable(tableName)
+        table=getattr(self, tableName, None)
         if table is None: return
         table.writeRow(conDict, update=True)
 
     def update(self, tableName, conDict, updateDict):
-        table=self.getTable(tableName)
+        table=getattr(self, tableName, None)
         if table is None: return
         cond=[]
         for key in conDict.keys():
@@ -61,7 +56,7 @@ class Tables(OrderedDict):
         table.updateRow(cond, updateDict)
 
     def remove(self, tableName, conDict):
-        table=self.getTable(tableName)
+        table=getattr(self, tableName, None)
         if table is None: return
         cond=[]
         for key in conDict.keys():

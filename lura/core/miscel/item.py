@@ -6,9 +6,9 @@ from .container import Container
 
 class Item(QStandardItem):
 
-    def __init__(self, kind, m_id, window, title=None, path=None):
+    def __init__(self, kind, m_id, window, title=None):
         super().__init__()
-        self.m_path=path
+        self.m_pathes=[]
         self.m_kind = kind.lower()
         self.m_id = -99 if m_id in ['None', None, ''] else int(m_id)
         self.m_window = window
@@ -62,7 +62,8 @@ class Item(QStandardItem):
         return self.kind()==other.kind() and self.id()==other.id()
 
     def watchFolder(self):
-        return self.m_path
+        return self.m_pathes
 
-    def setWatchFolder(self, path):
-        self.m_path=path
+    def addWatchFolder(self, path):
+        if path in self.m_pathes: return
+        self.m_pathes+=[path]

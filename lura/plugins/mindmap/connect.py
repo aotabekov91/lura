@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring, fromstring
 
-from .table import MapsTable
+from lura.plugins.tables import Table
 
 class DatabaseConnector:
 
@@ -15,41 +15,30 @@ class DatabaseConnector:
 
     def setup(self):
         self.window.plugin.tables.addTable(MapsTable)
-        self.db=self.window.plugin.tables.maps
         self.window.mapCreated.connect(self.register)
-
-    def title(self, mapp):
-        return self.db.getRow({'field':'id','value':mapp.id()})[0]['title']
-
-    def setTitle(self, mapp, title):
-        self.db.updateRow(
-                {'field':'id', 'value':mapp.id()}, {'title':title})
-
-    def setContent(self, mapp, content):
-        self.db.updateRow({'field':'id', 'value':mapp.id()}, {'content':content})
-
-    def getAll(self):
-        return self.db.getAll()
-
-    def get(self, mid):
-        return self.db.getRow({'field':'id', 'value':mid})[0]
 
     def register(self, mapp):
         mapp.setDB(self)
         if mapp.id() is not None: return
 
-        data={'title':'Mindmap', 'content':''}
-        self.db.writeRow(data)
-        mapp.setId(self.db.getAll()[-1]['id'])
+        allMaps=self.window.plugin.tables.get('maps')
+        if allMaps is None or len(allMaps)==0:
+            newId=0
+        else:
+            newId=max([a['id'] for a in allMaps])+1
+        data={'title':'Mindmap', 'content':'', 'id':newId}
+        self.window.plugin.tables.write('maps', 
+                data)
+        mapp.setId(newId)
 
-    def delete(self, mid):
-        criteria={'field': 'id', 'value':mid}
-        self.db.removeRow(criteria)
 
-    def write(self, data):
-        self.db.writeRow(data)
+class MapsTable(Table):
 
-    def setId(self, mapp):
-        self.write({'title':'Mindmap', 'content': mapp.tree()})
-        mapp.setId(self.getAll()[-1]['id'])
+    def __init__(self):
 
+        self.fields = [
+            'id integer PRIMARY KEY AUTOINCREMENT',
+            'title text',
+            'content text',
+        ]
+        super().__init__(table='maps', fields=self.fields)

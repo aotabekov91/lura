@@ -21,7 +21,6 @@ class BaseMapDocument(QObject):
 
     def setId(self, did):
         self.m_id=did
-        if did is not None: self.setRegistered(True)
 
     def itemFromIndex(self, index):
         return self.m_model.itemFromIndex(index)

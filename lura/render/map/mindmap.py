@@ -29,12 +29,6 @@ class MapDocument(BaseMapDocument):
     def readSuccess(self):
         return True
 
-    def title(self):
-        return self.m_db.title(self)
-
-    def setTitle(self, title):
-        self.m_db.setTitle(self, title)
-
     def setContent(self, item=None, parentElement=None):
         if item is None:
 
@@ -51,7 +45,7 @@ class MapDocument(BaseMapDocument):
             if item.kind() == 'container':
                 element.set('title', item.get('title'))
             if item.watchFolder() is not None:
-                elemement.set('watch', item.watchFolder())
+                element.set('watch', ':'.join(item.watchFolder()))
 
         self.m_count += 1
         element.set('eid', str(self.m_count))
@@ -67,7 +61,9 @@ class MapDocument(BaseMapDocument):
         self.m_block=condition
 
     def update(self, *args, **kwargs):
-        if not self.m_block: self.m_db.setContent(self, self.xml())
+        if not self.m_block: 
+            self.m_db.window.plugin.tables.update(
+                    'maps', {'id':self.m_id}, {'content':self.xml()})
 
     def element(self):
         return self.m_element
@@ -79,9 +75,6 @@ class MapDocument(BaseMapDocument):
         self.m_db = db
         self.load()
 
-    def db(self):
-        return self.m_db
-
     def load(self):
 
         if self.m_id is not None:
@@ -89,7 +82,8 @@ class MapDocument(BaseMapDocument):
             self.m_model = QStandardItemModel()
 
             items = {'0': self.m_model.invisibleRootItem()}
-            mapData = self.m_db.get(self.id())
+            mapData = self.m_db.window.plugin.tables.get(
+                    'maps', {'id': self.id()})
             if mapData['content']=='': return self.connectModel()
             xml = fromstring(mapData['content'])
 
@@ -105,7 +99,11 @@ class MapDocument(BaseMapDocument):
                     watchFolder=element.attrib.get('watch', None)
 
                     item=Item(kind, m_id, self.parent(), title)
-                    item.setWatchFolder(watchFolder)
+                    
+                    if len(watchFolder)>0:
+                        pathes=watchFolder.split(':')
+                        for path in pathes:
+                            item.addWatchFolder(path)
 
                     items[element.attrib['p_eid']].appendRow(item)
                     items[element.attrib['eid']] = item

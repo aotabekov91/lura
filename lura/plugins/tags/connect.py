@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .table import *
+from lura.plugins.tables import Table
 
 class DatabaseConnector:
     def __init__(self, parent=None):
@@ -73,3 +73,29 @@ class DatabaseConnector:
         for tid in toBeDeleted:
             self.m_tags.removeRow({'field':'id', 'value':tid})
 
+
+class TaggedTable(Table):
+
+    def __init__(self):
+
+        self.fields = [
+            'id integer PRIMARY KEY AUTOINCREMENT',
+            'tid int',
+            'uid int',
+            'kind text',
+            'foreign key(tid) references tags(id)',
+            'constraint unique_tagged unique (tid, uid, kind)',
+        ]
+
+        super().__init__(table='tagged', fields=self.fields)
+
+
+class TagsTable(Table):
+
+    def __init__(self):
+
+        self.fields = [
+            'id integer PRIMARY KEY AUTOINCREMENT',
+            'tag text',
+        ]
+        super().__init__(table='tags', fields=self.fields)

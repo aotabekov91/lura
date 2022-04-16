@@ -17,13 +17,19 @@ class MapView(QWidget):
 
     def setup(self):
 
+        self.chosenFor=None
+
         self.m_layout = QVBoxLayout(self)
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
         self.m_title = QLineEdit('Mindmap')
         self.m_view = MapTree(self)
 
-        commandList=[('maf', 'addFolder'), ('mad', 'addDocument')]
+        commandList=[
+                ('maf', 'addFolder'),
+                ('mad', 'addDocument'),
+                ('maw', 'addWatchFolder'),
+                ]
         self.window.plugin.command.addCommands(commandList, self)
 
         self.m_view.open = self.openNode
@@ -34,6 +40,8 @@ class MapView(QWidget):
 
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
+
+        self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -77,17 +85,93 @@ class MapView(QWidget):
         self.m_view.show()
         self.m_view.setFocus()
 
+        self.updateWatchFolder()
+
+    def actOnChoosen(self, chosen):
+        if self.chosenFor=='addWatchFolder':
+            self.addWatchFolder(chosen)
+        elif self.chosenFor=='addFolder':
+            self.addFolder(chosen)
+
+    def updateWatchFolder(self):
+
+        root=self.m_view.model().invisibleRootItem()
+
+        wCon=None
+        for i in range(root.rowCount()):
+            child=root.child(i)
+            if child.kind()=='container' and child.get('title')=='Documents':
+                wCon=child
+                break
+
+        if wCon is None: return
+
+        for path in wCon.watchFolder():
+            print('watch', path)
+            qIterator = QDirIterator(
+                path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
+
+            while qIterator.hasNext():
+                loc=qIterator.next()
+                self.addDocument(loc, client=self, item=wCon)
+
+        toRemove=[]
+        for i in range(wCon.rowCount()):
+            item=wCon.child(i)
+            if not item.kind()=='document': continue
+            loc=self.window.plugin.tables.get('documents',
+                    {'id':item.id()}, 'loc')
+            if os.path.exists(loc): continue
+            toRemove+=[item]
+
+        for item in toRemove:
+            self.m_view.delete(item)
+
+    def addWatchFolder(self, path=False):
+        if not self.isVisible(): return
+
+        if not path:
+
+            self.chosenFor='addWatchFolder'
+            self.window.plugin.fileBrowser.toggle()
+
+        else:
+
+            self.chosenFor=None
+            self.window.plugin.fileBrowser.toggle()
+            self.m_view.setFocus()
+
+            wCon=None
+            root=self.m_view.model().invisibleRootItem()
+            for i in range(root.rowCount()):
+                child=root.child(i)
+                if child.kind()=='container' and child.get('title')=='Documents':
+                    wCon=child
+                    break
+            if not wCon:
+                wCon=Item('container', None, self.window, 'Documents')
+                root.insertRow(0, wCon)
+
+            if os.path.isdir(path):
+                wCon.addWatchFolder(path)
+                qIterator = QDirIterator(
+                    path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
+                while qIterator.hasNext():
+                    self.addDocument(qIterator.next(), client=self, item=wCon)
+
+
     def addFolder(self, path=False):
 
         if not self.isVisible(): return
 
         if not path:
 
-            self.window.plugin.fileBrowser.pathChosen.connect(self.addFolder)
+            self.chosenFor='addFolder'
             self.window.plugin.fileBrowser.toggle()
 
         else:
 
+            self.chosenFor=None
             self.window.plugin.fileBrowser.toggle()
             self.setFocus()
             if os.path.isdir(path):
@@ -98,7 +182,7 @@ class MapView(QWidget):
             else:
                 self.addDocument(path, client=self)
 
-    def addDocument(self, selected=False, client=False):
+    def addDocument(self, selected=False, client=False, item=None):
 
         if not self.isVisible(): return
 
@@ -117,9 +201,10 @@ class MapView(QWidget):
                 document = self.window.buffer.loadDocument(selected)
                 did = document.id()
             dItem = Item('document', did, self.window)
-            item = self.m_view.currentItem()
             if item is None:
-                item = self.m_view.model().invisibleRootItem()
+                item = self.m_view.currentItem()
+                if item is None:
+                    item = self.m_view.model().invisibleRootItem()
             if self.isChild(dItem, item): return
 
             item.appendRow(dItem)

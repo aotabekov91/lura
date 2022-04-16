@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from .table import MetadataTable
+from lura.plugins.tables import Table 
 
 class DatabaseConnector(QObject):
 
@@ -42,3 +42,32 @@ class DatabaseConnector(QObject):
                     'documents', {'id':document.id()}, 'loc')
             if title=='': title=filePath.split('/')[-1]
             self.db.setField('title', title, 'did', document.id()) 
+
+
+class MetadataTable(Table):
+
+    def __init__(self):
+
+        self.fields=[
+            'id integer PRIMARY KEY AUTOINCREMENT', 
+            'author text',
+            'title text',
+            'url text',
+            'journal text',
+            'year int',
+            'volume int',
+            'number int',
+            'edition int', 
+            'pages text',
+            'publisher text',
+            'address text',
+            'bibkey text',
+            'kind text',
+            'did int unique',
+            'hash text',
+            'type text',
+            'createTime datetime',
+            'accessTime datetime',
+            'foreign key(did) references documents(id)'
+            ]
+        super().__init__(table='metadata', fields=self.fields)
