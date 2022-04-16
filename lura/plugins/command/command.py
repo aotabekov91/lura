@@ -145,7 +145,7 @@ class Command(QObject):
                     'metadata', {'did':document.id()}, 'title')
             if title in ['', None]: title=document.filePath()
             self.title.setText(title)
-            self.pageNumber.setText(f' [0/{numberOfPages}]')
+            self.pageNumber.setText(f' [1/{numberOfPages}]')
         else:
             title=self.window.plugin.tables.get(
                     'maps', {'id':document.id()}, 'title')

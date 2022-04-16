@@ -40,6 +40,7 @@ class Links(QObject):
         except:
             return
         view.jumpToPage(pageNumber)
+        view.setFocus()
 
     def setup(self):
 

@@ -13,6 +13,7 @@ class Item(QStandardItem):
         self.m_id = -99 if m_id in ['None', None, ''] else int(m_id)
         self.m_window = window
         self.m_data = window.plugin.tables
+        self.m_changedFromOutside=False
         self.setup(title)
 
     def setup(self, title):
@@ -38,7 +39,10 @@ class Item(QStandardItem):
     def setTitle(self):
         title=self.get('title')
         if title in ['', None]: title=f'{self.m_kind}: No title'
-        if title!=self.text(): self.setText(title)
+        if title!=self.text():
+            self.m_changedFromOutside=True
+            self.setText(title)
+
 
     def update(self):
         if self.m_kind=='container':

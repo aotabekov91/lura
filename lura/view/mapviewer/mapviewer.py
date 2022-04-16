@@ -292,6 +292,9 @@ class MapView(QWidget):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
+        if item.m_changedFromOutside:
+            item.m_changedFromOutside=False
+            return
         self.window.titleChanged.emit(self)
 
 class MQLineEdit(QLineEdit):
