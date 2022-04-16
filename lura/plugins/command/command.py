@@ -1,8 +1,8 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from lura.render import PdfDocument
 
+from lura.render import PdfDocument
 
 class Command(QObject):
 
@@ -28,6 +28,7 @@ class Command(QObject):
     def setupStatus(self):
 
         self.window.currentPageChanged.connect(self.on_currentPageChanged)
+        self.window.viewChanged.connect(self.on_viewChanged)
 
         self.pageInfo = QWidget()
         self.pageInfo.m_layout = QHBoxLayout(self.pageInfo)
@@ -75,7 +76,7 @@ class Command(QObject):
             pass
         self.m_edit.clear()
         self.commandEdit.hide()
-        self.window.statusBar().hide()
+        # self.window.statusBar().hide()
         self.commandList.clear()
         for command in self.m_commands:
             self.commandList.addItem(command)
@@ -103,7 +104,7 @@ class Command(QObject):
 
         self.window.activateTabWidget(self.commandList)
         self.window.statusBar().show()
-        self.pageInfo.hide()
+        # self.pageInfo.hide()
 
         self.commandEdit.show()
         self.m_edit.setFocus()
@@ -112,7 +113,7 @@ class Command(QObject):
 
         self.customClientFunc=callFunc
         self.window.statusBar().show()
-        self.pageInfo.hide()
+        # self.pageInfo.hide()
         if label is not None: self.m_editLabel.setText(label)
 
         self.m_edit.clear()
@@ -124,19 +125,37 @@ class Command(QObject):
     def customClientMode(self):
         text=self.m_edit.text()
         self.m_editLabel.setText(':')
-        self.hide()
+
+        self.m_edit.clear()
+        self.commandEdit.hide()
+        # self.hide()
         func=getattr(self, 'customClientFunc', None)
         if func is None: return
+        raise
         self.customClientFunc(text)
 
     def addCommands(self, commandList, client):
         for (key, command) in commandList:
             self.m_commands[f'{key} -  {command}'] = getattr(client, command)
 
+    def on_viewChanged(self, view):
+        document=view.document()
+        if type(document)==PdfDocument:
+            numberOfPages = document.numberOfPages()
+            title=self.window.plugin.tables.get(
+                    'metadata', {'did':document.id()}, 'title')
+            if title in ['', None]: title=document.filePath()
+            self.title.setText(title)
+            self.pageNumber.setText(f' [0/{numberOfPages}]')
+        else:
+            title=self.window.plugin.tables.get(
+                    'maps', {'id':document.id()}, 'title')
+            self.title.setText(title)
+            self.pageNumber.setText('')
+
     def on_currentPageChanged(self, document, pageNumber):
 
         numberOfPages = document.numberOfPages()
-        self.title.setText(document.filePath())
         self.pageNumber.setText(f' [{pageNumber}/{numberOfPages}]')
 
     def toggle(self):
