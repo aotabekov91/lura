@@ -77,7 +77,7 @@ class FileBrowser(QWidget):
 
     def currentPath(self):
         if self.m_view.currentIndex() is None: return
-        return self.m_view.model().filePath(self.currentIndex())
+        return self.m_view.model().filePath(self.m_view.currentIndex())
 
     def setModel(self):
         self.m_view.setModel(QFileSystemModel())

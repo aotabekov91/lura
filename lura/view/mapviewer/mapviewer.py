@@ -29,6 +29,7 @@ class MapView(QWidget):
                 ('maf', 'addFolder'),
                 ('mad', 'addDocument'),
                 ('maw', 'addWatchFolder'),
+                ('mdd', 'deleteDocument'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
@@ -121,6 +122,7 @@ class MapView(QWidget):
             if not item.kind()=='document': continue
             loc=self.window.plugin.tables.get('documents',
                     {'id':item.id()}, 'loc')
+            if loc is None: continue
             if os.path.exists(loc): continue
             toRemove+=[item]
 
@@ -139,7 +141,6 @@ class MapView(QWidget):
 
             self.chosenFor=None
             self.window.plugin.fileBrowser.toggle()
-            self.m_view.setFocus()
 
             wCon=None
             root=self.m_view.model().invisibleRootItem()
@@ -159,6 +160,25 @@ class MapView(QWidget):
                 while qIterator.hasNext():
                     self.addDocument(qIterator.next(), client=self, item=wCon)
 
+            self.m_view.setFocus()
+
+    def deleteDocument(self):
+        item=self.m_view.currentItem()
+        if item is None: return
+        if item.kind()!='document': return
+
+        loc=self.window.plugin.tables.get('documents', {'id':item.id()}, 'loc')
+        # from map
+        self.m_view.delete(item)
+        # from annotations
+        self.window.plugin.tables.remove('annotations', {'did':item.id()})
+        # from metadata
+        self.window.plugin.tables.remove('metadata', {'did':item.id()})
+        # from documents
+        self.window.plugin.tables.remove('documents', {'id':item.id()})
+        # from the system
+        self.window.buffer.close(loc)
+        os.remove(loc)
 
     def addFolder(self, path=False):
 
@@ -173,7 +193,6 @@ class MapView(QWidget):
 
             self.chosenFor=None
             self.window.plugin.fileBrowser.toggle()
-            self.setFocus()
             if os.path.isdir(path):
                 qIterator = QDirIterator(
                     path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
@@ -181,6 +200,8 @@ class MapView(QWidget):
                     self.addDocument(qIterator.next(), client=self)
             else:
                 self.addDocument(path, client=self)
+
+            self.m_view.setFocus()
 
     def addDocument(self, selected=False, client=False, item=None):
 

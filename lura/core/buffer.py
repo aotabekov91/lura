@@ -75,5 +75,12 @@ class BufferManager(QObject):
         [self.addView(path) for path in filePath]
         return self.views.get(filePath[-1], None)
 
+    def close(self, filePath):
+        if not filePath in self.documents: return
+        self.documents.pop(filePath)
+        if not filePath in self.views: return
+        view=self.views.pop(filePath)
+        view.close()
+
     def hideViews(self):
         [view.hide() for view in self.views.values()]
