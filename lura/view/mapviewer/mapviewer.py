@@ -22,7 +22,7 @@ class MapView(QWidget):
         self.m_layout = QVBoxLayout(self)
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
-        self.m_title = QLineEdit('Mindmap')
+        self.m_title = MQLineEdit()
         self.m_view = MapTree(self)
 
         commandList=[
@@ -86,6 +86,7 @@ class MapView(QWidget):
         self.m_view.setFocus()
 
         self.updateWatchFolder()
+        self.m_title.setMap(document.id(), self.window)
 
     def actOnChoosen(self, chosen):
         if self.chosenFor=='addWatchFolder':
@@ -255,3 +256,19 @@ class MapView(QWidget):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
+
+class MQLineEdit(QLineEdit):
+
+    def __init__(self):
+        super().__init__()
+        self.textChanged.connect(self.on_textChanged)
+
+    def setMap(self, m_id, window):
+        self.window=window
+        self.m_id=m_id
+        self.setText(self.window.plugin.tables.get(
+            'maps', {'id':self.m_id}, 'title'))
+
+    def on_textChanged(self, text):
+        self.window.plugin.tables.update(
+                'maps', {'id':self.m_id}, {'title':text})
