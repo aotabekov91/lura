@@ -41,7 +41,7 @@ class Outline(MapTree):
         self.expanded.connect(self.on_expanded)
         self.collapsed.connect(self.on_collapsed)
 
-        self.header().setSectionResizeMode(QHeaderView.Stretch)
+        self.header().setSectionResizeMode(QHeaderView.Interactive)
         self.header().hide()
 
         self.clicked.connect(self.on_outline_clicked)

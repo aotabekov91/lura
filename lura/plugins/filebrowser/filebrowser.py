@@ -30,7 +30,6 @@ class FileBrowser(QWidget):
         self.activated = False
         self.path = os.path.abspath('.')
 
-        # self.m_view = TreeFileBrowser(self, self.s_settings)
         self.m_view = MapTree(self, self.window)
         self.m_view.open=self.open
         self.setModel()

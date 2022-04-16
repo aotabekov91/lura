@@ -140,10 +140,10 @@ class PdfDocument(QObject):
             pageItem=item.clone()
             pageItem.setText(str(page))
             pageItem.setTextAlignment(Qt.AlignRight)
-            parent.appendRow([item, pageItem])
 
-        else:
 
+            # if allow also pages the look of outline becomes ugly
+            # parent.appendRow([item, pageItem])
             parent.appendRow(item)
 
         siblingNode=node.nextSibling()

@@ -100,7 +100,7 @@ class MapDocument(BaseMapDocument):
 
                     item=Item(kind, m_id, self.parent(), title)
                     
-                    if len(watchFolder)>0:
+                    if watchFolder is not None and len(watchFolder)>0:
                         pathes=watchFolder.split(':')
                         for path in pathes:
                             item.addWatchFolder(path)
