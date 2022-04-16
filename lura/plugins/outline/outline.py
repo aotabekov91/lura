@@ -158,6 +158,7 @@ class Outline(MapTree):
 
     def on_viewChanged(self, view):
         if not self.isVisible(): return
+        document=view.document()
         outline=self.outlines.get(document, None)
         if not outlines: self.setModel(outline)
 
