@@ -76,6 +76,7 @@ class DocumentView(QGraphicsView):
     def setup(self):
         
         self.proxyWidget=None
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.setScene(QGraphicsScene(self))
         self.scene().setBackgroundBrush(QColor('gray'))
@@ -295,16 +296,16 @@ class DocumentView(QGraphicsView):
         scaleMode = self.s_settings['scaleMode']['currentMode']
         if scaleMode == 'ScaleFactorMode':
             self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            # self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         elif scaleMode == 'FitToPageWidthMode':
             self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            # self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         elif scaleMode == 'FitToPageSizeMode':
             self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
             policy = Qt.ScrollBarAlwaysOff
             if self.s_settings['continuousMode']:
                 policy = Qt.ScrollBarAsNeeded
-            self.setVerticalScrollBarPolicy(policy)
+            # self.setVerticalScrollBarPolicy(policy)
 
     def getConfiguration(self, kind='shortcuts'):
         ownConfiguration=self.configuration.get(self.__class__.__name__) 

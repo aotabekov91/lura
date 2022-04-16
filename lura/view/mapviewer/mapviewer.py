@@ -28,13 +28,14 @@ class MapView(QWidget):
         commandList=[
                 ('maf', 'addFolder'),
                 ('mad', 'addDocument'),
-                ('maw', 'addWatchFolder'),
                 ('mdd', 'deleteDocument'),
+                ('maw', 'addWatchFolder'),
+                ('muw', 'updateWatchFolder'),
+                # ('mum', 'updateMap'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
         self.m_view.open = self.openNode
-        self.m_view.update = self.updateMap
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
@@ -48,8 +49,7 @@ class MapView(QWidget):
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
             'annotations', {'did': item.id()}, unique=False)
-        if annotations is None:
-            return
+        if annotations is None: return
         for a in annotations:
             aItem = Item('annotation', a['id'], self.window)
             if self.isChild(aItem, item): continue
@@ -228,9 +228,8 @@ class MapView(QWidget):
                 item = self.m_view.currentItem()
                 if item is None:
                     item = self.m_view.model().invisibleRootItem()
-            if self.isChild(dItem, item): return
-
-            item.appendRow(dItem)
+            if not self.isChild(dItem, item):
+                item.appendRow(dItem)
             self.addAnnotations(dItem)
 
     def save(self):
