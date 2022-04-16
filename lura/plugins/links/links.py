@@ -6,6 +6,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from lura.render.pdf import PdfDocument
+
 class Links(QObject):
 
     def __init__(self, parent, settings):
@@ -16,10 +18,28 @@ class Links(QObject):
                 'Ctrl+Shift+l': (
                     self.toggle,
                     self.window,
+                    Qt.WindowShortcut),
+                'g': (
+                    self.goToWanted,
+                    self.window,
                     Qt.WindowShortcut)
                 }
         self.name='showLinks'
         self.setup()
+
+    def goToWanted(self):
+        view=self.window.view()
+        if view is None or type(view.document())!=PdfDocument: return 
+        self.window.plugin.command.activateCustom(
+                self.goto, 'Go to: ')
+
+    def goto(self, text):
+        view=self.window.view()
+        try:
+            pageNumber=int(text)
+        except:
+            return
+        view.jumpToPage(pageNumber)
 
     def setup(self):
 

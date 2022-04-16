@@ -40,7 +40,7 @@ class Command(QObject):
         self.pageInfo.m_layout.addWidget(self.pageNumber)
 
         self.commandEdit = QWidget()
-        self.commandEdit.m_layout = QFormLayout(self.commandEdit)
+        self.commandEdit.m_layout = QHBoxLayout(self.commandEdit)
         self.commandEdit.m_layout.setContentsMargins(0, 0, 0, 0)
         self.commandEdit.m_layout.setSpacing(0)
         self.commandEdit.hide()
@@ -48,8 +48,11 @@ class Command(QObject):
         self.m_edit = MQLineEdit(self)
         self.m_edit.setFixedHeight(20)
         self.m_edit.setStyleSheet('border: 0px')
+        self.m_editLabel=QLabel(':')
 
-        self.commandEdit.m_layout.addRow(':', self.m_edit)
+        # self.commandEdit.m_layout.addRow(':', self.m_edit)
+        self.commandEdit.m_layout.addWidget(self.m_editLabel)
+        self.commandEdit.m_layout.addWidget(self.m_edit)
 
         self.window.statusBar().addWidget(self.commandEdit, 1)
         self.window.statusBar().addPermanentWidget(self.pageInfo)
@@ -65,9 +68,12 @@ class Command(QObject):
 
     def hide(self):
 
-        self.m_edit.textChanged.disconnect()
+        try:
+            self.m_edit.textChanged.disconnect()
+            self.window.deactivateTabWidget(self.commandList)
+        except:
+            pass
         self.m_edit.clear()
-        self.window.deactivateTabWidget(self.commandList)
         self.commandEdit.hide()
         self.window.statusBar().hide()
         self.commandList.clear()
@@ -101,6 +107,27 @@ class Command(QObject):
 
         self.commandEdit.show()
         self.m_edit.setFocus()
+
+    def activateCustom(self, callFunc, label=None):
+
+        self.customClientFunc=callFunc
+        self.window.statusBar().show()
+        self.pageInfo.hide()
+        if label is not None: self.m_editLabel.setText(label)
+
+        self.m_edit.clear()
+        self.m_edit.returnPressed.connect(self.customClientMode)
+
+        self.commandEdit.show()
+        self.m_edit.setFocus()
+
+    def customClientMode(self):
+        text=self.m_edit.text()
+        self.m_editLabel.setText(':')
+        self.hide()
+        func=getattr(self, 'customClientFunc', None)
+        if func is None: return
+        self.customClientFunc(text)
 
     def addCommands(self, commandList, client):
         for (key, command) in commandList:
