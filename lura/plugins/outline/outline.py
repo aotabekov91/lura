@@ -2,10 +2,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-class Outline(QTreeView):
+from lura.core import MapTree
+
+class Outline(MapTree):
     
     def __init__(self, parent, settings):
-        super().__init__()
         self.window=parent
         self.s_settings=settings
         self.location='right'
@@ -16,6 +17,7 @@ class Outline(QTreeView):
                     self.window,
                     Qt.WindowShortcut)
                 }
+        super().__init__(None, parent)
         self.setup()
 
     def setup(self):
@@ -39,7 +41,8 @@ class Outline(QTreeView):
         self.expanded.connect(self.on_expanded)
         self.collapsed.connect(self.on_collapsed)
 
-        self.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.header().setSectionResizeMode(QHeaderView.Stretch)
+        self.header().hide()
 
         self.clicked.connect(self.on_outline_clicked)
 
@@ -139,6 +142,8 @@ class Outline(QTreeView):
 
     def toggle(self, forceShow=False):
 
+        if self.window.view() is None: return
+
         if not self.activated or forceShow:
 
             document=self.window.view().document()
@@ -171,5 +176,5 @@ class Outline(QTreeView):
 
     def register(self, document):
         outline=document.loadOutline()
-        outline.setHorizontalHeaderLabels(['Content', 'Page'])
+        # outline.setHorizontalHeaderLabels(['Content', 'Page'])
         self.outlines[document]=outline

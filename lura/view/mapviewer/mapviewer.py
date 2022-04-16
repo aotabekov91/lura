@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from lura.core import Item
 
-from lura.core import MapTree 
+from lura.core import MapTree
 
 class MapView(QWidget):
 
@@ -23,7 +23,7 @@ class MapView(QWidget):
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
         self.m_title = MQLineEdit()
-        self.m_view = MapTree(self)
+        self.m_view = MapTree(self, self.window)
 
         commandList=[
                 ('maf', 'addFolder'),
@@ -108,7 +108,6 @@ class MapView(QWidget):
         if wCon is None: return
 
         for path in wCon.watchFolder():
-            print('watch', path)
             qIterator = QDirIterator(
                 path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
 

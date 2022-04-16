@@ -6,10 +6,10 @@ from lura.core.miscel import Item
 
 class MapTree(QTreeView):
 
-    def __init__(self, parent):
+    def __init__(self, parent, window):
         super().__init__(parent)
 
-        self.window=parent.window
+        self.window=window
         self.yanked=[]
         self.copied=[]
 
