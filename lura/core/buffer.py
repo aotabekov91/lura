@@ -30,6 +30,8 @@ class BufferManager(QObject):
         
         if document is None: return 
 
+
+        self.documents[filePath]=document
         # if document.__class__.__name__=='WebDocument':
             # view=BrowserView(self.window, self.configuration.copy())
         if document.__class__.__name__ in ['PdfDocument']:
@@ -76,11 +78,10 @@ class BufferManager(QObject):
         return self.views.get(filePath[-1], None)
 
     def close(self, filePath):
-        if not filePath in self.documents: return
-        self.documents.pop(filePath)
         if not filePath in self.views: return
-        view=self.views.pop(filePath)
-        view.close()
+        print(self.documents)
+        self.documents.pop(filePath)
+        return self.views.pop(filePath)
 
     def hideViews(self):
         [view.hide() for view in self.views.values()]

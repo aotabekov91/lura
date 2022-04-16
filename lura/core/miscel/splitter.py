@@ -41,6 +41,17 @@ class DisplaySplitter(QSplitter):
             self.clear(self.right)
             self.right.addWidget(widget)
 
+    def removeWidget(self, widget):
+        if widget.__class__.__name__=='MapView':
+            self.clear(self.left)
+            self.left.removeWidget(widget)
+        elif widget.__class__.__name__=='DocumentView':
+            self.clear(self.center)
+            self.center.removeWidget(widget)
+        elif widget.__class__.__name__=='BrowserView':
+            self.clear(self.right)
+            self.right.removeWidget(widget)
+
     def addWidget(self, widget):
         if widget.__class__.__name__=='MapView':
             self.left.addWidget(widget)

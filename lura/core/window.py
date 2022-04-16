@@ -107,6 +107,13 @@ class WindowManager(QMainWindow):
         self.display=DisplaySplitter()
         self.setCentralWidget(self.display)
 
+    def closeView(self, filePath):
+        view=self.buffer.close(filePath)
+        if view is None: return
+        if self.m_view==view: 
+            self.m_view=None
+        self.display.removeWidget(view)
+
     def resetView(self, m_view):
 
         self.display.setWidget(m_view)

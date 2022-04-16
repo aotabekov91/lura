@@ -168,6 +168,7 @@ class MapView(QWidget):
         if item.kind()!='document': return
 
         loc=self.window.plugin.tables.get('documents', {'id':item.id()}, 'loc')
+
         # from map
         self.m_view.delete(item)
         # from annotations
@@ -177,7 +178,7 @@ class MapView(QWidget):
         # from documents
         self.window.plugin.tables.remove('documents', {'id':item.id()})
         # from the system
-        self.window.buffer.close(loc)
+        self.window.closeView(loc)
         os.remove(loc)
 
     def addFolder(self, path=False):
