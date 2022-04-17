@@ -19,7 +19,11 @@ class MapTree(QTreeView):
         self.header().hide()
 
     def currentItem(self):
-        return self.model().itemFromIndex(self.currentIndex())
+        if not self.isProxyModel:
+            return self.model().itemFromIndex(self.currentIndex())
+        else:
+            index=self.model().mapToSource(self.currentIndex())
+            return self.m_model.itemFromIndex(index)
 
     def moveUp(self):
         if self.currentIndex() is None: return
@@ -99,29 +103,6 @@ class MapTree(QTreeView):
         elif event.key()==Qt.Key_O:
             self.open()
 
-    def unselect(self, item=None):
-        if item is None: item = self.currentItem()
-        item.proxy().setStyleSheetWidget("background-color: rgba(255, 255, 255, 0);")
-        item.proxy().setStyleSheetButton("background-color: rgba(255, 255, 255, 0);")
-
-    def select(self, item=None):
-        if item is None: item = self.currentItem()
-        item.proxy().setStyleSheetWidget('background-color:rgba(255, 211, 25, 55);')
-        item.proxy().setStyleSheetButton("background-color: rgba(255, 211, 25, 55);")
-
-    def unhighlight(self, item=None):
-        if item is None: item = self.currentItem()
-        if item in self.yanked or item in self.copied:
-            self.select(item)
-        else:
-            item.proxy().setStyleSheetButton("background-color: rgba(255, 255, 255, 0);")
-            item.proxy().widget().setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-
-    def highlight(self, item=None):
-        if item is None: item = self.currentItem()
-        item.proxy().setStyleSheetButton("background-color: rgba(255, 55, 55, 10);")
-        item.proxy().widget().setStyleSheet("background-color: rgba(191, 209, 229, 55);")
-
     def moveToParent(self):
         if self.currentItem().parent() is None: return
         self.setCurrentIndex(self.currentItem().parent().index())
@@ -182,9 +163,16 @@ class MapTree(QTreeView):
         item.insertRow(row, new)
         self.setCurrentIndex(new.index())
 
-    def setModel(self, model):
+    def setProxyModel(self, model):
+        self.m_proxy=model
+        self.isProxyModel=True
         super().setModel(model)
-        if not hasattr(self.model(), 'invisibleRootItem'): return 
+
+    def setModel(self, model):
+        self.m_model=model
+        self.isProxyModel=False
+        super().setModel(model)
+        if not hasattr(self.model(), 'invisibleRootItem'): return
         if self.model().invisibleRootItem().rowCount()>0:
             first=self.model().invisibleRootItem().child(0)
             self.setCurrentIndex(first.index())

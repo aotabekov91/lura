@@ -51,16 +51,16 @@ class MapView(QWidget):
 
     def activateSorting(self):
         if self.m_view.model() is None: return
-        self.m_view.setModel(self.m_proxyModel)
+        self.m_view.setProxyModel(self.m_proxyModel)
         self.m_view.sortByColumn(0, Qt.AscendingOrder)
 
     def deactivateSorting(self):
         if self.m_view.model() is None: return
-        self.m_view.setModel(self.m_document.m_model)
+        self.m_view.setProxyModel(self.m_document.m_model)
 
     def activateFiltering(self):
         if self.m_view.model() is None: return
-        self.m_view.setModel(self.m_proxyModel)
+        self.m_view.setProxyModel(self.m_proxyModel)
         self.window.plugin.command.activateCustom(
                 self._activateFiltering, 'Filter: ', self._activateFiltering)
 
@@ -70,7 +70,7 @@ class MapView(QWidget):
 
     def deactivateFiltering(self):
         if self.m_view.model() is None: return
-        self.m_view.setModel(self.m_document.m_model)
+        self.m_view.setProxyModel(self.m_document.m_model)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -128,7 +128,7 @@ class MapView(QWidget):
 
     def updateWatchFolder(self):
 
-        root=self.m_view.model().invisibleRootItem()
+        root=self.m_document.m_model.invisibleRootItem()
 
         wCon=None
         for i in range(root.rowCount()):
@@ -174,7 +174,7 @@ class MapView(QWidget):
             self.window.plugin.fileBrowser.toggle()
 
             wCon=None
-            root=self.m_view.model().invisibleRootItem()
+            root=self.m_document.m_model.invisibleRootItem()
             for i in range(root.rowCount()):
                 child=root.child(i)
                 if child.kind()=='container' and child.get('title')=='Documents':
@@ -256,7 +256,7 @@ class MapView(QWidget):
             if item is None:
                 item = self.m_view.currentItem()
                 if item is None:
-                    item = self.m_view.model().invisibleRootItem()
+                    item = self.m_document.m_model.invisibleRootItem()
             dItem = Item('document', did, self.window)
 
             myDItem=self.isChild(dItem, item)
@@ -292,16 +292,16 @@ class MapView(QWidget):
 
     def updateMap(self, item=None):
         if item is None:
-            item=self.m_view.model().invisibleRootItem()
+            item=self.m_document.m_model.invisibleRootItem()
         for index in range(item.rowCount()):
             self.updateMap(item.child(index))
-        if item!=self.m_view.model().invisibleRootItem():
+        if item!=self.m_document.m_view.invisibleRootItem():
             if item.kind()!='container':
                 r=self.window.plugin.tables.get(
                         item.kind(), {'id':item.id()}, 'id')
                 if r is None:
                     parent=item.parent()
-                    if parent is None: parent=self.m_view.model().invisibleRootItem()
+                    if parent is None: parent=self.m_document.m_model.invisibleRootItem()
                     parent.takeRow(item.row())
             if item.kind()=='document':
                 self.addAnnotations(item)
@@ -313,10 +313,10 @@ class MapView(QWidget):
     def _updateTitles(self, item=None, sender=None):
         if not self.m_view.isVisible(): return
         if item is None:
-            item=self.m_view.model().invisibleRootItem()
+            item=self.m_document.m_model.invisibleRootItem()
         for index in range(item.rowCount()):
             self._updateTitles(item.child(index), sender)
-        if item!=self.m_view.model().invisibleRootItem():
+        if item!=self.m_document.m_model.invisibleRootItem():
             item.setTitle()
 
     def on_itemChanged(self, item):

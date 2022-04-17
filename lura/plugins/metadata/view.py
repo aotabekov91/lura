@@ -112,13 +112,17 @@ class Metadata(QWidget):
                     'metadata', {'did':did}, 'title'))
         tids=self.window.plugin.tables.get(
                 'tagged', {'uid':did}, 'tid', unique=False)
-        if tids is not None or len(tids)>0:
+        if tids is not None and len(tids)>0:
             tags=[]
-            print(tids)
+            print(tags)
             for tid in tids:
-                tags+=[self.window.plugin.tables.get(
-                        'tags', {'id':tid}, 'tag')]
+                tag=self.window.plugin.tables.get(
+                        'tags', {'id':tid}, 'tag')
+                if tag is None: continue
+                tags+=[tag]
             self.tags.setPlainText('; '.join(tags))
+        else:
+            self.tags.setPlainText('')
 
         if self.kind in [None, '']: self.kind = 'book'
 
