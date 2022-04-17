@@ -27,6 +27,15 @@ class Links(QObject):
         self.name='showLinks'
         self.setup()
 
+    def setup(self):
+
+        self.links={}
+        self.activated=False
+
+        self.window.pageItemHasBeenJustCreated.connect(self.on_pageItemHasBeenJustCreated)
+        self.window.mousePressEventOccured.connect(self.on_mousePressEventOccured)
+
+
     def goToWanted(self):
         view=self.window.view()
         if view is None or type(view.document())!=PdfDocument: return 
@@ -41,14 +50,6 @@ class Links(QObject):
             return
         view.jumpToPage(pageNumber)
         view.setFocus()
-
-    def setup(self):
-
-        self.links={}
-        self.activated=False
-
-        self.window.pageItemHasBeenJustCreated.connect(self.on_pageItemHasBeenJustCreated)
-        self.window.mousePressEventOccured.connect(self.on_mousePressEventOccured)
 
     def toggle(self):
 

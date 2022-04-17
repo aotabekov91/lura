@@ -79,7 +79,7 @@ class DocumentView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.setScene(QGraphicsScene(self))
-        self.scene().setBackgroundBrush(QColor('gray'))
+        self.scene().setBackgroundBrush(QColor('black'))
 
         self.setAcceptDrops(False)
         self.setDragMode(QGraphicsView.ScrollHandDrag)
@@ -90,6 +90,7 @@ class DocumentView(QGraphicsView):
                 self.getConfiguration('shortcuts').items()}
         self.setActions()
         self.show()
+
 
     def setActions(self):
         self.actions=[]
