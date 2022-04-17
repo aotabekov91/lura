@@ -56,7 +56,7 @@ class MapView(QWidget):
 
     def deactivateSorting(self):
         if self.m_view.model() is None: return
-        self.m_view.setProxyModel(self.m_document.m_model)
+        self.m_view.setModel(self.m_document.m_model)
 
     def activateFiltering(self):
         if self.m_view.model() is None: return
@@ -70,7 +70,7 @@ class MapView(QWidget):
 
     def deactivateFiltering(self):
         if self.m_view.model() is None: return
-        self.m_view.setProxyModel(self.m_document.m_model)
+        self.m_view.setModel(self.m_document.m_model)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
