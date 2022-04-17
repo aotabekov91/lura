@@ -151,6 +151,7 @@ class DocumentView(QGraphicsView):
             
             pages = document.pages()
             self.prepareDocument(document, pages)
+            self.refresh()
             self.updateSceneAndView()
 
             self.currentPageChanged.emit(self.m_document, self.m_currentPage)
@@ -160,6 +161,10 @@ class DocumentView(QGraphicsView):
             # self.layoutModeChanged.emit(self.m_layout.layoutMode())
 
             return True
+
+    def refresh(self):
+        for pageItem in self.m_pageItems:
+            pageItem.refresh(dropCachedPixmap=True)
 
     def prepareView(self, changeLeft=0., changeTop=0., visiblePage=0):
 
@@ -242,7 +247,6 @@ class DocumentView(QGraphicsView):
             self.m_pages = pages
             self.m_document = document
             self.preparePages()
-            # self.prepareAnnotations()
 
     def pageItem(self, index):
         return self.m_pageItems[index]
@@ -258,6 +262,7 @@ class DocumentView(QGraphicsView):
             page.setPageItem(pageItem)
             self.scene().addItem(pageItem)
             self.m_pageItems += [pageItem]
+
             self.pageItemHasBeenJustCreated.emit(pageItem, self)
 
             pageItem.mouseDoubleClickOccured.connect(self.on_mouseDoubleClickOccured)
@@ -266,10 +271,6 @@ class DocumentView(QGraphicsView):
             pageItem.mouseMoveEventOccured.connect(self.on_mouseMoveEventOccured)
             pageItem.hoverMoveEventOccured.connect(self.on_hoverMoveEventOccured)
             pageItem.pageHasBeenJustPainted.connect(self.on_pageHasBeenJustPainted)
-
-    # def prepareAnnotations(self):
-    #     for annotation in self.document().annotations():
-    #         annotation.wasModified.connect(annotation.page().pageItem().wasModified)
 
     def on_mouseDoubleClickOccured(self, *args):
         self.mouseDoubleClickOccured.emit(*args, self)

@@ -138,7 +138,29 @@ class Search(QListWidget):
         self.matches=[]
         self.currentMatch=None
 
+    def moveUp(self):
+        row=self.currentRow()
+        if row>0: 
+            row-=1
+            self.setCurrentRow(row)
+
+    def moveDown(self):
+        row=self.currentRow()
+        if row<self.count()-1: 
+            row+=1
+            self.setCurrentRow(row)
+
     def keyPressEvent(self, event):
-        if event.key()==Qt.Key_Escape:
+        if event.key()==Qt.Key_J:
+            self.moveDown()
+        elif event.key()==Qt.Key_K:
+            self.moveUp()
+        elif event.key()==Qt.Key_O:
+            item=self.currentItem()
+            if item is None: return
+            self.jump(item)
+        elif event.key()==Qt.Key_Escape:
             self.window.deactivateTabWidget(self)
             self.window.view().setFocus()
+        else:
+            super().keyPressEvent(event)
