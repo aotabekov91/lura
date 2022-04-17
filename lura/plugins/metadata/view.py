@@ -20,7 +20,6 @@ class Metadata(QWidget):
 
     def setup(self):
 
-        self.activated = False
         self.m_id=None
 
         self.dropdown = QComboBox(self)
@@ -74,9 +73,9 @@ class Metadata(QWidget):
             setattr(self, f'{k}Fields', fields)
 
     def on_viewChanged(self):
-        if not self.activated: return
-        self.activated = not self.activated
-        self.toggle()
+        if not self.isVisible(): return
+        self.m_id = self.window.view().document().id()
+        self.setKind(self.m_id)
 
     def on_dropdown_changed(self):
         if self.m_id is None: return
@@ -90,18 +89,16 @@ class Metadata(QWidget):
 
         if self.window.document() is None: return
 
-        if not self.activated or forceShow:
+        if not self.isVisible(): 
 
             self.m_id = self.window.view().document().id()
             self.setKind(self.m_id)
             self.stack.setCurrentIndex(self.index)
             self.setFocus()
             self.window.activateTabWidget(self)
-            self.activated = True
 
         else:
             self.window.deactivateTabWidget(self)
-            self.activated = False
 
     def setKind(self, did):
         self.kind = self.window.plugin.tables.get('metadata', {'did':did}, 'kind')
@@ -110,19 +107,25 @@ class Metadata(QWidget):
         self.title.setPlainText(
                 self.window.plugin.tables.get(
                     'metadata', {'did':did}, 'title'))
-        tids=self.window.plugin.tables.get(
-                'tagged', {'uid':did}, 'tid', unique=False)
-        if tids is not None and len(tids)>0:
-            tags=[]
-            print(tags)
-            for tid in tids:
-                tag=self.window.plugin.tables.get(
-                        'tags', {'id':tid}, 'tag')
-                if tag is None: continue
-                tags+=[tag]
-            self.tags.setPlainText('; '.join(tags))
-        else:
-            self.tags.setPlainText('')
+
+        # tids=self.window.plugin.tables.get(
+                # 'tagged', {'uid':did}, 'tid', unique=False)
+
+        tags=self.window.plugin.tags.get(did, 'document')
+        self.tags.textChanged.disconnect()
+        self.tags.setPlainText('; '.join(tags))
+        self.tags.connect()
+
+        # if tids is not None and len(tids)>0:
+        #     tags=[]
+        #     for tid in tids:
+        #         tag=self.window.plugin.tables.get(
+        #                 'tags', {'id':tid}, 'tag')
+        #         if tag is None: continue
+        #         tags+=[tag]
+        #     self.tags.setPlainText('; '.join(tags))
+        # else:
+        #     self.tags.setPlainText('')
 
         if self.kind in [None, '']: self.kind = 'book'
 
@@ -145,6 +148,9 @@ class MQTextEdit(QPlainTextEdit):
         self.m_data=data
         self.textChanged.connect(self.on_textChanged)
         self.setFixedHeight(60)
+
+    def connect(self):
+        self.textChanged.connect(self.on_textChanged)
 
     def on_titleChanged(self, sender):
         if self==sender: return
@@ -173,8 +179,16 @@ class MQLineEdit(QLineEdit):
         self.m_data=data
         self.textChanged.connect(self.on_textChanged)
 
+    def connect(self):
+        self.textChanged.connect(self.on_textChanged)
+
     def on_textChanged(self, text):
-        self.m_data.update(
-                'metadata', 
-                {'did':self.meta.m_id}, 
-                {self.field:text.lower().title()})
+        if text=='': return
+        if self.field!='tags':
+            self.m_data.update(
+                    'metadata', 
+                    {'did':self.meta.m_id}, 
+                    {self.field:text.lower().title()})
+        else:
+            self.meta.window.plugin.tags.set(
+                    self.meta.m_id, 'document', text.split(';'))

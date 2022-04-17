@@ -15,13 +15,15 @@ class DatabaseConnector:
         self.m_parent.window.plugin.tables.addTable(TaggedTable)
 
     def get(self, uid, kind):
-        tids=self.window.plugin.tables.get(
+        data=self.window.plugin.tables.get(
                 'tagged', {'uid':uid, 'kind':kind}, 'tid', unique=False)
 
         tags=[]
-        for tid in tids:
-            tags+=self.window.plugin.tables.get(
-                    'tags', {'id':tid}, 'tag', unique=False)
+        if data is None: return tags
+        for t in data:
+            tag=self.window.plugin.tables.get('tags', {'id':t['tid']}, 'tag')
+            if tag is None: continue
+            tags+=[tag]
         return tags
 
     def set(self, uid, kind, tags):

@@ -13,8 +13,8 @@ class Tags(QObject):
         self.name = 'tags'
         self.db = DatabaseConnector(self) 
 
-    def get(self, document):
-        return self.db.get(document.id(), document.kind())
+    def get(self, m_id, kind='document'):
+        return self.db.get(m_id, kind)
 
     def set(self, m_id, kind, tagList):
         self.db.set(m_id, kind, tagList)
