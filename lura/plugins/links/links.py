@@ -35,7 +35,6 @@ class Links(QObject):
         self.window.pageItemHasBeenJustCreated.connect(self.on_pageItemHasBeenJustCreated)
         self.window.mousePressEventOccured.connect(self.on_mousePressEventOccured)
 
-
     def goToWanted(self):
         view=self.window.view()
         if view is None or type(view.document())!=PdfDocument: return 

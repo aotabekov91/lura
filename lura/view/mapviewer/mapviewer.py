@@ -31,6 +31,10 @@ class MapView(QWidget):
                 ('mdd', 'deleteDocument'),
                 ('maw', 'addWatchFolder'),
                 ('muw', 'updateWatchFolder'),
+                ('msa', 'activateSorting'),
+                ('msd', 'deactivateSorting'),
+                ('mfa', 'activateFiltering'),
+                ('mfd', 'deactivateFiltering'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
@@ -44,6 +48,29 @@ class MapView(QWidget):
 
         self.window.titleChanged.connect(self.updateTitles)
         self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
+
+    def activateSorting(self):
+        if self.m_view.model() is None: return
+        self.m_view.setModel(self.m_proxyModel)
+        self.m_view.sortByColumn(0, Qt.AscendingOrder)
+
+    def deactivateSorting(self):
+        if self.m_view.model() is None: return
+        self.m_view.setModel(self.m_document.m_model)
+
+    def activateFiltering(self):
+        if self.m_view.model() is None: return
+        self.m_view.setModel(self.m_proxyModel)
+        self.window.plugin.command.activateCustom(
+                self._activateFiltering, 'Filter: ', self._activateFiltering)
+
+    def _activateFiltering(self, text):
+        if self.m_view.model() is None: return
+        self.m_proxyModel.setFilterFixedString(text)
+
+    def deactivateFiltering(self):
+        if self.m_view.model() is None: return
+        self.m_view.setModel(self.m_document.m_model)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -81,6 +108,10 @@ class MapView(QWidget):
         self.m_view.hide()
         self.m_view.setModel(self.m_document.m_model)
         self.m_view.model().itemChanged.connect(self.on_itemChanged)
+
+        self.m_proxyModel=QSortFilterProxyModel(self.m_view)
+        self.m_proxyModel.setSourceModel(self.m_document.m_model)
+        self.m_proxyModel.setDynamicSortFilter(True)
 
         self.show()
         self.m_view.show()

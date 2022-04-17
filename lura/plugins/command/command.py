@@ -108,15 +108,18 @@ class Command(QObject):
         self.commandEdit.show()
         self.m_edit.setFocus()
 
-    def activateCustom(self, callFunc, label=None):
+    def activateCustom(self, callFunc, label=None, contCallFunc=None):
 
         self.customClientFunc=callFunc
+        self.contCallFunc=contCallFunc
         self.window.statusBar().show()
         # self.pageInfo.hide()
         if label is not None: self.m_editLabel.setText(label)
 
         self.m_edit.clear()
         self.m_edit.returnPressed.connect(self.customClientMode)
+        if contCallFunc is not None:
+            self.m_edit.textChanged.connect(self.contCallFunc)
 
         self.commandEdit.show()
         self.m_edit.setFocus()
@@ -127,9 +130,13 @@ class Command(QObject):
 
         self.m_edit.clear()
         self.commandEdit.hide()
-        # self.hide()
         func=getattr(self, 'customClientFunc', None)
         if func is None: return
+        try:
+            self.m_edit.returnPressed.disconnect()
+            self.m_edit.textChanged.disconnect()
+        except:
+            pass
         self.customClientFunc(text)
 
     def addCommands(self, commandList, client):

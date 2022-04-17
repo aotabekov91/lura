@@ -59,11 +59,10 @@ class BaseMapDocument(QObject):
 
         return found
 
-    def isChild(self, item, parent):
-
-        for index in range(parent.rowCount()):
-            if parent.child(index).isEqual(item): return True
-        return False
+    # def isChild(self, item, parent):
+    #     for index in range(parent.rowCount()):
+    #         if parent.child(index).isEqual(item): return True
+    #     return False
 
     def isIn(self, item, parent):
         if parent!=self.invisibleRootItem():
