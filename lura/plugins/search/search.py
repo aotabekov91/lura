@@ -1,126 +1,122 @@
 #!/usr/bin/python3
 
-import os
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-class Search(QWidget):
+from lura.render.pdf import PdfDocument
+
+def search(text, document):
+    found=[]
+    for page in document.pages():
+        matches=page.search(text)
+        for m in matches:
+            found+=[(page.pageNumber(), m)]
+    return found
+
+class Search(QListWidget):
 
     def __init__(self, parent, settings):
         super().__init__(parent)
         self.window = parent
         self.s_settings=settings
-        self.name = 'textSearch'
+        self.name = 'search'
+        self.location='bottom'
         self.globalKeys= {
                 '/': (
-                    self.toggle,
+                    self.find,
                     self.window,
                     Qt.WindowShortcut)
                 }
         self.setup()
 
     def setup(self):
+        nextAction=QShortcut('n', self)
+        nextAction.setContext(Qt.WidgetShortcut)
+        nextAction.activated.connect(lambda: self.jump('next'))
+        prevAction=QShortcut('p', self)
+        prevAction.setContext(Qt.WidgetShortcut)
+        prevAction.activated.connect(lambda: self.jump('prev'))
 
-        self.shortcuts={v:k for k, v in self.s_settings['shortcuts'].items()}
+        self.itemDoubleClicked.connect(self.on_doubleClicked)
+        self.window.viewChanged.connect(self.on_viewChanged)
+        self.window.setTabLocation(self, self.location, self.name)
 
-        self.window.view.pageHasBeenJustPainted.connect(self.paintMatches)
-
-        self.activated=False
-        self.currentMatch=None
-        self.matches=None
-
-        self.editor=QLineEdit()
-        self.editor.returnPressed.connect(self.search)
-        label=QLabel('Search')
-        self.widget=QWidget()
-        layout=QHBoxLayout()
-        layout.addWidget(label)
-        layout.addWidget(self.editor)
-        self.widget.setLayout(layout)
-
-    def toggle(self):
-
-        raise
-        if not self.activated:
-
-            self.window.activateStatusBar(self.widget)
-            self.editor.setFocus()
-            self.activated=True
-
-        else:
-
-            self.window.deactivateStatusBar(self.widget)
-            self.activated=False
-
+    def find(self):
+        view=self.window.view()
+        if view is None or type(view.document())!=PdfDocument: return 
+        self.window.plugin.command.activateCustom(self.search, 'Search: ')
 
     def paintMatches(self, painter, options, widget, pageItem):
-        if self.activated:
-            if self.currentMatch is not None:
-                painter.setPen(QPen(Qt.red, 0.0))
-                painter.drawRect(self.currentMatch)
 
+        if self.currentMatch is None: return
+        painter.setPen(QPen(Qt.red, 0.0))
+        painter.drawRect(self.currentMatch)
 
-    def getMatches(self, text):
-        found=[]
-        for pageItem in self.window.view.m_pageItems:
-            matches=pageItem.search(text)
-            for match in matches:
-                match=pageItem.mapToItem(match)[0]
-                found+=[(pageItem, match)]
-        return found
-
-    def search(self):
+    def search(self, text):
         
-        text=self.editor.text()
+        self.matches=[]
+        self.currentMatch=None
+        self.currentIndex=-1
+
         if text == '': return
 
-        matches=self.getMatches(text)
+        self.matches=search(text, self.window.view().document())
 
-        if len(matches) == 0: 
-            self.toggle()
-            return 
+        if len(self.matches) == 0: return 
 
-        self.show()
+        self.clear()
+        for i, (pageNumber, rectF) in enumerate(self.matches):
+            text=str(pageNumber)
+            item=QListWidgetItem(text)
+            item.setData(0, pageNumber)
+            item.setData(1, rectF)
+            self.addItem(item)
+        self.window.activateTabWidget(self)
+
+        self.window.view().pageHasBeenJustPainted.connect(self.paintMatches)
+        self.jump('next')
         self.setFocus()
-
-        self.matches=matches
-        self.currentIndex=-1
-        self.jumpToNext()
         
-    def keyPressEvent(self, event):
-        key=event.text()
+    def jump(self, kind):
 
-        if key in self.shortcuts:
-            func=getattr(self, self.shortcuts[key])
-            func()
+        if len(self.matches)==0: return
 
-        elif event.key()==Qt.Key_Escape:
-            self.toggle()
-
-
-    def jumpToNext(self):
-
-        if self.matches is not None:
-
+        if kind=='next':
             self.currentIndex+=1
             if self.currentIndex>=len(self.matches):
                 self.currentIndex=0
 
-            pageItem=self.matches[self.currentIndex][0]
-            self.currentMatch=self.matches[self.currentIndex][1]
-            self.window.view.jumpToPage(pageItem.m_index)
-
-    def jumpToPrevious(self):
-
-        if self.matches is not None:
-
+        elif kind=='prev':
             self.currentIndex-=1
             if self.currentIndex<0:
                 self.currentIndex=len(self.matches)-1
 
-            pageItem=self.matches[self.currentIndex][0]
-            self.currentMatch=self.matches[self.currentIndex][1]
-            self.window.view.jumpToPage(pageItem.m_index)
+        pageNumber=self.matches[self.currentIndex][0]
+        pageItem=self.window.view().pageItem(pageNumber-1)
+        currentMatch=self.matches[self.currentIndex][1]
+        self.currentMatch=pageItem.mapToItem(currentMatch)[0]
+        self.window.view().jumpToPage(pageNumber)
+        self.setFocus()
 
+    def on_doubleClicked(self, item):
+        if len(self.matches)==0: return
+        pageNumber=int(item.data(0))
+        currentMatch=item.data(1)
+        print(pageNumber, currentMatch)
+        pageItem=self.window.view().pageItem(pageNumber-1)
+        self.currentMatch=pageItem.mapToItem(currentMatch)[0]
+        self.window.view().jumpToPage(pageNumber)
+        self.setFocus()
+
+    def on_viewChanged(self, view):
+        if not hasattr(self, 'matches'): return
+        self.window.deactivateTabWidget(self)
+        self.clear()
+        self.matches=[]
+        self.currentMatch=None
+
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_Escape:
+            self.window.deactivateTabWidget(self)
+            self.window.view().setFocus()

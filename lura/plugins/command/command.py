@@ -76,7 +76,6 @@ class Command(QObject):
             pass
         self.m_edit.clear()
         self.commandEdit.hide()
-        # self.window.statusBar().hide()
         self.commandList.clear()
         for command in self.m_commands:
             self.commandList.addItem(command)

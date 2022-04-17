@@ -122,6 +122,7 @@ class DocumentView(QGraphicsView):
             if cond:
                 self.m_currentPage = self.m_layout.currentPage(page)
                 self.prepareView(changeLeft, changeTop, page)
+                self.currentPageChanged.emit(self.m_document, self.m_currentPage)
 
     def saveLeftAndTop(self, left=0., top=0.):
         page=self.m_pageItems[self.m_currentPage-1]
@@ -241,6 +242,9 @@ class DocumentView(QGraphicsView):
             self.m_document = document
             self.preparePages()
             # self.prepareAnnotations()
+
+    def pageItem(self, index):
+        return self.m_pageItems[index]
 
     def preparePages(self):
 
