@@ -48,15 +48,14 @@ class Documents(QObject):
 
             while qIterator.hasNext():
                 loc=qIterator.next()
-                r=self.window.plugin.tables.get('documents',
-                    {'loc':loc})
+                r=self.window.plugin.tables.get('documents', {'loc':loc})
                 if r is None:
                     self.window.buffer.loadDocument(loc)
 
     def checkDocuments(self):
 
         # TODO: refactor as a separate process
-        allDocs=self.window.plugin.tables.getAll('documents')
+        allDocs=self.window.plugin.tables.get('documents')
 
         for doc in allDocs:
             loc=doc['loc']

@@ -108,24 +108,10 @@ class Metadata(QWidget):
                 self.window.plugin.tables.get(
                     'metadata', {'did':did}, 'title'))
 
-        # tids=self.window.plugin.tables.get(
-                # 'tagged', {'uid':did}, 'tid', unique=False)
-
         tags=self.window.plugin.tags.get(did, 'document')
         self.tags.textChanged.disconnect()
         self.tags.setPlainText('; '.join(tags))
         self.tags.connect()
-
-        # if tids is not None and len(tids)>0:
-        #     tags=[]
-        #     for tid in tids:
-        #         tag=self.window.plugin.tables.get(
-        #                 'tags', {'id':tid}, 'tag')
-        #         if tag is None: continue
-        #         tags+=[tag]
-        #     self.tags.setPlainText('; '.join(tags))
-        # else:
-        #     self.tags.setPlainText('')
 
         if self.kind in [None, '']: self.kind = 'book'
 
@@ -133,9 +119,11 @@ class Metadata(QWidget):
         fields = getattr(self, f'{self.kind}Fields')
 
         for field, qline in fields.items():
+            qline.disconnect()
             qline.setText(
                     str(self.window.plugin.tables.get(
                 'metadata', {'did':did}, field)))
+            qline.connect()
 
     def register(self, document):
         self.db.register(document)

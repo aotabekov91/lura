@@ -18,12 +18,12 @@ class DatabaseConnector:
         data=self.window.plugin.tables.get(
                 'tagged', {'uid':uid, 'kind':kind}, 'tid', unique=False)
 
+        if data is None: return []
+
         tags=[]
-        if data is None: return tags
         for t in data:
-            tag=self.window.plugin.tables.get('tags', {'id':t['tid']}, 'tag')
-            if tag is None: continue
-            tags+=[tag]
+            tag=self.window.plugin.tables.get('tags', {'id':t}, 'tag')
+            if tag is not None: tags+=[tag]
         return tags
 
     def set(self, uid, kind, tags):

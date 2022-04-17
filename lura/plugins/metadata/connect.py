@@ -24,7 +24,7 @@ class DatabaseConnector(QObject):
                 [('iad - meta add title', 'addTitle')], self)
 
     def addTitle(self):
-        allDocuments=self.window.plugin.tables.getAll('documents')
+        allDocuments=self.window.plugin.tables.get('documents')
         for f in allDocuments:
             meta=self.window.plugin.tables.get('metadata', {'did':f['id']})
             if meta is None: self.window.buffer.loadDocument(f['loc'])

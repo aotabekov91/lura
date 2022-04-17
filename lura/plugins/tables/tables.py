@@ -29,18 +29,17 @@ class Tables(OrderedDict):
 
         if len(results)==0: return
 
-        if len(results)>1:
-            if fieldName is None:
-                return results
-            else:
-                return [r[fieldName] for r in results]
-        else:
-            if not unique: return results
-
-            if fieldName is None:
+        if fieldName is None:
+            if unique:
                 return results[0]
             else:
-                return results[0][fieldName]
+                return results
+        else:
+            found=[r[fieldName] for r in results]
+            if unique:
+                return found[0]
+            else:
+                return found
 
     def write(self, tableName, conDict):
         table=getattr(self, tableName, None)

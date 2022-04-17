@@ -74,7 +74,7 @@ class MapView(QWidget):
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
-            'annotations', {'did': item.id()}, unique=False)
+                'annotations', {'did': item.id()}, unique=False)
         if annotations is None: return
         for a in annotations:
             aItem = Item('annotation', a['id'], self.window)

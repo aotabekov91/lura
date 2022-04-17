@@ -56,8 +56,8 @@ class Display(QScrollArea):
         if function is not None and function!='All':
             criteria['color']=self.colorCode[function]
 
-        annotations = self.window.plugin.tables.get(
-            'annotations', criteria, unique=False)
+        annotations = self.window.plugin.tables.get('annotations', criteria,
+                unique=False)
 
         if annotations is None: return
 
