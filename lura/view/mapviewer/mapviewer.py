@@ -53,10 +53,12 @@ class MapView(QWidget):
         if self.m_view.model() is None: return
         self.m_view.setProxyModel(self.m_proxyModel)
         self.m_view.sortByColumn(0, Qt.AscendingOrder)
+        self.m_view.setFocus()
 
     def deactivateSorting(self):
         if self.m_view.model() is None: return
         self.m_view.setModel(self.m_document.m_model)
+        self.m_view.setFocus()
 
     def activateFiltering(self):
         if self.m_view.model() is None: return
@@ -67,10 +69,12 @@ class MapView(QWidget):
     def _activateFiltering(self, text):
         if self.m_view.model() is None: return
         self.m_proxyModel.setFilterFixedString(text)
+        self.m_view.setFocus()
 
     def deactivateFiltering(self):
         if self.m_view.model() is None: return
         self.m_view.setModel(self.m_document.m_model)
+        self.m_view.setFocus()
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
