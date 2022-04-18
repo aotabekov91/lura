@@ -76,9 +76,12 @@ class Command(QObject):
             pass
         self.m_edit.clear()
         self.commandEdit.hide()
+        self.commandList.hide()
         self.commandList.clear()
         for command in self.m_commands:
             self.commandList.addItem(command)
+
+        self.window.setFocus()
 
     def on_textChanged(self, text):
         if self.commandList.count() == 1:
@@ -190,6 +193,7 @@ class MQLineEdit(QLineEdit):
         wasVisible=getattr(self.m_client, 'wasStatusBarVisible', None)
 
         if event.key()==Qt.Key_Escape:
+            self.m_client.hide()
             if not wasVisible:
                 self.m_client.window.statusBar().hide()
         else:
