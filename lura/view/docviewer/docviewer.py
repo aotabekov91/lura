@@ -339,6 +339,12 @@ class DocumentView(QGraphicsView):
             self.verticalScrollBar().setValue(int(self.scene().sceneRect().height()))
         self.setCurrentPageFromVisiblePages()
 
+    def pageLeft(self):
+        self.horizontalScrollBar().setValue(int(self.horizontalScrollBar().value()*1.1))
+
+    def pageRight(self):
+        self.horizontalScrollBar().setValue(int(self.horizontalScrollBar().value()*0.9))
+
     def pageUp(self):
         visibleHeight=self.m_layout.visibleHeight(self.size().height())
         dx=self.verticalScrollBar().value() - visibleHeight
