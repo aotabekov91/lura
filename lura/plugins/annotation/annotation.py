@@ -8,22 +8,6 @@ from .create import Creator
 from .display import Display, AQWidget
 from .connect import DatabaseConnector
 
-class NQWidget(AQWidget):
-
-    def on_titleChanged(self, text):
-        super().on_titleChanged(text)
-        self.m_window.plugin.annotation.display.update()
-
-    def on_contentChanged(self):
-        super().on_contentChanged(text)
-        self.m_window.plugin.annotation.display.update()
-
-    def keyPressEvent(self, event):
-        if event.key()==Qt.Key_Escape:
-            self.hide()
-        else:
-            super().keyPressEvent(event)
-
 class Annotation(QObject):
 
     def __init__(self, parent, settings):
@@ -93,3 +77,20 @@ class Annotation(QObject):
     def checkDocument(self, document):
         for ann in document.annotations():
             self.db.register(ann)
+
+class NQWidget(AQWidget):
+
+    def on_titleChanged(self, text):
+        super().on_titleChanged(text)
+        self.m_window.plugin.annotation.display.update()
+
+    def on_contentChanged(self):
+        super().on_contentChanged(text)
+        self.m_window.plugin.annotation.display.update()
+
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_Escape:
+            self.hide()
+        else:
+            super().keyPressEvent(event)
+

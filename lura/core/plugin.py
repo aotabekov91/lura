@@ -18,6 +18,7 @@ from lura.plugins.mindmap import MindMap
 from lura.plugins.command import Command
 from lura.plugins.outline import Outline
 from lura.plugins.quickmarks import Quickmarks
+from lura.plugins.selection import Selection
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.anki import Anki
@@ -53,6 +54,7 @@ class PluginManager(dict):
                     Quickmarks,
                     Search,
                     Tags,
+                    Selection,
                     # Anki,
                     # Lookup,
                     # Pager,

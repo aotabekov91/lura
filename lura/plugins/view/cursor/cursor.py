@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 class Cursor(QObject):
 
     selectedAreaByCursor=pyqtSignal(object, object, object)
+    rubberBandSelection=pyqtSignal(QRectF, object)
 
     def __init__(self, parent, settings): 
         super().__init__(parent)
@@ -186,7 +187,7 @@ class Cursor(QObject):
     def activate(self, client, mode='selector'):
         self.m_client=client
         self.m_mode=mode
-        self.connecntSelectorEvents()
+        self.connectSelectorEvents()
 
     def deactivate(self):
         self.m_client=None
@@ -197,7 +198,7 @@ class Cursor(QObject):
         self.selectedArea=[]
         self.selectedText=[]
 
-    def connecntSelectorEvents(self):
+    def connectSelectorEvents(self):
         self.m_client.window.mousePressEventOccured.connect(self.on_mousePress)
         self.m_client.window.mouseMoveEventOccured.connect(self.on_mouseMove)
         self.m_client.window.mouseReleaseEventOccured.connect(self.on_mouseRelease)
@@ -218,20 +219,23 @@ class Cursor(QObject):
         elif self.m_mode=='rubberBand':
             if pageItem.m_boundingRect.contains(event.pos()):
                 self.m_rubberBand.setBottomRight(event.pos())
+                self.m_rubberBand=self.m_rubberBand.normalized()
                 pageItem.update()
                 event.accept()
 
     def on_mouseRelease(self, event, pageItem, view):
-        if self.m_mode is not None:
-            try:
+        if self.m_mode is None: return
 
-                pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
-                self.selectedAreaByCursor.emit(event, pageItem, self.m_client)
-                self.selectedArea=[]
-                pageItem.update()
-                event.accept()
-            except:
-                pass
+        try:
+
+            pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
+            self.selectedAreaByCursor.emit(event, pageItem, self.m_client)
+            self.rubberBandSelection.emit(self.m_rubberBand, pageItem)
+            self.selectedArea=[]
+            pageItem.update()
+            event.accept()
+        except:
+            pass
 
     def getRubberBandSelection(self):
         return self.m_rubberBand

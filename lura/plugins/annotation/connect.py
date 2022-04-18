@@ -1,3 +1,5 @@
+import re
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -13,7 +15,6 @@ class DatabaseConnector:
     def setup(self):
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
         self.db = self.m_parent.window.plugin.tables.annotations
-
 
     def register(self, annotation):
 
@@ -37,8 +38,8 @@ class DatabaseConnector:
             b.setBottomRight(t.map(bottomRight))
             text=annotation.page().text(b)
 
-            for f in ['"', '\n']:
-                text=text.replace(f, ' ')
+            text=' '.join([f for f in text.split('\n') if f!=''])
+            text=re.sub(re.compile(r'  *'), ' ', text)
 
             data['content']=text
             data['color']=annotation.color()
