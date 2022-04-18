@@ -14,7 +14,7 @@ class DatabaseConnector:
 
     def setup(self):
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
-        self.db = self.m_parent.window.plugin.tables.annotations
+        self.db = self.m_parent.window.plugin.tables
 
     def register(self, annotation):
 
@@ -22,12 +22,13 @@ class DatabaseConnector:
         page = annotation.page().pageNumber()
         position=annotation.position()
 
-        data = {'did': did, 'page': page, 'position': position}
-        criteria=[{'field':k, 'value':v} for k,v in data.items()]
+        cond = {'did': did, 'page': page, 'position': position}
 
-        aData=self.db.getRow(criteria)
+        aid=self.db.get('annotations', cond, 'id') 
 
-        if len(aData)==0: 
+        if aid is None: 
+
+            data=cond.copy()
 
             b=annotation.boundary()
             size=annotation.page().size()
@@ -44,10 +45,11 @@ class DatabaseConnector:
             data['content']=text
             data['color']=annotation.color()
 
-            self.db.writeRow(data)
-            aData=self.db.getRow(criteria)
+            self.db.write('annotations', data)
+            aid=self.db.get('annotations', data, 'id')
 
-        annotation.setId(aData[0]['id'])
+        annotation.setId(aid)
+
         self.m_parent.window.annotationRegistered.emit(annotation)
         return annotation
 
