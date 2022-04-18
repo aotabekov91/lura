@@ -26,7 +26,7 @@ class Display(QWidget):
 
     def open(self, n_id=None):
         if n_id is None:
-            noteNumber=len(self.window.plugin.tables.getAll('notes'))
+            noteNumber=len(self.window.plugin.tables.get('notes'))
             title=f'Note_{noteNumber}'
             loc=f'{self.m_parent.baseFolder}/{title}.md'
             pathlib.Path(loc).touch()

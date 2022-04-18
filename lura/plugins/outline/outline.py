@@ -160,7 +160,7 @@ class Outline(MapTree):
         if not self.isVisible(): return
         document=view.document()
         outline=self.outlines.get(document, None)
-        if not outlines: self.setModel(outline)
+        if not outline: self.setModel(outline)
 
     def setModel(self, model):
         super().setModel(model)

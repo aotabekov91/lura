@@ -26,6 +26,7 @@ class WindowManager(QMainWindow):
     pageHasBeenJustPainted = pyqtSignal(object, object, object, object, object)
 
     titleChanged=pyqtSignal(object)
+    documentTagged=pyqtSignal(object, str)
 
     mapCreated=pyqtSignal(object)
     documentCreated=pyqtSignal(object)

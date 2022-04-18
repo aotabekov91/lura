@@ -108,23 +108,31 @@ class Command(QObject):
         self.commandEdit.show()
         self.m_edit.setFocus()
 
-    def activateCustom(self, callFunc, label=None, contCallFunc=None):
+    def activateCustom(self, callFunc, label=None, contCallFunc=None, text=None):
+
+        self.pageInfo.hide()
+        self.wasStatusBarVisible=self.window.statusBar().isVisible()
 
         self.customClientFunc=callFunc
         self.contCallFunc=contCallFunc
         self.window.statusBar().show()
-        # self.pageInfo.hide()
         if label is not None: self.m_editLabel.setText(label)
 
         self.m_edit.clear()
         self.m_edit.returnPressed.connect(self.customClientMode)
         if contCallFunc is not None:
             self.m_edit.textChanged.connect(self.contCallFunc)
+        if text is not None:
+            self.m_edit.setText(text)
 
         self.commandEdit.show()
         self.m_edit.setFocus()
 
     def customClientMode(self):
+
+        self.pageInfo.show()
+        if not self.wasStatusBarVisible: self.window.statusBar().hide()
+
         text=self.m_edit.text()
         self.m_editLabel.setText(':')
 
@@ -178,7 +186,11 @@ class MQLineEdit(QLineEdit):
         self.m_client=client
 
     def keyPressEvent(self,event):
+
+        wasVisible=getattr(self.m_client, 'wasStatusBarVisible', None)
+
         if event.key()==Qt.Key_Escape:
-            self.m_client.hide()
+            if not wasVisible:
+                self.m_client.window.statusBar().hide()
         else:
             super().keyPressEvent(event)

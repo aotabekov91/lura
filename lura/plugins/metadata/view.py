@@ -26,6 +26,7 @@ class Metadata(QWidget):
         self.title=MQTextEdit('title', self.window.plugin.tables, self)
         self.tags=MQTextEdit('tags', self.window.plugin.tables, self)
         self.window.titleChanged.connect(self.title.on_titleChanged)
+        self.window.documentTagged.connect(self.on_documentTagged)
         self.stack = QStackedWidget(self)
 
         self.m_layout = QVBoxLayout(self)
@@ -76,6 +77,13 @@ class Metadata(QWidget):
         if not self.isVisible(): return
         self.m_id = self.window.view().document().id()
         self.setKind(self.m_id)
+
+    def on_documentTagged(self, document, text):
+        if not self.isVisible(): return
+        if self.m_id!=document.id(): return
+        self.tags.textChanged.disconnect()
+        self.tags.setPlainText(text)
+        self.tags.connect()
 
     def on_dropdown_changed(self):
         if self.m_id is None: return

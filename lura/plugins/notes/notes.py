@@ -38,7 +38,7 @@ class Notes(QObject):
 
     def setFuzzyData(self):
 
-        notes=self.window.plugin.tables.getAll('notes')
+        notes=self.window.plugin.tables.get('notes')
         if len(notes)==0: return
         names=[n['title'] for n in notes]
         nids=[n['id'] for n in notes]
