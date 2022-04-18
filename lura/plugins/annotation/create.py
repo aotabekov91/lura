@@ -85,6 +85,7 @@ class Creator(QObject):
                     'did': annotation.page().document().id()},
                 'id')
         self.window.plugin.tables.remove('annotations', {'id': aid})
+        self.m_parent.display.load(annotation.page().document())
         annotation.page().removeAnnotation(annotation)
-
         annotation.page().pageItem().refresh(dropCachedPixmap=True)
+

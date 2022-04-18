@@ -43,6 +43,7 @@ class Display(QScrollArea):
 
     def on_viewChanged(self, view):
 
+        if not self.isVisible(): return
         self.load(view.document())
 
     def load(self, document=None, function=None):
@@ -85,6 +86,7 @@ class Display(QScrollArea):
         if not self.isVisible():
 
             self.window.activateTabWidget(self)
+            self.load()
 
         else:
 
