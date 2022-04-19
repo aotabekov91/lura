@@ -162,7 +162,8 @@ class Command(QObject):
         for (key, command) in commandList:
             self.m_commands[f'{key} -  {command}'] = getattr(client, command)
 
-    def on_documentTagged(self, document, text):
+    def on_documentTagged(self, m_id, kind, tagList):
+        text='; '.join(tagList)
         self.tags.setText(f' [{text}] ')
 
     def on_viewChanged(self, view):

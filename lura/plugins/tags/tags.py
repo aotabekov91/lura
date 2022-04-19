@@ -34,13 +34,11 @@ class Tags(QObject):
     def _tag(self, text):
         document=self.window.view().document()
         tags=[a.strip() for a in text.split(';')]
-        self.window.plugin.tags.set(
-                document.id(), 'document', tags)
-
-        self.window.documentTagged.emit(document, text)
+        self.set(document.id(), 'document', tags)
 
     def get(self, m_id, kind='document'):
         return self.db.get(m_id, kind)
 
     def set(self, m_id, kind, tagList):
         self.db.set(m_id, kind, tagList)
+        self.window.documentTagged.emit(m_id, kind, tagList)

@@ -42,40 +42,56 @@ class Quickmarks(QListWidget):
 
     def set(self):
         view = self.window.view()
-        if view is None or type(view.document()) != PdfDocument:
-            return
-        self.window.plugin.command.activateCustom(
-            self._set, 'Mark: ')
+        if view is None: return
+        self.window.plugin.command.activateCustom(self._set, 'Mark: ')
 
     def _set(self, mark):
         if mark=='': return
-        did = self.window.view().document().id()
-        page = self.window.view().currentPage()
-        left, top = self.window.view().saveLeftAndTop()
+        view = self.window.view()
+        if type(view.document()) == PdfDocument:
+            did = self.window.view().document().id()
+            page = self.window.view().currentPage()
+            left, top = self.window.view().saveLeftAndTop()
+        else:
+            tree=self.window.view().tree()
+            did=tree.model()
+            page=tree.currentItem()
+            left, top=None, None
 
-        if not did in self.marks:
-            self.marks[did] = {}
+        if not did in self.marks: self.marks[did] = {}
 
         self.marks[did][mark] = (page, left, top)
 
     def goto(self):
         view = self.window.view()
-        if view is None or type(view.document()) != PdfDocument:
-            return
-        did = view.document().id()
-        if not did in self.marks:
-            return
+        if view is None: return
+        if type(view.document()) == PdfDocument:
+            did = view.document().id()
+        else:
+            did=view.tree().model()
+
+        if not did in self.marks: return
         self.showList(did)
         self.window.plugin.command.activateCustom(self._goto, 'Jump: ')
 
     def _goto(self, mark):
         if mark=='': return
         self.window.deactivateTabWidget(self)
-        did = self.window.view().document().id()
-        if not mark in self.marks[did]:
-            return
+
+        view = self.window.view()
+        if type(view.document()) == PdfDocument:
+            did = self.window.view().document().id()
+        else:
+            did=self.window.view().tree().model()
+
+        if not mark in self.marks[did]: return
+
         page, left, top = self.marks[did][mark]
-        self.window.view().jumpToPage(page, left, top)
+
+        if type(view.document()) == PdfDocument:
+            self.window.view().jumpToPage(page, left, top)
+        else:
+            self.window.view().tree().setCurrentIndex(page.index())
 
     def showList(self, did):
         self.clear()

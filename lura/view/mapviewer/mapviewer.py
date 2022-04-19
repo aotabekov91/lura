@@ -52,6 +52,9 @@ class MapView(QWidget):
         self.window.titleChanged.connect(self.updateTitles)
         self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
 
+    def tree(self):
+        return self.m_view
+
     def activateSorting(self):
         if self.m_view.model() is None: return
         self.m_view.setProxyModel(self.m_proxyModel)
