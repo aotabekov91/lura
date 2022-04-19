@@ -126,6 +126,7 @@ class Command(QObject):
 
         self.customClientFunc=callFunc
         self.contCallFunc=contCallFunc
+
         self.window.statusBar().show()
         if label is not None: self.m_editLabel.setText(label)
 
@@ -151,18 +152,20 @@ class Command(QObject):
         self.commandEdit.hide()
         func=getattr(self, 'customClientFunc', None)
         if func is None: return
+
         try:
             self.m_edit.returnPressed.disconnect()
             self.m_edit.textChanged.disconnect()
         except:
             pass
+
         self.customClientFunc(text)
 
     def addCommands(self, commandList, client):
         for (key, command) in commandList:
             self.m_commands[f'{key} -  {command}'] = getattr(client, command)
 
-    def on_documentTagged(self, m_id, kind, tagList):
+    def on_documentTagged(self, m_id, kind, tagList, sender):
         text='; '.join(tagList)
         self.tags.setText(f' [{text}] ')
 

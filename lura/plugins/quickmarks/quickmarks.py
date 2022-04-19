@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import *
 
 from lura.render.pdf import PdfDocument
 
-
 class Quickmarks(QListWidget):
 
     def __init__(self, parent, settings):
@@ -42,6 +41,7 @@ class Quickmarks(QListWidget):
 
     def set(self):
         view = self.window.view()
+        print(type(view))
         if view is None: return
         self.window.plugin.command.activateCustom(self._set, 'Mark: ')
 
@@ -61,6 +61,7 @@ class Quickmarks(QListWidget):
         if not did in self.marks: self.marks[did] = {}
 
         self.marks[did][mark] = (page, left, top)
+        print(self.marks)
 
     def goto(self):
         view = self.window.view()
@@ -90,8 +91,10 @@ class Quickmarks(QListWidget):
 
         if type(view.document()) == PdfDocument:
             self.window.view().jumpToPage(page, left, top)
+            self.window.view().setFocus()
         else:
             self.window.view().tree().setCurrentIndex(page.index())
+            self.window.view().tree().setFocus()
 
     def showList(self, did):
         self.clear()

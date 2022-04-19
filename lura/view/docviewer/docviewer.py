@@ -363,6 +363,7 @@ class DocumentView(QGraphicsView):
             self.verticalScrollBar().setValue(int(self.scene().sceneRect().height()))
         self.setCurrentPageFromVisiblePages()
 
+
     def setCurrentPageFromVisiblePages(self):
         items=self.items(self.viewport().rect())
         if len(items)==1:
@@ -475,16 +476,21 @@ class DocumentView(QGraphicsView):
         self.m_currentPage=pageNumber
         self.currentPageChanged.emit(self.m_document, self.m_currentPage)
 
-    def event(self, event):
-        if event.type()==QEvent.Enter: self.window.setView(self)
-        return super().event(event)
-
     def totalPages(self):
         return len(self.m_pages)
 
     def update(self):
         pageItem=self.m_pageItems[self.m_currentPage-1]
         pageItem.refresh(dropCachedPixmap=True)
+
+    def wheelEvent(self, event):
+        super().wheelEvent(event)
+        self.setCurrentPageFromVisiblePages()
+
+    def event(self, event):
+        if event.type()==QEvent.Enter: self.window.setView(self)
+        return super().event(event)
+
 
 class Position:
 

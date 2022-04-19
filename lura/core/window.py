@@ -26,7 +26,7 @@ class WindowManager(QMainWindow):
     pageHasBeenJustPainted = pyqtSignal(object, object, object, object, object)
 
     titleChanged=pyqtSignal(object)
-    documentTagged=pyqtSignal(object, str)
+    documentTagged=pyqtSignal(int, str, object, object)
 
     mapItemChanged=pyqtSignal(QStandardItem)
 
@@ -90,22 +90,18 @@ class WindowManager(QMainWindow):
         return QSize(1000, 1200)
 
     def focusMapView(self):
-        self.display.focusMapView()
+        view=self.display.focusMapView()
+        self.setView(view)
 
     def focusDocumentView(self):
-        self.display.focusDocumentView()
-
-    def focusBrowserView(self):
-        self.display.focusBrowserView()
+        view=self.display.focusDocumentView()
+        self.setView(view)
 
     def onlyMapView(self):
         self.display.onlyMapView()
 
     def onlyDocumentView(self):
         self.display.onlyDocumentView()
-
-    def onlyBrowserView(self):
-        self.display.onlyBrowserView()
 
     def createDisplay(self):
 
@@ -240,6 +236,7 @@ class WindowManager(QMainWindow):
 
     def setView(self, view):
         self.m_view=view
+        self.viewChanged.emit(view)
 
     def close(self):
         if self.m_view is not None: self.m_view.save()

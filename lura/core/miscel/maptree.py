@@ -108,6 +108,7 @@ class MapTree(QTreeView):
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
         if self.model() is None: return
+        if self.currentItem() is None: return
         self.currentItemChanged.emit(self.currentItem())
 
     def moveToParent(self):

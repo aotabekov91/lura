@@ -78,11 +78,12 @@ class Metadata(QWidget):
         self.m_id = self.window.view().document().id()
         self.setKind(self.m_id)
 
-    def on_documentTagged(self, document, text):
+    def on_documentTagged(self, m_id, kind, tagList, sender):
+        if sender==self.tags: return
         if not self.isVisible(): return
-        if self.m_id!=document.id(): return
+        if self.m_id!=m_id: return
         self.tags.textChanged.disconnect()
-        self.tags.setPlainText(text)
+        self.tags.setPlainText('; '.join(tagList))
         self.tags.connect()
 
     def on_dropdown_changed(self):
@@ -163,9 +164,11 @@ class MQTextEdit(QPlainTextEdit):
                     {self.field:self.toPlainText().lower().title()})
             self.meta.titleChanged.emit(self)
         elif self.field=='tags':
-            tags=[a.strip() for a in self.toPlainText().split(';')]
+            tagList=[a.strip() for a in self.toPlainText().split(';')]
             self.meta.window.plugin.tags.set(
-                    self.meta.m_id, 'document', tags)
+                    self.meta.m_id, 'document', tagList)
+            self.meta.window.documentTagged.emit(
+                    self.meta.m_id, 'document', tagList, self)
 
 class MQLineEdit(QLineEdit):
     def __init__(self, field, data, meta):
@@ -180,11 +183,8 @@ class MQLineEdit(QLineEdit):
 
     def on_textChanged(self, text):
         if text=='': return
-        if self.field!='tags':
-            self.m_data.update(
-                    'metadata', 
-                    {'did':self.meta.m_id}, 
-                    {self.field:text.lower().title()})
-        else:
-            self.meta.window.plugin.tags.set(
-                    self.meta.m_id, 'document', text.split(';'))
+        self.m_data.update(
+                'metadata', 
+                {'did':self.meta.m_id}, 
+                {self.field:text.lower().title()})
+

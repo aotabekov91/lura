@@ -26,6 +26,7 @@ class MapView(QWidget):
 
         self.m_view = MapTree(self, self.window)
         self.m_view.open = self.openNode
+        # self.m_view.event=self.event
         self.m_view.currentItemChanged.connect(
                 self.window.mapItemChanged)
 
@@ -340,6 +341,10 @@ class MapView(QWidget):
             item.m_changedFromOutside=False
             return
         self.window.titleChanged.emit(self)
+
+    def event(self, event):
+        if event.type()==QEvent.Enter: self.window.setView(self)
+        return super().event(event)
 
 class MQLineEdit(QLineEdit):
 
