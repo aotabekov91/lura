@@ -43,7 +43,7 @@ class Cursor(QObject):
                 return word, pageItem.mapToPage(i)[1]
 
     def setup(self, event, pageItem):
-        pageItem.setCursor(self.cursor)
+        # pageItem.setCursor(self.cursor)
         self.displayedWidth=pageItem.displayedWidth()
         self.point=pageItem.mapToPage(event.pos())[0]
         self.adjustParameters(pageItem)
@@ -180,11 +180,11 @@ class Cursor(QObject):
 
         elif self.m_rubberBand is not None:
 
-            painter.setPen(QPen(Qt.black, 0.0, Qt.DashLine))
-            painter.drawRect(self.m_rubberBand)
+            painter.fillRect(self.m_rubberBand, QBrush(QColor(128, 128, 255, 128)))
 
 
     def activate(self, client, mode='selector'):
+        self.deactivate()
         self.m_client=client
         self.m_mode=mode
         self.connectSelectorEvents()
@@ -205,13 +205,15 @@ class Cursor(QObject):
 
     def on_mousePress(self, event, pageItem, view):
         pageItem.pageHasBeenJustPainted.connect(self.highlightSelectedArea)
+        self.oldCursor=pageItem.cursor()
         if self.m_mode=='selector': 
+            pageItem.setCursor(Qt.IBeamCursor)
             self.setup(event, pageItem)
         elif self.m_mode=='rubberBand':
-            if event.button()==Qt.LeftButton:
-                self.m_rubberBand=QRectF(event.pos(), QSizeF())
-                pageItem.update()
-                event.accept()
+            pageItem.setCursor(Qt.CrossCursor)
+            self.m_rubberBand=QRectF(event.pos(), QSizeF())
+            pageItem.update()
+            event.accept()
 
     def on_mouseMove(self, event, pageItem, view):
         if self.m_mode=='selector': 
@@ -224,18 +226,23 @@ class Cursor(QObject):
                 event.accept()
 
     def on_mouseRelease(self, event, pageItem, view):
-        if self.m_mode is None: return
+        pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
+        pageItem.setCursor(self.oldCursor)
 
-        try:
+        if self.m_mode=='rubberBand':
 
-            pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
-            self.selectedAreaByCursor.emit(event, pageItem, self.m_client)
             self.rubberBandSelection.emit(self.m_rubberBand, pageItem)
-            self.selectedArea=[]
+            self.m_rubberBand=None
             pageItem.update()
             event.accept()
-        except:
-            pass
+
+        elif self.m_mode=='selector':
+
+            self.selectedAreaByCursor.emit(event, pageItem, self.m_client)
+            self.selectedArea=[]
+            self.selectedText=[]
+            pageItem.update()
+            event.accept()
 
     def getRubberBandSelection(self):
         return self.m_rubberBand

@@ -55,6 +55,7 @@ class Annotation(QObject):
             if action!=deleteAction: return 
             self.creator.remove(annotation)
 
+
     def activateProxyWidget(self, annotation, event, view):
 
         aid=self.window.plugin.tables.get('annotations',

@@ -21,7 +21,7 @@ class MapTree(QTreeView):
         self.header().hide()
 
     def currentItem(self):
-        if not self.isProxyModel:
+        if not getattr(self, 'isProxyModel', None):
             return self.model().itemFromIndex(self.currentIndex())
         else:
             index=self.model().mapToSource(self.currentIndex())
@@ -107,6 +107,7 @@ class MapTree(QTreeView):
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
+        if self.model() is None: return
         self.currentItemChanged.emit(self.currentItem())
 
     def moveToParent(self):

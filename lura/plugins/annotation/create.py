@@ -42,8 +42,7 @@ class Creator(QObject):
 
     def act(self, event, unified, pageItem, listener):
 
-        if listener != self:
-            return
+        if listener != self: return
 
         pageItem.setActions(self.colorSystemActions)
         action = pageItem.m_menu.exec_(event.screenPos())
@@ -52,20 +51,17 @@ class Creator(QObject):
 
             color = QColor(self.colorSystemActions[action])
             self.addAnnotation(unified, color, pageItem.page())
-
-        pageItem.refresh(dropCachedPixmap=True)
+            pageItem.refresh(dropCachedPixmap=True)
 
     def on_cursor_selectedAreaByCursor(self, event, pageItem, client):
 
-        if client != self:
-            return
+        if client != self: return
 
         boundaries = []
         for rectF in self.cursor.getSelectionArea():
             boundaries += [pageItem.mapToPage(rectF)[1]]
 
-        if len(boundaries) == 0:
-            return
+        if len(boundaries) == 0: return
         self.act(event, boundaries, pageItem, self)
 
     def addAnnotation(self, boundary, color, page):
