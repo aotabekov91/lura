@@ -94,4 +94,3 @@ class NQWidget(AQWidget):
             self.hide()
         else:
             super().keyPressEvent(event)
-

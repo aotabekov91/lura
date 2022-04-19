@@ -32,6 +32,7 @@ class Command(QObject):
         self.window.currentPageChanged.connect(self.on_currentPageChanged)
         self.window.viewChanged.connect(self.on_viewChanged)
         self.window.mapItemChanged.connect(self.on_viewChanged)
+        self.window.documentTagged.connect(self.on_documentTagged)
 
         self.pageInfo = QWidget()
         self.pageInfo.m_layout = QHBoxLayout(self.pageInfo)
@@ -160,6 +161,9 @@ class Command(QObject):
     def addCommands(self, commandList, client):
         for (key, command) in commandList:
             self.m_commands[f'{key} -  {command}'] = getattr(client, command)
+
+    def on_documentTagged(self, document, text):
+        self.tags.setText(f' [{text}] ')
 
     def on_viewChanged(self, view):
         if type(view)==Item:
