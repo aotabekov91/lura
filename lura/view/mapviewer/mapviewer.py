@@ -88,10 +88,13 @@ class MapView(QWidget):
             if not self.isChild(aItem, item): 
                 item.appendRow(aItem)
 
-    def isChild(self, child, possibleParent):
+    def isChild(self, child, possibleParent, recursively=False):
         for index in range(possibleParent.rowCount()):
             p=possibleParent.child(index)
             if child == p: return p
+            if recursively: 
+                r=self.isChild(child, p, recursively)
+                if r: return r
         return None
 
     def readjust(self):
@@ -152,7 +155,7 @@ class MapView(QWidget):
 
             while qIterator.hasNext():
                 loc=qIterator.next()
-                self.addDocument(loc, client=self, item=wCon)
+                self.addDocument(loc, client=self, item=wCon, recursively=True)
 
         toRemove=[]
         for i in range(wCon.rowCount()):
@@ -242,7 +245,8 @@ class MapView(QWidget):
 
             self.m_view.setFocus()
 
-    def addDocument(self, selected=False, client=False, item=None):
+    def addDocument(self, selected=False, client=False, item=None,
+            recursively=False):
 
         if not self.isVisible(): return
 
@@ -257,7 +261,6 @@ class MapView(QWidget):
 
             document = self.window.buffer.loadDocument(selected)
             if document is None: return
-            self.window.plugin.annotation.checkDocument(document)
             did = document.id()
 
             if item is None:
@@ -266,7 +269,7 @@ class MapView(QWidget):
                     item = self.m_document.m_model.invisibleRootItem()
             dItem = Item('document', did, self.window)
 
-            myDItem=self.isChild(dItem, item)
+            myDItem=self.isChild(dItem, item, recursively)
             if myDItem is None: 
                 item.appendRow(dItem)
                 myDItem=dItem
