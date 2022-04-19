@@ -28,6 +28,8 @@ class WindowManager(QMainWindow):
     titleChanged=pyqtSignal(object)
     documentTagged=pyqtSignal(object, str)
 
+    mapItemChanged=pyqtSignal(QStandardItem)
+
     mapCreated=pyqtSignal(object)
     documentCreated=pyqtSignal(object)
     annotationCreated=pyqtSignal(object)

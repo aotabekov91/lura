@@ -2,7 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from lura.core.miscel import Item
 from lura.render import PdfDocument
+from lura.render import MapDocument
 
 class Command(QObject):
 
@@ -29,6 +31,7 @@ class Command(QObject):
 
         self.window.currentPageChanged.connect(self.on_currentPageChanged)
         self.window.viewChanged.connect(self.on_viewChanged)
+        self.window.mapItemChanged.connect(self.on_viewChanged)
 
         self.pageInfo = QWidget()
         self.pageInfo.m_layout = QHBoxLayout(self.pageInfo)
@@ -36,8 +39,12 @@ class Command(QObject):
         self.pageInfo.m_layout.setSpacing(0)
 
         self.title = QLabel()
+        self.mode=QLabel()
         self.pageNumber = QLabel()
+        self.tags=QLabel()
         self.pageInfo.m_layout.addWidget(self.title)
+        self.pageInfo.m_layout.addWidget(self.mode)
+        self.pageInfo.m_layout.addWidget(self.tags)
         self.pageInfo.m_layout.addWidget(self.pageNumber)
 
         self.commandEdit = QWidget()
@@ -155,19 +162,43 @@ class Command(QObject):
             self.m_commands[f'{key} -  {command}'] = getattr(client, command)
 
     def on_viewChanged(self, view):
-        document=view.document()
-        if type(document)==PdfDocument:
+        if type(view)==Item:
+            title=view.get('title')
+            pageNumber=''
+            data=self.window.plugin.tags.get(
+                    view.id(), view.kind())
+            tags=''
+            if data is not None: 
+                tags='; '.join(data)
+            mode=f'Item: {view.kind()}'
+
+        elif type(view.document())==PdfDocument:
+            document=view.document()
             numberOfPages = document.numberOfPages()
             title=self.window.plugin.tables.get(
                     'metadata', {'did':document.id()}, 'title')
             if title in ['', None]: title=document.filePath()
-            self.title.setText(title)
-            self.pageNumber.setText(f' [1/{numberOfPages}]')
-        else:
+            data=self.window.plugin.tags.get(
+                    document.id(), 'document')
+            tags=''
+            if data is not None:
+                tags='; '.join(data)
+
+            pageNumber=f' [1/{numberOfPages}]'
+            mode='Document'
+        elif type(view.document())==MapDocument:
+            document=view.document()
             title=self.window.plugin.tables.get(
                     'maps', {'id':document.id()}, 'title')
-            self.title.setText(title)
-            self.pageNumber.setText('')
+            pageNumber=''
+            tags=''
+            mode='Map'
+
+        self.title.setText(title)
+        self.mode.setText(f' [{mode}] ')
+        self.tags.setText(f' [{tags}] ')
+        self.pageNumber.setText('[]')
+        if pageNumber!='': self.pageNumber.setText(f' [1/{numberOfPages}]')
 
     def on_currentPageChanged(self, document, pageNumber):
 

@@ -6,6 +6,8 @@ from lura.core.miscel import Item
 
 class MapTree(QTreeView):
 
+    currentItemChanged=pyqtSignal(QStandardItem)
+
     def __init__(self, parent, window):
         super().__init__(parent)
 
@@ -102,6 +104,10 @@ class MapTree(QTreeView):
             self.moveToUncle()
         elif event.key()==Qt.Key_O:
             self.open()
+
+    def setCurrentIndex(self, index):
+        super().setCurrentIndex(index)
+        self.currentItemChanged.emit(self.currentItem())
 
     def moveToParent(self):
         if self.currentItem().parent() is None: return

@@ -23,7 +23,11 @@ class MapView(QWidget):
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
         self.m_title = MQLineEdit()
+
         self.m_view = MapTree(self, self.window)
+        self.m_view.open = self.openNode
+        self.m_view.currentItemChanged.connect(
+                self.window.mapItemChanged)
 
         commandList=[
                 ('maf', 'addFolder'),
@@ -38,7 +42,6 @@ class MapView(QWidget):
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
-        self.m_view.open = self.openNode
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
