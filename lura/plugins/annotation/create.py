@@ -51,6 +51,7 @@ class Creator(QObject):
 
             color = QColor(self.colorSystemActions[action])
             self.addAnnotation(unified, color, pageItem.page())
+
             pageItem.refresh(dropCachedPixmap=True)
 
     def on_cursor_selectedAreaByCursor(self, event, pageItem, client):

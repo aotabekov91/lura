@@ -55,6 +55,8 @@ class Annotation(QObject):
             if action!=deleteAction: return 
             self.creator.remove(annotation)
 
+            pageItem.refresh(dropCachedPixmap=True)
+
 
     def activateProxyWidget(self, annotation, event, view):
 

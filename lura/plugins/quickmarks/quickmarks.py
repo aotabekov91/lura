@@ -75,7 +75,6 @@ class Quickmarks(QListWidget):
         if not mark in self.marks[did]:
             return
         page, left, top = self.marks[did][mark]
-        print(self.marks, mark, page)
         self.window.view().jumpToPage(page, left, top)
 
     def showList(self, did):

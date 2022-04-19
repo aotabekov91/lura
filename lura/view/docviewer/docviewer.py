@@ -482,6 +482,10 @@ class DocumentView(QGraphicsView):
     def totalPages(self):
         return len(self.m_pages)
 
+    def update(self):
+        pageItem=self.m_pageItems[self.m_currentPage-1]
+        pageItem.refresh(dropCachedPixmap=True)
+
 class Position:
 
     def __init__(self, page, left, top):

@@ -57,12 +57,10 @@ class TileItem(QObject):
         pixmap = self.s_cache.get(key)
 
         if self.isNotEmptyPixmap(pixmap):
-
             self.m_obsoletePixmap = QPixmap() 
-
             return pixmap
 
-        if self.isNotEmptyPixmap(self.m_pixmap):
+        elif self.isNotEmptyPixmap(self.m_pixmap):
             self.s_cache[key]=self.m_pixmap
             pixmap = self.m_pixmap
             self.m_pixmap = QPixmap() 
@@ -88,8 +86,7 @@ class TileItem(QObject):
     def startRender(self, prefetch=False):
         cond = self.m_pixmapError or self.m_renderTask.isRunning()
         cond = cond or (prefetch and self.cacheKey() in self.s_cache)
-        if cond:
-            return
+        if cond: return
         self.m_renderTask.start(
             self.parentPage().s_settings,
             self.m_rect, prefetch)
@@ -107,8 +104,8 @@ class TileItem(QObject):
     def on_renderTask_finished(self):
         self.parentPage().update()
 
-    def rect(self, renderParam, rect, prefetch, image, cropRect):
-        raise
+    # def rect(self, renderParam, rect, prefetch, image, cropRect):
+    #     raise
 
     def cacheKey(self):
         page = self.parentPage()
@@ -137,9 +134,9 @@ class TileItem(QObject):
         self.m_obsoletePixmap = None 
 
     def dropCachedPixmaps(self, page):
-        for key, pixmap in self.s_cache.items():
-            if key[0]==page:
-                self.s_cache.pop(key)
+
+        for key, pixmap in list(self.s_cache.items()):
+            if key[0]==page: self.s_cache.pop(key)
 
     def paint(self, painter, topLeft):
 

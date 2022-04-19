@@ -17,6 +17,7 @@ DocumentView:
     pageSmallUp: k
     pageRight: l 
     pageLeft: h 
+    update: u
     toggleContinuousMode: c
     fitToPageWidth: w
     fitToPageSize: a

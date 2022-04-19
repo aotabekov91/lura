@@ -197,6 +197,9 @@ class Cursor(QObject):
         self.unUnifiedSelection=None
         self.selectedArea=[]
         self.selectedText=[]
+        if getattr(self, 'currentPageItem', None) is not None:
+            self.currentPageItem.pageHasBeenJustPainted.disconnect(
+                    self.highlightSelectedArea)
 
     def connectSelectorEvents(self):
         self.m_client.window.mousePressEventOccured.connect(self.on_mousePress)
@@ -204,6 +207,7 @@ class Cursor(QObject):
         self.m_client.window.mouseReleaseEventOccured.connect(self.on_mouseRelease)
 
     def on_mousePress(self, event, pageItem, view):
+        self.currentPageItem=pageItem
         pageItem.pageHasBeenJustPainted.connect(self.highlightSelectedArea)
         self.oldCursor=pageItem.cursor()
         if self.m_mode=='selector': 
@@ -226,6 +230,7 @@ class Cursor(QObject):
                 event.accept()
 
     def on_mouseRelease(self, event, pageItem, view):
+        self.currentPageItem=None
         pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
         pageItem.setCursor(self.oldCursor)
 

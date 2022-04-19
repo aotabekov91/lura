@@ -98,10 +98,10 @@ class MapTree(QTreeView):
             self.addNode()
         elif event.key()==Qt.Key_E:
             self.edit(self.currentIndex())
-        elif event.key()==Qt.Key_B:
+        elif event.key()==Qt.Key_Semicolon:
             self.moveToParent()
-        elif event.key()==Qt.Key_F:
-            self.moveToUncle()
+        elif event.key()==Qt.Key_B:
+            self.moveToBottom()
         elif event.key()==Qt.Key_O:
             self.open()
 
@@ -114,12 +114,13 @@ class MapTree(QTreeView):
         if self.currentItem().parent() is None: return
         self.setCurrentIndex(self.currentItem().parent().index())
 
-    def moveToUncle(self):
+    def moveToBottom(self):
         item=self.currentItem()
+        if item is None: return
         parent=item.parent()
-        if parent is None: return
-        if parent.rowCount()==item.row()+1: return
-        self.setCurrentIndex(parent.child(item.row()+1).index())
+        if parent is None: 
+            parent=self.model().invisibleRootItem()
+        self.setCurrentIndex(parent.child(parent.rowCount()-1).index())
 
     def delete(self, item=None):
         if item is None: item=self.currentItem()
@@ -136,6 +137,9 @@ class MapTree(QTreeView):
         self.copied+=[self.currentItem().copy()]
 
     def pasteInside(self):
+        temp=self.copied+self.yanked
+        if len(temp)==0: return
+
         if self.currentItem() is None: return
         item=self.currentItem()
         for i in self.copied:
@@ -148,16 +152,55 @@ class MapTree(QTreeView):
             item.appendRow(i)
         self.yanked=[]
 
+        self.expand(item.index())
+        self.setCurrentIndex(temp[0].index())
+
     def pasteBelow(self):
-        if self.currentItem() is None: return
+        temp=self.copied+self.yanked
+        if len(temp)==0: return
+
+        item=self.currentItem()
+        if item is None: return
         itemParent=item.parent()
         if itemParent is None:
             itemParent=self.model().invisibleRootItem()
-        raise
+        for i in self.copied:
+            itemParent.insertRow(item.row()+1, i)
+        self.copied=[]
+
+        for i in self.yanked:
+            parent=i.parent()
+            if parent is None: parent=self.model().invisibleRootItem()
+            parent.takeRow(i.row())
+            itemParent.insertRow(item.row()+1, i)
+        self.yanked=[]
+
+        self.setCurrentIndex(temp[0].index())
 
     def pasteAbove(self):
-        if self.currentItem() is None: return
-        raise
+        temp=self.copied+self.yanked
+        if len(temp)==0: return
+
+        item=self.currentItem()
+        if item is None: return
+        itemParent=item.parent()
+        if itemParent is None:
+            itemParent=self.model().invisibleRootItem()
+        row=item.row()
+
+        for i in self.copied:
+            itemParent.insertRow(row-1, i)
+
+        self.copied=[]
+
+        for i in self.yanked:
+            parent=i.parent()
+            if parent is None: parent=self.model().invisibleRootItem()
+            parent.takeRow(i.row())
+            itemParent.insertRow(row-1, i)
+        self.yanked=[]
+
+        self.setCurrentIndex(temp[0].index())
 
     def addNode(self, item=None):
         if item is None: 

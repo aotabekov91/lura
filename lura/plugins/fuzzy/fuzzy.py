@@ -173,6 +173,25 @@ class Fuzzy(QWidget):
         newList += tmpList
         self.addItems(newList)
 
+    def compare(self):
+        text = self.editor.text()
+        tmpList = []
+        regex = '.*{}.*'.format('.*'.join([re.escape(t) for t in list(text)]))
+        for item in self.items:
+            if len(re.findall(regex, item.lower())) > 0:
+                tmpList += [item]
+        newList = []
+        for i in range(len(text)+1):
+            tmpText = text[:len(text)-i]
+            regex = '.*{}.*'.format(tmpText)
+            for j, item in enumerate(tmpList):
+                if len(re.findall(regex, item)) > 0:
+                    if not item in newList:
+                        newList += [item]
+                        tmpList.pop(j)
+        newList += tmpList
+        self.addItems(newList)
+
     def addItems(self, newList=None, currentRow=0):
 
         self.currentList = newList

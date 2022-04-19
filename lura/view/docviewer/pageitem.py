@@ -122,6 +122,8 @@ class PageItem(QGraphicsObject):
     def refresh(self, dropCachedPixmap=False):
         for tile in self.m_tileItems:
             tile.refresh(dropCachedPixmap)
+            if dropCachedPixmap: tile.dropCachedPixmaps(self)
+            
         self.update()
 
     def startRender(self, prefetch):
