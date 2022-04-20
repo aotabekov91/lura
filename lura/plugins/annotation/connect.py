@@ -31,13 +31,14 @@ class DatabaseConnector:
             data=cond.copy()
 
             content=[]
+
             size=annotation.page().size()
             t=QTransform().scale(size.width(), size.height())
-
             if type(boundary)!=list: boundary=[boundary]
 
             for b in boundary: 
 
+                if b is None: continue
                 topLeft=b.topLeft()
                 bottomRight=b.bottomRight()
 
@@ -46,10 +47,11 @@ class DatabaseConnector:
 
                 content+=[annotation.page().text(b)]
 
-            text=' '.join(content)
-            text=re.sub(re.compile(r'  *'), ' ', text)
+            if len(content)>0:
+                text=' '.join(content)
+                text=re.sub(re.compile(r'  *'), ' ', text)
+                data['content']=text
 
-            data['content']=text
             data['color']=annotation.color()
 
             self.db.write('annotations', data)

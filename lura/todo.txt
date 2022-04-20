@@ -1,0 +1,1 @@
+1. add remove and color change buttons in annotation display

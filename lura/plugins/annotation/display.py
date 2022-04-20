@@ -2,6 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from lura.view.docviewer import DocumentView 
+
 class Display(QScrollArea):
 
     def __init__(self, parent, settings):
@@ -35,30 +37,54 @@ class Display(QScrollArea):
         self.group.m_layout.addStretch(1)
 
         self.window.viewChanged.connect(self.on_viewChanged)
+        self.window.mapItemChanged.connect(self.on_mapItemChanged)
+
         self.window.setTabLocation(self, self.location, self.name)
 
     def on_colorComboChanged(self):
         function = self.colorCombo.currentText()
-        self.load(self.window.view().document(), function)
+        document=self.window.view().document()
+        if type(document)==DocumentView:
+            self.load(document().id(), function=function)
+        else:
+            item=view.tree().currentItem()
+            if item is None or item.kind()!='document': return
+            self.load(item.id(), function)
+
+    def on_mapItemChanged(self, item):
+
+        if not self.isVisible(): return
+
+        if item is None or item.kind()!='document': return
+        self.load(item.id())
 
     def on_viewChanged(self, view):
 
         if not self.isVisible(): return
-        self.load(view.document())
+        if type(view)==DocumentView:
+            self.load(view.document().id())
+        else:
+            item=view.tree().currentItem()
+            if item is None or item.kind()!='document': return
+            self.load(item.id())
 
-    def load(self, document=None, function=None):
+    def load(self, did=None, function=None):
 
-        if document is None: document=self.window.view().document()
+        if did is None: 
+            did=self.window.view().document().id()
+
+        if function is None:
+            function = self.colorCombo.currentText()
 
         for i in reversed(range(self.scrollableWidget.m_layout.count())):
             self.scrollableWidget.m_layout.itemAt(i).widget().setParent(None)
 
-        criteria={'did':document.id()}
+        criteria={'did':did}
         if function is not None and function!='All':
             criteria['color']=self.colorCode[function]
 
-        annotations = self.window.plugin.tables.get('annotations', criteria,
-                unique=False)
+        annotations = self.window.plugin.tables.get(
+                'annotations', criteria, unique=False)
 
         if annotations is None: return
 
