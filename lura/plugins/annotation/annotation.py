@@ -75,7 +75,6 @@ class Annotation(QObject):
         pos=pageItem.mapToPage(event.pos())[1]
         for annotation in view.document().annotations(): 
             if annotation.page().pageItem()!=pageItem: continue
-            #CHANGE if annotation.boundary().contains(pos): return annotation
             if annotation.contains(pos): return annotation
 
     def checkDocument(self, document):

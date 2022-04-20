@@ -16,7 +16,7 @@ class DatabaseConnector:
         self.m_parent.window.plugin.tables.addTable(AnnotationsTable)
         self.db = self.m_parent.window.plugin.tables
 
-    def register(self, annotation):
+    def register(self, annotation, boundary=None):
 
         did = annotation.page().document().id()
         page = annotation.page().pageNumber()
@@ -30,16 +30,23 @@ class DatabaseConnector:
 
             data=cond.copy()
 
-            b=annotation.boundary()
+            content=[]
             size=annotation.page().size()
             t=QTransform().scale(size.width(), size.height())
-            topLeft=b.topLeft()
-            bottomRight=b.bottomRight()
-            b.setTopLeft(t.map(topLeft))
-            b.setBottomRight(t.map(bottomRight))
-            text=annotation.page().text(b)
 
-            text=' '.join([f for f in text.split('\n') if f!=''])
+            if type(boundary)!=list: boundary=[boundary]
+
+            for b in boundary: 
+
+                topLeft=b.topLeft()
+                bottomRight=b.bottomRight()
+
+                b.setTopLeft(t.map(topLeft))
+                b.setBottomRight(t.map(bottomRight))
+
+                content+=[annotation.page().text(b)]
+
+            text=' '.join(content)
             text=re.sub(re.compile(r'  *'), ' ', text)
 
             data['content']=text
