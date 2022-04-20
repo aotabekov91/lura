@@ -1,2 +1,0 @@
-1. statusbar tags update when meta tags updated
-2. quickmarking in mapview

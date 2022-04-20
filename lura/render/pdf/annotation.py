@@ -42,6 +42,17 @@ class PdfAnnotation(QObject):
             round(self.boundary().width(), 8),
             round(self.boundary().height(), 8))
 
+    def contains(self, point):
+        for quad in self.m_data.highlightQuads():
+            points=quad.points
+            rectF=QRectF()
+            rectF.setTopLeft(points[0])
+            rectF.setTopRight(points[1])
+            rectF.setBottomRight(points[2])
+            rectF.setBottomLeft(points[3])
+            if rectF.contains(point): return True
+        return False
+
     def setColor(self, color):
         style.setColor(color)
         self.m_data.setStyle(style)
