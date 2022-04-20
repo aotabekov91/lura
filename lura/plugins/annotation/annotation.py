@@ -81,6 +81,9 @@ class Annotation(QObject):
         for ann in document.annotations():
             self.db.register(ann)
 
+    def remove(self, annotation):
+        self.creator.remove(annotation)
+
 class NQWidget(AQWidget):
 
     def on_titleChanged(self, text):

@@ -142,6 +142,9 @@ class AQWidget(QWidget):
         self.title.textChanged.connect(self.on_titleChanged)
         self.title.mouseDoubleClickEvent=self.on_titleDoubleClick
 
+        self.deleteButton=QPushButton('D')
+        self.deleteButton.pressed.connect(self.on_deleteButtonPressed)
+
         self.content = QTextEdit(content)
         self.content.setMinimumHeight(80)
         self.content.setMaximumHeight(140)
@@ -154,6 +157,7 @@ class AQWidget(QWidget):
 
         self.m_layout.addWidget(self.title)
         self.m_layout.addWidget(self.content)
+        self.m_layout.addWidget(self.deleteButton)
 
     def update(self):
         self.title.setText(
@@ -171,9 +175,13 @@ class AQWidget(QWidget):
         self.m_window.view().jumpToPage(
                 pageNumber, topLeft.x(), .95*topLeft.y())
 
+
     def on_titleChanged(self, text):
         self.m_data.update('annotations', {'id':self.m_id}, {'title':text})
 
     def on_contentChanged(self):
         text=self.content.toPlainText()
         self.m_data.update('annotations', {'id':self.m_id}, {'content':text})
+
+    def on_deleteButtonPressed(self):
+        self.m_window.plugin.annotation.remove(self.m_id)
