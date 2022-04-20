@@ -39,8 +39,12 @@ class DatabaseConnector:
             for b in boundary: 
 
                 if b is None: continue
-                topLeft=b.topLeft()
-                bottomRight=b.bottomRight()
+
+                x=.99*b.topLeft().x()
+                topLeft=QPointF(x, b.topLeft().y())
+
+                x=1.01*b.bottomRight().x()
+                bottomRight=QPointF(x, b.bottomRight().y())
 
                 b.setTopLeft(t.map(topLeft))
                 b.setBottomRight(t.map(bottomRight))
