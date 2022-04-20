@@ -77,7 +77,9 @@ class Display(QScrollArea):
             function = self.colorCombo.currentText()
 
         for i in reversed(range(self.scrollableWidget.m_layout.count())):
-            self.scrollableWidget.m_layout.itemAt(i).widget().setParent(None)
+            w=self.scrollableWidget.m_layout.itemAt(i).widget()
+            self.scrollableWidget.m_layout.removeWidget(w)
+            w.hide()
 
         criteria={'did':did}
         if function is not None and function!='All':
@@ -142,7 +144,7 @@ class AQWidget(QWidget):
         self.title.textChanged.connect(self.on_titleChanged)
         self.title.mouseDoubleClickEvent=self.on_titleDoubleClick
 
-        self.deleteButton=QPushButton('D')
+        self.deleteButton=QPushButton('Delete')
         self.deleteButton.pressed.connect(self.on_deleteButtonPressed)
 
         self.content = QTextEdit(content)
