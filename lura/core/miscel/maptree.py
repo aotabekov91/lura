@@ -12,12 +12,13 @@ class MapTree(QTreeView):
         super().__init__(parent)
 
         self.window=window
-        self.yanked=[]
-        self.copied=[]
-
         self.setup()
 
     def setup(self):
+
+        self.yanked=[]
+        self.copied=[]
+
         self.header().hide()
 
     def currentItem(self):
@@ -104,6 +105,8 @@ class MapTree(QTreeView):
             self.moveToBottom()
         elif event.key()==Qt.Key_O:
             self.open()
+        elif event.key()==Qt.Key_Escape:
+            self.close()
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
@@ -230,4 +233,7 @@ class MapTree(QTreeView):
             self.setCurrentIndex(first.index())
 
     def open(self):
+        pass
+
+    def close(self):
         pass

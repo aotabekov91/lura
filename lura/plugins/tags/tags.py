@@ -30,8 +30,10 @@ class Tags(MapTree):
         self.setup()
 
     def setup(self):
-        self.window.setTabLocation(self, self.location, self.name)
+        super().setup()
+        self.open=self.openNode
         self.setModel(QStandardItemModel())
+        self.window.setTabLocation(self, self.location, self.name)
 
     def showTagsFromTag(self, tagId):
         pass
@@ -79,44 +81,22 @@ class Tags(MapTree):
         self.model().appendRow(uContainer)
 
         self.window.activateTabWidget(self)
+        self.setFocus()
 
     def setItem(self, preList, itemDict, model):
-        if len(preList)==1:
-            if preList in itemDict:
-                return itemDict[preList]
-            else:
-                tag=preList[0]
-                item=QStandardItem(tag)
-                model.appendRow(item)
-                itemDict[preList]=item
-            return item
+        if preList in itemDict:
+            return itemDict[preList]
         else:
-            if preList in itemDict:
-                return itemDict[preList]
+            tag=preList[-1]
+            item=Item('container', None, self.window, tag)
+            if len(preList)==1:
+                model.appendRow(item)
             else:
-                tag=preList[-1]
-                item=QStandardItem(tag)
                 preItem=self.setItem(preList[:-1], itemDict, model)
                 preItem.appendRow(item)
-                itemDict[preList]=item
-                return item
+            itemDict[preList]=item
+            return item
 
-    def getItem(self, rankedList, itemsDict, item):
-        t=tuple(rankedList)
-        if not t in itemsDict:
-            newItem=QStandardItem(rankedList[-1])
-            newItem.document=lambda: None
-            itemsDict[t]=newItem
-        else:
-            newItem=itemsDict[t]
-
-        newItem.appendRow(item)
-
-        if len(rankedList)>1:
-            self.getItem(rankedList[:-1], itemsDict, newItem)
-        return newItem
-
-       
     def _getTags(self, item, tagged=None, untagged=None, tags=None):
         if tagged is None:
             tagged={}
@@ -168,8 +148,23 @@ class Tags(MapTree):
         self.window.documentTagged.emit(m_id, kind, tags, self)
         self.window.view().setFocus()
 
+    def openNode(self):
+        item = self.currentItem()
+        if item is None: return
+        if item.kind() != 'document': return
+
+        filePath = self.window.plugin.tables.get(
+            'documents', {'id': item.id()}, 'loc')
+        self.window.open(filePath)
+
+        self.setFocus()
+
     def get(self, m_id, kind='document'):
         return self.db.get(m_id, kind)
 
     def set(self, m_id, kind, tagList):
         self.db.set(m_id, kind, tagList)
+
+    def close(self):
+        self.window.deactivateTabWidget(self)
+
