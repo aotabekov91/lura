@@ -25,8 +25,6 @@ class Metadata(QWidget):
         self.dropdown = QComboBox(self)
         self.title=MQTextEdit('title', self.window.plugin.tables, self)
         self.tags=MQTextEdit('tags', self.window.plugin.tables, self)
-        self.window.titleChanged.connect(self.title.on_titleChanged)
-        self.window.documentTagged.connect(self.on_documentTagged)
         self.stack = QStackedWidget(self)
 
         self.m_layout = QVBoxLayout(self)
@@ -52,6 +50,10 @@ class Metadata(QWidget):
         self.createWidgets()
 
         self.window.viewChanged.connect(self.on_viewChanged)
+        self.window.mapItemChanged.connect(self.on_mapItemChanged)
+        self.window.titleChanged.connect(self.title.on_titleChanged)
+        self.window.documentTagged.connect(self.on_documentTagged)
+
         self.titleChanged.connect(self.window.titleChanged)
         self.window.setTabLocation(self, self.location, self.name)
 
@@ -72,6 +74,12 @@ class Metadata(QWidget):
                 fields[field]=qline
             setattr(self, f'{k}TabIndex', self.stack.addWidget(tab))
             setattr(self, f'{k}Fields', fields)
+
+    def on_mapItemChanged(self, item):
+        if not self.isVisible(): return
+        if item is None or item.kind()!='document': return
+
+        self.setKind(item.id())
 
     def on_viewChanged(self):
         if not self.isVisible(): return

@@ -28,7 +28,8 @@ class MapView(QWidget):
         self.m_view.open = self.openNode
         self.m_view.currentItemChanged.connect(
                 self.window.mapItemChanged)
-        # self.m_view.currentItemChanged.connect(self.on_currentItemChanged)
+        # self.m_view.currentItemChanged.connect(
+                # self.on_currentItemChanged)
 
         self.m_tagView=MapTree(self, self.window)
         self.m_tagView.open = self.openNode
