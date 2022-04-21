@@ -109,6 +109,12 @@ class WindowManager(QMainWindow):
     def onlyDocumentView(self):
         self.display.onlyDocumentView()
 
+    def toggleViews(self):
+        if self.display.isVisible():
+            self.display.hide()
+        else:
+            self.display.show()
+
     def createDisplay(self):
 
         self.display=DisplaySplitter()

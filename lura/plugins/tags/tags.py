@@ -31,19 +31,93 @@ class Tags(MapTree):
 
     def setup(self):
         super().setup()
+
+        self.m_mainModel=None
+        self.tagItems=None
+
         self.open=self.openNode
-        self.setModel(QStandardItemModel())
         self.window.setTabLocation(self, self.location, self.name)
+        self.currentItemChanged.connect(
+                self.window.mapItemChanged)
 
     def showTagsFromTag(self, tagId):
         pass
 
+    def rootUp(self):
+        if self.m_mainModel is None: return
+        self.showTagsFromModel(self.m_mainModel)
+
+    def getParentTags(self, item, ancesstors):
+        parent=item.parent()
+        if parent is None: return
+        ancesstors+=[parent.text()]
+        self.getParentTags(parent, ancesstors)
+
+    def setModel(self, model):
+        super().setModel(model)
+        model.itemChanged.connect(self.itemChanged)
+
+    def edit(self, index, *args, **kwargs):
+        item=self.currentItem()
+        if item.kind()!='container': return True
+        self.oldTag=item.text()
+        return super().edit(index, *args, **kwargs)
+
+    def itemChanged(self, item):
+        if item.kind()!='container': return
+
+        newTag=item.text()
+
+        for k, v in self.tagItems.items():
+            if not self.oldTag in k: continue
+            tags=[]
+            for t in k:
+                if t!=self.oldTag: tags+=[t]
+            tags+=[newTag]
+            for vv in v:
+                self.set(vv.id(), vv.kind(), tags)
+
+        self.oldTag=None
+        self.rootUp()
+
+    def delete(self):
+        item=self.currentItem()
+        if item is None: return
+        if item.kind()!='container': return
+
+        tag=item.text()
+
+        for k, v in self.tagItems.items():
+            if not tag in k: continue
+            for vv in v:
+                self.untag(vv.kind(), vv.id(), tag)
+
+        self.rootUp()
+
+    def makeRoot(self):
+        item=self.currentItem()
+        if item is None: return
+        if item.kind()!='container': return
+
+        tag=item.text()
+
+        model=QStandardItemModel()
+
+        for k, v in self.tagItems.items():
+            if not tag in k: continue
+
+            for kk in v:
+                ii=Item(kk.kind(), kk.id(), self.window, kk.text())
+                model.invisibleRootItem().appendRow(ii)
+
+        self.showTagsFromModel(model)
+
     def showTagsFromModel(self, model):
-        self.model().clear()
 
         if model is None: return
 
         tagsDict, untagged, allTags=self._getTags(model.invisibleRootItem())
+
         tagCountDict=dict(Counter(allTags))
 
         tagItems={}
@@ -62,7 +136,11 @@ class Tags(MapTree):
         sortedKeys=sorted(tagItems.keys(), key=lambda k: len(k))
 
         itemDict={}
-        model=self.model()
+
+        model=QStandardItemModel()
+        if self.m_mainModel is None: 
+            self.m_mainModel=model
+            self.tagItems=tagItems
 
         for k in sortedKeys:
             self.setItem(k, itemDict, model)
@@ -78,8 +156,10 @@ class Tags(MapTree):
             i=Item(item.kind(), item.id(), self.window)
             uContainer.appendRow(i)
 
-        self.model().appendRow(uContainer)
+        if model==self.m_mainModel:
+            model.appendRow(uContainer)
 
+        self.setModel(model)
         self.window.activateTabWidget(self)
         self.setFocus()
 
@@ -105,6 +185,7 @@ class Tags(MapTree):
         if hasattr(item, 'id') and item.kind()=='document':
             t=self.get(item.id(), item.kind())
             if len(t)>0:
+                t=sorted(t)
                 tagged[item]=t
                 tags+=t
             else:
@@ -165,6 +246,8 @@ class Tags(MapTree):
     def set(self, m_id, kind, tagList):
         self.db.set(m_id, kind, tagList)
 
+    def untag(self, kind, m_id, tag):
+        self.db.untag(kind, m_id, tag)
+
     def close(self):
         self.window.deactivateTabWidget(self)
-

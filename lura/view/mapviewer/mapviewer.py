@@ -86,8 +86,8 @@ class MapView(QWidget):
 
     def _activateFiltering(self, text):
         if self.m_view.model() is None: return
+        self.m_view.setProxyModel(self.m_proxyModel)
         self.m_proxyModel.setFilterFixedString(text)
-        self.m_view.setFocus()
 
     def deactivateFiltering(self):
         if self.m_view.model() is None: return

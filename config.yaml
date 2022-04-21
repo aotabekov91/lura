@@ -4,6 +4,7 @@ Window:
     focusDocumentView: 'Ctrl+2'
     onlyMapView: 'Ctrl+Shift+1'
     onlyDocumentView: 'Ctrl+Shift+2'
+    toggleViews: 'Ctrl+3'
     close: q
     save: s
 

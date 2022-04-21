@@ -158,7 +158,7 @@ class PdfPage:
                               'url': url})
             elif link.linkType() == Poppler.Link.Execute:
                 url = link.fileName()
-                lins.append({'boundary': boundary,
+                links.append({'boundary': boundary,
                              'url': url})
         return links
 

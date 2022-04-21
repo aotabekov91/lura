@@ -57,6 +57,13 @@ class DatabaseConnector:
         for tid in toBeDeleted:
             self.window.plugin.tables.remove('tags', {'id':tid})
 
+    def untag(self, kind, m_id, tag):
+        tid=self.window.plugin.tables.get(
+                'tags', {'tag':tag}, 'id')
+        self.window.plugin.tables.remove(
+                'tagged', {'kind': kind, 'uid':m_id, 'tid':tid})
+
+
 
 class TaggedTable(Table):
 
