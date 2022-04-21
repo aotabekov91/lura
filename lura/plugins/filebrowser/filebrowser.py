@@ -34,7 +34,6 @@ class FileBrowser(QWidget):
         self.m_view.open=self.open
         self.setModel()
 
-
         self.window.plugin.command.addCommands(
             [('fbc - file browser choose path', 'choose')], self)
 

@@ -1,11 +1,11 @@
 import os
+from collections import Counter
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from lura.core import Item
-
 from lura.core import MapTree
 
 class MapView(QWidget):
@@ -26,9 +26,16 @@ class MapView(QWidget):
 
         self.m_view = MapTree(self, self.window)
         self.m_view.open = self.openNode
-        # self.m_view.event=self.event
         self.m_view.currentItemChanged.connect(
                 self.window.mapItemChanged)
+        # self.m_view.currentItemChanged.connect(self.on_currentItemChanged)
+
+        self.m_tagView=MapTree(self, self.window)
+        self.m_tagView.open = self.openNode
+        self.m_tagView.currentItemChanged.connect(
+                self.window.mapItemChanged)
+
+        self.m_tagView.hide()
 
         commandList=[
                 ('maf', 'addFolder'),
@@ -40,18 +47,132 @@ class MapView(QWidget):
                 ('msd', 'deactivateSorting'),
                 ('mfa', 'activateFiltering'),
                 ('mfd', 'deactivateFiltering'),
+                ('mtt', 'showTagTree'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
-
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.m_view)
+        self.m_layout.addWidget(self.m_tagView)
 
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
 
         self.window.titleChanged.connect(self.updateTitles)
         self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
+
+    def showTagTree(self):
+        if self.m_view.model() is None: return
+        self.window.plugin.tags.showTagsFromModel(self.m_view.model())
+        return
+        model=self.m_view.model()
+        if model is None: return
+        tagsDict, tagCountDict=self.getItemTags(model)
+
+        tagItems={}
+
+        model=QStandardItemModel()
+
+        notTagged=[]
+        for item, tags in tagsDict.items():
+            itemTagsRanked=sorted(
+                    tags, key=lambda t: tagCountDict[t], reverse=True)
+            itemTagsRanked=tuple(itemTagsRanked)
+
+            if len(itemTagsRanked)==0:
+                notTagged+=[item]
+                continue
+
+            if itemTagsRanked in tagItems:
+                tagItems[itemTagsRanked]+=[item]
+
+            else:
+                tagItems[itemTagsRanked]=[item]
+
+
+        sortedKeys=sorted(tagItems.keys(), key=lambda k: len(k))
+
+        tmp={}
+        print(sortedKeys)
+
+        for k in sortedKeys:
+            if len(k)==0: return
+            elif len(k)==1:
+                item=QStandardItem(k[0])
+                model.appendRow(item)
+            elif len(k)>1:
+                item=QStandardItem(k[-1])
+                prev=self.getParentItem(k[:-1], tmp, model)
+                prev.appendRow(item)
+            tmp[k]=item
+
+        for k, v in tagItems.items():
+
+            for item in v:
+                i=Item(item.kind(), item.id(), self.window)
+                tmp[k].appendRow(i)
+
+        for item in notTagged:
+            i=Item(item.kind(), item.id(), self.window)
+            model.appendRow(i)
+
+        self.m_tagView.setModel(model)
+        self.m_tagView.show()
+
+    def getParentItem(self, preList, itemDict, model):
+        if len(preList)==1:
+            tag=preList[0]
+            if tag in itemDict:
+                return itemDict[tag]
+            else:
+                item=QStandardItem(tag)
+                model.appendRow(item)
+                itemDict[tag]=item
+            return item
+        else:
+            if preList in itemDict:
+                return itemDict[preList]
+            else:
+                tag=preList[-1]
+                item=QStandardItem(tag)
+                preItem=self.getParentItem(preList[:-1], itemDict, model)
+                preItem.appendRow(item)
+                itemDict[preList]=item
+                return item
+
+    def getItem(self, rankedList, itemsDict, item):
+        t=tuple(rankedList)
+        if not t in itemsDict:
+            newItem=QStandardItem(rankedList[-1])
+            newItem.document=lambda: None
+            itemsDict[t]=newItem
+        else:
+            newItem=itemsDict[t]
+
+        newItem.appendRow(item)
+
+        if len(rankedList)>1:
+            self.getItem(rankedList[:-1], itemsDict, newItem)
+        return newItem
+
+    def getItemTags(self, model):
+        tags=self._getTags(model.invisibleRootItem())
+
+        allTags=[]
+        for t in tags.values():
+            allTags+=t
+        return tags, dict(Counter(allTags))
+        
+    def _getTags(self, item, tags=None):
+        if tags is None: tags={}
+        if hasattr(item, 'id') and item.kind()=='document':
+            tags[item]=self.window.plugin.tags.get(
+                    item.id(), item.kind())
+
+        for i in range(item.rowCount()):
+            child=item.child(i)
+            self._getTags(child, tags)
+        return tags
 
     def tree(self):
         return self.m_view
@@ -121,6 +242,7 @@ class MapView(QWidget):
         self.hide()
         self.m_view.hide()
         self.m_view.setModel(self.m_document.m_model)
+
         self.m_view.model().itemChanged.connect(self.on_itemChanged)
 
         self.m_proxyModel=QSortFilterProxyModel(self.m_view)
@@ -282,8 +404,11 @@ class MapView(QWidget):
     def save(self):
         pass
 
-    def openNode(self):
-        item = self.m_view.currentItem()
+    def openNode(self, item=None):
+
+        if item is None: item = self.m_view.currentItem()
+
+        if item is None: return
 
         if item.kind() == 'annotation':
 
@@ -332,6 +457,14 @@ class MapView(QWidget):
             self._updateTitles(item.child(index), sender)
         if item!=self.m_document.m_model.invisibleRootItem():
             item.setTitle()
+
+    # open node on item change in docviewer
+    # if set so in the settings
+    def on_currentItemChanged(self, item):
+        if not self.window.isDocumentViewVisible(): return
+        if True: return
+        self.openNode(item)
+        self.setFocus()
 
     def on_itemChanged(self, item):
         item.update()

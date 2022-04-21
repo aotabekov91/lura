@@ -231,8 +231,11 @@ class Cursor(QObject):
 
     def on_mouseRelease(self, event, pageItem, view):
         self.currentPageItem=None
-        pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
         pageItem.setCursor(self.oldCursor)
+        try:
+            pageItem.pageHasBeenJustPainted.disconnect(self.highlightSelectedArea)
+        except:
+            pass
 
         if self.m_mode=='rubberBand':
 

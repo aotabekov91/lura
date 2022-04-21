@@ -31,7 +31,7 @@ class BufferManager(QObject):
 
         view.open(document)
         self.views[filePath]=view
-        return self.views[filePath]
+        return view
 
     def updateViews(self):
         for view in self.views.values():

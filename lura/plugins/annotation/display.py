@@ -42,14 +42,14 @@ class Display(QScrollArea):
         self.window.setTabLocation(self, self.location, self.name)
 
     def on_colorComboChanged(self):
-        function = self.colorCombo.currentText()
-        document=self.window.view().document()
-        if type(document)==DocumentView:
-            self.load(document().id(), function=function)
+        view=self.window.view()
+        if view is None: return
+        if type(view)==DocumentView:
+            self.load(view.document().id())
         else:
             item=view.tree().currentItem()
             if item is None or item.kind()!='document': return
-            self.load(item.id(), function)
+            self.load(item.id())
 
     def on_mapItemChanged(self, item):
 

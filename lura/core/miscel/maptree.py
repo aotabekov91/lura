@@ -226,6 +226,7 @@ class MapTree(QTreeView):
         if not hasattr(self.model(), 'invisibleRootItem'): return
         if self.model().invisibleRootItem().rowCount()>0:
             first=self.model().invisibleRootItem().child(0)
+            if first is None: return
             self.setCurrentIndex(first.index())
 
     def open(self):

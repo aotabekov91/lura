@@ -42,4 +42,12 @@ if __name__ == "__main__":
     mainWin = App()
     if parsed_args.open: mainWin.window.open(parsed_args.open)
 
-    sys.exit(app.exec_())
+    try:
+        sys.exit(app.exec_())
+    except:
+        view=self.window.view()
+        if view is not None: view.save()
+        raise
+
+
+

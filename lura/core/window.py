@@ -93,9 +93,15 @@ class WindowManager(QMainWindow):
         view=self.display.focusMapView()
         self.setView(view)
 
+    def isMapViewVisible(self):
+        return self.display.isMapViewVisible()
+
     def focusDocumentView(self):
         view=self.display.focusDocumentView()
         self.setView(view)
+
+    def isDocumentViewVisible(self):
+        return self.display.isDocumentViewVisible()
 
     def onlyMapView(self):
         self.display.onlyMapView()

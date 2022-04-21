@@ -68,6 +68,9 @@ class Item(QStandardItem):
     def __eq__(self, other):
         return self.kind()==other.kind() and self.id()==other.id()
 
+    def __hash__(self):
+        return hash((self.m_id, self.m_kind))
+
     def watchFolder(self):
         return self.m_pathes
 

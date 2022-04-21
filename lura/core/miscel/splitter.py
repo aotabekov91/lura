@@ -20,6 +20,9 @@ class DisplaySplitter(QSplitter):
         self.right.setContentsMargins(0,0,0,0)
         self.right.setSpacing(0)
 
+        self.leftSP.hide()
+        self.rightSP.hide()
+
     def clear(self, layout):
         for index in range(layout.count()):
             item=layout.takeAt(index)
@@ -27,9 +30,11 @@ class DisplaySplitter(QSplitter):
 
     def setWidget(self, widget):
         if widget.__class__.__name__=='MapView':
+            self.leftSP.show()
             self.clear(self.left)
             self.left.addWidget(widget)
         elif widget.__class__.__name__=='DocumentView':
+            self.rightSP.show()
             self.clear(self.right)
             self.right.addWidget(widget)
 
@@ -43,18 +48,22 @@ class DisplaySplitter(QSplitter):
 
     def addWidget(self, widget):
         if widget.__class__.__name__=='MapView':
+            self.leftSP.show()
             self.left.addWidget(widget)
         elif widget.__class__.__name__=='DocumentView':
+            self.rightSP.show()
             self.right.addWidget(widget)
 
     def replaceWidget(self, index, widget):
         if widget.__class__.__name__=='DocumentView':
+            self.rightSP.show()
             if self.right.count()>0: 
                 self.right.insertWidget(index, widget)
                 self.right.takeAt(index+1)
             else:
                 self.right.addWidget(widget)
         elif widget.__class__.__name__=='MapView':
+            self.leftSP.show()
             if self.left.count()>0: 
                 self.left.insertWidget(index, widget)
                 self.left.takeAt(index+1)
@@ -82,3 +91,9 @@ class DisplaySplitter(QSplitter):
     def onlyDocumentView(self):
         self.rightSP.show()
         self.leftSP.hide()
+
+    def isMapViewVisible(self):
+        return self.leftSP.isVisible()
+
+    def isDocumentViewVisible(self):
+        return self.rightSP.isVisible()

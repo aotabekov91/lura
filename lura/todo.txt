@@ -1,1 +1,6 @@
 1. add color change buttons in annotation display
+2. annotation delete from display does not remove annotation is the document if
+their exist
+2. Handle two-side pdfs for selection (e.g. for annotation)
+3. filter command should be able to handle different types arguments (e.g. by
+title, date, tag, etc) (i.e. incorporate argparse)

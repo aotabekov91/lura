@@ -170,6 +170,7 @@ class Command(QObject):
         self.tags.setText(f' [{text}] ')
 
     def on_viewChanged(self, view):
+        if view is None: return
         if type(view)==Item:
             title=view.get('title')
             pageNumber=''
@@ -179,6 +180,12 @@ class Command(QObject):
             if data is not None: 
                 tags='; '.join(data)
             mode=f'Item: {view.kind()}'
+
+        elif type(view)==QStandardItem:
+            try:
+                print(view.kind())
+            except:
+                return
 
         elif type(view.document())==PdfDocument:
             document=view.document()
@@ -201,6 +208,10 @@ class Command(QObject):
             pageNumber=''
             tags=''
             mode='Map'
+
+        else:
+
+            return
 
         self.title.setText(title)
         self.mode.setText(f' [{mode}] ')
