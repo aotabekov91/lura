@@ -81,9 +81,11 @@ class Metadata(QWidget):
 
         self.setKind(item.id())
 
-    def on_viewChanged(self):
+    def on_viewChanged(self, view):
         if not self.isVisible(): return
-        self.m_id = self.window.view().document().id()
+        if view is None: return
+        # self.m_id = self.window.view().document().id()
+        self.m_id = view.document().id()
         self.setKind(self.m_id)
 
     def on_documentTagged(self, m_id, kind, tagList, sender):

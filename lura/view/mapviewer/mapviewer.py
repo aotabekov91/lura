@@ -283,6 +283,8 @@ class MapView(QWidget):
         if parent is None: parent=self.m_view.model().invisibleRootItem()
         parent.takeRow(item.row())
 
+        self.setFocus()
+
 
     def addFolder(self, path=False):
 
