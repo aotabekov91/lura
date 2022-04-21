@@ -48,6 +48,7 @@ class MapView(QWidget):
                 ('mfa', 'activateFiltering'),
                 ('mfd', 'deactivateFiltering'),
                 ('mtt', 'showTagTree'),
+                ('mmd', 'moveDocumentTo'),
                 ]
         self.window.plugin.command.addCommands(commandList, self)
 
@@ -222,6 +223,17 @@ class MapView(QWidget):
         if item is None: return
         if item.kind()!='document': return
 
+        
+        self.window.plugin.command.activateCustom(
+                self._deleteDocument, 
+                'Do you want to delete the document [yes/no]: ')
+
+    def _deleteDocument(self, text):
+        if text!='yes': return
+        item=self.m_view.currentItem()
+        if item is None: return
+        if item.kind()!='document': return
+
         loc=self.window.plugin.tables.get('documents', {'id':item.id()}, 'loc')
 
         # from map
@@ -235,6 +247,41 @@ class MapView(QWidget):
         # from the system
         self.window.closeView(loc)
         os.remove(loc)
+
+        self.setFocus()
+
+    def moveDocumentTo(self):
+        item=self.m_view.currentItem()
+        if item is None or item.kind()!='document': return
+
+        filePath=self.window.plugin.tables.get(
+                'documents', {'id':item.id()}, 'loc')
+        dirLoc=filePath.rsplit('/', 1)[0]
+
+        self.window.plugin.command.activateCustom(
+                self._moveDocumentTo, 'Move to: ', text=dirLoc)
+
+    def _moveDocumentTo(self, text):
+        item=self.m_view.currentItem()
+        if item is None or item.kind()!='document': return
+
+        oldFilePath=self.window.plugin.tables.get(
+                'documents', {'id':item.id()}, 'loc')
+        fileName=oldFilePath.rsplit('/', 1)[-1]
+
+        if not text.endswith('/'): text+='/'
+
+        if not os.path.exists(text): return
+        newFilePath=text+fileName
+
+        os.rename(oldFilePath, newFilePath)
+        self.window.plugin.tables.update(
+                'documents', {'id':item.id()}, {'loc':newFilePath})
+
+        parent=item.parent()
+        if parent is None: parent=self.m_view.model().invisibleRootItem()
+        parent.takeRow(item.row())
+
 
     def addFolder(self, path=False):
 
