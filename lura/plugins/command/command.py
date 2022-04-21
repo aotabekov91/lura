@@ -173,13 +173,21 @@ class Command(QObject):
         if view is None: return
         if type(view)==Item:
             title=view.get('title')
-            pageNumber=''
+
+            parent=view.parent()
+            if parent is None:
+                parent=view.index().model().invisibleRootItem()
+
+
             data=self.window.plugin.tags.get(
                     view.id(), view.kind())
             tags=''
             if data is not None: 
                 tags='; '.join(data)
+
             mode=f'Item: {view.kind()}'
+            pageNumber=view.row()+1
+            numberOfPages=parent.rowCount()
 
         elif type(view)==QStandardItem:
             try:
@@ -189,7 +197,6 @@ class Command(QObject):
 
         elif type(view.document())==PdfDocument:
             document=view.document()
-            numberOfPages = document.numberOfPages()
             title=self.window.plugin.tables.get(
                     'metadata', {'did':document.id()}, 'title')
             if title in ['', None]: title=document.filePath()
@@ -199,7 +206,8 @@ class Command(QObject):
             if data is not None:
                 tags='; '.join(data)
 
-            pageNumber=f' [1/{numberOfPages}]'
+            numberOfPages = document.numberOfPages()
+            pageNumber=view.currentPage()
             mode='Document'
         elif type(view.document())==MapDocument:
             document=view.document()
@@ -217,7 +225,8 @@ class Command(QObject):
         self.mode.setText(f' [{mode}] ')
         self.tags.setText(f' [{tags}] ')
         self.pageNumber.setText('[]')
-        if pageNumber!='': self.pageNumber.setText(f' [1/{numberOfPages}]')
+        if pageNumber!='': 
+            self.pageNumber.setText(f' [{pageNumber}/{numberOfPages}]')
 
     def on_currentPageChanged(self, document, pageNumber):
 
