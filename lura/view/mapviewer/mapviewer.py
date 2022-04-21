@@ -339,8 +339,7 @@ class MapView(QWidget):
 
     def showTagTree(self):
         if self.m_view.model() is None: return
-        self.window.plugin.tags.showTagsFromModel(self.m_view.model())
-        return
+        self.window.plugin.tags.showTagsFromModel(self.m_document.m_model)
 
     def _updateTitles(self, item=None, sender=None):
         if not self.m_view.isVisible(): return

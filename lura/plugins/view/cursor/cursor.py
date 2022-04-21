@@ -184,7 +184,7 @@ class Cursor(QObject):
 
 
     def activate(self, client, mode='selector'):
-        self.deactivate()
+        # self.deactivate()
         self.m_client=client
         self.m_mode=mode
         self.connectSelectorEvents()
@@ -239,6 +239,7 @@ class Cursor(QObject):
 
         if self.m_mode=='rubberBand':
 
+            if self.m_rubberBand is None: return
             self.rubberBandSelection.emit(self.m_rubberBand, pageItem)
             self.m_rubberBand=None
             pageItem.update()
@@ -251,6 +252,7 @@ class Cursor(QObject):
             self.selectedText=[]
             pageItem.update()
             event.accept()
+
 
     def getRubberBandSelection(self):
         return self.m_rubberBand
