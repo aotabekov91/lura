@@ -17,9 +17,9 @@ class DatabaseConnector:
         self.window.plugin.tables.addTable(MapsTable)
         self.window.mapCreated.connect(self.register)
 
-    def register(self, mapp):
-        mapp.setDB(self)
-        if mapp.id() is not None: return
+    def register(self, model):
+        model.load()
+        if model.id() is not None: return
 
         allMaps=self.window.plugin.tables.get('maps')
         if allMaps is None or len(allMaps)==0:
@@ -27,10 +27,8 @@ class DatabaseConnector:
         else:
             newId=max([a['id'] for a in allMaps])+1
         data={'title':'Mindmap', 'content':'', 'id':newId}
-        self.window.plugin.tables.write('maps', 
-                data)
-        mapp.setId(newId)
-
+        self.window.plugin.tables.write('maps', data)
+        model.setId(newId)
 
 class MapsTable(Table):
 

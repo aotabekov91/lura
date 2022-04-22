@@ -22,9 +22,11 @@ class MapDocument(QStandardItemModel):
         self.m_proxy=QSortFilterProxyModel()
         self.m_proxy.setSourceModel(self)
         self.m_proxy.setDynamicSortFilter(True)
+        self.m_proxy.setRecursiveFilteringEnabled(True)
+        self.m_proxy.setFilterCaseSensitivity(Qt.CaseInsensitive)
 
     def setParent(self, parent):
-        raise
+        self.window=parent
 
     def id(self):
         return self.m_id
@@ -38,7 +40,7 @@ class MapDocument(QStandardItemModel):
     def clear(self):
         for index in range(self.invisibleRootItem().rowCount()):
             self.invisibleRootItem().takeRow(index)
-                
+
     def proxy(self):
         return self.m_proxy
 
@@ -74,25 +76,15 @@ class MapDocument(QStandardItemModel):
         return tostring(self.m_element, encoding='unicode', method='xml')
 
     def update(self, *args, **kwargs):
-        self.m_db.window.plugin.tables.update(
+        self.window.plugin.tables.update(
                 'maps', {'id':self.m_id}, {'content':self.xml()})
-
-    def element(self):
-        return self.m_element
-
-    def setElement(self, element):
-        self.m_element = element
-
-    def setDB(self, db):
-        self.m_db = db
-        self.load()
 
     def load(self):
 
         if self.m_id is not None:
 
             items = {'0': self.invisibleRootItem()}
-            mapData = self.m_db.window.plugin.tables.get(
+            mapData = self.window.plugin.tables.get(
                     'maps', {'id': self.id()})
             if mapData['content']=='': return self.connectModel()
             xml = fromstring(mapData['content'])
@@ -108,7 +100,7 @@ class MapDocument(QStandardItemModel):
                     title=element.attrib.get('title', '')
                     watchFolder=element.attrib.get('watch', None)
 
-                    item=Item(kind, m_id, self.parent(), title)
+                    item=Item(kind, m_id, self.window, title)
                     
                     if watchFolder is not None and len(watchFolder)>0:
                         pathes=watchFolder.split(':')
@@ -126,10 +118,3 @@ class MapDocument(QStandardItemModel):
         self.rowsMoved.connect(self.update)
         self.rowsAboutToBeRemoved.connect(self.update)
         self.dataChanged.connect(self.update)
-
-    # def disconnectModel(self):
-    #     self.rowsInserted.disconnect(self.update)
-    #     self.rowsRemoved.disconnect(self.update)
-    #     self.rowsMoved.disconnect(self.update)
-    #     self.rowsAboutToBeRemoved.disconnect(self.update)
-    #     self.dataChanged.disconnect(self.update)

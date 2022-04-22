@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from lura.core import Item
 from lura.core import MapTree
 
+from lura.render.map import MapDocument
 from lura.view.docviewer import DocumentView
 
 class TagMap(MapTree):
@@ -26,9 +27,18 @@ class TagMap(MapTree):
         self.set=self.window.plugin.tags.set
         self.untag=self.window.plugin.tags.untag
 
+        commandList=[
+                ('mtsa', 'activateSorting'),
+                ('mtsd', 'deactivateSorting'),
+                ('mtfa', 'activateFiltering'),
+                ('mtfd', 'deactivateFiltering'),
+                ]
+
+        self.window.plugin.command.addCommands(commandList, self)
+
     def rootUp(self):
         if self.m_mainModel is None: return
-        self.showTagsFromModel(self.m_mainModel)
+        self.openModel(self.m_mainModel)
 
     def getParentTags(self, item, ancesstors):
         parent=item.parent()
@@ -85,7 +95,7 @@ class TagMap(MapTree):
 
         tag=item.text()
 
-        model=QStandardItemModel()
+        model=MapDocument()
 
         for k, v in self.tagItems.items():
             if not tag in k: continue
@@ -94,7 +104,7 @@ class TagMap(MapTree):
                 ii=Item(kk.kind(), kk.id(), self.window, kk.text())
                 model.invisibleRootItem().appendRow(ii)
 
-        self.showTagsFromModel(model)
+        self.openModel(model)
 
     def openModel(self, model):
 
@@ -121,7 +131,7 @@ class TagMap(MapTree):
 
         itemDict={}
 
-        model=QStandardItemModel()
+        model=MapDocument()
         if self.m_mainModel is None: 
             self.m_mainModel=model
             self.tagItems=tagItems
@@ -144,6 +154,7 @@ class TagMap(MapTree):
             model.appendRow(uContainer)
 
         self.setModel(model)
+        self.setFocus()
 
     def setItem(self, preList, itemDict, model):
         if preList in itemDict:

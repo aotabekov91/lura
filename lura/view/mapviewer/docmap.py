@@ -26,10 +26,10 @@ class DocMap(MapTree):
                 ('mmd', 'moveDocumentTo'),
                 ('maw', 'addWatchFolder'),
                 ('muw', 'updateWatchFolder'),
-                ('msa', 'activateSorting'),
-                ('msd', 'deactivateSorting'),
-                ('mfa', 'activateFiltering'),
-                ('mfd', 'deactivateFiltering'),
+                ('mdsa', 'activateSorting'),
+                ('mdsd', 'deactivateSorting'),
+                ('mdfa', 'activateFiltering'),
+                ('mdfd', 'deactivateFiltering'),
                 ]
 
         self.window.plugin.command.addCommands(commandList, self)
@@ -317,33 +317,6 @@ class DocMap(MapTree):
             item.m_changedFromOutside=False
         else:
             self.window.titleChanged.emit(self)
-
-    def activateSorting(self):
-        if self.model() is None: return
-        self.setProxyModel(self.model().proxy())
-        self.sortByColumn(0, Qt.AscendingOrder)
-        self.setFocus()
-
-    def deactivateSorting(self):
-        if self.model() is None: return
-        self.setModel(self.m_document.m_model)
-        self.setFocus()
-
-    def activateFiltering(self):
-        if self.model() is None: return
-        self.setProxyModel(self.m_proxyModel)
-        self.window.plugin.command.activateCustom(
-                self._activateFiltering, 'Filter: ', self._activateFiltering)
-
-    def _activateFiltering(self, text):
-        if self.model() is None: return
-        self.setProxyModel(self.m_proxyModel)
-        self.m_proxyModel.setFilterFixedString(text)
-
-    def deactivateFiltering(self):
-        if self.model() is None: return
-        self.setModel(self.m_document.m_model)
-        self.setFocus()
 
 class MQLineEdit(QLineEdit):
 

@@ -19,6 +19,8 @@ class MapTree(QTreeView):
 
         self.yanked=[]
         self.copied=[]
+        self.m_model=None
+        self.m_proxy=None
 
         self.header().hide()
 
@@ -26,6 +28,8 @@ class MapTree(QTreeView):
         if self.model() is None: return None
 
         if type(self.model())==QStandardItemModel:
+            return self.model().itemFromIndex(self.currentIndex())
+        elif hasattr(self.model(), 'itemFromIndex'):
             return self.model().itemFromIndex(self.currentIndex())
         elif type(self.model())==QSortFilterProxyModel:
             index=self.model().mapToSource(self.currentIndex())
@@ -44,6 +48,20 @@ class MapTree(QTreeView):
             if self.currentIndex() is None: return
             index=self.currentIndex()
         super().expand(self.currentIndex())
+
+    def expandAllInside(self, item=None):
+        if item is None: item=self.currentItem()
+        if item is None: return
+        super().expand(item.index())
+        for i in range(item.rowCount()):
+            self.expandAllInside(item.child(i))
+
+    def collapseAllInside(self, item=None):
+        if item is None: item=self.currentItem()
+        if item is None: return
+        super().collapse(item.index())
+        for i in range(item.rowCount()):
+            self.collapseAllInside(item.child(i))
 
     def collapse(self):
         if self.currentIndex() is None: return
@@ -108,6 +126,10 @@ class MapTree(QTreeView):
             self.moveToBottom()
         elif event.key()==Qt.Key_O:
             self.open()
+        elif event.key()==Qt.Key_X:
+            self.expandAllInside()
+        elif event.key()==Qt.Key_T:
+            self.collapseAllInside()
         elif event.key()==Qt.Key_Escape:
             self.close()
         elif event.key()==Qt.Key_Return:
@@ -222,14 +244,15 @@ class MapTree(QTreeView):
         item.insertRow(row, new)
         self.setCurrentIndex(new.index())
 
-    def setProxyModel(self, model):
-        self.m_proxy=model
-        self.isProxyModel=True
-        super().setModel(model)
+    def setProxyModel(self):
+        super().setModel(self.m_proxy)
 
     def setModel(self, model):
         self.m_model=model
-        self.isProxyModel=False
+        if hasattr(model, 'proxy'):
+            self.m_proxy=self.m_model.proxy()
+        else:
+            self.m_proxy=None
         super().setModel(model)
         if not hasattr(self.model(), 'invisibleRootItem'): return
         if self.model().invisibleRootItem().rowCount()>0:
@@ -242,3 +265,31 @@ class MapTree(QTreeView):
 
     def close(self):
         pass
+
+    def activateSorting(self):
+        if self.m_proxy is None: return
+        self.setProxyModel()
+        self.sortByColumn(0, Qt.AscendingOrder)
+        self.setFocus()
+
+    def deactivateSorting(self):
+        if self.m_proxy is None: return
+        self.setModel(self.m_model)
+        self.setFocus()
+
+    def activateFiltering(self):
+        if self.m_proxy is None: return
+        self.setProxyModel()
+        self.expandAll()
+        self.window.plugin.command.activateCustom(
+                lambda text: self._activateFiltering(text, True), 'Filter: ', self._activateFiltering)
+
+    def _activateFiltering(self, text, final=False):
+        if self.m_proxy is None: return
+        self.m_proxy.setFilterRegExp(text)
+        if final: self.setFocus()
+
+    def deactivateFiltering(self):
+        if self.m_proxy is None: return
+        self.setModel(self.m_model)
+        self.setFocus()
