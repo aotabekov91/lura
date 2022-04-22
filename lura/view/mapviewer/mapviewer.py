@@ -7,11 +7,12 @@ from PyQt5.QtWidgets import *
 
 from lura.core import Item
 from lura.core import MapTree
+from lura.view.base import View
 
 from .docmap import DocMap
 from .tagmap import TagMap
 
-class MapView(QWidget):
+class MapView(QWidget, View):
 
     def __init__(self, parent, settings):
         super().__init__(parent)
@@ -65,26 +66,11 @@ class MapView(QWidget):
     def tree(self):
         return self.m_docMap
 
-    def isChild(self, child, possibleParent, recursively=False):
-        for index in range(possibleParent.rowCount()):
-            p=possibleParent.child(index)
-            if child == p: return p
-            if recursively: 
-                r=self.isChild(child, p, recursively)
-                if r: return r
-        return None
-
-    def readjust(self):
-        pass
-
-    def fitToPageWidth(self):
-        pass
+    def document(self):
+        return self.m_docMap.model()
 
     def setFocus(self):
         self.stack.currentWidget().setFocus()
-
-    def document(self):
-        return self.m_document
 
     def open(self, document):
 
@@ -98,15 +84,21 @@ class MapView(QWidget):
         self.m_docMap.show()
         self.m_docMap.setFocus()
 
+        self.m_title.show()
         self.m_title.setMap(document.id(), self.window)
 
-    def save(self):
-        pass
+    def openTagView(self):
+        if self.m_docMap.model() is None: return
+        self.stack.setCurrentIndex(self.m_tagIndex)
+        self.m_tagMap.openModel(self.m_docMap.model())
+
+        self.m_title.hide()
+        self.m_tagMap.show()
+        self.m_tagMap.setFocus()
 
     def openNode(self, item=None):
 
         if item is None: item = self.stack.currentWidget().currentItem()
-
         if item is None: return
 
         if item.kind() == 'annotation':
@@ -127,15 +119,6 @@ class MapView(QWidget):
             filePath = self.window.plugin.tables.get(
                 'documents', {'id': item.id()}, 'loc')
             self.window.open(filePath)
-
-    def openTagView(self):
-        if self.m_docMap.model() is None: return
-
-        self.stack.setCurrentIndex(self.m_tagIndex)
-
-        self.m_tagMap.openModel(self.m_docMap.model())
-        self.m_tagMap.show()
-        self.m_tagMap.setFocus()
 
     def on_itemChanged(self, item):
         item.update()

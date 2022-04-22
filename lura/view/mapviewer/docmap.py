@@ -23,17 +23,16 @@ class DocMap(MapTree):
                 ('maf', 'addFolder'),
                 ('mad', 'addDocument'),
                 ('mdd', 'deleteDocument'),
+                ('mmd', 'moveDocumentTo'),
                 ('maw', 'addWatchFolder'),
                 ('muw', 'updateWatchFolder'),
                 ('msa', 'activateSorting'),
                 ('msd', 'deactivateSorting'),
                 ('mfa', 'activateFiltering'),
                 ('mfd', 'deactivateFiltering'),
-                ('mtt', 'showTagTree'),
-                ('mmd', 'moveDocumentTo'),
                 ]
 
-        # self.window.plugin.command.addCommands(commandList, self)
+        self.window.plugin.command.addCommands(commandList, self)
 
         self.fuzzy = self.window.plugin.fuzzy
         self.fuzzy.fuzzySelected.connect(self.addDocument)
@@ -114,7 +113,7 @@ class DocMap(MapTree):
             toRemove+=[item]
 
         for item in toRemove:
-            self.m_view.delete(item)
+            self.delete(item)
 
     def addWatchFolder(self, path=False):
         if not self.isVisible(): return
@@ -147,10 +146,10 @@ class DocMap(MapTree):
                 while qIterator.hasNext():
                     self.addDocument(qIterator.next(), client=self, item=wCon)
 
-            self.m_view.setFocus()
+            self.setFocus()
 
     def deleteDocument(self):
-        item=self.m_view.currentItem()
+        item=self.currentItem()
         if item is None: return
         if item.kind()!='document': return
 
@@ -161,14 +160,14 @@ class DocMap(MapTree):
 
     def _deleteDocument(self, text):
         if text!='yes': return
-        item=self.m_view.currentItem()
+        item=self.currentItem()
         if item is None: return
         if item.kind()!='document': return
 
         loc=self.window.plugin.tables.get('documents', {'id':item.id()}, 'loc')
 
         # from map
-        self.m_view.delete(item)
+        self.delete(item)
         # from annotations
         self.window.plugin.tables.remove('annotations', {'did':item.id()})
         # from metadata
@@ -182,7 +181,7 @@ class DocMap(MapTree):
         self.setFocus()
 
     def moveDocumentTo(self):
-        item=self.m_view.currentItem()
+        item=self.currentItem()
         if item is None or item.kind()!='document': return
 
         filePath=self.window.plugin.tables.get(
@@ -193,7 +192,7 @@ class DocMap(MapTree):
                 self._moveDocumentTo, 'Move to: ', text=dirLoc)
 
     def _moveDocumentTo(self, text):
-        item=self.m_view.currentItem()
+        item=self.currentItem()
         if item is None or item.kind()!='document': return
 
         oldFilePath=self.window.plugin.tables.get(
@@ -210,7 +209,7 @@ class DocMap(MapTree):
                 'documents', {'id':item.id()}, {'loc':newFilePath})
 
         parent=item.parent()
-        if parent is None: parent=self.m_view.model().invisibleRootItem()
+        if parent is None: parent=self.model().invisibleRootItem()
         parent.takeRow(item.row())
 
         self.setFocus()
@@ -237,7 +236,7 @@ class DocMap(MapTree):
             else:
                 self.addDocument(path, client=self)
 
-            self.m_view.setFocus()
+            self.setFocus()
 
     def addDocument(self, selected=False, client=False, item=None,
             recursively=False):
@@ -258,7 +257,7 @@ class DocMap(MapTree):
             did = document.id()
 
             if item is None:
-                item = self.m_view.currentItem()
+                item = self.currentItem()
                 if item is None:
                     item = self.m_document.m_model.invisibleRootItem()
             dItem = Item('document', did, self.window)
@@ -274,7 +273,7 @@ class DocMap(MapTree):
             item=self.m_document.m_model.invisibleRootItem()
         for index in range(item.rowCount()):
             self.updateMap(item.child(index))
-        if item!=self.m_document.m_view.invisibleRootItem():
+        if item!=self.m_document.invisibleRootItem():
             if item.kind()!='container':
                 r=self.window.plugin.tables.get(
                         item.kind(), {'id':item.id()}, 'id')
@@ -290,7 +289,7 @@ class DocMap(MapTree):
         self._updateTitles(sender=sender)
 
     def _updateTitles(self, item=None, sender=None):
-        if not self.m_view.isVisible(): return
+        if not self.isVisible(): return
         if item is None:
             item=self.m_document.m_model.invisibleRootItem()
         for index in range(item.rowCount()):
@@ -305,46 +304,42 @@ class DocMap(MapTree):
         if True: return
         self.openNode(item)
         self.setFocus()
-
+    
     def on_itemChanged(self, item):
         item.update()
         if item.kind() == 'container':
             self.m_document.update()
         if item.m_changedFromOutside:
             item.m_changedFromOutside=False
-            return
-        self.window.titleChanged.emit(self)
-
-    def event(self, event):
-        if event.type()==QEvent.Enter: self.window.setView(self)
-        return super().event(event)
+        else:
+            self.window.titleChanged.emit(self)
 
     def activateSorting(self):
-        if self.m_docMap.model() is None: return
-        self.m_docMap.setProxyModel(self.m_proxyModel)
-        self.m_docMap.sortByColumn(0, Qt.AscendingOrder)
-        self.m_docMap.setFocus()
+        if self.model() is None: return
+        self.setProxyModel(self.m_proxyModel)
+        self.sortByColumn(0, Qt.AscendingOrder)
+        self.setFocus()
 
     def deactivateSorting(self):
-        if self.m_docMap.model() is None: return
-        self.m_docMap.setModel(self.m_document.m_model)
-        self.m_docMap.setFocus()
+        if self.model() is None: return
+        self.setModel(self.m_document.m_model)
+        self.setFocus()
 
     def activateFiltering(self):
-        if self.m_docMap.model() is None: return
-        self.m_docMap.setProxyModel(self.m_proxyModel)
+        if self.model() is None: return
+        self.setProxyModel(self.m_proxyModel)
         self.window.plugin.command.activateCustom(
                 self._activateFiltering, 'Filter: ', self._activateFiltering)
 
     def _activateFiltering(self, text):
-        if self.m_docMap.model() is None: return
-        self.m_docMap.setProxyModel(self.m_proxyModel)
+        if self.model() is None: return
+        self.setProxyModel(self.m_proxyModel)
         self.m_proxyModel.setFilterFixedString(text)
 
     def deactivateFiltering(self):
-        if self.m_docMap.model() is None: return
-        self.m_docMap.setModel(self.m_document.m_model)
-        self.m_docMap.setFocus()
+        if self.model() is None: return
+        self.setModel(self.m_document.m_model)
+        self.setFocus()
 
 class MQLineEdit(QLineEdit):
 

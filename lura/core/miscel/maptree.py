@@ -22,9 +22,11 @@ class MapTree(QTreeView):
         self.header().hide()
 
     def currentItem(self):
-        if not getattr(self, 'isProxyModel', None):
+        if self.model() is None: return None
+
+        if type(self.model())==QStandardItemModel:
             return self.model().itemFromIndex(self.currentIndex())
-        else:
+        elif type(self.model())==QSortFilterProxyModel:
             index=self.model().mapToSource(self.currentIndex())
             return self.m_model.itemFromIndex(index)
 

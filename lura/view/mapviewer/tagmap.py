@@ -42,6 +42,7 @@ class TagMap(MapTree):
 
     def edit(self, index, *args, **kwargs):
         item=self.currentItem()
+        if item is None: return True
         if item.kind()!='container': return True
         self.oldTag=item.text()
         return super().edit(index, *args, **kwargs)

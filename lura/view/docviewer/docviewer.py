@@ -9,8 +9,9 @@ from functools import partial
 from .pageitem import PageItem
 from .layout import DocumentLayout
 from .settings import settings
+from lura.view.base import View
 
-class DocumentView(QGraphicsView):
+class DocumentView(QGraphicsView, View):
 
     continuousModeChanged = pyqtSignal(bool, object)
     documentModified = pyqtSignal(object)
