@@ -40,15 +40,15 @@ class BufferManager(QObject):
     def loadDocument(self, filePath):
         
         document=load(filePath)
-        if document is not None and document.readSuccess():
-            document.setParent(self.window)
+        if document is None or not document.readSuccess(): return
 
-            if document.__class__.__name__ in ['PdfDocument', 'WebDocument']: 
-                self.window.documentCreated.emit(document)
-            elif document.__class__.__name__ in ['MapDocument']: 
-                self.window.mapCreated.emit(document)
+        document.setParent(self.window)
+        if document.__class__.__name__ in ['PdfDocument', 'WebDocument']: 
+            self.window.documentCreated.emit(document)
+        elif document.__class__.__name__ in ['MapDocument']: 
+            self.window.mapCreated.emit(document)
 
-            return document
+        return document
 
     def getAllViews(self):
         return list(self.views.values())

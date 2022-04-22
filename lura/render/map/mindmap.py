@@ -23,6 +23,9 @@ class MapDocument(QStandardItemModel):
         self.m_proxy.setSourceModel(self)
         self.m_proxy.setDynamicSortFilter(True)
 
+    def setParent(self, parent):
+        raise
+
     def id(self):
         return self.m_id
 
