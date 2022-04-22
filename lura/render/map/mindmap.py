@@ -3,28 +3,41 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from lura.core import Item
-from .base import BaseMapDocument
 
 from xml.etree.ElementTree import Element, SubElement, tostring, fromstring
 
-class MapDocument(BaseMapDocument):
+class MapDocument(QStandardItemModel):
 
-    rowsInserted = pyqtSignal('QModelIndex', int, int)
-    rowsRemoved = pyqtSignal('QModelIndex', int, int)
-    rowsMoved = pyqtSignal('QModelIndex', int, int)
-    rowsAboutToBeRemoved = pyqtSignal('QModelIndex', int, int)
-    dataChanged = pyqtSignal('QModelIndex')
     modelChanged = pyqtSignal()
-
-    annotationAdded=pyqtSignal(object)
 
     def __init__(self, m_id=None):
         super().__init__()
         self.m_id = m_id
         self.m_title = 'Mindmap'
         self.m_content = ''
-        self.m_block=False
         self.m_collection={}
+        self.setup()
+
+    def setup(self):
+        self.m_proxy=QSortFilterProxyModel()
+        self.m_proxy.setSourceModel(self)
+        self.m_proxy.setDynamicSortFilter(True)
+
+    def id(self):
+        return self.m_id
+
+    def setId(self, did):
+        self.m_id=did
+
+    def appendRow(self, item):
+        self.invisibleRootItem().appendRow(item)
+
+    def clear(self):
+        for index in range(self.invisibleRootItem().rowCount()):
+            self.invisibleRootItem().takeRow(index)
+                
+    def proxy(self):
+        return self.m_proxy
 
     def readSuccess(self):
         return True
@@ -33,7 +46,7 @@ class MapDocument(BaseMapDocument):
         if item is None:
 
             self.m_count = -1
-            item = self.m_model.invisibleRootItem()
+            item = self.invisibleRootItem()
             element = Element('Mindmap')
             self.m_element = element
 
@@ -57,13 +70,9 @@ class MapDocument(BaseMapDocument):
         self.setContent()
         return tostring(self.m_element, encoding='unicode', method='xml')
 
-    def setBlock(self, condition):
-        self.m_block=condition
-
     def update(self, *args, **kwargs):
-        if not self.m_block: 
-            self.m_db.window.plugin.tables.update(
-                    'maps', {'id':self.m_id}, {'content':self.xml()})
+        self.m_db.window.plugin.tables.update(
+                'maps', {'id':self.m_id}, {'content':self.xml()})
 
     def element(self):
         return self.m_element
@@ -79,9 +88,7 @@ class MapDocument(BaseMapDocument):
 
         if self.m_id is not None:
 
-            self.m_model = QStandardItemModel()
-
-            items = {'0': self.m_model.invisibleRootItem()}
+            items = {'0': self.invisibleRootItem()}
             mapData = self.m_db.window.plugin.tables.get(
                     'maps', {'id': self.id()})
             if mapData['content']=='': return self.connectModel()
@@ -111,16 +118,15 @@ class MapDocument(BaseMapDocument):
             self.connectModel()
 
     def connectModel(self):
-        super().connectModel()
         self.rowsInserted.connect(self.update)
         self.rowsRemoved.connect(self.update)
         self.rowsMoved.connect(self.update)
         self.rowsAboutToBeRemoved.connect(self.update)
         self.dataChanged.connect(self.update)
 
-    def disconnectModel(self):
-        self.rowsInserted.disconnect(self.update)
-        self.rowsRemoved.disconnect(self.update)
-        self.rowsMoved.disconnect(self.update)
-        self.rowsAboutToBeRemoved.disconnect(self.update)
-        self.dataChanged.disconnect(self.update)
+    # def disconnectModel(self):
+    #     self.rowsInserted.disconnect(self.update)
+    #     self.rowsRemoved.disconnect(self.update)
+    #     self.rowsMoved.disconnect(self.update)
+    #     self.rowsAboutToBeRemoved.disconnect(self.update)
+    #     self.dataChanged.disconnect(self.update)

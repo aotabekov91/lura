@@ -320,7 +320,7 @@ class DocMap(MapTree):
 
     def activateSorting(self):
         if self.model() is None: return
-        self.setProxyModel(self.m_proxyModel)
+        self.setProxyModel(self.model().proxy())
         self.sortByColumn(0, Qt.AscendingOrder)
         self.setFocus()
 

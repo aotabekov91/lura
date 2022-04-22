@@ -43,21 +43,7 @@ class MapView(QWidget, View):
         self.m_docIndex=self.stack.addWidget(self.m_docMap)
         self.m_tagIndex=self.stack.addWidget(self.m_tagMap)
 
-        commandList=[
-                ('mot', 'openTagView'),
-                # ('maf', 'addFolder'),
-                # ('mad', 'addDocument'),
-                # ('mdd', 'deleteDocument'),
-                # ('maw', 'addWatchFolder'),
-                # ('muw', 'updateWatchFolder'),
-                # ('msa', 'activateSorting'),
-                # ('msd', 'deactivateSorting'),
-                # ('mfa', 'activateFiltering'),
-                # ('mfd', 'deactivateFiltering'),
-                # ('mtt', 'showTagTree'),
-                # ('mmd', 'moveDocumentTo'),
-                ]
-
+        commandList=[('mot', 'openTagView'),]
         self.window.plugin.command.addCommands(commandList, self)
 
         self.m_layout.addWidget(self.m_title)
@@ -75,7 +61,7 @@ class MapView(QWidget, View):
     def open(self, document):
 
         self.m_document = document
-        self.m_docMap.setModel(self.m_document.model())
+        self.m_docMap.setModel(self.m_document)
         self.m_docMap.model().itemChanged.connect(self.on_itemChanged)
 
         self.stack.setCurrentIndex(self.m_docIndex)
