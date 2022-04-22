@@ -17,7 +17,19 @@ class MapView(QWidget, View):
     def __init__(self, parent, settings):
         super().__init__(parent)
         self.window = parent
+
+        self.globalKeys = {
+            '1': (
+                self.openTagView,
+                self.window,
+                Qt.WidgetWithChildrenShortcut),
+            '2': (
+                self.openDocView,
+                self.window,
+                Qt.WidgetWithChildrenShortcut),
+        }
         self.setup()
+        self.setShortcuts()
 
     def setup(self):
 
@@ -43,11 +55,11 @@ class MapView(QWidget, View):
         self.m_docIndex=self.stack.addWidget(self.m_docMap)
         self.m_tagIndex=self.stack.addWidget(self.m_tagMap)
 
-        commandList=[
-                ('mot', 'openTagView'),
-                ('mod', 'openDocView'),
-                ]
-        self.window.plugin.command.addCommands(commandList, self)
+        # commandList=[
+        #         ('mot', 'openTagView'),
+        #         ('mod', 'openDocView'),
+        #         ]
+        # self.window.plugin.command.addCommands(commandList, self)
 
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.stack)

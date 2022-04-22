@@ -150,8 +150,8 @@ class TagMap(MapTree):
             i=Item(item.kind(), item.id(), self.window)
             uContainer.appendRow(i)
 
-        if model==self.m_mainModel:
-            model.appendRow(uContainer)
+        # if model==self.m_mainModel:
+        model.appendRow(uContainer)
 
         self.setModel(model)
         self.setFocus()

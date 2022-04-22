@@ -24,3 +24,12 @@ class View:
 
     def save(self):
         pass
+
+    def setShortcuts(self):
+
+        if hasattr(self, 'globalKeys'):
+            for key, (func, parent, context) in self.globalKeys.items():
+                key=QKeySequence(key)
+                shortcut=QShortcut(key, parent)
+                shortcut.setContext(context)
+                shortcut.activated.connect(func)
