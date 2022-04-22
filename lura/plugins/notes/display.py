@@ -11,11 +11,13 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='left'
+        self.location='bottom'
         self.name='Notes'
         self.setup()
 
     def setup(self):
+
+        self.setStyleSheet('background-color: white; color: black')
 
         self.m_layout=QVBoxLayout(self)
         self.m_layout.setSpacing(0)

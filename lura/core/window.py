@@ -131,7 +131,7 @@ class WindowManager(QMainWindow):
 
         self.display.setWidget(m_view)
 
-        if self.m_view is not None: self.m_view.save()
+        # if self.m_view is not None: self.m_view.save()
 
         self.m_view=m_view
         self.viewChanged.emit(m_view)
@@ -174,6 +174,11 @@ class WindowManager(QMainWindow):
 
             setattr(self, '{}Stack'.format(name), stackWidget)
             setattr(self, '{}Dock'.format(name), dockWidget)
+
+        self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
+        self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
         self.hideAllDocks()
 

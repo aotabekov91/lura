@@ -10,21 +10,20 @@ class MapView(QWidget):
     def __init__(self, parent, settings):
         super().__init__(parent)
         self.window = parent
-        self.name='mapviewer'
         self.location='left'
+        self.name='mapviewer'
 
-        # self.globalKeys = {
-        #     '1': (
-        #         self.openTagView,
-        #         self,
-        #         Qt.WidgetWithChildrenShortcut),
-        #     '2': (
-        #         self.openDocView,
-        #         self,
-        #         Qt.WidgetWithChildrenShortcut),
-        # }
-
-        # self.setup()
+        self.globalKeys = {
+            '1': (
+                self.openTagView,
+                self,
+                Qt.WidgetWithChildrenShortcut),
+            '2': (
+                self.openDocView,
+                self,
+                Qt.WidgetWithChildrenShortcut),
+        }
+        self.setup()
 
     def setup(self):
 
@@ -48,10 +47,17 @@ class MapView(QWidget):
         self.m_docIndex=self.stack.addWidget(self.m_docMap)
         self.m_tagIndex=self.stack.addWidget(self.m_tagMap)
 
+        # commandList=[
+        #         ('mot', 'openTagView'),
+        #         ('mod', 'openDocView'),
+        #         ]
+        # self.window.plugin.command.addCommands(commandList, self)
+
         self.m_layout.addWidget(self.m_title)
         self.m_layout.addWidget(self.stack)
 
         self.window.setTabLocation(self, self.location, self.name)
+
 
     def tree(self):
         return self.m_docMap
@@ -69,9 +75,9 @@ class MapView(QWidget):
         self.m_docMap.model().itemChanged.connect(self.on_itemChanged)
 
         self.stack.setCurrentIndex(self.m_docIndex)
+
         self.window.activateTabWidget(self)
 
-        self.show()
         self.m_docMap.show()
         self.m_docMap.setFocus()
 

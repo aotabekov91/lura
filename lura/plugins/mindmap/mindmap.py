@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from lura.render.map import MapDocument
 from .connect import DatabaseConnector
 
 class MindMap(QObject):
@@ -48,8 +49,9 @@ class MindMap(QObject):
         if client!=self: return
         self.fuzzy.deactivate(self)
         if self.mode=='open':
-            filePath='map:{}'.format(selected['id'])
-            self.window.open(filePath)
+            model=MapDocument(selected['id'], self.window)
+            self.db.register(model)
+            self.window.plugin.mapviewer.open(model)
         elif self.mode=='delete':
             self.window.plugin.tables.remove(
                     'maps', {'id': selected['id']})

@@ -10,9 +10,10 @@ class MapDocument(QStandardItemModel):
 
     modelChanged = pyqtSignal()
 
-    def __init__(self, m_id=None):
+    def __init__(self, m_id=None, window=None):
         super().__init__()
         self.m_id = m_id
+        self.window=window
         self.m_title = 'Mindmap'
         self.m_content = ''
         self.m_collection={}
@@ -24,9 +25,6 @@ class MapDocument(QStandardItemModel):
         self.m_proxy.setDynamicSortFilter(True)
         self.m_proxy.setRecursiveFilteringEnabled(True)
         self.m_proxy.setFilterCaseSensitivity(Qt.CaseInsensitive)
-
-    def setParent(self, parent):
-        self.window=parent
 
     def id(self):
         return self.m_id
