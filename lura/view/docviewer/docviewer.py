@@ -110,6 +110,8 @@ class DocumentView(QGraphicsView, View):
             self.updateSceneAndView(left, top)
         except:
             pass
+        for pageItem in self.m_pageItems:
+            pageItem.refresh()
         super().resizeEvent(event)
 
     def on_verticalScrollBar_valueChaged(self, int):
