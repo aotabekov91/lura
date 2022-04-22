@@ -12,9 +12,9 @@ class MapTree(QTreeView):
         super().__init__(parent)
 
         self.window=window
-        self.setup()
+        self.initialize()
 
-    def setup(self):
+    def initialize(self):
 
         self.yanked=[]
         self.copied=[]

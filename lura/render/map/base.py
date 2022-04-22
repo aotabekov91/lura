@@ -14,6 +14,9 @@ class BaseMapDocument(QObject):
     def __init__(self):
         super().__init__()
         self.m_model = QStandardItemModel()
+        self.m_proxy=QSortFilterProxyModel()
+        self.m_proxy.setSourceModel(self.m_model)
+        self.m_proxy.setDynamicSortFilter(True)
         self.connectModel()
 
     def id(self):
@@ -93,3 +96,9 @@ class BaseMapDocument(QObject):
     def clear(self):
         for index in range(self.invisibleRootItem().rowCount()):
             self.invisibleRootItem().takeRow(index)
+                
+    def model(self):
+        return self.m_model
+
+    def proxy(self):
+        return self.m_proxy.setModel
