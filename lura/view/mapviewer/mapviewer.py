@@ -21,11 +21,11 @@ class MapView(QWidget, View):
         self.globalKeys = {
             '1': (
                 self.openTagView,
-                self.window,
+                self,
                 Qt.WidgetWithChildrenShortcut),
             '2': (
                 self.openDocView,
-                self.window,
+                self,
                 Qt.WidgetWithChildrenShortcut),
         }
         self.setup()
@@ -85,14 +85,12 @@ class MapView(QWidget, View):
         self.m_docMap.show()
         self.m_docMap.setFocus()
 
-        self.m_title.show()
         self.m_title.setMap(document.id(), self.window)
 
     def openDocView(self):
         if self.m_docMap.model() is None: return
         self.stack.setCurrentIndex(self.m_docIndex)
 
-        self.m_title.show()
         self.m_docMap.show()
         self.m_docMap.setFocus()
 
@@ -102,7 +100,6 @@ class MapView(QWidget, View):
         self.stack.setCurrentIndex(self.m_tagIndex)
         self.m_tagMap.openModel(self.m_docMap.m_model)
 
-        self.m_title.hide()
         self.m_tagMap.show()
         self.m_tagMap.setFocus()
 

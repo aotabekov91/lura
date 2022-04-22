@@ -105,14 +105,15 @@ class DocumentView(QGraphicsView, View):
             self.actions+=[action]
 
     def resizeEvent(self, event):
+        super().resizeEvent(event)
         try:
             left, top=self.saveLeftAndTop()
             self.updateSceneAndView(left, top)
         except:
             pass
+        if not hasattr(self, 'm_pageItems'): return
         for pageItem in self.m_pageItems:
             pageItem.refresh()
-        super().resizeEvent(event)
 
     def on_verticalScrollBar_valueChaged(self, int):
         pass
