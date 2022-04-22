@@ -38,7 +38,7 @@ class DocMap(MapTree):
         self.fuzzy.fuzzySelected.connect(self.addDocument)
 
         self.window.titleChanged.connect(self.updateTitles)
-        self.window.plugin.fileBrowser.pathChosen.connect(self.actOnChoosen)
+        self.window.plugin.fileBrowser.returnPressed.connect(self.actOnChoosen)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -70,7 +70,11 @@ class DocMap(MapTree):
 
         self.updateWatchFolder()
 
-    def actOnChoosen(self, chosen):
+    def actOnChoosen(self, model, index):
+        if not self.isVisible(): return
+        if index is None: return
+        chosen=model.filePath(index)
+
         if self.chosenFor=='addWatchFolder':
             self.addWatchFolder(chosen)
         elif self.chosenFor=='addFolder':

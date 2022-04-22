@@ -120,6 +120,7 @@ class MapView(QWidget, View):
                 'documents', {'id': item.id()}, 'loc')
             self.window.open(filePath)
 
+
     def on_itemChanged(self, item):
         item.update()
         if item.kind() == 'container':
