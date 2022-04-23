@@ -17,6 +17,9 @@ class Display(QScrollArea):
 
     def setup(self):
 
+        self.m_view=None
+        self.m_item=None
+
         self.group=QWidget()
         self.group.m_layout=QVBoxLayout(self.group)
         self.group.m_layout.setContentsMargins(0, 0, 0, 0)
@@ -31,6 +34,7 @@ class Display(QScrollArea):
         self.scrollableWidget=QWidget()
         self.scrollableWidget.m_layout=QVBoxLayout(self.scrollableWidget)
         self.scrollableWidget.m_layout.setContentsMargins(0, 0, 0, 0)
+        self.scrollableWidget.m_layout.setSpacing(3)
 
         self.group.m_layout.addWidget(self.colorCombo)
         self.group.m_layout.addWidget(self.scrollableWidget)
@@ -56,12 +60,17 @@ class Display(QScrollArea):
         if not self.isVisible(): return
 
         if item is None or item.kind()!='document': return
+        if self.m_item==item:return
+        self.m_item=item
+
         self.load(item.id())
 
     def on_viewChanged(self, view):
 
         if not self.isVisible(): return
         if view is None: return
+        if self.m_view==view: return
+        self.m_view=view
         if type(view)==DocumentView:
             self.load(view.document().id())
         else:
@@ -145,8 +154,19 @@ class AQWidget(QWidget):
         self.title.textChanged.connect(self.on_titleChanged)
         self.title.mouseDoubleClickEvent=self.on_titleDoubleClick
 
-        self.deleteButton=QPushButton('Delete')
+        self.deleteButton=QPushButton()
+        pixmapi = getattr(QStyle, 'SP_TrashIcon')
+        icon = self.style().standardIcon(pixmapi)
+        self.deleteButton.setIcon(icon)
         self.deleteButton.pressed.connect(self.on_deleteButtonPressed)
+
+        widget=QWidget()
+        widget.m_layout=QHBoxLayout(widget)
+        widget.m_layout.setContentsMargins(0,0,0,0)
+        widget.m_layout.setSpacing(0)
+
+        widget.m_layout.addWidget(self.title)
+        widget.m_layout.addWidget(self.deleteButton)
 
         self.content = QTextEdit(content)
         self.content.setMinimumHeight(80)
@@ -155,12 +175,12 @@ class AQWidget(QWidget):
 
         color=self.m_data.get('annotations', {'id': self.m_id}, 'color')
         if color is not None:
-            self.title.setStyleSheet(f'background-color: {color}; color: black')
+            widget.setStyleSheet(f'background-color: {color}; color: black')
             self.content.setStyleSheet(f'background-color: {color}; color: black')
 
-        self.m_layout.addWidget(self.title)
+        self.m_layout.addWidget(widget)
         self.m_layout.addWidget(self.content)
-        self.m_layout.addWidget(self.deleteButton)
+        # self.m_layout.addWidget(self.deleteButton)
 
     def update(self):
         self.title.setText(

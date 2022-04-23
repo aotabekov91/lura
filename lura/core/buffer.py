@@ -14,6 +14,7 @@ class BufferManager(QObject):
         self.window=parent
         self.configuration=configuration
         self.views=OrderedDict()
+        self.documents={}
 
     def addView(self, filePath):
 
@@ -34,6 +35,9 @@ class BufferManager(QObject):
 
     def loadDocument(self, filePath):
         
+        if filePath in self.documents:
+            return self.documents[filePath]
+
         document=PdfDocument(filePath)
         if document is None or not document.readSuccess(): return
 

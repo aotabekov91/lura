@@ -87,13 +87,27 @@ class Creator(QObject):
 
         else:
             aid=annotation
-            did=self.window.plugin.tables.get(
-                    'annotations', {'id':aid}, 'did')
+            aData=self.window.plugin.tables.get(
+                    'annotations', {'id':aid})
+            did=aData['did']
+            loc=self.window.plugin.tables.get(
+                    'documents', {'id':did}, 'loc')
+
+            view=self.window.buffer.addView(loc)
+            pageItem=view.pageItem(aData['page']-1)
+            page=pageItem.page()
+
+            annotation=None
+            for ann in page.annotations():
+                if ann.position()==aData['position']: 
+                    annotation=ann
+                    break
+
+
+        print(annotation)
 
         self.window.plugin.tables.remove('annotations', {'id': aid})
         self.m_parent.display.load(did)
-
-        if type(annotation)!=int:
-
-            annotation.page().removeAnnotation(annotation)
-            annotation.page().pageItem().refresh(dropCachedPixmap=True)
+        if ann is None: return
+        annotation.page().removeAnnotation(annotation)
+        annotation.page().pageItem().refresh(dropCachedPixmap=True)
