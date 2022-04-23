@@ -21,7 +21,7 @@ settings={
                 ],
             'currentMode':'SinglePageLayout',
             'pageSpacing':2.,
-            'viewportPadding':2,
+            'viewportPadding':0,
             },
         'invertColors':False,
         'convertToGrayscale':False,

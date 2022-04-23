@@ -43,6 +43,7 @@ class PageInfo(QWidget):
         self.m_layout.addWidget(self.tags)
         self.m_layout.addWidget(self.pageNumber)
 
+        self.show()
         self.window.statusBar().addPermanentWidget(self)
 
     def on_documentTagged(self, m_id, kind, tagList, sender):

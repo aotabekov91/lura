@@ -1,1 +1,1 @@
-from .view import Metadata
+from .metadata import Metadata

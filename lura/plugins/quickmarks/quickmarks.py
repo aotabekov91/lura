@@ -11,7 +11,7 @@ class Quickmarks(QListWidget):
         self.window = parent
         self.s_settings = settings
         self.name = 'quickmarks'
-        self.location = 'bottom'
+        self.location = 'top'
         self.globalKeys = {
             'Ctrl+g': (
                 self.set,

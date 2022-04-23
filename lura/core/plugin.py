@@ -3,29 +3,29 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from lura.plugins.view import View
-from lura.plugins.tables import Tables
-from lura.plugins.documents import Documents
-from lura.plugins.filebrowser import FileBrowser
 from lura.plugins.tags import Tags
-from lura.plugins.bookmarks import Bookmarks
-from lura.plugins.annotation import Annotation
-from lura.plugins.metadata import Metadata
 from lura.plugins.links import Links
-from lura.plugins.search import Search
 from lura.plugins.notes import Notes
+from lura.plugins.fuzzy import Fuzzy
+from lura.plugins.tables import Tables
+from lura.plugins.search import Search
 from lura.plugins.mindmap import MindMap
 from lura.plugins.command import Command
 from lura.plugins.outline import Outline
-from lura.plugins.quickmarks import Quickmarks
-from lura.plugins.selection import Selection
+from lura.plugins.metadata import Metadata
 from lura.plugins.pageinfo import PageInfo
+from lura.plugins.clipboard import Clipboard
+from lura.plugins.bookmarks import Bookmarks
+from lura.plugins.documents import Documents
+from lura.plugins.annotation import Annotation
+from lura.plugins.quickmarks import Quickmarks
+from lura.plugins.filebrowser import FileBrowser
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.anki import Anki
 # from lura.plugins.pager import Pager
 
-from lura.plugins.fuzzy import Fuzzy
-from lura.plugins.buffers import Buffers
+# from lura.plugins.buffers import Buffers
 
 class PluginManager(dict):
     def __init__(self, parent, s_settings):
@@ -51,7 +51,7 @@ class PluginManager(dict):
                     Quickmarks,
                     Search,
                     Tags,
-                    Selection,
+                    Clipboard,
                     PageInfo,
                     # Anki,
                     # Lookup,

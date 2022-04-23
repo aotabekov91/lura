@@ -62,10 +62,10 @@ class WindowManager(QMainWindow):
         # TODO: settings -> config.ini
         # self.settings=settings
         self.m_view=None
-        # self.setStyleSheet("background-color: black;")
-        self.setStyleSheet("QWidget {color:white; background-color:black}")
-        # self.setStyleSheet("QScrollArea {color:white; background-color:black}")
-        # self.setStyleSheet("color:white")
+        stl="QWidget {color:white; background-color:black}; "
+        stl+="separator {width: 0px; height: 0px; margin: 0px; padding: 0px; }"
+
+        self.setStyleSheet(stl)
 
         self.setAcceptDrops(True)
         self.statusBar().setSizeGripEnabled(False)
@@ -162,12 +162,7 @@ class WindowManager(QMainWindow):
         for name, loc in locs.items():
 
             dockWidget = QDockWidget(self)
-            # dockWidget.setStyleSheet("background-color: white;")
-            # dockWidget.setFeatures(QDockWidget.NoDockWidgetFeatures)
-
             stackWidget= MQStackedWidget(name, self)
-            # stackWidget.setStyleSheet("background-color: white;")
-
             dockWidget.setWidget(stackWidget)
 
             self.addDockWidget(loc, dockWidget)
@@ -175,9 +170,7 @@ class WindowManager(QMainWindow):
             setattr(self, '{}Stack'.format(name), stackWidget)
             setattr(self, '{}Dock'.format(name), dockWidget)
 
-        # self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
-        # self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
         self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
         self.hideAllDocks()

@@ -25,7 +25,7 @@ class Bookmarks(MapTree):
                     self.window,
                     Qt.WindowShortcut),
                 'Ctrl+Shift+b': (
-                    self.showBookmakrs,
+                    self.toggle,
                     self.window,
                     Qt.WindowShortcut),
                 }
@@ -37,6 +37,12 @@ class Bookmarks(MapTree):
         self.window.plugin.tables.addTable(BookmarksTable)
         self.window.setTabLocation(self, self.location, self.name)
         
+    def toggle(self):
+        if not self.isVisible():
+            self.showBookmakrs()
+        else:
+            self.window.deactivateTabWidget(self)
+
     def showBookmakrs(self, view=None):
         if view is None: view=self.window.view()
         if view is None: return

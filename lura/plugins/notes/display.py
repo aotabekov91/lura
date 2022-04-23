@@ -9,7 +9,7 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='left'
+        self.location='bottom'
         self.name='Notes'
         self.setup()
 
@@ -22,6 +22,8 @@ class Display(QWidget):
 
         self.window.setTabLocation(self, self.location, self.name)
 
+        self.setStyleSheet('background-color: white; color: black')
+
     def open(self, n_id):
         noteWidget=NQWidget(n_id, self.window.plugin.tables)
 
@@ -30,6 +32,7 @@ class Display(QWidget):
 
         self.m_layout.addWidget(noteWidget)
         self.window.activateTabWidget(self)
+        self.m_dockWidget.titleBarWidget().setStyleSheet('background-color: white; color: black')
 
     def toggle(self):
 

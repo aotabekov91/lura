@@ -12,7 +12,7 @@ class Command(QObject):
         self.window = parent
         self.s_settings = settings
         self.name = 'command'
-        self.location = 'bottom'
+        self.location = 'top'
         self.globalKeys = {
             ':': (
                 self.activate,

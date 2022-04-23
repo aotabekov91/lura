@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 from lura.core import MapTree
 from lura.view.docviewer import DocumentView
 
-class Selection(QWidget):
+class Clipboard(QWidget):
 
     pathChosen = pyqtSignal(object)
 
