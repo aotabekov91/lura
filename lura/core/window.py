@@ -165,7 +165,7 @@ class WindowManager(QMainWindow):
             # dockWidget.setStyleSheet("background-color: white;")
             # dockWidget.setFeatures(QDockWidget.NoDockWidgetFeatures)
 
-            stackWidget= MQStackedWidget(self)
+            stackWidget= MQStackedWidget(name, self)
             # stackWidget.setStyleSheet("background-color: white;")
 
             dockWidget.setWidget(stackWidget)
@@ -264,8 +264,9 @@ class WindowManager(QMainWindow):
 
 class MQStackedWidget(QStackedWidget):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, position, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.m_position=position
         self.setup()
 
     def setup(self):
@@ -276,8 +277,4 @@ class MQStackedWidget(QStackedWidget):
     def readjust(self):
         s=self.size()
         w, h=s.width(), s.height()
-
         self.setFixedSize(round(w*1.2), h)
-
-
-
