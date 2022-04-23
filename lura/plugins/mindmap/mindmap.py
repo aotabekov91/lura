@@ -38,7 +38,9 @@ class MindMap(QObject):
         self.fuzzy.activate(self)
 
     def createMap(self):
-        self.window.open('map:new')
+        model=ItemModel(None, self.window)
+        self.db.register(model)
+        self.window.plugin.mapviewer.open(model)
 
     def deleteMap(self):
         self.mode='delete'
@@ -51,7 +53,7 @@ class MindMap(QObject):
         if self.mode=='open':
             model=ItemModel(selected['id'], self.window)
             self.db.register(model)
-            self.window.plugin.mapviewer.open(model)
+            self.window.plugin.itemviewer.open(model)
         elif self.mode=='delete':
             self.window.plugin.tables.remove(
                     'maps', {'id': selected['id']})

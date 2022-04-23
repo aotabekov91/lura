@@ -165,7 +165,7 @@ class WindowManager(QMainWindow):
             # dockWidget.setStyleSheet("background-color: white;")
             # dockWidget.setFeatures(QDockWidget.NoDockWidgetFeatures)
 
-            stackWidget= QStackedWidget(self)
+            stackWidget= MQStackedWidget(self)
             # stackWidget.setStyleSheet("background-color: white;")
 
             dockWidget.setWidget(stackWidget)
@@ -261,4 +261,23 @@ class WindowManager(QMainWindow):
 
     def save(self):
         if self.m_view is not None: self.m_view.save()
+
+class MQStackedWidget(QStackedWidget):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setup()
+
+    def setup(self):
+        shortcut=QShortcut('y', self)
+        shortcut.setContext(Qt.WidgetWithChildrenShortcut)
+        shortcut.activated.connect(self.readjust)
+
+    def readjust(self):
+        s=self.size()
+        w, h=s.width(), s.height()
+
+        self.setFixedSize(round(w*1.2), h)
+
+
 
