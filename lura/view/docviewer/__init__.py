@@ -1,1 +1,1 @@
-from .docviewer import DocumentView
+from .viewer import DocumentView

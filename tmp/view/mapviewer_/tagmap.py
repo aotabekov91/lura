@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from lura.core import Item
 from lura.core import MapTree
 
-from lura.render.map import MapDocument
+from lura.core.miscel import ItemModel
 from lura.view.docviewer import DocumentView
 
 class TagMap(MapTree):
@@ -95,7 +95,7 @@ class TagMap(MapTree):
 
         tag=item.text()
 
-        model=MapDocument()
+        model=ItemModel()
 
         for k, v in self.tagItems.items():
             if not tag in k: continue
@@ -131,7 +131,7 @@ class TagMap(MapTree):
 
         itemDict={}
 
-        model=MapDocument()
+        model=ItemModel()
         if self.m_mainModel is None: 
             self.m_mainModel=model
             self.tagItems=tagItems

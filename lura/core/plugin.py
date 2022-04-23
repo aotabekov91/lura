@@ -2,7 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-
 from lura.plugins.view import View
 from lura.plugins.tables import Tables
 from lura.plugins.documents import Documents
@@ -11,7 +10,7 @@ from lura.plugins.tags import Tags
 from lura.plugins.bookmarks import Bookmarks
 from lura.plugins.annotation import Annotation
 from lura.plugins.metadata import Metadata
-from lura.plugins.links import Links 
+from lura.plugins.links import Links
 from lura.plugins.search import Search
 from lura.plugins.notes import Notes
 from lura.plugins.mindmap import MindMap
@@ -19,7 +18,7 @@ from lura.plugins.command import Command
 from lura.plugins.outline import Outline
 from lura.plugins.quickmarks import Quickmarks
 from lura.plugins.selection import Selection
-from lura.plugins.mapviewer import MapView
+from lura.plugins.itemviewer import ItemView
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.anki import Anki
@@ -56,7 +55,7 @@ class PluginManager(dict):
                     Search,
                     Tags,
                     Selection,
-                    MapView,
+                    ItemView,
                     # Anki,
                     # Lookup,
                     # Pager,

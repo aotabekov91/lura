@@ -1,1 +1,0 @@
-from .mapviewer import MapView

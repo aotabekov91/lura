@@ -4,14 +4,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from functools import partial
-
 from .pageitem import PageItem
 from .layout import DocumentLayout
 from .settings import settings
-from lura.view.base import View
 
-class DocumentView(QGraphicsView, View):
+class DocumentView(QGraphicsView):
 
     continuousModeChanged = pyqtSignal(bool, object)
     documentModified = pyqtSignal(object)

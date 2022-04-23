@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from .docmap import DocMap
 from .tagmap import TagMap
 
-class MapView(QWidget):
+class ItemView(QWidget):
 
     def __init__(self, parent, settings):
         super().__init__(parent)

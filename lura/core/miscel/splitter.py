@@ -5,95 +5,44 @@ from PyQt5.QtWidgets import *
 class DisplaySplitter(QSplitter):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(Qt.Vertical)
         self.setup()
 
     def setup(self):
 
-        self.leftSP=QSplitter(Qt.Vertical, self)
-        self.left=QVBoxLayout(self.leftSP)
-        self.left.setContentsMargins(0,0,0,0)
-        self.left.setSpacing(0)
+        self.m_layout=QVBoxLayout(self)
 
-        self.rightSP=QSplitter(Qt.Vertical, self)
-        self.right=QVBoxLayout(self.rightSP)
-        self.right.setContentsMargins(0,0,0,0)
-        self.right.setSpacing(0)
+        self.m_layout.setSpacing(0)
+        self.m_layout.setContentsMargins(0,0,0,0)
 
-        self.leftSP.hide()
-        self.rightSP.hide()
-
-    def clear(self, layout):
-        for index in range(layout.count()):
-            item=layout.takeAt(index)
+    def clear(self):
+        for index in range(self.m_layout.count()):
+            item=self.m_layout.takeAt(index)
             item.widget().hide()
 
     def setWidget(self, widget):
-        if widget.__class__.__name__=='MapView':
-            self.leftSP.show()
-            self.clear(self.left)
-            self.left.addWidget(widget)
-        elif widget.__class__.__name__=='DocumentView':
-            self.rightSP.show()
-            self.clear(self.right)
-            self.right.addWidget(widget)
+
+        self.clear()
+        self.m_layout.addWidget(widget)
 
     def removeWidget(self, widget):
-        if widget.__class__.__name__=='MapView':
-            self.clear(self.left)
-            self.left.removeWidget(widget)
-        elif widget.__class__.__name__=='DocumentView':
-            self.clear(self.right)
-            self.right.removeWidget(widget)
+
+        self.m_layout.removeWidget(widget)
 
     def addWidget(self, widget):
-        if widget.__class__.__name__=='MapView':
-            self.leftSP.show()
-            self.left.addWidget(widget)
-        elif widget.__class__.__name__=='DocumentView':
-            self.rightSP.show()
-            self.right.addWidget(widget)
+        self.m_layout.addWidget(widget)
 
     def replaceWidget(self, index, widget):
-        if widget.__class__.__name__=='DocumentView':
-            self.rightSP.show()
-            if self.right.count()>0: 
-                self.right.insertWidget(index, widget)
-                self.right.takeAt(index+1)
-            else:
-                self.right.addWidget(widget)
-        elif widget.__class__.__name__=='MapView':
-            self.leftSP.show()
-            if self.left.count()>0: 
-                self.left.insertWidget(index, widget)
-                self.left.takeAt(index+1)
-            else:
-                self.left.addWidget(widget)
 
-    def focusMapView(self):
-        self.leftSP.show()
-        if self.left.count()>0:
-            view=self.left.itemAt(0).widget()
-            view.setFocus()
-            return view
+        if self.m_layout.count()>0:
+            self.m_layout.insertWidget(index, widget)
+            self.m_layout.takeAt(index+1)
+        else:
+            self.m_layout.addWidget(widget)
 
     def focusDocumentView(self):
-        self.rightSP.show()
-        if self.right.count()>0:
-            view=self.right.itemAt(0).widget()
+        self.show()
+        if self.m_layout.count()>0:
+            view=self.m_layout.itemAt(0).widget()
             view.setFocus()
             return view
-
-    def onlyMapView(self):
-        self.leftSP.show()
-        self.rightSP.hide()
-
-    def onlyDocumentView(self):
-        self.rightSP.show()
-        self.leftSP.hide()
-
-    def isMapViewVisible(self):
-        return self.leftSP.isVisible()
-
-    def isDocumentViewVisible(self):
-        return self.rightSP.isVisible()

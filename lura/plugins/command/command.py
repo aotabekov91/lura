@@ -4,7 +4,6 @@ from PyQt5.QtCore import *
 
 from lura.core.miscel import Item
 from lura.render import PdfDocument
-from lura.render import MapDocument
 
 class Command(QObject):
 
@@ -209,13 +208,13 @@ class Command(QObject):
             numberOfPages = document.numberOfPages()
             pageNumber=view.currentPage()
             mode='Document'
-        elif type(view.document())==MapDocument:
-            document=view.document()
-            title=self.window.plugin.tables.get(
-                    'maps', {'id':document.id()}, 'title')
-            pageNumber=''
-            tags=''
-            mode='Map'
+        # elif type(view.document())==MapDocument:
+        #     document=view.document()
+        #     title=self.window.plugin.tables.get(
+        #             'maps', {'id':document.id()}, 'title')
+        #     pageNumber=''
+        #     tags=''
+        #     mode='Map'
 
         else:
 

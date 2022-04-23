@@ -4,9 +4,7 @@ from PyQt5.QtWidgets import *
 
 from collections import OrderedDict
 
-from lura.render import loadDocument as load
-
-from lura.view.mapviewer import MapView
+from lura.render.pdf import PdfDocument
 from lura.view.docviewer import DocumentView
 
 class BufferManager(QObject):
@@ -24,12 +22,9 @@ class BufferManager(QObject):
         document=self.loadDocument(filePath)
         if document is None: return 
 
-        if document.__class__.__name__ in ['PdfDocument']:
-            view=DocumentView(self.window, self.configuration.copy())
-        elif document.__class__.__name__=='MapDocument':
-            view=MapView(self.window, self.configuration.copy())
-
+        view=DocumentView(self.window, self.configuration.copy())
         view.open(document)
+
         self.views[filePath]=view
         return view
 
@@ -39,15 +34,11 @@ class BufferManager(QObject):
 
     def loadDocument(self, filePath):
         
-        document=load(filePath)
+        document=PdfDocument(filePath)
         if document is None or not document.readSuccess(): return
 
         document.setParent(self.window)
-        if document.__class__.__name__ in ['PdfDocument', 'WebDocument']: 
-            self.window.documentCreated.emit(document)
-        elif document.__class__.__name__ in ['MapDocument']: 
-            self.window.mapCreated.emit(document)
-
+        self.window.documentCreated.emit(document)
         return document
 
     def getAllViews(self):

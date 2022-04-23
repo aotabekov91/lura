@@ -1,12 +1,12 @@
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
-from lura.core import Item
+from .item import Item
 
 from xml.etree.ElementTree import Element, SubElement, tostring, fromstring
 
-class MapDocument(QStandardItemModel):
+class ItemModel(QStandardItemModel):
 
     modelChanged = pyqtSignal()
 
