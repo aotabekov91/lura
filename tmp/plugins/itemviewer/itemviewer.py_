@@ -22,6 +22,10 @@ class ItemView(QStackedWidget):
                 self.openDocView,
                 self,
                 Qt.WidgetWithChildrenShortcut),
+            'Ctrl+y':(
+                self.toggle,
+                self,
+                Qt.WindowShortcut),
         }
         self.setup()
 
@@ -80,9 +84,21 @@ class ItemView(QStackedWidget):
         self.m_tagMap.show()
         self.m_tagMap.setFocus()
 
+    def toggle(self):
+        # document=getattr(self, 'm_document', None)
+        # if document is None: return
+
+        if not self.isVisible():
+            self.window.activateTabWidget(self)
+            self.m_docMap.show()
+            self.m_docMap.setFocus()
+
+        else:
+            self.window.deactivateTabWidget(self)
+
     def openNode(self, item=None):
 
-        if item is None: item = self.currentWidget().currentItem()
+        if item is None: item = self.currentItem()
         if item is None: return
 
         if item.kind() == 'annotation':

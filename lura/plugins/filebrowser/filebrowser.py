@@ -60,3 +60,6 @@ class FileBrowser(MapTree):
     def currentPath(self):
         if self.currentIndex() is None: return
         return self.model().filePath(self.currentIndex())
+
+    def close(self):
+        self.window.deactivateTabWidget(self)

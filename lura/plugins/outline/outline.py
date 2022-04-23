@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from lura.core import MapTree
-from lura.view.docviewer import DocumentView
 
 class Outline(MapTree):
     
     def __init__(self, parent, settings):
+        super().__init__(parent, parent)
         self.window=parent
         self.s_settings=settings
         self.location='right'
@@ -18,7 +18,6 @@ class Outline(MapTree):
                     self.window,
                     Qt.WindowShortcut)
                 }
-        super().__init__(None, parent)
         self.setup()
 
     def setup(self):
@@ -31,8 +30,6 @@ class Outline(MapTree):
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
-        
-        self.window.setTabLocation(self, self.location, self.name)
 
         self.window.viewChanged.connect(self.on_viewChanged)
         self.window.documentRegistered.connect(self.register)
@@ -40,11 +37,11 @@ class Outline(MapTree):
 
         self.expanded.connect(self.on_expanded)
         self.collapsed.connect(self.on_collapsed)
-
         self.header().setSectionResizeMode(QHeaderView.Interactive)
         self.header().hide()
 
         self.clicked.connect(self.on_outline_clicked)
+        self.window.setTabLocation(self, self.location, self.name)
 
     def on_outline_clicked(self, index):
 
@@ -89,14 +86,13 @@ class Outline(MapTree):
 
     def on_currentPageChanged(self, document, page):
 
-        outline=self.outlines[document]
+        outline=self.outlines.get(document, None)
 
-        if outline is not None:
+        if outline is None: return
 
-            found=self.synchronizeOutlineView(page, outline, QModelIndex()) 
-
-            if found.isValid():
-                self.setCurrentIndex(found)
+        found=self.synchronizeOutlineView(page, outline, QModelIndex()) 
+        if found.isValid():
+            self.setCurrentIndex(found)
 
     def expandAbove(self, child):
 
@@ -146,11 +142,12 @@ class Outline(MapTree):
 
             document=self.window.view().document()
             outline=self.outlines.get(document, None)
-            if outline:
-                self.setModel(outline)
-                self.window.activateTabWidget(self)
-                self.show()
-                self.setFocus()
+            if outline is None: return
+
+            self.setModel(outline)
+            self.window.activateTabWidget(self)
+            self.show()
+            self.setFocus()
 
         else:
 
@@ -161,10 +158,6 @@ class Outline(MapTree):
         document=view.document()
         outline=self.outlines.get(document, None)
         if not outline: self.setModel(outline)
-
-    def setModel(self, model):
-        super().setModel(model)
-        self.expandAll()
 
     def open(self):
         index=self.currentIndex()
@@ -179,3 +172,6 @@ class Outline(MapTree):
         outline=document.loadOutline()
         # outline.setHorizontalHeaderLabels(['Content', 'Page'])
         self.outlines[document]=outline
+
+    def close(self):
+        self.window.deactivateTabWidget(self)

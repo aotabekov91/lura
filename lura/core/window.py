@@ -175,9 +175,9 @@ class WindowManager(QMainWindow):
             setattr(self, '{}Stack'.format(name), stackWidget)
             setattr(self, '{}Dock'.format(name), dockWidget)
 
-        self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+        # self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
-        self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
+        # self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
         self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
         self.hideAllDocks()

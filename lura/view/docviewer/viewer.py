@@ -492,7 +492,6 @@ class DocumentView(QGraphicsView):
         if event.type()==QEvent.Enter: self.window.setView(self)
         return super().event(event)
 
-
 class Position:
 
     def __init__(self, page, left, top):

@@ -18,7 +18,6 @@ from lura.plugins.command import Command
 from lura.plugins.outline import Outline
 from lura.plugins.quickmarks import Quickmarks
 from lura.plugins.selection import Selection
-from lura.plugins.itemviewer import ItemView
 from lura.plugins.pageinfo import PageInfo
 
 # from lura.plugins.lookup import Lookup
@@ -53,7 +52,6 @@ class PluginManager(dict):
                     Search,
                     Tags,
                     Selection,
-                    ItemView,
                     PageInfo,
                     # Anki,
                     # Lookup,

@@ -8,11 +8,14 @@ from PyQt5.QtWidgets import *
 from lura.core import Item
 from lura.core import MapTree
 
-class DocMap(MapTree):
+class MapView(MapTree):
 
-    def __init__(self, window):
-        super().__init__(None, window)
+    def __init__(self, parent, window):
+        super().__init__(window, window)
+        self.m_parent=parent
         self.window = window
+        self.location='left'
+        self.name='mapview'
         self.setup()
 
     def setup(self):
@@ -25,11 +28,7 @@ class DocMap(MapTree):
                 ('mdd', 'deleteDocument'),
                 ('mmd', 'moveDocumentTo'),
                 ('maw', 'addWatchFolder'),
-                ('muw', 'updateWatchFolder'),
-                ('mdsa', 'activateSorting'),
-                ('mdsd', 'deactivateSorting'),
-                ('mdfa', 'activateFiltering'),
-                ('mdfd', 'deactivateFiltering'),
+                ('mtv', 'showTagView'),
                 ]
 
         self.window.plugin.command.addCommands(commandList, self)
@@ -38,6 +37,11 @@ class DocMap(MapTree):
         self.window.plugin.fileBrowser.returnPressed.connect(self.actOnChoosen)
 
         self.currentItemChanged.connect(self.window.mapItemChanged)
+        self.window.setTabLocation(self, self.location, self.name)
+
+    def showTagView(self):
+        if self.model() is None: return
+        self.window.plugin.tags.open(self.model())
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -57,17 +61,16 @@ class DocMap(MapTree):
                 if r: return r
         return None
 
+    def openModel(self, model):
 
-    def open(self, document):
-
-        self.setModel(self.m_document.model())
-
+        self.setModel(model)
         self.model().itemChanged.connect(self.on_itemChanged)
 
+        self.window.activateTabWidget(self)
         self.show()
         self.setFocus()
 
-        self.updateWatchFolder()
+        self.watch()
 
     def actOnChoosen(self, model, index):
         if not self.isVisible(): return
@@ -81,12 +84,12 @@ class DocMap(MapTree):
 
     def setModel(self, model):
         super().setModel(model)
-        self.updateWatchFolder()
+        self.watch()
 
-    def updateWatchFolder(self):
+    def watch(self):
 
         return
-        root=self.m_document.m_model.invisibleRootItem()
+        root=self.model().invisibleRootItem()
 
         wCon=None
         for i in range(root.rowCount()):
@@ -103,7 +106,7 @@ class DocMap(MapTree):
 
             while qIterator.hasNext():
                 loc=qIterator.next()
-                self.addDocument(loc, client=self, item=wCon, recursively=True)
+                self.addDocument(loc, item=wCon, recursively=True)
 
         toRemove=[]
         for i in range(wCon.rowCount()):
@@ -132,7 +135,7 @@ class DocMap(MapTree):
             self.window.plugin.fileBrowser.toggle()
 
             wCon=None
-            root=self.m_document.m_model.invisibleRootItem()
+            root=self.model().invisibleRootItem()
             for i in range(root.rowCount()):
                 child=root.child(i)
                 if child.kind()=='container' and child.get('title')=='Documents':
@@ -280,16 +283,16 @@ class DocMap(MapTree):
 
     def updateMap(self, item=None):
         if item is None:
-            item=self.m_document.m_model.invisibleRootItem()
+            item=self.model().invisibleRootItem()
         for index in range(item.rowCount()):
             self.updateMap(item.child(index))
-        if item!=self.m_document.invisibleRootItem():
+        if item!=self.model().invisibleRootItem():
             if item.kind()!='container':
                 r=self.window.plugin.tables.get(
                         item.kind(), {'id':item.id()}, 'id')
                 if r is None:
                     parent=item.parent()
-                    if parent is None: parent=self.m_document.m_model.invisibleRootItem()
+                    if parent is None: parent=self.model().invisibleRootItem()
                     parent.takeRow(item.row())
             if item.kind()=='document':
                 self.addAnnotations(item)
@@ -301,10 +304,10 @@ class DocMap(MapTree):
     def _updateTitles(self, item=None, sender=None):
         if not self.isVisible(): return
         if item is None:
-            item=self.m_document.m_model.invisibleRootItem()
+            item=self.model().invisibleRootItem()
         for index in range(item.rowCount()):
             self._updateTitles(item.child(index), sender)
-        if item!=self.m_document.m_model.invisibleRootItem():
+        if item!=self.model().invisibleRootItem():
             item.setTitle()
 
     # open node on item change in docviewer
@@ -318,11 +321,23 @@ class DocMap(MapTree):
     def on_itemChanged(self, item):
         item.update()
         if item.kind() == 'container':
-            self.m_document.update()
+            self.model().update()
         if item.m_changedFromOutside:
             item.m_changedFromOutside=False
         else:
             self.window.titleChanged.emit(self)
+
+    def toggle(self):
+        if not self.isVisible():
+            if self.model() is None:
+                self.openModel()
+            self.window.activateTabWidget(self)
+            self.setFocus()
+        else:
+            self.window.deactivateTabWidget(self)
+
+    def close(self):
+        self.window.deactivateTabWidget(self)
 
 class MQLineEdit(QLineEdit):
 

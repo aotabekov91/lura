@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 
 from lura.view.docviewer import DocumentView
 
+from .display import TagView
 from .connect import DatabaseConnector
 
 class Tags(QObject):
@@ -13,14 +14,24 @@ class Tags(QObject):
         self.window = parent
         self.name='tags'
         self.s_settings = settings
+        self.display=TagView(self, self.window)
         self.db = DatabaseConnector(self)
 
         self.globalKeys = {
             'Ctrl+t': (
                 self.tag,
                 self.window,
+                Qt.WindowShortcut),
+            'Ctrl+Shift+t': (
+                self.display.toggle,
+                self.window,
                 Qt.WindowShortcut)
         }
+
+    def open(self, model):
+        self.display.openModel(model)
+        self.window.activateTabWidget(self.display)
+        self.display.setFocus()
 
     def tag(self):
         if type(self.window.view())==DocumentView:

@@ -15,7 +15,7 @@ class Documents(MapTree):
         self.window=parent
         self.m_watchFolders=settings['watchFolders']
         self.name = 'documents'
-        self.location='bottom'
+        self.location='top'
         self.globalKeys={
                 'Ctrl+d': (
                     self.showDocuments,
@@ -28,14 +28,7 @@ class Documents(MapTree):
     def setup(self):
 
         self.window.plugin.tables.addTable(DocumentsTable)
-        self.db = self.window.plugin.tables.documents
-
         self.window.documentCreated.connect(self.register)
-
-        self.window.plugin.command.addCommands(
-                [('dcd - check documents', 'checkDocuments'),
-                    ('dwf - watch folders', 'watchFolders')], self)
-
         self.window.setTabLocation(self, self.location, self.name)
 
     def showDocuments(self):
@@ -62,11 +55,10 @@ class Documents(MapTree):
 
         filePath=self.window.plugin.tables.get(
                 'documents', {'id':item.id()}, 'loc')
-        print(filePath)
         self.window.open(filePath)
-        self.setFocus()
+        self.window.deactivateTabWidget(self)
 
-    def watchFolders(self):
+    def watch(self):
 
         # TODO: refactor as a separate process
         for path in self.m_watchFolders:
@@ -79,8 +71,6 @@ class Documents(MapTree):
                 r=self.window.plugin.tables.get('documents', {'loc':loc})
                 if r is None:
                     self.window.buffer.loadDocument(loc)
-
-    def checkDocuments(self):
 
         # TODO: refactor as a separate process
         allDocs=self.window.plugin.tables.get('documents')

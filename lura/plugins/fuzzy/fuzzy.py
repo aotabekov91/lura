@@ -13,7 +13,7 @@ class Fuzzy(MapTree):
         super().__init__(parent, parent)
         self.window = parent
         self.s_settings=settings
-        self.location = 'bottom' 
+        self.location = 'top' 
         self.name = 'fuzzy'
 
         self.setup()
@@ -21,10 +21,6 @@ class Fuzzy(MapTree):
     def setup(self):
 
         self.callFunc=None
-
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
         self.window.setTabLocation(self, self.location, self.name)
 
     def activate(self, callFunc, data, names=None):
@@ -53,3 +49,6 @@ class Fuzzy(MapTree):
             self.window.deactivateTabWidget(self)
         else:
             super().keyPressEvent(event)
+            
+    def close(self):
+        self.window.deactivateTabWidget(self)

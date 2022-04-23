@@ -64,7 +64,6 @@ class DatabaseConnector:
                 'tagged', {'kind': kind, 'uid':m_id, 'tid':tid})
 
 
-
 class TaggedTable(Table):
 
     def __init__(self):

@@ -149,7 +149,6 @@ class TagMap(MapTree):
             i=Item(item.kind(), item.id(), self.window)
             uContainer.appendRow(i)
 
-        # if model==self.m_mainModel:
         model.appendRow(uContainer)
 
         self.setModel(model)
@@ -186,3 +185,6 @@ class TagMap(MapTree):
             child=item.child(i)
             self._getTags(child, tagged, untagged, tags)
         return tagged, untagged, tags
+
+    def close(self):
+        self.window.deactivateTabWidget(self)

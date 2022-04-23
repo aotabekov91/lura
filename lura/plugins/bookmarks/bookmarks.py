@@ -128,8 +128,5 @@ class Bookmarks(MapTree):
         self.window.plugin.tables.update(
                 'bookmarks', {'id':item.id()}, {'text':item.text()})
 
-    def keyPressEvent(self, event):
-        if event.key()==Qt.Key_Escape:
-            self.window.deactivateTabWidget(self)
-        else:
-            super().keyPressEvent(event)
+    def close(self):
+        self.window.deactivateTabWidget(self)

@@ -9,19 +9,17 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='bottom'
+        self.location='left'
         self.name='Notes'
         self.setup()
 
     def setup(self):
 
-        self.setStyleSheet('background-color: white; color: black')
 
         self.m_layout=QVBoxLayout(self)
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.activated=False
         self.window.setTabLocation(self, self.location, self.name)
 
     def open(self, n_id):
@@ -71,8 +69,8 @@ class NQWidget(QWidget):
         
         self.content=QTextEdit()
 
-        self.m_layout.addWidget(widget)
         self.m_layout.addWidget(self.content)
+        self.m_layout.addWidget(widget)
 
         note=self.m_data.get('notes', {'id':self.m_id})
 

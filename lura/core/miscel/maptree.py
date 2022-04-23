@@ -25,6 +25,9 @@ class MapTree(QTreeView):
 
         self.header().hide()
 
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
     def currentItem(self):
         if self.model() is None: return None
 
@@ -270,8 +273,29 @@ class MapTree(QTreeView):
             if first is None: return
             self.setCurrentIndex(first.index())
 
-    def open(self):
-        pass
+    def open(self, item=None):
+
+        if item is None: item = self.currentItem()
+        if item is None: return
+
+        if item.kind() == 'annotation':
+
+            b = item.get('position').split(':')
+            topLeft = QPointF(float(b[0]), float(b[1]))
+            did = item.get('did')
+            pageNumber = item.get('page')
+            filePath = self.window.plugin.tables.get(
+                'documents', {'id': did}, 'loc')
+
+            self.window.open(filePath)
+            self.window.view().jumpToPage(
+                pageNumber, topLeft.x(), 0.95*topLeft.y())
+
+        elif item.kind() == 'document':
+
+            filePath = self.window.plugin.tables.get(
+                'documents', {'id': item.id()}, 'loc')
+            self.window.open(filePath)
 
     def close(self):
         pass
@@ -313,3 +337,10 @@ class MapTree(QTreeView):
         self.setModel(self.m_model)
         self.proxySet=False
         self.setFocus()
+
+    def event(self, event):
+        if event.type()==QEvent.Enter: self.window.setView(self)
+        return super().event(event)
+
+    def document(self):
+        return self.model()

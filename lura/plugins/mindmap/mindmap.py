@@ -9,16 +9,23 @@ from lura.core.miscel import MapTree
 from lura.core.miscel import Item
 from lura.core.miscel import ItemModel
 
+from .display import MapView
+
 class MindMap(MapTree):
 
     def __init__(self, parent, settings):
         super().__init__(parent, parent)
         self.window=parent
+        self.display=MapView(self, parent)
         self.location='left'
         self.name='mindmap'
         self.globalKeys = {
-                'Ctrl+Shift+m': (
+                'Ctrl+m': (
                     self.showMindmaps,
+                    self.window,
+                    Qt.WindowShortcut),
+                'Ctrl+Shift+m': (
+                    self.display.toggle,
                     self.window,
                     Qt.WindowShortcut),
                 }
@@ -50,13 +57,13 @@ class MindMap(MapTree):
         model=ItemModel(item.id(), self.window)
 
         self.db.register(model)
-        self.window.plugin.itemviewer.open(model)
+        self.display.openModel(model)
 
     def addNode(self):
         model=ItemModel(None, self.window)
         self.db.register(model)
 
-        self.window.plugin.itemviewer.open(model)
+        self.display.openModel(model)
 
     def delete(self):
         item=self.currentItem()
@@ -68,3 +75,6 @@ class MindMap(MapTree):
     def on_itemChanged(self, item):
         self.window.plugin.tables.update(
                 'maps', {'id': item.id()}, {'title':item.text()})
+
+    def close(self):
+        self.window.deactivateTabWidget(self)

@@ -13,12 +13,12 @@ class Quickmarks(QListWidget):
         self.name = 'quickmarks'
         self.location = 'bottom'
         self.globalKeys = {
-            'Ctrl+m': (
+            'Ctrl+g': (
                 self.set,
                 self.window,
                 Qt.WidgetWithChildrenShortcut,
             ),
-            'Ctrl+g': (
+            'Ctrl+Shift+g': (
                 self.goto,
                 self.window,
                 Qt.WidgetWithChildrenShortcut,
