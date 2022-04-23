@@ -21,6 +21,7 @@ class MapTree(QTreeView):
         self.copied=[]
         self.m_model=None
         self.m_proxy=None
+        self.proxySet=False
 
         self.header().hide()
 
@@ -131,9 +132,16 @@ class MapTree(QTreeView):
         elif event.key()==Qt.Key_T:
             self.collapseAllInside()
         elif event.key()==Qt.Key_Escape:
-            self.close()
+            if self.proxySet:
+                self.deactivateFiltering()
+            else:
+                self.close()
         elif event.key()==Qt.Key_Return:
             self.returnPressed.emit(self.model(), self.currentIndex())
+        elif event.key()==Qt.Key_F:
+            self.activateFiltering()
+        elif event.key()==Qt.Key_S:
+            self.activateSorting()
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
@@ -269,17 +277,20 @@ class MapTree(QTreeView):
     def activateSorting(self):
         if self.m_proxy is None: return
         self.setProxyModel()
+        self.proxySet=True
         self.sortByColumn(0, Qt.AscendingOrder)
         self.setFocus()
 
     def deactivateSorting(self):
         if self.m_proxy is None: return
         self.setModel(self.m_model)
+        self.proxySet=False
         self.setFocus()
 
     def activateFiltering(self):
         if self.m_proxy is None: return
         self.setProxyModel()
+        self.proxySet=True
         self.expandAll()
         self.window.plugin.command.activateCustom(
                 lambda text: self._activateFiltering(text, True), 'Filter: ', self._activateFiltering)
@@ -292,4 +303,5 @@ class MapTree(QTreeView):
     def deactivateFiltering(self):
         if self.m_proxy is None: return
         self.setModel(self.m_model)
+        self.proxySet=False
         self.setFocus()

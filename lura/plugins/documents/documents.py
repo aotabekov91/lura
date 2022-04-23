@@ -6,16 +6,19 @@ from PyQt5.QtWidgets import *
 
 from .table import DocumentsTable
 
-class Documents(QObject):
+from lura.core.miscel import *
+
+class Documents(MapTree):
 
     def __init__(self, parent, settings):
-        super().__init__(parent)
+        super().__init__(parent, parent)
         self.window=parent
         self.m_watchFolders=settings['watchFolders']
         self.name = 'documents'
+        self.location='bottom'
         self.globalKeys={
                 'Ctrl+d': (
-                    self.toggle,
+                    self.showDocuments,
                     self.window,
                     Qt.WindowShortcut)
                 }
@@ -24,19 +27,44 @@ class Documents(QObject):
 
     def setup(self):
 
-        self.activated=False
-
         self.window.plugin.tables.addTable(DocumentsTable)
         self.db = self.window.plugin.tables.documents
-
-        self.fuzzy = self.window.plugin.fuzzy
-        self.fuzzy.fuzzySelected.connect(self.act)
 
         self.window.documentCreated.connect(self.register)
 
         self.window.plugin.command.addCommands(
                 [('dcd - check documents', 'checkDocuments'),
                     ('dwf - watch folders', 'watchFolders')], self)
+
+        self.window.setTabLocation(self, self.location, self.name)
+
+    def showDocuments(self):
+        documents=self.window.plugin.tables.get('documents')
+
+        model=ItemModel()
+        model.itemChanged.connect(self.on_itemChanged)
+
+        for d in documents:
+            item=Item('document', d['id'], self.window)
+            model.appendRow(item)
+
+        self.setModel(model)
+        self.window.activateTabWidget(self)
+        self.setFocus()
+
+    def on_itemChanged(self, item):
+        self.window.plugin.tables.update(
+                'metadata', {'did':item.id()}, {'title':item.text().title()})
+
+    def open(self):
+        item=self.currentItem()
+        if item is None: return
+
+        filePath=self.window.plugin.tables.get(
+                'documents', {'id':item.id()}, 'loc')
+        print(filePath)
+        self.window.open(filePath)
+        self.setFocus()
 
     def watchFolders(self):
 
@@ -65,36 +93,6 @@ class Documents(QObject):
                 self.window.plugin.tables.remove(
                         'documents', {'id': doc['id']})
 
-    def setFuzzyData(self, client=None):
-        if client is None: client=self
-
-        data=self.db.getAll()
-        filePaths=[d['loc'] for d in data]
-        locs=[d.split('/')[-1] for d in filePaths]
-        names=[]
-
-        for i, d in enumerate(data):
-            meta=self.window.plugin.tables.get('metadata', {'did': d['id']})
-            if meta is None or meta['title']=='':
-                names+=[locs[i]]
-            else:
-                names+=[meta['title']]
-
-        self.fuzzy.setData(client, filePaths, names)
-
-    def toggle(self):
-        self.setFuzzyData()
-        self.fuzzy.toggle(self)
-
-    def getFuzzy(self, client):
-        self.setFuzzyData(client)
-        self.fuzzy.activate(client)
-
-    def act(self, filePath, fuzzyListener):
-        if fuzzyListener==self:
-            self.window.open(filePath)
-        self.toggle()
-
     def register(self, document):
         filePath=document.filePath()
         data=self.window.plugin.tables.get('documents', {'loc':filePath})
@@ -106,3 +104,6 @@ class Documents(QObject):
 
         document.setId(data['id'])
         self.window.documentRegistered.emit(document)
+
+    def close(self):
+        self.window.deactivateTabWidget(self)
