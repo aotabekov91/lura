@@ -1,5 +1,3 @@
-import pathlib
-
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -26,16 +24,7 @@ class Display(QWidget):
         self.activated=False
         self.window.setTabLocation(self, self.location, self.name)
 
-    def open(self, n_id=None):
-        if n_id is None:
-            noteNumber=len(self.window.plugin.tables.get('notes'))
-            title=f'Note_{noteNumber}'
-            loc=f'{self.m_parent.baseFolder}/{title}.md'
-            pathlib.Path(loc).touch()
-            self.window.plugin.tables.write('notes', {'title':title, 'loc':loc})
-            n_id=self.window.plugin.tables.get(
-                    'notes', {'title':title, 'loc':loc}, 'id')
-
+    def open(self, n_id):
         noteWidget=NQWidget(n_id, self.window.plugin.tables)
 
         for i in reversed(range(self.m_layout.count())):
@@ -46,15 +35,11 @@ class Display(QWidget):
 
     def toggle(self):
 
-        if not self.activated:
-
+        if self.m_layout.count()==0: return
+        if not self.isVisible():
             self.window.activateTabWidget(self)
-            self.activated=True
-
         else:
-
             self.window.deactivateTabWidget(self)
-            self.activated=False
 
 class NQWidget(QWidget):
 

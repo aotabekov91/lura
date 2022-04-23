@@ -140,8 +140,10 @@ class MapTree(QTreeView):
             self.returnPressed.emit(self.model(), self.currentIndex())
         elif event.key()==Qt.Key_F:
             self.activateFiltering()
-        elif event.key()==Qt.Key_S:
+        elif event.key()==Qt.Key_V:
             self.activateSorting()
+        elif event.key()==Qt.Key_W:
+            self.watch()
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
@@ -272,6 +274,12 @@ class MapTree(QTreeView):
         pass
 
     def close(self):
+        pass
+
+    def watch(self):
+        pass
+
+    def update(self):
         pass
 
     def activateSorting(self):

@@ -102,4 +102,4 @@ Plugins:
       webpage: '#09aa09'
 
   Notes:
-    baseFolder: '/home/adam/sciebo/doc_notes'
+    baseFolder: '/home/adam/sciebo/notes'
