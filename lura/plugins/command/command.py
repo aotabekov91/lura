@@ -86,7 +86,6 @@ class Command(QObject):
         self.window.activateTabWidget(self.commandList)
         self.window.statusBar().show()
 
-        self.window.setCorner(Qt.BottomLeftCorner, Qt.BottomDockWidgetArea)
         self.window.plugin.pageinfo.hide()
         self.commandEdit.show()
         self.m_edit.setFocus()
@@ -122,7 +121,6 @@ class Command(QObject):
 
         self.m_edit.clear()
         self.commandEdit.hide()
-        self.window.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
 
         func=getattr(self, 'customClientFunc', None)
         if func is None: return

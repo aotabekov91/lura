@@ -152,6 +152,7 @@ class WindowManager(QMainWindow):
 
     def createDocks(self):
 
+        self.state={}
         locs = {
                 'left': Qt.LeftDockWidgetArea,
                 'bottom': Qt.BottomDockWidgetArea,
@@ -199,31 +200,33 @@ class WindowManager(QMainWindow):
         self.statusBar().hide()
         widget.hide()
 
-        # self.buffer.updateViews()
-        # self.m_view.updateSceneAndView()
-        # self.m_view.setFocus()
-
     def deactivateTabWidget(self, widget):
 
-        widget.m_dockWidget.hide()
-        widget.m_tabWidget.hide()
-        widget.hide()
+        self.state[widget.m_dockWidget].pop(
+                self.state[widget.m_dockWidget].index(widget.m_tabIndex))
 
-        # self.buffer.updateViews()
-        # self.m_view.updateSceneAndView()
-        # self.m_view.setFocus()
+        if len(self.state[widget.m_dockWidget])==0:
+            widget.m_dockWidget.hide()
+            widget.m_tabWidget.hide()
+            widget.hide()
+        else:
+            oldWidgetIndex=self.state[widget.m_dockWidget][-1]
+            widget.m_tabWidget.setCurrentIndex(oldWidgetIndex)
+
+    def saveState(self, widget):
+        if not widget.m_dockWidget in self.state:
+            self.state[widget.m_dockWidget]=[]
+        self.state[widget.m_dockWidget]+=[widget.m_tabIndex]
 
     def activateTabWidget(self, widget):
 
+        self.saveState(widget)
         widget.m_dockWidget.setTitleBarWidget(widget.m_qlabel)
         widget.m_tabWidget.setCurrentIndex(widget.m_tabIndex)
         widget.m_dockWidget.show()
         widget.m_tabWidget.show()
         widget.show()
 
-        # self.buffer.updateViews()
-        # self.m_view.updateSceneAndView()
-    
     def setTabLocation(self, widget, location, title):
 
         widget.m_tabWidget=getattr(self, '{}Stack'.format(location))

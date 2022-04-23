@@ -103,9 +103,6 @@ class Creator(QObject):
                     annotation=ann
                     break
 
-
-        print(annotation)
-
         self.window.plugin.tables.remove('annotations', {'id': aid})
         self.m_parent.display.load(did)
         if ann is None: return
