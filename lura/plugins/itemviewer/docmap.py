@@ -34,11 +34,10 @@ class DocMap(MapTree):
 
         self.window.plugin.command.addCommands(commandList, self)
 
-        self.fuzzy = self.window.plugin.fuzzy
-        self.fuzzy.fuzzySelected.connect(self.addDocument)
-
         self.window.titleChanged.connect(self.updateTitles)
         self.window.plugin.fileBrowser.returnPressed.connect(self.actOnChoosen)
+
+        self.currentItemChanged.connect(self.window.mapItemChanged)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(
@@ -236,41 +235,48 @@ class DocMap(MapTree):
                 qIterator = QDirIterator(
                     path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
                 while qIterator.hasNext():
-                    self.addDocument(qIterator.next(), client=self)
+                    self._addDocument(qIterator.next())
             else:
-                self.addDocument(path, client=self)
+                self._addDocument(path)
 
             self.setFocus()
 
-    def addDocument(self, selected=False, client=False, item=None,
-            recursively=False):
-
+    def addDocument(self):
         if not self.isVisible(): return
 
-        if not selected:
+        documents=self.window.plugin.tables.get('documents')
+        data=[]
+        titles=[]
 
-            self.window.plugin.documents.getFuzzy(self)
+        for d in documents:
+            data+=[d]
+            title=self.window.plugin.tables.get(
+                    'metadata', {'did':d['id']}, 'title')
+            if title is None: title=d['loc']
+            titles+=[title]
 
+        self.window.plugin.fuzzy.activate(
+                self._addDocument, data, titles)
+
+    def _addDocument(self, item):
+        if item is None: return
+        data=item.m_data
+
+        newItem=Item('document', data['id'], self.window)
+        currentItem=self.currentItem()
+
+        if currentItem is None:
+            parent=self.model().invisibleRootItem()
         else:
+            parent=currentItem.parent()
+            if parent is None:
+                parent=self.model().invisibleRootItem()
 
-            if client != self: return
-            self.fuzzy.deactivate(self)
-
-            document = self.window.buffer.loadDocument(selected)
-            if document is None: return
-            did = document.id()
-
-            if item is None:
-                item = self.currentItem()
-                if item is None:
-                    item = self.m_document.m_model.invisibleRootItem()
-            dItem = Item('document', did, self.window)
-
-            myDItem=self.isChild(dItem, item, recursively)
-            if myDItem is None: 
-                item.appendRow(dItem)
-                myDItem=dItem
-            self.addAnnotations(myDItem)
+        myDItem=self.isChild(newItem, parent)
+        if myDItem is None:
+            parent.appendRow(newItem)
+            myDItem=newItem
+        self.addAnnotations(myDItem)
 
     def updateMap(self, item=None):
         if item is None:

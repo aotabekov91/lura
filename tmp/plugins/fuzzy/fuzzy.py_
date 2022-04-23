@@ -2,18 +2,19 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core.miscel import *
+import re
 
-class Fuzzy(MapTree):
+class Fuzzy(QWidget):
 
     fuzzySelected=pyqtSignal(object, object)
 
     def __init__(self, parent, settings):
 
-        super().__init__(parent, parent)
+        super().__init__(parent)
         self.window = parent
         self.s_settings=settings
-        self.location = 'bottom' 
+        self.shortcuts={v:k for k, v in self.s_settings['shortcuts'].items()}
+        self.location = 'top' 
         self.name = 'fuzzy'
 
         self.setup()

@@ -270,11 +270,27 @@ class MQStackedWidget(QStackedWidget):
         self.setup()
 
     def setup(self):
-        shortcut=QShortcut('y', self)
-        shortcut.setContext(Qt.WidgetWithChildrenShortcut)
-        shortcut.activated.connect(self.readjust)
 
-    def readjust(self):
+        shortcut=QShortcut('+', self)
+        shortcut.setContext(Qt.WidgetWithChildrenShortcut)
+        shortcut.activated.connect(self.increaseSize)
+
+        shortcut=QShortcut('-', self)
+        shortcut.setContext(Qt.WidgetWithChildrenShortcut)
+        shortcut.activated.connect(self.decreaseSize)
+
+    def increaseSize(self):
         s=self.size()
         w, h=s.width(), s.height()
-        self.setFixedSize(round(w*1.2), h)
+        if self.m_position in ['left', 'right']:
+            self.setFixedSize(round(w*1.2), h)
+        else:
+            self.setFixedSize(w, round(h*1.2))
+
+    def decreaseSize(self):
+        s=self.size()
+        w, h=s.width(), s.height()
+        if self.m_position in ['left', 'right']:
+            self.setFixedSize(round(w*0.9), h)
+        else:
+            self.setFixedSize(w, round(h*0.9))

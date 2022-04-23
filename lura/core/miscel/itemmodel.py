@@ -14,7 +14,6 @@ class ItemModel(QStandardItemModel):
         super().__init__()
         self.m_id = m_id
         self.window=window
-        self.m_title = 'Mindmap'
         self.m_content = ''
         self.m_collection={}
         self.setup()

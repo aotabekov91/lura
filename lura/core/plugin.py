@@ -23,13 +23,10 @@ from lura.plugins.pageinfo import PageInfo
 
 # from lura.plugins.lookup import Lookup
 # from lura.plugins.anki import Anki
-# from lura.plugins.finder import Finder
-# from lura.plugins.pomodoro import Pomodoro
 # from lura.plugins.pager import Pager
-# from lura.plugins.display import Display
 
-from lura.plugins.buffers import Buffers
 from lura.plugins.fuzzy import Fuzzy
+from lura.plugins.buffers import Buffers
 
 class PluginManager(dict):
     def __init__(self, parent, s_settings):
