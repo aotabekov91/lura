@@ -93,7 +93,7 @@ class Command(QObject):
 
     def activateCustom(self, callFunc, label=None, contCallFunc=None, text=None):
 
-        self.pageInfo.hide()
+        self.window.plugin.pageinfo.hide()
         self.wasStatusBarVisible=self.window.statusBar().isVisible()
 
         self.customClientFunc=callFunc
@@ -114,7 +114,7 @@ class Command(QObject):
 
     def customClientMode(self):
 
-        self.window.plugin.pageInfo.show()
+        self.window.plugin.pageinfo.show()
         if not self.wasStatusBarVisible: self.window.statusBar().hide()
 
         text=self.m_edit.text()

@@ -4,96 +4,132 @@ from PyQt5.QtWidgets import *
 
 from .table import BookmarksTable
 
-class Bookmarks(QWidget):
+from lura.core.miscel import MapTree
 
-    bookmarkDeleted=pyqtSignal(int)
+from lura.core.miscel import Item
+from lura.core.miscel import ItemModel
+
+class Bookmarks(MapTree):
+
+    bookmarkChanged=pyqtSignal()
 
     def __init__(self, parent, settings):
-        super().__init__()
-        self.window = parent 
+        super().__init__(parent, parent)
+        self.window = parent
         self.s_settings=settings
+        self.location='right'
         self.name = 'bookmarks'
         self.globalKeys = {
                 'Ctrl+b': (
                     self.addBookmark,
                     self.window,
                     Qt.WindowShortcut),
+                'Ctrl+Shift+b': (
+                    self.showBookmakrs,
+                    self.window,
+                    Qt.WindowShortcut),
                 }
         self.setup()
-        
-    def toggle(self):
-        if not self.activated:
-            self.window.activateStatusBar(self)
-            self.activated=True
-        else:
-            self.window.deactivateStatusBar(self)
-            self.activated=False
-
-    def addBookmark(self, initial=True):
-
-        if self.window.view() is None: return
-
-        if initial:
-            
-            
-            conditions=[{'field':'did', 'value': self.window.document().id()},
-                    {'field':'page', 'value': self.window.view().currentPage()}, 
-                    {'field':'position', 'value':'%f:%f'%self.window.view().saveLeftAndTop()}
-                    ]
-            bookmarks=self.db.getRow(conditions)
-
-            if len(bookmarks)>0: self.lineEdit.setText(bookmarks[0]['text'])
-
-            self.toggle()
-            self.lineEdit.setFocus()
-
-        else:
-
-            self.toggle()
-
-            data={'did': self.window.document().id(),
-                    'page':self.window.view().currentPage(),
-                    'text':self.lineEdit.text(),
-                    'position':'%f:%f'%self.window.view().saveLeftAndTop()}
-
-            self.register(data)
-
-    def register(self, data):
-        uniqueFields=['did', 'page', 'position']
-        conditions=[{'field':f, 'value':data[f]} for f in uniqueFields]
-        bookmark=self.db.getRow(conditions)
-        if len(bookmark)>0: 
-            return self.db.updateRow({'field':'id', 'value':bookmark[0]['id']}, data)
-        self.db.writeRow(data)
 
     def setup(self):
 
-        self.activated=False
-
-        self.shortcuts={v:k for k, v in self.s_settings['shortcuts'].items()}
-
+        self.bookmarkChanged.connect(self.update)
         self.window.plugin.tables.addTable(BookmarksTable)
-        self.db=self.window.plugin.tables.bookmarks
-        self.documentsDB=self.window.plugin.tables.documents
+        self.window.setTabLocation(self, self.location, self.name)
+        
+    def showBookmakrs(self, view=None):
+        if view is None: view=self.window.view()
+        if view is None: return
 
-        self.label=QLabel('Bookmark')
-        self.lineEdit=CQLineEdit()
-        self.lineEdit.returnPressed.connect(lambda: self.addBookmark(initial=False))
+        condition={'did':self.window.document().id()}
 
-        layout=QHBoxLayout(self)
-        layout.addWidget(self.label)
-        layout.addWidget(self.lineEdit)
+        bookmarks=self.window.plugin.tables.get('bookmarks', condition,
+                unique=False)
+        if len(bookmarks)==0: return
 
-    def keyPressEvent(self, event):
-        key=event.text()
-        if key in self.shortcuts:
-            func=getattr(self, self.shortcuts[key])
-            func()
+        model=ItemModel()
+        model.itemChanged.connect(self.on_itemChanged)
+        for b in bookmarks:
+            item=Item('bookmark', b['id'], self.window, b['text'])
+            model.appendRow(item)
 
-class CQLineEdit(QLineEdit):
+        self.setModel(model)
+
+        self.window.activateTabWidget(self)
+        self.setFocus()
+
+    def open(self):
+        item=self.currentItem()
+        if item is None: return
+
+        print(item.id(), type(item.id()))
+        data=self.window.plugin.tables.get('bookmarks', {'id':item.id()})
+        if data is None: return
+        filePath=self.window.plugin.tables.get(
+                'documents', {'id':data['did']}, 'loc')
+
+        position=data['position'].split(':')
+        left, top=float(position[0]), float(position[1])
+
+        self.window.open(filePath)
+        self.window.view().jumpToPage(data['page'], left, top)
+        self.setFocus()
+
+    def delete(self):
+        item=self.currentItem()
+        if item is None: return
+
+        self.window.plugin.tables.remove('bookmarks', {'id':item.id()})
+        self.bookmarkChanged.emit()
+        self.setFocus()
+
+    def update(self):
+        if not self.isVisible(): return
+        self.showBookmakrs()
+
+    def addBookmark(self):
+
+        if self.window.view() is None: return
+
+        conditions={'did':self.window.document().id(),
+                'page': self.window.view().currentPage(),
+                'position' :'%f:%f'%self.window.view().saveLeftAndTop()}
+
+        text=self.window.plugin.tables.get(
+                'bookmarks', conditions, 'text')
+
+        if text is None: text=''
+
+        self.window.plugin.command.activateCustom(
+                self._addBookmark, 'Bookmark: ', None, text)
+
+    def _addBookmark(self, text):
+
+        data={'did': self.window.document().id(),
+                'page':self.window.view().currentPage(),
+                'text': text,
+                'position':'%f:%f'%self.window.view().saveLeftAndTop()}
+
+        self.register(data)
+        self.bookmarkChanged.emit()
+
+    def register(self, data):
+        uniqueFields=['did', 'page', 'position']
+        conditions={f:data[f] for f in uniqueFields}
+        bookmark=self.window.plugin.tables.get(
+                'bookmarks', conditions)
+        if bookmark is not None:
+            self.window.plugin.tables.update(
+                    'bookmarks', conditions, {'text':data['text']})
+        else:
+            self.window.plugin.tables.write('bookmarks', data)
+
+    def on_itemChanged(self, item):
+        self.window.plugin.tables.update(
+                'bookmarks', {'id':item.id()}, {'text':item.text()})
 
     def keyPressEvent(self, event):
         if event.key()==Qt.Key_Escape:
-            self.parent().toggle()
+            self.window.deactivateTabWidget(self)
         else:
             super().keyPressEvent(event)

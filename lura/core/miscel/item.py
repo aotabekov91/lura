@@ -37,16 +37,22 @@ class Item(QStandardItem):
                 self.m_table, {self.m_idName: self.m_id}, *args, **kwargs)
 
     def setTitle(self):
-        title=self.get('title')
+        if self.m_kind=='bookmark':
+            title=self.get('text')
+        else:
+            title=self.get('title')
         if title in ['', None]: title=f'{self.m_kind}: No title'
         if title!=self.text():
             self.m_changedFromOutside=True
             self.setText(title)
 
-
     def update(self):
         if self.m_kind=='container':
             self.m_plugin.setTitle(self.text())
+        elif self.m_kind=='bookmark':
+            updateDict={'text':self.text()}
+            self.m_data.update(
+                self.m_table, {self.m_idName:self.m_id}, updateDict)
         else:
             updateDict={'title':self.text()}
             self.m_data.update(
