@@ -45,7 +45,7 @@ if __name__ == "__main__":
     try:
         sys.exit(app.exec_())
     except:
-        view=self.window.view()
+        view=mainWin.window.view()
         if view is not None: view.save()
         raise
 

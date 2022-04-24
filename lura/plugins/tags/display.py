@@ -22,6 +22,7 @@ class TagView(MapTree):
         self.m_mainModel=None
         self.tagItems=None
 
+        self.currentItemChanged.connect(self.window.mapItemChanged)
         self.window.setTabLocation(self, self.location, self.name)
 
     def rootUp(self):

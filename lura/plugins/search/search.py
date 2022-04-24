@@ -31,6 +31,7 @@ class Search(QListWidget):
         self.setup()
 
     def setup(self):
+        self.m_view=None
         nextAction=QShortcut('n', self)
         nextAction.setContext(Qt.WidgetShortcut)
         nextAction.activated.connect(lambda: self.jump('next'))
@@ -43,8 +44,10 @@ class Search(QListWidget):
         self.window.setTabLocation(self, self.location, self.name)
 
     def find(self):
+        self.clear()
         view=self.window.view()
         if view is None or type(view.document())!=PdfDocument: return
+        self.m_view=view
         self.window.plugin.command.activateCustom(self.search, 'Search: ')
 
     def paintMatches(self, painter, options, widget, pageItem):
@@ -133,7 +136,7 @@ class Search(QListWidget):
 
     def on_viewChanged(self, view):
         if not hasattr(self, 'matches'): return
-        self.window.deactivateTabWidget(self)
+        if self.m_view==view: return
         self.clear()
         self.matches=[]
         self.currentMatch=None

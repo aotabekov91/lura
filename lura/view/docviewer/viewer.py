@@ -75,6 +75,7 @@ class DocumentView(QGraphicsView):
         
         self.proxyWidget=None
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.setScene(QGraphicsScene(self))
         self.scene().setBackgroundBrush(QColor('black'))
@@ -302,7 +303,8 @@ class DocumentView(QGraphicsView):
     def adjustScrollBarPolicy(self):
         scaleMode = self.s_settings['scaleMode']['currentMode']
         if scaleMode == 'ScaleFactorMode':
-            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            # self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             # self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         elif scaleMode == 'FitToPageWidthMode':
             self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

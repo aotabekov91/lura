@@ -58,7 +58,6 @@ class Display(QScrollArea):
     def on_mapItemChanged(self, item):
 
         if not self.isVisible(): return
-
         if item is None or item.kind()!='document': return
         if self.m_item and self.m_item==item: return
             

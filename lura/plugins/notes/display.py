@@ -41,10 +41,6 @@ class Display(QWidget):
         else:
             self.window.deactivateTabWidget(self)
 
-    def setFocus(self):
-        if not hasattr(self, 'noteWidget'): return
-        self.noteWidget.setFocus()
-
 class NQWidget(QWidget):
 
     def __init__(self, m_id, data):
