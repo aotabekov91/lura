@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.view.docviewer import DocumentView 
+from lura.view.docviewer import DocumentView
 
 class Display(QScrollArea):
 
