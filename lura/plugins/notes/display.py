@@ -15,7 +15,6 @@ class Display(QWidget):
 
     def setup(self):
 
-
         self.m_layout=QVBoxLayout(self)
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0, 0, 0, 0)
@@ -25,12 +24,12 @@ class Display(QWidget):
         self.setStyleSheet('background-color: white; color: black')
 
     def open(self, n_id):
-        noteWidget=NQWidget(n_id, self.window.plugin.tables)
 
         for i in reversed(range(self.m_layout.count())):
             self.m_layout.itemAt(i).widget().setParent(None)
 
-        self.m_layout.addWidget(noteWidget)
+        self.noteWidget=NQWidget(n_id, self.window.plugin.tables)
+        self.m_layout.addWidget(self.noteWidget)
         self.window.activateTabWidget(self)
         self.m_dockWidget.titleBarWidget().setStyleSheet('background-color: white; color: black')
 
@@ -41,6 +40,10 @@ class Display(QWidget):
             self.window.activateTabWidget(self)
         else:
             self.window.deactivateTabWidget(self)
+
+    def setFocus(self):
+        if not hasattr(self, 'noteWidget'): return
+        self.noteWidget.setFocus()
 
 class NQWidget(QWidget):
 
@@ -89,3 +92,6 @@ class NQWidget(QWidget):
         nFile=open(loc, 'w')
         for f in text:
             nFile.write(f)
+
+    def setFocus(self):
+        self.content.setFocus()

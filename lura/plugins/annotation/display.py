@@ -51,7 +51,7 @@ class Display(QScrollArea):
         if type(view)==DocumentView:
             self.load(view.document().id())
         else:
-            item=view.tree().currentItem()
+            item=view.currentItem()
             if item is None or item.kind()!='document': return
             self.load(item.id())
 
@@ -60,9 +60,9 @@ class Display(QScrollArea):
         if not self.isVisible(): return
 
         if item is None or item.kind()!='document': return
-        if self.m_item==item:return
+        if self.m_item and self.m_item==item: return
+            
         self.m_item=item
-
         self.load(item.id())
 
     def on_viewChanged(self, view):
@@ -70,17 +70,19 @@ class Display(QScrollArea):
         if not self.isVisible(): return
         if view is None: return
         if self.m_view==view: return
+
         self.m_view=view
         if type(view)==DocumentView:
             self.load(view.document().id())
         else:
-            item=view.tree().currentItem()
+            item=view.currentItem()
             if item is None or item.kind()!='document': return
             self.load(item.id())
 
     def load(self, did=None, function=None):
 
         if did is None: 
+            if self.window.view() is None: return
             did=self.window.view().document().id()
 
         if function is None:
@@ -118,8 +120,6 @@ class Display(QScrollArea):
             self.scrollableWidget.m_layout.itemAt(i).widget().update()
 
     def toggle(self):
-
-        if self.window.view() is None: return
 
         if not self.isVisible():
 

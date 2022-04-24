@@ -36,6 +36,15 @@ class PdfAnnotation(QObject):
         return self.m_data.boundary()
 
     def position(self):
+
+        # # new positon format to annotate from db into pdf file
+        # q=[]
+        # for quad in self.m_data.highlightQuads():
+        #     p=quad.points
+        #     q+=['{}:{}:{}:{}'.format(
+        #         round(p[0], 8), round(p[1], 8), round(p[2], 8), round(p[3], 8))]
+        # r='_'.join(q)
+
         return '{}:{}:{}:{}'.format(
             round(self.boundary().x(), 8),
             round(self.boundary().y(), 8),

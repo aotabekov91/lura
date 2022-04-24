@@ -10,7 +10,7 @@ class Outline(MapTree):
         super().__init__(parent, parent)
         self.window=parent
         self.s_settings=settings
-        self.location='right'
+        self.location='left'
         self.name='outline'
         self.globalKeys={
                 'Ctrl+o': (

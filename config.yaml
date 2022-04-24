@@ -1,6 +1,10 @@
 Window:
   shortcuts:
     focusDocumentView: 'Ctrl+1'
+    focusLeft: 'Ctrl+Shift+h'
+    focusRight: 'Ctrl+Shift+;'
+    focusBottom: 'Ctrl+Shift+j'
+    focusUp: 'Ctrl+Shift+k'
     close: q
     save: s
 

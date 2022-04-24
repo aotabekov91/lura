@@ -47,19 +47,20 @@ class Bookmarks(MapTree):
         if view is None: view=self.window.view()
         if view is None: return
 
+        model=ItemModel()
+        self.setModel(model)
+
         condition={'did':self.window.document().id()}
 
         bookmarks=self.window.plugin.tables.get('bookmarks', condition,
                 unique=False)
-        if len(bookmarks)==0: return
 
-        model=ItemModel()
+        if bookmarks is None or len(bookmarks)==0: return
+
         model.itemChanged.connect(self.on_itemChanged)
         for b in bookmarks:
             item=Item('bookmark', b['id'], self.window, b['text'])
             model.appendRow(item)
-
-        self.setModel(model)
 
         self.window.activateTabWidget(self)
         self.setFocus()

@@ -329,8 +329,8 @@ class MapView(MapTree):
 
     def toggle(self):
         if not self.isVisible():
-            if self.model() is None:
-                self.openModel()
+            if self.model() is not None:
+                self.openModel(self.model())
             self.window.activateTabWidget(self)
             self.setFocus()
         else:

@@ -69,8 +69,7 @@ class Creator(QObject):
 
         annotation = page.annotate(boundary, color, 'highlightAnnotation')
         self.m_parent.db.register(annotation, boundary)
-
-        self.m_parent.display.load(page.document())
+        self.m_parent.display.load(page.document().id())
 
         return annotation
 
@@ -86,17 +85,16 @@ class Creator(QObject):
             did=annotation.page().document().id()
 
         else:
+
             aid=annotation
             aData=self.window.plugin.tables.get(
                     'annotations', {'id':aid})
             did=aData['did']
             loc=self.window.plugin.tables.get(
                     'documents', {'id':did}, 'loc')
-
             view=self.window.buffer.addView(loc)
             pageItem=view.pageItem(aData['page']-1)
             page=pageItem.page()
-
             annotation=None
             for ann in page.annotations():
                 if ann.position()==aData['position']: 

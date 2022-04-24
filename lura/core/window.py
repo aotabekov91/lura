@@ -164,6 +164,12 @@ class WindowManager(QMainWindow):
 
             dockWidget = QDockWidget(self)
             stackWidget= MQStackedWidget(name, self)
+            if name=='right':
+                stackWidget.setFixedWidth(275)
+            elif name=='left':
+                stackWidget.setFixedWidth(450)
+            else:
+                stackWidget.setFixedHeight(275)
             dockWidget.setWidget(stackWidget)
 
             self.addDockWidget(loc, dockWidget)
@@ -199,6 +205,34 @@ class WindowManager(QMainWindow):
         self.statusBar().removeWidget(widget)
         self.statusBar().hide()
         widget.hide()
+
+    def focusLeft(self):
+        if not self.leftDock.isVisible(): return
+        if not self.leftDock in self.state: return
+        if len(self.state[self.leftDock])==0: return
+        index=self.state[self.leftDock][-1]
+        self.leftStack.widget(index).setFocus()
+
+    def focusUp(self):
+        if not self.upDock.isVisible(): return
+        if not self.upDock in self.state: return
+        if len(self.state[self.upDock])==0: return
+        index=self.state[self.upDock][-1]
+        self.upStack.widget(index).setFocus()
+
+    def focusBottom(self):
+        if not self.bottomDock.isVisible(): return
+        if not self.bottomDock in self.state: return
+        if len(self.state[self.bottomDock])==0: return
+        index=self.state[self.bottomDock][-1]
+        self.bottomStack.widget(index).setFocus()
+
+    def focusRight(self):
+        if not self.rightDock.isVisible(): return
+        if not self.rightDock in self.state: return
+        if len(self.state[self.rightDock])==0: return
+        index=self.state[self.rightDock][-1]
+        self.rightStack.widget(index).setFocus()
 
     def deactivateTabWidget(self, widget):
 
