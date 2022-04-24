@@ -107,6 +107,9 @@ class TagView(MapTree):
 
         return model
 
+    def update(self):
+        self.openModel()
+
     def openModel(self, model=None):
 
         if model is None: model=self.getModel()
@@ -118,7 +121,7 @@ class TagView(MapTree):
         tagItems={}
 
         for item, tags in tagsDict.items():
-            itemTagsRanked=sorted(tags, key=lambda t: tagCountDict[t], reverse=True)
+            itemTagsRanked=sorted(tags, key=lambda t: (tagCountDict[t], t), reverse=True)
             itemTagsRanked=tuple(itemTagsRanked)
 
             if itemTagsRanked in tagItems:

@@ -45,9 +45,6 @@ class PageInfo(QWidget):
 
         self.window.statusBar().addPermanentWidget(self)
 
-        self.window.statusBar().show()
-        self.show()
-
     def on_documentTagged(self, m_id, kind, tagList, sender):
         text='; '.join(tagList)
         self.tags.setText(f' [{text}] ')

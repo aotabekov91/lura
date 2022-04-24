@@ -46,6 +46,8 @@ class Command(QObject):
         self.window.statusBar().addWidget(self.commandEdit, 1)
         self.window.setTabLocation(self.commandList, self.location, self.name)
 
+        self.window.statusBar().hide()
+
     def hide(self):
 
         try:

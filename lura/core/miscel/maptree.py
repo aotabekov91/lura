@@ -108,6 +108,8 @@ class MapTree(QTreeView):
             self.collapse()
         elif event.key()==Qt.Key_U:
             self.rootUp()
+        elif event.key()==Qt.Key_Z:
+            self.update()
         elif event.key()==Qt.Key_R:
             self.makeRoot()
         elif event.key()==Qt.Key_Y:

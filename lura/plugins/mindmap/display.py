@@ -88,7 +88,6 @@ class MapView(MapTree):
 
     def watch(self):
 
-        return
         root=self.model().invisibleRootItem()
 
         wCon=None
@@ -98,7 +97,9 @@ class MapView(MapTree):
                 wCon=child
                 break
 
-        if wCon is None: return
+        if wCon is None:
+            wCon=Item('container', None, self.window, 'Documents')
+            root.appendRow(wCon)
 
         for path in wCon.watchFolder():
             qIterator = QDirIterator(
@@ -106,7 +107,18 @@ class MapView(MapTree):
 
             while qIterator.hasNext():
                 loc=qIterator.next()
-                self.addDocument(loc, item=wCon, recursively=True)
+
+                document = self.window.buffer.loadDocument(loc)
+                if document is None: return
+
+                did = document.id()
+                dItem = Item('document', did, self.window)
+
+                myDItem=self.isChild(dItem, wCon, True)
+                if myDItem is None:
+                    wCon.appendRow(dItem)
+                    myDItem=dItem
+                self.addAnnotations(myDItem)
 
         toRemove=[]
         for i in range(wCon.rowCount()):
@@ -261,11 +273,11 @@ class MapView(MapTree):
         self.window.plugin.fuzzy.activate(
                 self._addDocument, data, titles)
 
-    def _addDocument(self, item):
-        if item is None: return
-        data=item.m_data
+    def _addDocument(self, item=None, did=None):
+        if item is None and did is None: return
+        if item is not None: did=item.m_data['id']
 
-        newItem=Item('document', data['id'], self.window)
+        newItem=Item('document', did, self.window)
         currentItem=self.currentItem()
 
         if currentItem is None:
