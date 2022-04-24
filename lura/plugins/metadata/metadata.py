@@ -79,12 +79,12 @@ class Metadata(QWidget):
         if not self.isVisible(): return
         if item is None or item.kind()!='document': return
 
+        self.m_id=item.id()
         self.setKind(item.id())
 
     def on_viewChanged(self, view):
         if not self.isVisible(): return
         if view is None: return
-        # self.m_id = self.window.view().document().id()
         self.m_id = view.document().id()
         self.setKind(self.m_id)
 
@@ -106,15 +106,14 @@ class Metadata(QWidget):
 
     def toggle(self, forceShow=False):
 
-        if self.window.document() is None: return
-
+        # if self.window.document() is None: return
         if not self.isVisible(): 
 
-            self.m_id = self.window.view().document().id()
+            self.window.activateTabWidget(self)
+            if self.m_id is None: return
             self.setKind(self.m_id)
             self.stack.setCurrentIndex(self.index)
             self.setFocus()
-            self.window.activateTabWidget(self)
 
         else:
             self.window.deactivateTabWidget(self)
@@ -123,9 +122,12 @@ class Metadata(QWidget):
         self.kind = self.window.plugin.tables.get('metadata', {'did':did}, 'kind')
         if self.kind==None: self.kind='paper'
         self.dropdown.setCurrentText(self.kind.title())
+
+        self.title.textChanged.disconnect()
         self.title.setPlainText(
                 self.window.plugin.tables.get(
                     'metadata', {'did':did}, 'title'))
+        self.title.connect()
 
         tags=self.window.plugin.tags.get(did, 'document')
         self.tags.textChanged.disconnect()
