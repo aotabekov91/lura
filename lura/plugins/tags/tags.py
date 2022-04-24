@@ -27,6 +27,14 @@ class Tags(QObject):
                 self.window,
                 Qt.WindowShortcut)
         }
+        self.setup()
+
+    def setup(self):
+        self.m_item=None
+        self.window.mapItemChanged.connect(self.on_mapItemChanged)
+
+    def on_mapItemChanged(self, item):
+        self.m_item=item
 
     def open(self, model):
         self.display.openModel(model)
@@ -38,11 +46,10 @@ class Tags(QObject):
             m_id=self.window.view().document().id()
             tags=self.get(m_id, 'document')
         else:
-            document=self.window.view().tree()
-            item=document.currentItem()
-            if item is None: return
-            m_id=item.id()
-            kind=item.kind()
+            if self.m_item is None: return
+            if self.m_item.kind()!='document': return
+            m_id=self.m_item.id()
+            kind=self.m_item.kind()
             tags=self.get(m_id, kind)
 
         text='; '.join(tags)
@@ -55,17 +62,15 @@ class Tags(QObject):
             m_id=document.id()
             kind='document'
         else:
-            document=self.window.view().tree()
-            item=document.currentItem()
-            if item is None: return
-            m_id=item.id()
-            kind=item.kind()
+            if self.m_item is None: return
+            if self.m_item.kind()!='document': return
+            m_id=self.m_item.id()
+            kind=self.m_item.kind()
 
         tags=[a.strip() for a in text.split(';')]
         self.set(m_id, kind, tags)
 
         self.window.documentTagged.emit(m_id, kind, tags, self)
-        self.window.view().setFocus()
 
     def get(self, m_id, kind='document'):
         return self.db.get(m_id, kind)

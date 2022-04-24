@@ -118,8 +118,7 @@ class TagView(MapTree):
         tagItems={}
 
         for item, tags in tagsDict.items():
-            itemTagsRanked=sorted(
-                    tags, key=lambda t: tagCountDict[t], reverse=True)
+            itemTagsRanked=sorted(tags, key=lambda t: tagCountDict[t], reverse=True)
             itemTagsRanked=tuple(itemTagsRanked)
 
             if itemTagsRanked in tagItems:
