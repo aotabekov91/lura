@@ -46,14 +46,15 @@ class Display(QScrollArea):
         self.window.setTabLocation(self, self.location, self.name)
 
     def on_colorComboChanged(self):
-        view=self.window.view()
-        if view is None: return
-        if type(view)==DocumentView:
-            self.load(view.document().id())
+        if type(self.m_view)==DocumentView:
+            self.load(self.m_view.document().id())
+        elif self.m_item is not None:
+            if self.m_item.kind()!='document': return
+            self.load(self.m_item.id())
         else:
-            item=view.currentItem()
-            if item is None or item.kind()!='document': return
-            self.load(item.id())
+            view=self.window.view()
+            if view is None: return
+            self.load(view.document().id())
 
     def on_mapItemChanged(self, item):
 
@@ -62,6 +63,7 @@ class Display(QScrollArea):
         if self.m_item and self.m_item==item: return
             
         self.m_item=item
+        self.m_view=None
         self.load(item.id())
 
     def on_viewChanged(self, view):
@@ -71,6 +73,7 @@ class Display(QScrollArea):
         if self.m_view==view: return
 
         self.m_view=view
+        self.m_item=None
         if type(view)==DocumentView:
             self.load(view.document().id())
         else:
@@ -124,11 +127,27 @@ class Display(QScrollArea):
 
             self.window.activateTabWidget(self)
             self.load()
+            self.setFocus()
 
         else:
 
             self.window.deactivateTabWidget(self)
-            self.window.view().setFocus()
+            view=self.window.view()
+            if view is None: return
+            view.setFocus()
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_F:
+            self.colorCombo.setCurrentText('Definition')
+        elif event.key()==Qt.Key_A:
+            self.colorCombo.setCurrentText('All')
+        elif event.key()==Qt.Key_M:
+            self.colorCombo.setCurrentText('Main')
+        elif event.key()==Qt.Key_D:
+            self.colorCombo.setCurrentText('Data')
+        elif event.key()==Qt.Key_N:
+            self.colorCombo.setCurrentText('Question')
+        elif event.key()==Qt.Key_R:
+            self.colorCombo.setCurrentText('Source')
 
 
 class AQWidget(QWidget):
@@ -207,3 +226,5 @@ class AQWidget(QWidget):
 
     def on_deleteButtonPressed(self):
         self.m_window.plugin.annotation.remove(self.m_id)
+
+

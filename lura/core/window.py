@@ -214,10 +214,10 @@ class WindowManager(QMainWindow):
         self.leftStack.widget(index).setFocus()
 
     def focusUp(self):
-        if not self.upDock.isVisible(): return
-        if not self.upDock in self.state: return
-        if len(self.state[self.upDock])==0: return
-        index=self.state[self.upDock][-1]
+        if not self.topDock.isVisible(): return
+        if not self.topDock in self.state: return
+        if len(self.state[self.topDock])==0: return
+        index=self.state[self.topDock][-1]
         self.upStack.widget(index).setFocus()
 
     def focusBottom(self):

@@ -51,6 +51,8 @@ class NQWidget(QWidget):
 
     def setup(self):
 
+        self.changed=False
+
         self.m_layout=QVBoxLayout(self)
         self.m_layout.setContentsMargins(0, 0, 0, 0)
         self.m_layout.setSpacing(0)
@@ -70,6 +72,11 @@ class NQWidget(QWidget):
         widget.m_layout.addWidget(self.saveButton)
         
         self.content=QTextEdit()
+        self.content.textChanged.connect(self.on_textChanged)
+        self.timer=QTimer()
+        self.timer.setInterval(12000)
+        self.timer.timeout.connect(self.on_saveButtonPressed)
+        self.timer.start()
 
         self.m_layout.addWidget(self.content)
         self.m_layout.addWidget(widget)
@@ -79,15 +86,21 @@ class NQWidget(QWidget):
         self.title.setText(note['title'])
         self.content.setPlainText(''.join(open(note['loc']).readlines()))
 
+    def on_textChanged(self):
+        self.changed=True
+
     def on_titleChanged(self, text):
         self.m_data.update('notes', {'id':self.m_id}, {'title':text})
 
     def on_saveButtonPressed(self):
+        if not self.isVisible(): return
+        if not self.changed: return
         text=self.content.toPlainText()
         loc=self.m_data.get('notes', {'id':self.m_id}, 'loc')
         nFile=open(loc, 'w')
         for f in text:
             nFile.write(f)
+        self.changed=False
 
     def setFocus(self):
         self.content.setFocus()

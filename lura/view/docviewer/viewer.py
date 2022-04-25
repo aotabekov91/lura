@@ -157,6 +157,7 @@ class DocumentView(QGraphicsView):
             self.updateSceneAndView()
 
             self.currentPageChanged.emit(self.m_document, self.m_currentPage)
+            self.fitToPageWidth()
 
             # self.canJumpChanged.emit(False, False)
             # self.continuousModeChanged.emit(self.s_settings['continuousMode'])
@@ -215,8 +216,8 @@ class DocumentView(QGraphicsView):
     def prepareScene(self, visibleWidth, visibleHeight):
 
         # BUG
-        # visibleWidth = self.m_layout.visibleWidth(self.viewport().width())
-        # visibleHeight = self.m_layout.visibleHeight(self.viewport().height())
+        visibleWidth = self.m_layout.visibleWidth(self.viewport().width())
+        visibleHeight = self.m_layout.visibleHeight(self.viewport().height())
 
         for page in self.m_pageItems:
 
