@@ -1,8 +1,4 @@
-import sys
-
 import markdown
-import mimetypes
-import os.path
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -16,7 +12,7 @@ class Display(QWidget):
         self.m_parent=parent
         self.window=parent.window
         self.s_settings=settings
-        self.location='bottom'
+        self.location='left'
         self.name='Notes'
         self.setup()
 
@@ -56,6 +52,9 @@ class Display(QWidget):
         self.page=MQWebEnginePage(self.window.plugin.tables)
         self.page.linkClicked.connect(self.on_linkClicked)
 
+        self.web.setStyleSheet('background-color: black; color:white')
+        # self.page.setStyleSheet('background-color: black; color:white')
+
         self.contentIndex=self.view.addWidget(self.content)
         self.webIndex=self.view.addWidget(self.web)
 
@@ -63,7 +62,7 @@ class Display(QWidget):
 
         self.window.setTabLocation(self, self.location, self.name)
 
-        self.setStyleSheet('background-color: white; color: black')
+        # self.setStyleSheet('background-color: white; color: black')
 
 
     def open(self, n_id):
@@ -86,8 +85,8 @@ class Display(QWidget):
         self.content.show()
 
         self.window.activateTabWidget(self)
-        self.m_dockWidget.titleBarWidget().setStyleSheet(
-                'background-color: white; color: black')
+        # self.m_dockWidget.titleBarWidget().setStyleSheet(
+                # 'background-color: white; color: black')
 
     def toggle(self):
 
@@ -199,7 +198,18 @@ class MQWebEnginePage(QWebEnginePage):
     def load(self):
         mFile=open(self.m_filePath)
         mContent=mFile.read()
-        self.setHtml(markdown.markdown(mContent))
+        html=markdown.markdown(mContent)
+        for i in range(1, 5):
+            html=html.replace(f'<h{i}>', f'<h{i} style="font-size: 12">')
+        head='''
+        <style>
+        body {font-size: 12; background-color: black; color: white;}
+        a:link {color: green}
+        </style>
+        '''
+        html=head+'<body>'+html +'</body>'
+        print(html)
+        self.setHtml(html)
 
     def acceptNavigationRequest(self, url, navType, isMainFrame):
         if navType==QWebEnginePage.NavigationTypeLinkClicked:
