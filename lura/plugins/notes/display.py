@@ -7,7 +7,7 @@ import os.path
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtWebKit import *
+from PyQt5.QtWebEngineWidgets import *
 
 class Display(QWidget):
 
@@ -49,13 +49,15 @@ class Display(QWidget):
         self.m_layout.addWidget(widget)
 
         self.view=QStackedWidget()
+
         self.content=NQWidget(self.window.plugin.tables)
-        self.web=NQWebView()
+        self.web=QWebEngineView()
+
+        self.page=MQWebEnginePage(self.window.plugin.tables)
+        self.page.linkClicked.connect(self.on_linkClicked)
 
         self.contentIndex=self.view.addWidget(self.content)
         self.webIndex=self.view.addWidget(self.web)
-
-        self.view.setCurrentIndex(self.contentIndex)
 
         self.m_layout.addWidget(self.view)
 
@@ -63,25 +65,62 @@ class Display(QWidget):
 
         self.setStyleSheet('background-color: white; color: black')
 
+
     def open(self, n_id):
 
-        for i in reversed(range(self.m_layout.count())):
-            self.m_layout.itemAt(i).widget().setParent(None)
-
         self.m_id=n_id
-        self.web.setId(n_id)
+        note=self.window.plugin.tables.get('notes', {'id':self.m_id})
+
+        if note is None: return
+
+        self.page.setId(n_id)
         self.content.setId(n_id)
+        self.web.setPage(self.page)
+
+        self.title.textChanged.disconnect()
+        self.title.setText(note['title'])
+        self.title.textChanged.connect(self.on_titleChanged)
+
+        self.view.setCurrentIndex(self.contentIndex)
+        self.view.show()
+        self.content.show()
+
         self.window.activateTabWidget(self)
+        self.m_dockWidget.titleBarWidget().setStyleSheet(
+                'background-color: white; color: black')
 
     def toggle(self):
 
         if self.m_layout.count()==0: return
         if not self.isVisible():
             self.window.activateTabWidget(self)
-            self.m_dockWidget.titleBarWidget().setStyleSheet(
-                    'background-color: white; color: black')
         else:
             self.window.deactivateTabWidget(self)
+
+    def on_linkClicked(self, url):
+        data=url.toDisplayString(QUrl.FullyDecoded).split(':')
+        if data[0]=='d':
+            did=int(data[1])
+            loc=self.window.plugin.tables.get(
+                    'documents', {'id':did}, 'loc')
+            page=0
+            if len(data)>2: page=int(data[2])
+            self.window.open(loc)
+            self.window.view().jumpToPage(page)
+        elif data[0]=='a':
+            aid=data[1]
+            aData=self.window.plugin.tables.get('annotations', {'id':aid})
+
+            did=aData['did']
+            loc=self.window.plugin.tables.get(
+                    'documents', {'id':did}, 'loc')
+            page=aData['page']
+
+            b = aData['position'].split(':')
+            topLeft = QPointF(float(b[0]), float(b[1]))
+
+            self.window.open(loc)
+            self.window.view().jumpToPage(page, 0, topLeft.y())
 
 
     def on_titleChanged(self, text):
@@ -92,9 +131,14 @@ class Display(QWidget):
         widget=self.view.currentWidget()
         if widget==self.web:
             self.view.setCurrentIndex(self.contentIndex)
+            self.view.show()
+            self.content.show()
         else:
+            self.content.save()
             self.view.setCurrentIndex(self.webIndex)
-            self.web.load()
+            self.page.load()
+            self.view.show()
+            self.web.show()
 
     def on_saveButtonPressed(self):
         self.content.save()
@@ -138,7 +182,13 @@ class NQWidget(QTextEdit):
             nFile.write(f)
         self.changed=False
 
-class NQWebView(QWebView):
+class MQWebEnginePage(QWebEnginePage):
+
+    linkClicked=pyqtSignal(QUrl)
+
+    def __init__(self, data):
+        super().__init__()
+        self.m_data=data
 
     def setId(self, nid):
         self.m_id=nid
@@ -150,3 +200,8 @@ class NQWebView(QWebView):
         mFile=open(self.m_filePath)
         mContent=mFile.read()
         self.setHtml(markdown.markdown(mContent))
+
+    def acceptNavigationRequest(self, url, navType, isMainFrame):
+        if navType==QWebEnginePage.NavigationTypeLinkClicked:
+            self.linkClicked.emit(url)
+        return True

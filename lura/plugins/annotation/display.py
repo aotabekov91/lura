@@ -178,13 +178,16 @@ class AQWidget(QWidget):
         self.deleteButton.setIcon(icon)
         self.deleteButton.pressed.connect(self.on_deleteButtonPressed)
 
+        self.info=QLabel(f'{self.m_id}')
+
         widget=QWidget()
         widget.m_layout=QHBoxLayout(widget)
         widget.m_layout.setContentsMargins(0,0,0,0)
-        widget.m_layout.setSpacing(0)
+        widget.m_layout.setSpacing(1)
 
         widget.m_layout.addWidget(self.title)
         widget.m_layout.addWidget(self.deleteButton)
+        widget.m_layout.addWidget(self.info)
 
         self.content = QTextEdit(content)
         self.content.setMinimumHeight(80)
@@ -226,5 +229,3 @@ class AQWidget(QWidget):
 
     def on_deleteButtonPressed(self):
         self.m_window.plugin.annotation.remove(self.m_id)
-
-
