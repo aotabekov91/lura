@@ -51,6 +51,7 @@ Plugins:
     colorSystem:
       Main: '#a4de02'
       Definition: '#eefc5e'
+      Data: '#ff7f00'
       Question: '#c8d9e8'
       Source: '#d3d3d3'
 

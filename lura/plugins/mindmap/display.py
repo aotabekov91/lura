@@ -29,6 +29,7 @@ class MapView(MapTree):
                 ('mmd', 'moveDocumentTo'),
                 ('maw', 'addWatchFolder'),
                 ('mtv', 'showTagView'),
+                ('mbv', 'showBookmarkView'),
                 ]
 
         self.window.plugin.command.addCommands(commandList, self)
@@ -42,6 +43,15 @@ class MapView(MapTree):
     def showTagView(self):
         if self.model() is None: return
         self.window.plugin.tags.open(self.model())
+
+    def showBookmarkView(self):
+        # TODO: show all bookmarks in the mindmap
+        if self.model() is None: return
+        allItems=self.model().getAllItems()
+        for i in allItems:
+            if i.kind()!='document': return
+            raise
+        self.window.plugin.tags.open(model)
 
     def addAnnotations(self, item):
         annotations = self.window.plugin.tables.get(

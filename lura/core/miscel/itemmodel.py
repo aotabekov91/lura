@@ -115,3 +115,12 @@ class ItemModel(QStandardItemModel):
         self.rowsMoved.connect(self.update)
         self.rowsAboutToBeRemoved.connect(self.update)
         self.dataChanged.connect(self.update)
+
+    def getAllItems(self, item=None, items=None):
+        if item is None:
+            item=self.invisibleRootItem()
+            items=[]
+        if item!=self.invisibleRootItem(): items+=[item]
+        for i in range(item.rowCount()):
+            self.getAllItems(item.child(i), items)
+        return items

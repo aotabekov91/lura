@@ -26,7 +26,7 @@ class Display(QScrollArea):
         self.setStyleSheet("background-color: black; color: white")
 
         self.colorCombo = QComboBox()
-        for f in ['All', 'Main', 'Definition', 'Question', 'Source']:
+        for f in ['All']+list(self.colorCode.keys()):
             self.colorCombo.addItem(f)
         self.colorCombo.setCurrentText('All')
         self.colorCombo.currentTextChanged.connect(self.on_colorComboChanged)

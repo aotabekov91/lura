@@ -43,9 +43,10 @@ class Metadata(QWidget):
 
         self.dropdown.currentTextChanged.connect(self.on_dropdown_changed)
 
-        self.book = ['author', 'publisher', 'year', 'edition', 'address']
-        self.paper = ['author', 'journal', 'year', 'volume', 'number', 'pages']
-        self.website = ['author', 'url']
+        self.book = ['author', 'publisher', 'year', 'edition', 'address', 'bibkey']
+        self.paper = ['author', 'journal', 'year', 'volume', 'number', 'pages',
+                'bibkey']
+        self.website = ['author', 'url', 'bibkey']
 
         self.createWidgets()
 
