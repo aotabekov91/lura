@@ -92,7 +92,8 @@ class Command(QObject):
         self.commandEdit.show()
         self.m_edit.setFocus()
 
-    def activateCustom(self, callFunc, label=None, contCallFunc=None, text=None):
+    def activateCustom(self, callFunc, label=None, contCallFunc=None,
+            text=None):
 
         self.window.plugin.pageinfo.hide()
         self.wasStatusBarVisible=self.window.statusBar().isVisible()
@@ -112,6 +113,7 @@ class Command(QObject):
 
         self.commandEdit.show()
         self.m_edit.setFocus()
+        return self.m_edit
 
     def customClientMode(self):
 

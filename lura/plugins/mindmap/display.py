@@ -21,6 +21,7 @@ class MapView(MapTree):
     def setup(self):
 
         self.chosenFor=None
+        self.m_item=None
 
         commandList=[
                 ('maf', 'addFolder'),
@@ -338,6 +339,7 @@ class MapView(MapTree):
         if not self.window.isDocumentViewVisible(): return
         if True: return
         self.openNode(item)
+        self.m_item=item
         self.setFocus()
     
     def on_itemChanged(self, item):
@@ -353,6 +355,8 @@ class MapView(MapTree):
         if not self.isVisible():
             if self.model() is not None:
                 self.openModel(self.model())
+                if self.m_item is not None:
+                    self.setCurrentIndex(self.m_item.index())
             self.window.activateTabWidget(self)
             self.setFocus()
         else:

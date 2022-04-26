@@ -1,20 +1,13 @@
-#!/usr/bin/python3
-
-import shutil
-import time
-
-from collections import OrderedDict
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from anki.storage import Collection
+
 from .table import AnkiNote
+from lura.core.miscel import *
 
-from bs4 import BeautifulSoup as BSHTML
-
-class Anki(QScrollArea):
+class Anki(QWidget):
 
     def __init__(self, parent, settings):
         super().__init__(parent)
@@ -22,6 +15,7 @@ class Anki(QScrollArea):
         self.s_settings=settings
         self.db=AnkiNote(self.window)
         self.name = 'Anki'
+        self.location='right'
         self.globalKeys={
                 'Ctrl+a': (
                     self.toggle, 
@@ -29,338 +23,197 @@ class Anki(QScrollArea):
                     Qt.WindowShortcut,
                     ), 
                 }
+
         self.mediaFolder = '/home/adam/.local/share/Anki2/kim/collection.media/'
 
-        # self.setup()
+        self.setup()
 
     def collection(self):
         return Collection('/home/adam/.local/share/Anki2/kim/collection.anki2')
 
-    def activateImageSelector(self):
-        self.selectionMode='image'
-        self.cursor.activate(self, mode='rubberBand')
+    def setup(self):
 
-    def activateTextSelector(self):
-        self.selectionMode='text'
-        self.cursor.activate(self, mode='text'),
+        self.activated=False
+        self.m_fields=[]
 
-    def actOnCursorSelection(self, event, pageItem, client):
+        self.setAnkiData()
 
-        if client==self:
+        self.deckWidget=QComboBox()
+        self.deckWidget.addItems(self.decks)
+        self.deckWidget.currentTextChanged.connect(self.on_deckChanged)
+        self.modelWidget=QComboBox()
+        self.modelWidget.addItems(self.models)
+        self.modelWidget.currentTextChanged.connect(self.on_modelChanged)
+        self.fieldWidget=QWidget()
+        self.save=QPushButton('Save')
+        self.save.pressed.connect(self.on_savePressed)
 
-            self.menu.clear()
+        self.m_layout=QVBoxLayout(self)
+        self.m_fieldLayout=QVBoxLayout(self.fieldWidget)
+        self.m_fieldLayout.setContentsMargins(0,0,0,0)
+        self.m_fieldLayout.setSpacing(0)
 
-            for (_, __, qaction) in self.currentWidget.fields.values():
-                self.menu.addAction(qaction)
+        self.m_layout.addWidget(self.deckWidget)
+        self.m_layout.addWidget(self.modelWidget)
+        self.m_layout.addWidget(self.fieldWidget)
+        self.m_layout.addWidget(self.save)
 
-            if self.selectionMode=='text':
+        self.m_layout.addStretch()
 
-                text=' '.join(self.cursor.getSelectionText())
+        if len(self.decks)>0: self.on_deckChanged(self.decks[0])
+        if len(self.models)>0: self.on_modelChanged(self.models[0])
 
-                self.selectionMode=None
-                self.cursor.deactivate()
+        self.cursor = self.window.plugin.view.cursor
+        self.cursor.selectedAreaByCursor.connect(
+            self.on_cursor_selectedAreaByCursor)
 
-                action=self.menu.exec_(event.screenPos())
+        self.window.setTabLocation(self, self.location, self.name)
 
-                for (qedit, qradio_, qaction) in self.currentWidget.fields.values():
-                    if action==qaction:
-                        qedit.insertPlainText(f' {text}')
+    def on_cursor_selectedAreaByCursor(self, event, pageItem, client):
+        if client!=self: return
 
-            elif self.selectionMode=='image':
+        text=self.cursor.getSelectionText()
+        if text is None or len(text)==0: return
+        text=' '.join(text)
+        self.window.plugin.selector.copyToClipboard(text)
 
-                rect=self.cursor.getRubberBandSelection()
+        if len(self.m_fields)==0: return 
 
-                self.selectionMode=None
-                self.cursor.deactivate()
+        pageItem.setActions(self.m_fields)
+        action = pageItem.m_menu.exec_(event.screenPos())
 
-                image=pageItem.m_page.render(
-                        hResol=pageItem.scaledResolutionX(),
-                        vResol=pageItem.scaledResolutionY(),
-                        boundingRect=rect)
-                
-                imageFile='/tmp/{}.jpg'.format(int(time.time()))
-                image.save(imageFile)
+        if action.text() in self.m_fields:
 
-                action=self.menu.exec_(event.screenPos())
+            index=self.m_fields.index(action.text())
+            for i in range(self.m_fieldLayout.count()):
+                i=self.m_fieldLayout.itemAt(i)
+                if i is None: continue
+                w=i.widget()
+                if w.m_row==index:
+                    w.editor.setPlainText(text)
+                    w.editor.show()
 
-                for (qedit, qradio_, qaction) in self.currentWidget.fields.values():
+    def setAnkiData(self):
+        collection=self.collection()
+        self.decks= collection.decks.all_names()
+        self.models = collection.models.all_names()
+        collection.close()
 
-                    if action==qaction:
-                        cursor=qedit.textCursor()
-                        cursor.insertImage(imageFile)
-            self.setFocus()
+    def on_savePressed(self):
+
+        collection=self.collection()
+
+        deck=self.deckWidget.currentText()
+        model=self.modelWidget.currentText()
+
+        deckId=collection.decks.by_name(deck)['id']
+        model=collection.models.by_name(model)
+
+        collection.decks.set_current(deckId)
+        collection.models.set_current(model)
+
+        note = collection.newNote()
+
+        for i in reversed(range(self.m_fieldLayout.count())):
+            i=self.m_fieldLayout.itemAt(i)
+            if i is None: continue
+            w=i.widget()
+            text = w.editor.toPlainText()
+            note.fields[w.m_row] = text
+            if not w.button.isChecked():
+                w.editor.clear()
+
+        if self.window.view() is not None:
+
+            did = self.window.view().document().id()
+            page = self.window.view().currentPage()
+            left, top=self.window.view().saveLeftAndTop()
+            position=f'{left}:{top}'
+
+        noteId=note.id
+
+        self.window.plugin.tables.write(
+                'anki', {'nid':noteId, 'did':did, 'page':page, 'position':position})
+
+        collection.add_note(note, deckId)
+        collection.save()
+
+    def on_deckChanged(self, text):
+        if text in self.decks:
+            self.m_deck=text
+
+    def on_modelChanged(self, text):
+        if not text in self.models: return
+        self.m_model=text
+        self.m_fields=[]
+
+        for i in reversed(range(self.m_fieldLayout.count())):
+            i=self.m_fieldLayout.takeAt(i)
+            if i is not None: i.widget().hide()
+
+        collection=self.collection()
+        for i, f in enumerate(collection.models.by_name(self.m_model)['flds']):
+            field=f['name']
+            self.m_fields+=[field]
+            w=MQWidget(field, i)
+            self.m_fieldLayout.addWidget(w)
+
+
+    def toggle(self): 
+
+        if not self.activated:
+
+            self.activated=True
+            self.window.plugin.view.cursor.activate(self, mode='selector')
+            self.window.activateTabWidget(self)
+
+        else:
+
+            self.activated=False
+            self.window.plugin.view.cursor.deactivate()
+            self.window.deactivateTabWidget(self)
+
+class MQWidget(QWidget):
+
+    def __init__(self, title, row):
+        super().__init__()
+        self.m_title=title
+        self.m_row=row
+        self.setup()
 
     def setup(self):
 
-        self.fuzzy=self.window.plugin.fuzzy
-        self.fuzzy.fuzzySelected.connect(self.actOnFuzzySelection)
+        widget=QWidget(self)
+        layout=QHBoxLayout(widget)
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(0)
 
-        self.activated=False
-        self.selectionMode =None 
+        self.title=QPushButton('+')
+        self.title.setFixedWidth(20)
+        self.title.pressed.connect(self.on_pressed)
+        self.button=QRadioButton()
+        self.button.setFixedWidth(20)
+        self.button.setCheckable(True)
 
-        self.shortcuts={v : k for k, v in self.s_settings['shortcuts'].items()}
+        layout.addWidget(QLabel(self.m_title))
+        layout.addStretch()
+        layout.addWidget(self.button)
+        layout.addWidget(self.title)
 
-        self.decks= self.collection().decks.all_names()
-        self.models = self.collection().models.all_names()
-        self.deck=self.decks[0]
-        self.model=self.models[0]
-        self.deckLabel=QLabel(self)
-        self.modelLabel=QLabel(self)
-        self.setAnkiData()
+        self.editor=QTextEdit()
+        layout=QVBoxLayout(self)
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(4)
 
-        self.ankiEdit=QLineEdit()
-        self.ankiLabel=QLabel('Add new anki deck')
-        self.ankiStatusBarWidget=QWidget()
-        layout=QHBoxLayout(self.ankiStatusBarWidget)
-        layout.addWidget(self.ankiLabel)
-        layout.addWidget(self.ankiEdit)
+        layout.addWidget(widget)
+        layout.addWidget(self.editor)
 
-        self.ankiEdit.returnPressed.connect(self.on_ankStatusBar)
+        self.editor.hide()
 
-        self.widgets={}
-        self.currentWidget=None
-
-        self.scrollArea=QScrollArea()
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.deckLabel)
-        self.layout.addWidget(self.modelLabel)
-        self.layout.addWidget(self.scrollArea)
-
-        self.cursor=self.window.plugin.view.cursor
-        self.cursor.selectedAreaByCursor.connect(self.actOnCursorSelection)
-
-        self.menu=QMenu(self.window)
-
-        self.window.setTabLocation(self, 'left', 'Anki')
-
-    def keyPressEvent(self, event):
-        key=event.text()
-
-        if key in self.shortcuts:
-            func=getattr(self, self.shortcuts[key])
-            func()
-            event.accept()
-        else:
-            if self.window.view() is None: return
-            self.window.view().keyPressEvent(event)
-
-    def changeModel(self):
-        self.model=None
-        self.fuzzy.setData(self, self.models)
-        self.fuzzy.activate(self)
-
-    def changeDeck(self):
-        self.deck=None
-        self.fuzzy.setData(self, self.decks)
-        self.fuzzy.activate(self)
-
-    def setAnkiData(self):
-
-        deck=self.collection().decks.by_name(self.deck)
-        model=self.collection().models.by_name(self.model)
-        self.deckId=deck['id']
-        self.collection().decks.set_current(self.deckId)
-        self.collection().models.set_current(model)
-
-        self.deckLabel.setText(f'Deck: {self.deck}')
-        self.modelLabel.setText(f'Model: {self.model}')
-
-    def actOnFuzzySelection(self, selected, listener):
-        if self==listener:
-            self.fuzzy.deactivate(self)
-            # self.fuzzy.removeClient(self)
-            if self.deck is None:
-                self.deck=selected
-            if self.model is None:
-                self.model=selected
-            
-            self.setAnkiData()
-            self.showModelWidget(self.model)
-            self.activated=not self.activated
-            self.toggle()
-
-    def showModelWidget(self, model):
-
-        self.scrollArea.takeWidget()
-
-        if model not in self.widgets:
-
-            widget=QWidget()
-            self.widgets[model]=widget
-            fields= self.getFields(self.model) 
-            layout=QVBoxLayout(widget)
-
-            widget.fields=OrderedDict()
-
-            for i, field in enumerate(fields):
-
-                qedit = CustomQEdit(self)
-                # qedit.textChanged.connect(self.adjustTextEditorSize)
-                # qedit.setFixedHeight(200)
-                # qedit.setFixedWidth(200)
-                qradio = QRadioButton(field)
-                qaction=QAction(field)
-                widget.fields[field]=(qedit, qradio, qaction)
-
-                layout.addWidget(qradio)
-                layout.addWidget(qedit)
-
-            layout.addStretch()
-
-            self.currentWidget=widget
-            self.scrollArea.setWidget(self.currentWidget)
-            self.scrollArea.setWidgetResizable(True)
-
-        else:
-
-            for m_model, widget in self.widgets.items():
-                if m_model==model: 
-                    self.currentWidget=widget
-                    self.scrollArea.setWidget(self.currentWidget)
-
-    def adjustTextEditorSize(self):
-        widget=self.widgets[self.model]
-        for field, (qedit, qradio, qaction) in widget.fields.items():
-            size = qedit.document().size().toSize()
-            if size.height() < 250:
-                qedit.setFixedHeight(size.height()+15)
-
-
-    def toggle(self, forceShow=False): 
-
-        if not self.activated or forceShow:
-
-            self.showModelWidget(self.model)
-            self.window.activateTabWidget(self)
+    def on_pressed(self):
+        if self.editor.isVisible():
+            self.editor.hide()
             self.setFocus()
-            self.activated=True
-
         else:
-
-            self.window.deactivateTabWidget(self)
-            self.activated=False
-
-    def getFields(self, model):
-        fields=[]
-        for f in self.collection().models.by_name(model)['flds']:
-            fields+=[f['name']]
-        return fields
-
-    def addToField(self, fieldNumber):
-        if self.kind == 'image':
-            self.addImageToField(fieldNumber)
-        elif self.kind == 'text':
-            self.addTextToField(fieldNumber)
-
-    def addTextToField(self, fieldNumber=None):
-        if fieldNumber:
-            field = self.fieldKeys[fieldNumber][0]
-            rectangle = getattr(self.app.plugin.docViewer,
-                                'rubberSelection', None)
-            if rectangle != None:
-                text = self.app.buffer.currentDocument.findText(
-                    rectangle=rectangle)
-                field.setText(text)
-                self.app.plugin.docViewer.rubberSelection = None
-                self.toggleAnkiMenu()
-            else:
-                self.parent.setFocus()
-                self.toggle(mode='show')
-                field.setFocus()
-
-    def addImageToField(self, fieldNumber=None):
-        if fieldNumber:
-            field = self.fieldKeys[fieldNumber][0]
-            rectangle = getattr(self.app.plugin.docViewer,
-                                'rubberSelection', None)
-            if rectangle != None:
-                img = self.app.buffer.currentDocument.cutImage(
-                    rectangle=rectangle)
-                tmpLocation = '/tmp/{}.jpg'.format(int(time.time()))
-                img.save(tmpLocation)
-                document = field.document()
-                cursor = field.textCursor()
-                position = cursor.position()
-                cursor.insertImage(tmpLocation)
-                self.app.plugin.docViewer.rubberSelection = None
-                self.toggleAnkiMenu()
-            else:
-                self.parent.setFocus()
-                self.toggle(mode='show')
-                field.setFocus()
-
-    def addNewDeck(self):
-        self.window.activateStatusBar(self.ankiStatusBarWidget)
-        self.ankiEdit.setFocus()
-
-    def on_ankStatusBar(self):
-        deckName=self.ankiEdit.text()
-        collection=self.collection()
-        collection.decks.add_normal_deck_with_name(deckName)
-        collection.save()
-        self.window.deactivateStatusBar(self.ankiStatusBarWidget)
-        self.deck=deckName
-        self.setAnkiData()
-
-    def submit(self):
-
-        note = self.collection().newNote()
-
-        self.setAnkiData()
-        for i, field in enumerate(self.currentWidget.fields):
-            qedit, qradio, qaction=self.currentWidget.fields[field]
-            html = qedit.toHtml()
-            for img in BSHTML(html).findAll('img'):
-                src = img['src']
-                newSrc = src.rsplit('/', 1)[-1]
-                html = html.replace(src, newSrc)
-                shutil.copyfile(src, self.mediaFolder+newSrc)
-            note.fields[i] = html
-            if not qradio.isChecked():
-                qedit.clear()
-
-        did = self.window.view.m_document.m_id
-        page = self.window.view.m_currentPage
-        left, top=self.window.view.saveLeftAndTop()
-        position=f'{left}:{top}'
-        noteId=note['id']
-
-        self.db.write(noteId, did, page, position)
-
-        note.add_tag(f'did:{did} page:{page} position:{position}')
-        collection=self.collection()
-        collection().add_note(note, self.deckId)
-        collection.save()
-
-    def clearFields(self):
-        for (qedit, qradio, qaction) in self.currentWidget.fields.values():
-            qedit.clear()
-
-    def getNotes(self):
-        # TODO
-        did = self.app.buffer.currentDocument.id
-        condition = 'tag:did:{}'.format(did)
-        noteIds = self.collection().find_notes(condition)
-        self.notes = [self.collection().get_note(n) for n in noteIds]
-        fontHtmls = [n.items()[0][1] for n in self.notes]
-        self.fuzzyItems = []
-        for i, f in enumerate(fontHtmls):
-            self.fuzzyItems += ['{}'.format(BSHTML(f).text).strip('\n')]
-        self.fuzzy.setItems(self.fuzzyItems)
-        self.fuzzy.toggle()
-
-class CustomQEdit(QTextEdit):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.parent=parent
-
-    def keyPressEvent(self, event):
-        if event.key()==Qt.Key_Escape:
-            self.parent.setFocus()
-        else:
-            super().keyPressEvent(event)
-
-
-
-
+            self.editor.show()
+            self.editor.setFocus()

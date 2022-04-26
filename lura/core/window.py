@@ -218,7 +218,7 @@ class WindowManager(QMainWindow):
         if not self.topDock in self.state: return
         if len(self.state[self.topDock])==0: return
         index=self.state[self.topDock][-1]
-        self.upStack.widget(index).setFocus()
+        self.topStack.widget(index).setFocus()
 
     def focusBottom(self):
         if not self.bottomDock.isVisible(): return

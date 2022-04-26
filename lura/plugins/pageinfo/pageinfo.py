@@ -67,10 +67,7 @@ class PageInfo(QWidget):
             if data is not None: 
                 tags='; '.join(data)
 
-            model=view.index().model()
-            mode=self.window.plugin.tables.get(
-                    'maps', {'id':model.id()}, 'title')
-            mode=f'Map: {mode}, {view.kind()}'
+            mode=f'{view.kind().title()} {view.id()}'
 
             pageNumber=view.row()+1
             numberOfPages=parent.rowCount()
@@ -88,7 +85,7 @@ class PageInfo(QWidget):
 
             numberOfPages = document.numberOfPages()
             pageNumber=view.currentPage()
-            mode='Document'
+            mode=f'Document {document.id()}'
 
         else:
         

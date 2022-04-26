@@ -21,8 +21,10 @@ from lura.plugins.annotation import Annotation
 from lura.plugins.quickmarks import Quickmarks
 from lura.plugins.filebrowser import FileBrowser
 
+
+from lura.plugins.anki import Anki
+
 # from lura.plugins.lookup import Lookup
-# from lura.plugins.anki import Anki
 # from lura.plugins.pager import Pager
 
 # from lura.plugins.buffers import Buffers
@@ -53,7 +55,7 @@ class PluginManager(dict):
                     Tags,
                     Clipboard,
                     PageInfo,
-                    # Anki,
+                    Anki,
                     # Lookup,
                     # Pager,
                     ]
