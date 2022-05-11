@@ -18,10 +18,16 @@ class Anki(QWidget):
         self.location='right'
         self.globalKeys={
                 'Ctrl+a': (
-                    self.toggle, 
+                    lambda: self.toggle(kind='text'), 
                     self.window,
                     Qt.WindowShortcut,
                     ), 
+                'Ctrl+Shift+a': (
+                    lambda: self.toggle(kind='area'), 
+                    self.window,
+                    Qt.WindowShortcut,
+                    ), 
+                }
                 }
 
         self.mediaFolder = '/home/adam/.local/share/Anki2/kim/collection.media/'
@@ -44,6 +50,12 @@ class Anki(QWidget):
         self.modelWidget=QComboBox()
         self.modelWidget.addItems(self.models)
         self.modelWidget.currentTextChanged.connect(self.on_modelChanged)
+        self.tagWidget=QLineEdit()
+        widget=QWidget()
+        layout=QHBoxLayout(widget)
+        layout.setContentsMargins(0,0,0,0)
+        layout.addWidget(QLabel('Tags'))
+        layout.addWidget(self.tagWidget)
         self.fieldWidget=QWidget()
         self.save=QPushButton('Save')
         self.save.pressed.connect(self.on_savePressed)
@@ -55,6 +67,7 @@ class Anki(QWidget):
 
         self.m_layout.addWidget(self.deckWidget)
         self.m_layout.addWidget(self.modelWidget)
+        self.m_layout.addWidget(widget)
         self.m_layout.addWidget(self.fieldWidget)
         self.m_layout.addWidget(self.save)
 
@@ -66,6 +79,8 @@ class Anki(QWidget):
         self.cursor = self.window.plugin.view.cursor
         self.cursor.selectedAreaByCursor.connect(
             self.on_cursor_selectedAreaByCursor)
+        self.cursor.rubberBandSelection.connect(
+            self.on_cursor_rubberBandSelection)
 
         self.window.setTabLocation(self, self.location, self.name)
 
@@ -82,7 +97,7 @@ class Anki(QWidget):
         pageItem.setActions(self.m_fields)
         action = pageItem.m_menu.exec_(event.screenPos())
 
-        if action.text() in self.m_fields:
+        if action is not None and action.text() in self.m_fields:
 
             index=self.m_fields.index(action.text())
             for i in range(self.m_fieldLayout.count()):
@@ -90,8 +105,40 @@ class Anki(QWidget):
                 if i is None: continue
                 w=i.widget()
                 if w.m_row==index:
-                    w.editor.setPlainText(text)
+                    w.editor.append(text)
                     w.editor.show()
+
+    def on_cursor_rubberBandSelection(self, area, pageItem, client):
+        if client!=self: return
+
+        if len(self.m_fields)==0: return 
+
+        if area is None: return
+
+        img = self.app.buffer.currentDocument.cutImage(
+            rectangle=rectangle)
+        raise
+
+        tmpLocation = '/tmp/{}.jpg'.format(int(time.time()))
+        img.save(tmpLocation)
+        self.collection().media.add_file(tmpLocation)
+
+        pageItem.setActions(self.m_fields)
+        action = pageItem.m_menu.exec_(event.screenPos())
+
+        if action is None or not action.text() in self.m_fields: return
+
+        index=self.m_fields.index(action.text())
+        for i in range(self.m_fieldLayout.count()):
+            i=self.m_fieldLayout.itemAt(i)
+            if i is None: continue
+            w=i.widget()
+            if w.m_row==index:
+                document = w.editor.document()
+                cursor = field.textCursor()
+                position = cursor.position()
+                cursor.insertImage(tmpLocation)
+                w.editor.show()
 
     def setAnkiData(self):
         collection=self.collection()
@@ -122,6 +169,10 @@ class Anki(QWidget):
             note.fields[w.m_row] = text
             if not w.button.isChecked():
                 w.editor.clear()
+
+        tags=self.tagWidget.text()
+        for tag in tags.split(';'):
+            note.add_tag(tag)
 
         if self.window.view() is not None:
 
@@ -159,12 +210,15 @@ class Anki(QWidget):
             self.m_fieldLayout.addWidget(w)
 
 
-    def toggle(self): 
+    def toggle(self, kind=None): 
 
         if not self.activated:
 
             self.activated=True
-            self.window.plugin.view.cursor.activate(self, mode='selector')
+            if kind=='text':
+                self.window.plugin.view.cursor.activate(self, mode='selector')
+            elif kind=='area':
+                self.window.plugin.view.cursor.activate(self, mode='rubberBand')
             self.window.activateTabWidget(self)
 
         else:
@@ -172,6 +226,13 @@ class Anki(QWidget):
             self.activated=False
             self.window.plugin.view.cursor.deactivate()
             self.window.deactivateTabWidget(self)
+
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_Escape:
+            self.window.deactivateTabWidget(self)
+        elif event.key()==Qt.Key_Return:
+            self.on_savePressed()
+
 
 class MQWidget(QWidget):
 
@@ -188,7 +249,7 @@ class MQWidget(QWidget):
         layout.setContentsMargins(0,0,0,0)
         layout.setSpacing(0)
 
-        self.title=QPushButton('+')
+        self.title=QPushButton('-')
         self.title.setFixedWidth(20)
         self.title.pressed.connect(self.on_pressed)
         self.button=QRadioButton()
@@ -208,12 +269,18 @@ class MQWidget(QWidget):
         layout.addWidget(widget)
         layout.addWidget(self.editor)
 
-        self.editor.hide()
-
     def on_pressed(self):
         if self.editor.isVisible():
+            self.title.setText('+')
             self.editor.hide()
             self.setFocus()
         else:
             self.editor.show()
+            self.title.setText('-')
             self.editor.setFocus()
+
+    def adjustTextEditorSize(self):
+
+        size = self.editor.document().size().toSize()
+        if size.height() < 250:
+            self.editor.setFixedHeight(size.height()+15)

@@ -80,7 +80,7 @@ class Bookmarks(MapTree):
 
         self.window.open(filePath)
         self.window.view().jumpToPage(data['page'], left, top)
-        self.setFocus()
+        self.window.view().setFocus()
 
     def delete(self):
         item=self.currentItem()

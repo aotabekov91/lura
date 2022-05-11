@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 class Cursor(QObject):
 
     selectedAreaByCursor=pyqtSignal(object, object, object)
-    rubberBandSelection=pyqtSignal(QRectF, object)
+    rubberBandSelection=pyqtSignal(QRectF, object, object)
 
     def __init__(self, parent, settings): 
         super().__init__(parent)
@@ -22,6 +22,7 @@ class Cursor(QObject):
 
         self.m_mode=None
         self.m_rubberBand=None
+        self.selectedText=None
         self.selectedArea=[]
 
     def selectWordUnderCursor(self, event, pageItem):
@@ -240,7 +241,7 @@ class Cursor(QObject):
         if self.m_mode=='rubberBand':
 
             if self.m_rubberBand is None: return
-            self.rubberBandSelection.emit(self.m_rubberBand, pageItem)
+            self.rubberBandSelection.emit(self.m_rubberBand, pageItem, self.m_client)
             self.m_rubberBand=None
             pageItem.update()
             event.accept()

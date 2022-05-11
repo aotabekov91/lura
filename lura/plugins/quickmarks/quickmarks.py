@@ -61,7 +61,8 @@ class Quickmarks(QListWidget):
         if not did in self.marks: self.marks[did] = {}
 
         self.marks[did][mark] = (page, left, top)
-        print(self.marks)
+        view=self.window.view()
+        if view is not None: view.setFocus()
 
     def goto(self):
         view = self.window.view()

@@ -33,7 +33,9 @@ class Clipboard(QWidget):
                 self._copyTextToClipboard)
 
 
-    def _copyTextToClipboard(self, rectF, pageItem):
+    def _copyTextToClipboard(self, rectF, pageItem, client):
+
+        if client!=self: return
 
         pageRect=self.getPageRect(rectF, pageItem)
         text=pageItem.page().text(pageRect)

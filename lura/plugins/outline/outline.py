@@ -167,6 +167,7 @@ class Outline(MapTree):
         top=index.data(Qt.UserRole+3)
 
         self.window.view().jumpToPage(page, left, top)
+        self.window.view().setFocus()
 
     def register(self, document):
         outline=document.loadOutline()

@@ -84,7 +84,6 @@ class MapView(MapTree):
         self.watch()
 
     def actOnChoosen(self, model, index):
-        if not self.isVisible(): return
         if index is None: return
         chosen=model.filePath(index)
 
@@ -246,8 +245,6 @@ class MapView(MapTree):
 
     def addFolder(self, path=False):
 
-        if not self.isVisible(): return
-
         if not path:
 
             self.chosenFor='addFolder'
@@ -256,7 +253,7 @@ class MapView(MapTree):
         else:
 
             self.chosenFor=None
-            self.window.plugin.fileBrowser.toggle()
+            # self.window.plugin.fileBrowser.toggle()
             if os.path.isdir(path):
                 qIterator = QDirIterator(
                     path, ["*.pdf", "*PDF"], QDir.Files, QDirIterator.Subdirectories)
@@ -264,8 +261,6 @@ class MapView(MapTree):
                     self._addDocument(qIterator.next())
             else:
                 self._addDocument(path)
-
-            self.setFocus()
 
     def addDocument(self):
         if not self.isVisible(): return
@@ -286,7 +281,12 @@ class MapView(MapTree):
 
     def _addDocument(self, item=None, did=None):
         if item is None and did is None: return
-        if item is not None: did=item.m_data['id']
+        if item is not None: 
+            if type(item)==str:
+                did=self.window.plugin.tables.get(
+                        'documents', {'loc':item}, 'id')
+            else:
+                did=item.m_data['id']
 
         newItem=Item('document', did, self.window)
         currentItem=self.currentItem()

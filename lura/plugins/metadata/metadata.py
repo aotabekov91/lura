@@ -168,6 +168,7 @@ class MQTextEdit(QPlainTextEdit):
         title=self.meta.window.plugin.tables.get(
                     'metadata', {'did':self.meta.m_id}, 'title')
         self.setPlainText(title)
+        self.moveCursor(QTextCursor.End)
 
     def on_textChanged(self):
         if self.field=='title':
