@@ -1,3 +1,6 @@
+import time
+import shutil
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -27,7 +30,6 @@ class Anki(QWidget):
                     self.window,
                     Qt.WindowShortcut,
                     ), 
-                }
                 }
 
         self.mediaFolder = '/home/adam/.local/share/Anki2/kim/collection.media/'
@@ -108,20 +110,25 @@ class Anki(QWidget):
                     w.editor.append(text)
                     w.editor.show()
 
-    def on_cursor_rubberBandSelection(self, area, pageItem, client):
+    def on_cursor_rubberBandSelection(self, event, pageItem, client):
         if client!=self: return
 
         if len(self.m_fields)==0: return 
 
+        area=self.cursor.getRubberBandSelection()
+
         if area is None: return
 
-        img = self.app.buffer.currentDocument.cutImage(
-            rectangle=rectangle)
-        raise
+        img=pageItem.page().render(
+                hResol=pageItem.xResolution(),
+                vResol=pageItem.yResolution(),
+                boundingRect=area)
+        self.window.plugin.selector.copyToClipboard(img)
 
-        tmpLocation = '/tmp/{}.jpg'.format(int(time.time()))
-        img.save(tmpLocation)
-        self.collection().media.add_file(tmpLocation)
+        tmpLocation = '{}.jpg'.format(int(time.time()))
+        img.save(f'/tmp/{tmpLocation}')
+        # shutil.copyfile(f'/tmp/{tmpLocation}', self.mediaFolder+tmpLocation)
+        # self.collection().media.add_file(tmpLocation)
 
         pageItem.setActions(self.m_fields)
         action = pageItem.m_menu.exec_(event.screenPos())
@@ -134,10 +141,8 @@ class Anki(QWidget):
             if i is None: continue
             w=i.widget()
             if w.m_row==index:
-                document = w.editor.document()
-                cursor = field.textCursor()
-                position = cursor.position()
-                cursor.insertImage(tmpLocation)
+                cursor = w.editor.textCursor()
+                cursor.insertImage(f'/tmp/{tmpLocation}')
                 w.editor.show()
 
     def setAnkiData(self):

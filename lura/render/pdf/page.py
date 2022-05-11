@@ -33,10 +33,10 @@ class PdfPage:
         x, y, w, h = (-1,)*4
 
         if boundingRect is not None:
-            x = boundingRect.x()
-            y = boundingRect.y()
-            w = boundingRect.width()
-            h = boundingRect.height()
+            x = int(boundingRect.x())
+            y = int(boundingRect.y())
+            w = int(boundingRect.width())
+            h = int(boundingRect.height())
 
         return self.m_data.renderToImage(hResol, vResol, x, y, w, h, rotate)
 

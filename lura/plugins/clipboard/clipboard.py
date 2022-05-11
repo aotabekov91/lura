@@ -25,7 +25,6 @@ class Clipboard(QWidget):
                 Qt.WindowShortcut)
         }
 
-
     def copyTextToClipboard(self):
         if type(self.window.view())!=DocumentView: return 
         self.window.plugin.view.cursor.activate(self, mode='rubberBand')
@@ -33,9 +32,10 @@ class Clipboard(QWidget):
                 self._copyTextToClipboard)
 
 
-    def _copyTextToClipboard(self, rectF, pageItem, client):
+    def _copyTextToClipboard(self, event, pageItem, client):
 
         if client!=self: return
+        rectF=self.window.plugin.view.cursor.getRubberBandSelection()
 
         pageRect=self.getPageRect(rectF, pageItem)
         text=pageItem.page().text(pageRect)
@@ -43,11 +43,17 @@ class Clipboard(QWidget):
         text=re.sub(re.compile(r'  *'), ' ', text)
         self.copyToClipboard(text)
 
-    def copyToClipboard(self, text):
-        self.clipboard.setText(text, QClipboard.Clipboard)
+    def copyToClipboard(self, data):
+        if type(data)==str:
 
-        if self.clipboard.supportsSelection():
-            self.clipboard.setText(text, QClipboard.Selection)
+            self.clipboard.setText(data, QClipboard.Clipboard)
+            if self.clipboard.supportsSelection():
+                self.clipboard.setText(data, QClipboard.Selection)
+
+        elif type(data)==QImage:
+            self.clipboard.setImage(data, QClipboard.Clipboard)
+            if self.clipboard.supportsSelection():
+                self.clipboard.setImage(data, QClipboard.Selection)
 
 
     def getPageRect(self, rectF, pageItem):
@@ -59,9 +65,3 @@ class Clipboard(QWidget):
         pageTr=QTransform()
         pageTr.scale(pageSize.width(), pageSize.height())
         return pageTr.mapRect(normRectF)
-
-
-
-
-
-

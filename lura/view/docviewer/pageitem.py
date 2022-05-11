@@ -254,3 +254,15 @@ class PageItem(QGraphicsObject):
         if self.highlightRect is None: return
         painter.setBrush(QBrush(QColor(88, 139, 174, 30)))
         painter.drawRect(self.highlightRect)
+
+    def xResolution(self):
+        devicePixelRatio = self.s_settings['resolution']['devicePixelRatio']
+        resolutionX = self.s_settings['resolution']['resolutionX']
+        scaleFactor = self.s_settings['scaleFactor']
+        return scaleFactor*devicePixelRatio*resolutionX
+
+    def yResolution(self):
+        devicePixelRatio = self.s_settings['resolution']['devicePixelRatio']
+        resolutionY = self.s_settings['resolution']['resolutionY']
+        scaleFactor = self.s_settings['scaleFactor']
+        return scaleFactor*devicePixelRatio*resolutionY
