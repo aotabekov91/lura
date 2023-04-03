@@ -6,26 +6,25 @@ from PyQt5.QtCore import *
 
 class Creator(QObject):
 
-    def __init__(self, parent, settings):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.window = parent.window
+        self.app = parent.app
         self.m_parent = parent
-        self.s_settings = settings
-        self.setup()
+        self.set_config()
 
     def createColorSystemActions(self):
         self.colorSystemActions = {}
         for key, color in self.system.items():
             self.colorSystemActions[QAction(key)] = color
 
-    def setup(self):
+    def set_config(self):
 
         self.activated = False
 
-        self.system = self.s_settings['colorSystem']
+        self.system = self.app.config['colorSystem']
         self.createColorSystemActions()
 
-        self.cursor = self.window.plugin.view.cursor
+        self.cursor = self.app.plugin.view.cursor
         self.cursor.selectedAreaByCursor.connect(
             self.on_cursor_selectedAreaByCursor)
 
@@ -77,7 +76,7 @@ class Creator(QObject):
 
         if type(annotation)!=int:
 
-            aid=self.window.plugin.tables.get('annotations',
+            aid=self.app.tables.get('annotations',
                     {'position':annotation.position(),
                         'page':annotation.page().pageNumber(),
                         'did': annotation.page().document().id()},
@@ -87,12 +86,12 @@ class Creator(QObject):
         else:
 
             aid=annotation
-            aData=self.window.plugin.tables.get(
+            aData=self.app.tables.get(
                     'annotations', {'id':aid})
             did=aData['did']
-            loc=self.window.plugin.tables.get(
+            loc=self.app.tables.get(
                     'documents', {'id':did}, 'loc')
-            view=self.window.buffer.addView(loc)
+            view=self.app.buffer.addView(loc)
             pageItem=view.pageItem(aData['page']-1)
             page=pageItem.page()
             annotation=None
@@ -101,7 +100,7 @@ class Creator(QObject):
                     annotation=ann
                     break
 
-        self.window.plugin.tables.remove('annotations', {'id': aid})
+        self.app.tables.remove('annotations', {'id': aid})
         self.m_parent.display.load(did)
         if annotation is None: return
         annotation.page().removeAnnotation(annotation)

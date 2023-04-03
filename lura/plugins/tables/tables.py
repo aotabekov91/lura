@@ -64,7 +64,7 @@ class Tables(OrderedDict):
 
 class Table:
 
-    def __init__(self, table, fields, loc='/home/adam/code/lura/lura.db'):
+    def __init__(self, table, fields, loc='/home/adam/bin/python/lura.db'):
         self.table=table
         self.fields
         self.loc=loc

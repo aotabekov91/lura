@@ -1,1 +1,1 @@
-from .pdf import PdfDocument
+from .document import PdfDocument

@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.render.pdf import PdfDocument
+from lura.utils import Plugin
 
 def search(text, document):
     found=[]
@@ -14,156 +14,91 @@ def search(text, document):
             found+=[(page.pageNumber(), m)]
     return found
 
-class Search(QListWidget):
+class Search(Plugin):
 
-    def __init__(self, parent, settings):
-        super().__init__(parent)
-        self.window = parent
-        self.s_settings=settings
-        self.name = 'search'
-        self.location='bottom'
-        self.globalKeys= {
-                '/': (
-                    self.find,
-                    self.window,
-                    Qt.WindowShortcut)
-                }
-        self.setup()
+    def __init__(self, app):
+        super(Search, self).__init__(app)
+        self.currentMatch=None
 
-    def setup(self):
-        self.m_view=None
-        nextAction=QShortcut('n', self)
-        nextAction.setContext(Qt.WidgetShortcut)
-        nextAction.activated.connect(lambda: self.jump('next'))
-        prevAction=QShortcut('p', self)
-        prevAction.setContext(Qt.WidgetShortcut)
-        prevAction.activated.connect(lambda: self.jump('prev'))
+    def activate(self):
+        statusbar=self.app.window.statusBar()
+        if not self.activated:
+            self.activated=True
+            self.app.window.keyPressEventOccurred.connect(self.keyPressEvent)
+            self.app.window.view().pageHasBeenJustPainted.connect(self.paintMatches)
+            statusbar.setClient(self)
+            statusbar.setCommandInfo('Search:')
+            statusbar.commandEdit().returnPressed.connect(self.search)
+            statusbar.keyPressEventOccurred.connect(self.keyPressEvent)
+            statusbar.focusCommandEdit()
+        else:
+            statusbar.toggle()
 
-        self.itemDoubleClicked.connect(self.jump)
-        self.window.viewChanged.connect(self.on_viewChanged)
-        self.window.setTabLocation(self, self.location, self.name)
+    def deactivate(self):
+        if self.activated:
+            self.activated=False
+            self.app.window.keyPressEventOccurred.disconnect(self.keyPressEvent)
+            self.app.window.view().pageHasBeenJustPainted.disconnect(self.paintMatches)
+            statusbar=self.app.window.statusBar()
+            statusbar.setClient()
+            statusbar.clearCommand()
+            statusbar.commandEdit().returnPressed.disconnect(self.search)
 
-    def find(self):
-        self.clear()
-        view=self.window.view()
-        if view is None or type(view.document())!=PdfDocument: return
-        self.m_view=view
-        self.window.plugin.command.activateCustom(self.search, 'Search: ')
+    def keyPressEvent(self, event):
+        if event.key()==Qt.Key_Escape:
+            self.deactivate()
+        elif self.activated and event.text() in self.actions:
+            self.actions[event.text()]()
 
-    def paintMatches(self, painter, options, widget, pageItem):
+    def search(self):
+        statusbar=self.app.window.statusBar()
+        text=statusbar.commandEdit().text()
 
-        if self.currentMatch is None: return
-        if self.currentPage!=pageItem.page().pageNumber(): return
-        if hasattr(painter, 'r') and painter.r==self.currentMatch: return
-
-        painter.setPen(QPen(Qt.red, 0.0))
-        painter.drawRect(self.currentMatch)
-        painter.r=self.currentMatch
-
-    def search(self, text):
-        
         self.matches=[]
         self.currentMatch=None
         self.currentIndex=-1
 
         if text == '': return
 
-        self.window.activateTabWidget(self)
+        self.matches=search(text, self.app.window.view().document())
 
-        self.window.view().updateSceneAndView()
-
-        self.matches=search(text, self.window.view().document())
-
-        if len(self.matches) == 0: return
-
-        self.clear()
-        for i, (pageNumber, rectF) in enumerate(self.matches):
-
-            pageItem=self.window.view().pageItem(pageNumber-1)
-            text=self.getFullLineText(pageItem, rectF)
-            item=QListWidgetItem()
-
-            itemRectF=pageItem.mapToItem(rectF)[0]
-
-
-            item.setText(text)
-
-            item.m_pageNumber=pageNumber
-            item.m_rectF=itemRectF
-
-            self.addItem(item)
-
-        self.window.view().pageHasBeenJustPainted.connect(self.paintMatches)
-        self.jump('next')
-        self.setFocus()
+        if len(self.matches) > 0: self.jump(1)
         
-    def jump(self, data):
-
+    def jump(self, increment):
         if len(self.matches)==0: return
 
-        if type(data)==str:
+        self.currentIndex+=increment
+        if self.currentIndex>=len(self.matches):
+            self.currentIndex=0
+        elif self.currentIndex<0:
+            self.currentIndex=len(self.matches)-1
 
-            if data=='next':
-                self.currentIndex+=1
-                if self.currentIndex>=len(self.matches):
-                    self.currentIndex=0
+        pageNumber, currentMatch=self.matches[self.currentIndex]
+        pageItem=self.app.window.view().pageItem(pageNumber-1)
+        self.currentMatch=pageItem.mapToItem(currentMatch)[0]
 
-            elif data=='prev':
-                self.currentIndex-=1
-                if self.currentIndex<0:
-                    self.currentIndex=len(self.matches)-1
-
-            self.currentPage=self.matches[self.currentIndex][0]
-            pageItem=self.window.view().pageItem(self.currentPage-1)
-            currentMatch=self.matches[self.currentIndex][1]
-            self.currentMatch=pageItem.mapToItem(currentMatch)[0]
-
-        else:
-
-            self.currentPage=data.m_pageNumber
-            pageItem=self.window.view().pageItem(self.currentPage-1)
-            self.currentMatch=data.m_rectF
-
-        self.window.view().jumpToPage(self.currentPage)
+        self.app.window.view().jumpToPage(pageNumber)
         sceneRect=pageItem.mapRectToScene(self.currentMatch)
-        self.window.view().centerOn(0, sceneRect.y())
-        self.setFocus()
+        self.app.window.view().centerOn(0, sceneRect.y())
+        self.app.window.setFocus()
+
+    def searchNext(self):
+        self.jump(+1)
+
+    def searchPrev(self):
+        self.jump(-1)
+
+    def focusSearch(self):
+        self.app.window.statusBar().commandEdit().setFocus()
 
     def getFullLineText(self, pageItem, rectF):
         width=pageItem.page().size().width()
         lineRectF=QRectF(0, rectF.y(), width, rectF.height())
         return pageItem.page().text(lineRectF)
 
-    def on_viewChanged(self, view):
-        if not hasattr(self, 'matches'): return
-        if self.m_view==view: return
-        self.clear()
-        self.matches=[]
-        self.currentMatch=None
-
-    def moveUp(self):
-        row=self.currentRow()
-        if row>0: 
-            row-=1
-            self.setCurrentRow(row)
-
-    def moveDown(self):
-        row=self.currentRow()
-        if row<self.count()-1: 
-            row+=1
-            self.setCurrentRow(row)
-
-    def keyPressEvent(self, event):
-        if event.key()==Qt.Key_J:
-            self.moveDown()
-        elif event.key()==Qt.Key_K:
-            self.moveUp()
-        elif event.key()==Qt.Key_O:
-            item=self.currentItem()
-            if item is None: return
-            self.jump(item)
-        elif event.key()==Qt.Key_Escape:
-            self.window.deactivateTabWidget(self)
-            self.window.view().setFocus()
-        else:
-            super().keyPressEvent(event)
+    def paintMatches(self, painter, options, widget, pageItem):
+        if self.currentMatch is None: return
+        if hasattr(painter, 'r') and painter.r==self.currentMatch: return
+        painter.setPen(QPen(Qt.red, 0.0))
+        painter.drawRect(self.currentMatch)
+        painter.r=self.currentMatch

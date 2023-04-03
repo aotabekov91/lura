@@ -33,15 +33,6 @@ BrowserView:
 
 Plugins:
 
-  Fuzzy:
-    location: top
-    closeOnSelection: True
-    shortcuts:
-      moveDown: j
-      moveUp: k
-      onlyPreview: p
-      clearEditorFilter: c
-
   Annotation:
     showAnnotationOverlay: True
     shortcuts:
@@ -55,42 +46,10 @@ Plugins:
       Question: '#c8d9e8'
       Source: '#d3d3d3'
 
-  Bookmarks:
-    shortcuts:
-      deleteBookmark: d
-
-  Metadata:
-    shortcuts:
-      changeKind: c
-      searchMeta: m
-      save: s
-
-  Quickmarks:
-    shortcuts:
-      delete: d
-      setComment: c
-
-  Outline:
-    shortcuts:
-      expandAll: e
-      collapseAll: c
-      open: o
-
   View:
     Cursor:
       height: 10
       tolerance: 0.5
-
-
-  Anki:
-    shortcuts:
-      submit: s
-      changeDeck: d
-      changeModel: f
-      clearFields: c
-      activateTextSelector: t
-      activateImageSelector: i
-      addNewDeck: a
 
   Search:
     shortcuts:
@@ -106,5 +65,3 @@ Plugins:
       paper: '#09bb09'
       webpage: '#09aa09'
 
-  Notes:
-    baseFolder: '/home/adam/sciebo/notes'

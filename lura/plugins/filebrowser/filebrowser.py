@@ -4,62 +4,49 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.core import MapTree
+from lura.utils import Plugin
+from lura.utils.widgets import TreeView
 
-class FileBrowser(MapTree):
+class EmptyIconProvider(QFileIconProvider):
+    def icon(self, _):
+        return QIcon()
 
-    def __init__(self, parent, settings):
-        super().__init__(parent, parent)
-        self.window = parent
-        self.location = 'left'
-        self.name = 'fileBrowser'
+class FileBrowser(Plugin):
 
-        self.globalKeys = {
-            'Ctrl+f': (
-                self.toggle,
-                self.window,
-                Qt.WindowShortcut)
-        }
+    def __init__(self, app):
+        super().__init__(app, name='fileBrowser')
+
+        self.tree=TreeView(app, self, location='left', name='fileBrowser')
         self.setup()
 
     def setup(self):
-
-        self.path = os.path.abspath('.')
-
-        self.setModel(QFileSystemModel())
-        self.header().hide()
-
+        model=QFileSystemModel()
+        model.setIconProvider(EmptyIconProvider())
+        self.tree.setModel(model)
         for i in range(1, 4):
-            self.hideColumn(i)
+            self.tree.hideColumn(i)
+        self.set_path(os.path.abspath('.'))
 
-        self.window.setTabLocation(self, self.location, self.name)
+    def deactivate(self):
+        self.activated=False
+        self.tree.deactivate()
 
-    def toggle(self):
-
-        if not self.isVisible():
-
-            self.window.activateTabWidget(self)
-            self.tree(self.path)
-            self.setFocus()
-
+    def activate(self):
+        if not self.activated:
+            self.activated=True
+            self.tree.activate()
         else:
-
-            self.window.deactivateTabWidget(self)
+            self.deactivate()
 
     def open(self):
-        self.window.open(self.currentPath())
+        path=self.currentPath()
+        if path: self.app.window.open(path)
 
-    def tree(self, path=None):
-
+    def set_path(self, path=None):
         if path is None: path = os.path.abspath('.')
-
-        self.model().setRootPath(path)
-        self.setRootIndex(self.model().index(path))
-        self.setFocus()
+        self.tree.model().setRootPath(path)
+        self.tree.setRootIndex(self.tree.model().index(path))
 
     def currentPath(self):
-        if self.currentIndex() is None: return
-        return self.model().filePath(self.currentIndex())
-
-    def close(self):
-        self.window.deactivateTabWidget(self)
+        if self.tree.currentIndex():
+            return self.tree.model().filePath(self.tree.currentIndex())

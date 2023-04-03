@@ -1,53 +1,53 @@
-#!/bin/bash
+#!/usr/bin/env python
+
+import os
 import sys
+
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.core.window import WindowManager
-
-import yaml
 import argparse
+from configparser import ConfigParser
 
-fileLocs=['/home/adam/docs/docs/1raman_kirthi_mastering_python_data_visualization.pdf',
-        '/home/adam/docs/docs/1300_math_formulas.pdf']
+from lura.utils import WindowManager
+from lura.utils import BufferManager
+from lura.utils import PluginManager
+from lura.utils import TablesManager
 
-fileLocs=['https://www.google.com']
-configurationFile='/home/adam/code/lura/config.yaml'
+class App(QApplication):
 
-def process_cl_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--url')
-    parser.add_argument('-f', '--file')
-    parser.add_argument('open', nargs='?')
-    parsed_args, unparsed_args = parser.parse_known_args()
-    return parsed_args, unparsed_args
+    def __init__(self):
+        super().__init__([])
 
-class App:
+        self.set_config()
 
-    def __init__(self, documentLocs=[]):
-        super().__init__()
-        configuration=self.getConfiguration()
-        self.window=WindowManager(configuration)
+        self.actions={}
 
-    def getConfiguration(self): 
-        with open(configurationFile, 'r') as stream:
-            config = yaml.safe_load(stream)
-        return config
+        self.tables=TablesManager(self)
+        self.window=WindowManager(self)
+        self.buffer=BufferManager(self)
+        self.plugin=PluginManager(self)
+
+        self.parse_args()
+
+    def set_config(self):
+        main_path=os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')
+        config_path=f'{main_path}/config.ini'
+        if os.path.isfile(config_path):
+            self.config=ConfigParser()
+            self.config.read(config_path)
+        else:
+            self.config=ConfigParser()
+
+    def parse_args(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-f', '--file')
+        parser.add_argument('open', nargs='?')
+        parsed_args, unparsed_args = parser.parse_known_args()
+        if parsed_args.open:
+            self.window.open(parsed_args.open)
 
 if __name__ == "__main__":
-    parsed_args, unparsed_args = process_cl_args()
-    qt_args = sys.argv[:1] + unparsed_args
-    app = QApplication(qt_args)
-    mainWin = App()
-    if parsed_args.open: mainWin.window.open(parsed_args.open)
-
-    try:
-        sys.exit(app.exec_())
-    except:
-        view=mainWin.window.view()
-        if view is not None: view.save()
-        raise
-
-
-
+    app = App()
+    sys.exit(app.exec_())
