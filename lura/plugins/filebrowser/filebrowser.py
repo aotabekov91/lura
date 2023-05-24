@@ -4,49 +4,45 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.utils import Plugin
-from lura.utils.widgets import TreeView
+from lura.utils import watch, Plugin
+from lura.utils.widgets import BaseCommandStack
 
-class EmptyIconProvider(QFileIconProvider):
-    def icon(self, _):
-        return QIcon()
+from .widget import Tree
 
 class FileBrowser(Plugin):
 
     def __init__(self, app):
-        super().__init__(app, name='fileBrowser')
 
-        self.tree=TreeView(app, self, location='left', name='fileBrowser')
-        self.setup()
+        super().__init__(app)
 
-    def setup(self):
-        model=QFileSystemModel()
-        model.setIconProvider(EmptyIconProvider())
-        self.tree.setModel(model)
-        for i in range(1, 4):
-            self.tree.hideColumn(i)
-        self.set_path(os.path.abspath('.'))
+        self.setUI()
 
-    def deactivate(self):
-        self.activated=False
-        self.tree.deactivate()
+    def setUI(self):
+        
+        self.ui=BaseCommandStack(self, 'left')
+        self.ui.addWidget(Tree(), 'tree', main=True)
+        self.ui.tree.openWanted.connect(self.on_openWanted)
+        self.ui.hideWanted.connect(self.deactivate)
+
+    def on_openWanted(self, how, focus):
+
+        self.open(how=how, focus=focus)
 
     def activate(self):
-        if not self.activated:
-            self.activated=True
-            self.tree.activate()
-        else:
-            self.deactivate()
 
-    def open(self):
-        path=self.currentPath()
-        if path: self.app.window.open(path)
+        self.activated=True
+        self.ui.activate()
 
-    def set_path(self, path=None):
-        if path is None: path = os.path.abspath('.')
-        self.tree.model().setRootPath(path)
-        self.tree.setRootIndex(self.tree.model().index(path))
+    def deactivate(self):
 
-    def currentPath(self):
-        if self.tree.currentIndex():
-            return self.tree.model().filePath(self.tree.currentIndex())
+        self.activated=False
+        self.ui.deactivate()
+
+    def open(self, how='reset', focus=True):
+
+        if self.ui.tree.currentIndex():
+            path=self.ui.tree.model().filePath(self.ui.tree.currentIndex())
+            if os.path.isdir(path): 
+                self.ui.tree.expand(self.ui.tree.currentIndex())
+            else:
+                self.app.window.open(path, how=how, focus=focus)

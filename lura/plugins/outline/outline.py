@@ -4,135 +4,107 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.utils import Plugin
-from lura.utils.widgets import TreeView
+from lura.utils import Plugin, register
+from lura.utils import watch, BaseCommandStack
 
-class OutlineTree(TreeView):
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.m_expansionRole=Qt.UserRole+4
-        self.m_expansionIDRole=Qt.UserRole+5
-
-        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.setSelectionBehavior(QAbstractItemView.SelectRows)
-
-        self.expanded.connect(self.m_parent.on_expanded)
-        self.collapsed.connect(self.m_parent.on_collapsed)
-
-        self.header().setSectionResizeMode(QHeaderView.Interactive)
-        self.clicked.connect(self.m_parent.on_outline_clicked)
-
-    def restoreExpansion(self, index):
-        if index.isValid():
-            expanded=self.model().data(index, self.m_expansionRole)
-            if self.isExpanded(index)!=expanded:
-                self.setExpanded(index, expanded)
-        for row in self.model().rowCount(index):
-            self.restoreExpansion(self.model().index(row, 0, index))
-
-    def synchronizeOutlineView(self, currentPage, outlineModel, parent):
-        for row in range(outlineModel.rowCount(parent)):
-            index=outlineModel.index(row, 0, parent)
-            page=outlineModel.data(index, Qt.UserRole+1)
-            if page==currentPage:
-                return index
-        for row in range(outlineModel.rowCount(parent)):
-            index=outlineModel.index(row, 0, parent)
-            match=self.synchronizeOutlineView(currentPage, outlineModel, index)
-            if match.isValid():
-                return match
-        return QModelIndex()
-
-    def expandAbove(self, child):
-        index=child.parent()
-        while index.isValid():
-            index=index.parent()
-            self.expand(index)
-
-    def expandAll(self, index=None):
-        if index is None:
-            super().expandAll()
-        elif index.isValid():
-            if not self.isExpanded(index):
-                self.expand(index)
-            for row in range(self.model().rowCount()):
-                self.expandAll(index.child(row,0))
-
-    def collapseAll(self, index=None):
-        if index is not None and index.isValid():
-            if not self.isExpanded(index):
-                self.collapse(index)
-            for row in range(self.model().rowCount()):
-                self.collapseAll(index.child(row,0))
-        else:
-            super().collapseAll()
-
+from .widget import OutlineTree
 
 class Outline(Plugin):
     
     def __init__(self, app):
-        super().__init__(app, name='outline')
+
+        super().__init__(app, position='left', mode_keys={'command': 'o'})
 
         self.outlines={}
-        self.tree=OutlineTree(app, self, 'left', 'outline')
 
-        self.app.window.viewChanged.connect(self.on_viewChanged)
-        self.app.buffer.documentCreated.connect(self.register)
-        self.app.window.currentPageChanged.connect(self.on_currentPageChanged)
+        self.app.window.buffer.documentCreated.connect(self.registerDocument)
+        self.app.window.display.viewChanged.connect(self.on_viewChanged)
+        self.app.window.display.currentPageChanged.connect(self.on_currentPageChanged)
 
-    def on_outline_clicked(self, index):
-        page=index.data(Qt.UserRole+1)
-        left=index.data(Qt.UserRole+2)
-        top=index.data(Qt.UserRole+3)
-        self.app.window.view().jumpToPage(page, left, top)
+        self.setUI()
 
-    def on_expanded(self, index):
-        self.tree.model().setData(index, True, self.tree.m_expansionRole)
+    def setUI(self):
 
-    def on_collapsed(self, index):
-        self.tree.model().setData(index, False, self.tree.m_expansionRole)
+        super().setUI()
 
-    def on_currentPageChanged(self, document, page):
+        self.ui.addWidget(OutlineTree(), 'tree', main=True)
+
+        self.ui.tree.clicked.connect(self.on_outlineClicked)
+        self.ui.tree.expanded.connect(self.on_outlineExpanded)
+        self.ui.tree.collapsed.connect(self.on_outlineCollapsed)
+        self.ui.tree.returnPressed.connect(self.on_outlineClicked)
+        self.ui.tree.openWanted.connect(self.on_outlineClicked)
+        self.ui.tree.hideWanted.connect(self.deactivate)
+
+        self.ui.installEventFilter(self)
+
+    def on_outlineClicked(self, index=None):
+
+        if index is None: index=self.ui.tree.currentIndex()
+        if index:
+            page=index.data(Qt.UserRole+1)
+            left=index.data(Qt.UserRole+2)
+            top=index.data(Qt.UserRole+3)
+            self.app.window.display.currentView().jumpToPage(page, left, top)
+
+    def on_outlineExpanded(self, index):
+
+        self.ui.tree.model().setData(index, True, self.ui.tree.m_expansionRole)
+
+    def on_outlineCollapsed(self, index):
+
+        self.ui.tree.model().setData(index, False, self.ui.tree.m_expansionRole)
+
+    def on_currentPageChanged(self, document, currentPage, prevPage):
+
         outline=self.outlines.get(document, None)
         if outline:
-            found=self.tree.synchronizeOutlineView(page, outline, QModelIndex()) 
-            if found.isValid(): self.tree.setCurrentIndex(found)
+            index=self.ui.tree.currentIndex()
+            found=self.ui.tree.synchronizeOutlineView(currentPage, outline, QModelIndex()) 
+            if found.isValid(): self.ui.tree.setCurrentIndex(found)
 
     def on_viewChanged(self, view):
+
         document=view.document()
         outline=self.outlines.get(document, None)
-        if outline: self.tree.setModel(outline)
+        if outline: self.ui.tree.setModel(outline)
 
+    @register('t')
+    def toggle(self): super().toggle()
+
+    @register('o')
     def open(self):
-        index=self.tree.currentIndex()
-        page=index.data(Qt.UserRole+1)
-        left=index.data(Qt.UserRole+2)
-        top=index.data(Qt.UserRole+3)
 
-        self.app.window.view().jumpToPage(page, left, top)
-        self.app.window.view().setFocus()
+        if self.activated:
 
-    def register(self, document):
+            index=self.ui.tree.currentIndex()
+            page=index.data(Qt.UserRole+1)
+            left=index.data(Qt.UserRole+2)
+            top=index.data(Qt.UserRole+3)
+            self.app.window.display.currentView().jumpToPage(page, left, top)
+            self.app.window.display.currentView().setFocus()
+
+    def registerDocument(self, document):
+
         def _run():
+
             outline=document.loadOutline()
             self.outlines[document]=outline
         t=threading.Thread(target=_run)
         t.daemon=True
         t.start()
 
-    def activate(self, forceShow=False):
-        if not self.activated:
-            self.activated=True
-            self.tree.activate()
-        elif self.app.window.view().hasFocus():
-            self.tree.setFocus()
-        else:
-            self.deactivate()
+    @register('a')
+    def activate(self):
 
+        self.activated=True
+        self.app.modes.plug.setClient(self)
+        self.app.modes.setMode('plug')
+        self.ui.activate()
+
+    @register('d')
     def deactivate(self):
-        if self.activated:
-            self.activated=False
-            self.tree.deactivate()
+
+        self.activated=False
+        self.app.modes.setMode('normal')
+        self.ui.deactivate()

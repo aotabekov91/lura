@@ -6,13 +6,12 @@ class AnnotationsTable(Table):
 
         self.fields = [
             'id integer PRIMARY KEY AUTOINCREMENT',
-            'did int',
+            'dhash str',
             'page int',
             'position text',
             'title text',
             'content text',
             'color text',
-            'foreign key(did) references documents(id)',
-            'constraint unique_ann unique (did, page, position)'
+            'constraint unique_ann unique (dhash, page, position, color)'
         ]
         super().__init__(table='annotations', fields=self.fields)

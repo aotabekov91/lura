@@ -6,9 +6,6 @@ class Display(Plugin):
     def __init__(self, app):
         super().__init__(app, name='generic')
 
-    def set_shortcuts(self):
-        super().set_shortcuts(level='widget_with_children')
-
     def toggleContinuousMode(self):
         self.app.window.view().toggleContinuousMode()
 

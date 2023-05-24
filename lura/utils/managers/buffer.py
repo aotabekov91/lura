@@ -11,70 +11,62 @@ class BufferManager(QObject):
 
     documentCreated=pyqtSignal(object)
     documentRegistered=pyqtSignal(object)
+    viewCreated=pyqtSignal(object)
 
     def __init__(self, app):
         super().__init__(app)
         self.app=app
         self.config=app.config
-        self.views=OrderedDict()
+        self.views=[]
         self.documents={}
 
     def addView(self, filePath):
-
-        if filePath in self.views: return self.views[filePath]
-
         document=self.loadDocument(filePath)
-        if document is None: return 
+        if document:
+            view=DocumentView(self.app, document)
+            view.setId(len(self.views))
+            self.views+=[view]
+            self.viewCreated.emit(view)
+            return view
 
-        view=DocumentView(self.app, document)
-
-        self.views[filePath]=view
-        return view
-
-    def updateViews(self):
-        for view in self.views.values():
-            if view.isVisible(): view.readjust()
+    # def updateViews(self):
+    #     for view in self.views:#.values():
+    #         if view.isVisible(): view.readjust()
 
     def loadDocument(self, filePath):
-        
         if filePath in self.documents:
             return self.documents[filePath]
 
         document=PdfDocument(filePath)
         if document.readSuccess():
+            self.documents[filePath]=document
 
             self.documentCreated.emit(document)
-            data=self.app.tables.get('documents', {'loc':filePath})
+            data=self.app.tables.get('documents', {'hash': document.hash()})
 
             if data is None:
-
-                self.app.tables.write('documents', {'loc': filePath})
-                data=self.app.tables.get('documents', {'loc':filePath})
+                self.app.tables.write('documents', {'hash': document.hash(),
+                                                    'path': filePath})
+                data=self.app.tables.get('documents', {'hash':document.hash()})
 
             document.setParent(self.app)
             document.setId(data['id'])
             self.documentRegistered.emit(document)
-
             return document
 
     def getAllViews(self):
-        return list(self.views.values())
-
-    def getView(self, filePath=None): 
-        if filePath is None and len(self.views)>0: return self.views[list(self.views.keys())[-1]]
-        if filePath in self.views: return self.views[filePath]
+        return self.views
 
     def open(self, filePath):
-
         if filePath is None: return
-        if filePath in self.views: return self.views[filePath]
         if type(filePath)!=list: filePath=[filePath,]
-        [self.addView(path) for path in filePath]
-        return self.views.get(filePath[-1], None)
+        for path in filePath:
+            view=self.addView(path)
+        return view
 
-    def close(self, filePath):
-        if not filePath in self.views: return
-        return self.views.pop(filePath)
+    def close(self, view):
+        view.close()
+        self.views.pop(view)
 
     def hideViews(self):
-        [view.hide() for view in self.views.values()]
+        [view.hide() for view in self.views]

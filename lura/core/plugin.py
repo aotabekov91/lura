@@ -1,82 +1,29 @@
+import os
+import sys
+import importlib.util
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from lura.plugins.view import View
-from lura.plugins.tags import Tags
-from lura.plugins.links import Links
-from lura.plugins.notes import Notes
-from lura.plugins.fuzzy import Fuzzy
-from lura.plugins.tables import Tables
-from lura.plugins.search import Search
-from lura.plugins.mindmap import MindMap
-from lura.plugins.command import Command
-from lura.plugins.outline import Outline
-from lura.plugins.metadata import Metadata
-from lura.plugins.pageinfo import PageInfo
-from lura.plugins.clipboard import Clipboard
-from lura.plugins.bookmarks import Bookmarks
-from lura.plugins.documents import Documents
-from lura.plugins.annotation import Annotation
-from lura.plugins.quickmarks import Quickmarks
-from lura.plugins.filebrowser import FileBrowser
+class Plugin(dict):
 
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
 
-from lura.plugins.anki import Anki
+    def __init__(self, app):
+        self.app=app
+        self.plugins_path=self.app.config.get('Settings', 'plugins_path') 
+        self.set_plugins()
 
-# from lura.plugins.lookup import Lookup
-# from lura.plugins.pager import Pager
+    def set_plugins(self):
+        sys.path.append(self.plugins_path)
+        for p_name in os.listdir(self.plugins_path):
+            if not p_name.startswith('__'):
+                plugin_module=importlib.import_module(p_name)
+                if hasattr(plugin_module, 'get_plugin_class'):
+                    plugin_class=plugin_module.get_plugin_class()
+                    plugin=plugin_class(self.app)
+                    self[plugin.name]=plugin
 
-# from lura.plugins.buffers import Buffers
-
-class PluginManager(dict):
-    def __init__(self, parent, s_settings):
-        self.window=parent
-        self.s_settings=s_settings
-
-    def activatePlugins(self):
-
-        plugins=[
-                    View,
-                    Fuzzy,
-                    Tables,
-                    Command,
-                    Documents,
-                    FileBrowser,
-                    Metadata,
-                    Links,
-                    Annotation,
-                    Bookmarks,
-                    Notes,
-                    MindMap,
-                    Outline,
-                    Quickmarks,
-                    Search,
-                    Tags,
-                    Clipboard,
-                    PageInfo,
-                    Anki,
-                    # Lookup,
-                    # Pager,
-                    ]
-
-        for Plugin in plugins:
-            settings=self.getRelevantSettings(Plugin)
-            plugin=Plugin(self.window, settings)
-            setattr(self, plugin.name, plugin)
-            self[plugin.name]=plugin
-
-        self.setPluginShortcuts()
-
-    def getRelevantSettings(self, klass):
-        name=klass.__name__
-        return self.s_settings['Plugins'].get(name, None)
-
-    def setPluginShortcuts(self):
-        for plugin in self.values():
-            if hasattr(plugin, 'globalKeys'):
-                for key, (func, parent, context) in plugin.globalKeys.items():
-                    key=QKeySequence(key)
-                    shortcut=QShortcut(key, parent)
-                    shortcut.setContext(context)
-                    shortcut.activated.connect(func)

@@ -13,58 +13,65 @@ from .annotation import PdfAnnotation
 class PdfDocument(QObject):
 
     def __init__(self, filePath):
+
         super().__init__()
         self.m_data=None
         self.m_hash=None
-        self.m_filePath=filePath
-        self.setHash()
-        self.load_document()
         self.m_mutex=QMutex()
+        self.m_filePath=filePath
+        self.readFilepath(filePath)
 
-    def load_document(self):
-        self.m_data = Poppler.Document.load(self.m_filePath)
-        if self.m_data is not None:
-            self.m_data.setRenderHint(Poppler.Document.Antialiasing)
-            self.m_data.setRenderHint(Poppler.Document.TextAntialiasing)
-            self.setPages()
+    def readFilepath(self, filePath):
+
+        self.m_data, self.m_pages=self.loadDocument(filePath)
+
+    def loadDocument(self, filePath):
+
+        m_data = Poppler.Document.load(filePath)
+        if m_data is not None:
+            m_data.setRenderHint(Poppler.Document.Antialiasing)
+            m_data.setRenderHint(Poppler.Document.TextAntialiasing)
+            m_pages=self.setPages(m_data)
+            return m_data, m_pages
         else:
-            self.m_data=None
+            return None, {}
 
     def filePath(self):
+
         return self.m_filePath
 
     def readSuccess(self):
+
         return self.m_data is not None
 
     def numberOfPages(self):
+
         return self.m_data.numPages()
 
-    def setHash(self):
-        file_hash = hashlib.md5()
-        with open(self.m_filePath, "rb") as f:
-            chunk = f.read(8192)
-            while chunk:
-                file_hash.update(chunk)
-                chunk = f.read(8192)
-        self.m_hash=file_hash.hexdigest()
+    def setHash(self, dhash):
+
+        self.m_hash=dhash
 
     def hash(self):
+
         return self.m_hash
 
     def author(self):
+
         return self.m_data.author()
 
     def title(self):
+
         return self.m_data.title()
 
-    def page(self, index):
-        page = self.m_data.page(index)
-        if page is not None:
-            return PdfPage(page)
+    def page(self, pageNumber):
+
+        return self.m_pages.get(pageNumber, None)
 
     def annotations(self):
+
         annotations=[]
-        for page in self.m_pages:
+        for pageNumber, page in self.m_pages.items():
             annotations+=page.annotations()
         return annotations
 
@@ -80,17 +87,19 @@ class PdfDocument(QObject):
         return pdfConverter.convert()
 
     def pages(self):
+
         return self.m_pages
 
-    def setPages(self):
-        self.m_pages= []
-        for i in range(self.numberOfPages()):
-            page=PdfPage(self.m_data.page(i))
-            page.setDocument(self)
-            page.setPageNumber(i+1)
-            self.m_pages += [page]
+    def setPages(self, m_data):
+
+        m_pages={}
+        for i in range(m_data.numPages()):
+            page=PdfPage(m_data.page(i), pageNumber=i+1, document=self)
+            m_pages[i+1] = page
+        return m_pages
 
     def search(self, text):
+
         found={}
         for i, page in enumerate(self.pages()):
             match=page.search(text)
@@ -99,6 +108,7 @@ class PdfDocument(QObject):
         return found
 
     def loadOutline(self):
+
         outlineModel=QStandardItemModel()
         toc=self.m_data.toc()
         if toc!=0:
@@ -177,13 +187,17 @@ class PdfDocument(QObject):
             self.outline(document, childNode, item)
 
     def __eq__(self, other):
+
         return self.m_data==other.m_data
 
     def __hash__(self):
+
         return hash(self.m_data)
 
     def id(self):
+
         return self.m_id
 
     def setId(self, m_id):
+
         self.m_id=m_id

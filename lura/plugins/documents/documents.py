@@ -1,51 +1,95 @@
-import os
-
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils.widgets import *
+from plugin import UpDown, InputList
+from lura.utils import Plugin, register
 
-class Documents(MapTree):
+class Documents(Plugin):
 
     def __init__(self, app):
-        super(Documents, self).__init__(app)
-        self.app=app
-        self.name = 'documents'
-        self.location='top'
-        self.globalKeys={
-                'Ctrl+d': (
-                    self.showDocuments,
-                    self.app,
-                    Qt.WindowShortcut)
-                }
 
-        self.app.window.setTabLocation(self, self.location, self.name)
+        super().__init__(app, position='right', mode_keys={'command': 'd'})
 
-    def showDocuments(self):
-        documents=self.app.tables.get('documents')
+        self.setUI()
+        self.ui.main.setList(self.getList())
 
-        model=ItemModel()
-        model.itemChanged.connect(self.on_itemChanged)
+    def setUI(self):
 
-        for d in documents:
-            item=Item('document', d['id'], self.app.window)
-            model.appendRow(item)
+        super().setUI()
 
-        self.setModel(model)
-        self.app.window.activateTabWidget(self)
-        self.setFocus()
+        main=InputList(item_widget=UpDown)
+        self.ui.addWidget(main, 'main', main=True)
 
-    def on_itemChanged(self, item):
-        self.app.tables.update('metadata', {'did':item.id()}, {'title':item.text().title()})
+        self.ui.main.input.hideLabel()
+        self.ui.main.returnPressed.connect(self.on_returnPressed)
+        self.ui.hideWanted.connect(self.deactivate)
+        self.ui.installEventFilter(self)
 
-    def open(self):
-        item=self.currentItem()
-        if item is None: return
+    @register('a')
+    def activate(self):
 
-        filePath=self.app.tables.get('documents', {'id':item.id()}, 'loc')
-        self.app.window.open(filePath)
-        self.app.window.deactivateTabWidget(self)
+        self.activated=True
+        self.app.modes.plug.setClient(self)
+        self.app.modes.setMode('plug')
+        self.ui.activate()
 
-    def close(self):
-        self.app.deactivateTabWidget(self)
+    @register('d')
+    def deactivate(self):
+
+        self.activated=False
+        self.app.modes.setMode('normal')
+        self.ui.deactivate()
+
+    @register('t')
+    def toggle(self):
+
+        if self.activated:
+            self.deactivate()
+        else:
+            self.activate()
+
+    def getList(self):
+
+        data=self.app.tables.hash.getAll()
+        for d in data:
+            d['up']=d['path'].split('/')[-1]
+            meta=self.app.tables.metadata.getRow({'hash':d['hash']})
+            if meta and meta[0]['title']:
+                d['down']=meta[0]['title']
+                d['up']=d['path'].split('/')[-1]
+                d['up_color']='green'
+        return data
+
+    def on_returnPressed(self): 
+
+        self.open(focus=False)
+        self.ui.show()
+
+    @register('o')
+    def open(self, focus=True, how='reset', hide=False):
+
+        if self.activated:
+
+            if hide: self.deactivate()
+            if not focus or hide: self.deactivateCommandMode()
+
+            item=self.ui.main.list.currentItem()
+            if item:
+                path=self.app.tables.hash.getPath(item.itemData['hash'])
+                if path: self.app.window.open(path, how=how)
+
+    @register('O')
+    def openAndHide(self): 
+
+        if self.activated: self.open(focus=True, hide=True)
+
+    @register('i')
+    def openBelow(self): 
+
+        if self.activated: self.open(focus=True, how='below')
+
+    @register('I')
+    def openBelowAndHide(self): 
+
+        if self.activated: self.open(how='below', hide=True)

@@ -10,7 +10,6 @@ class DisplaySplitter(QSplitter):
         self.setup()
 
     def setup(self):
-
         self.m_layout=QVBoxLayout(self)
 
         self.m_layout.setSpacing(0)
@@ -19,22 +18,20 @@ class DisplaySplitter(QSplitter):
     def clear(self):
         for index in range(self.m_layout.count()):
             item=self.m_layout.takeAt(index)
-            item.widget().hide()
+            if item: item.widget().hide()
 
     def setWidget(self, widget):
-
         self.clear()
         self.m_layout.addWidget(widget)
+        widget.show()
 
     def removeWidget(self, widget):
-
         self.m_layout.removeWidget(widget)
 
     def addWidget(self, widget):
         self.m_layout.addWidget(widget)
 
     def replaceWidget(self, index, widget):
-
         if self.m_layout.count()>0:
             self.m_layout.insertWidget(index, widget)
             self.m_layout.takeAt(index+1)
