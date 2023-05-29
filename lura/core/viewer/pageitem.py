@@ -44,13 +44,11 @@ class PageItem(QGraphicsObject):
         self.m_rotation=self.view().settings().getint('rotation', 0)
         self.m_xresol=self.view().settings().getint('resolutionX', 72)
         self.m_yresol=self.view().settings().getint('resolutionY', 72)
-        self.m_proxy_padding=self.view().settings().getfloat('proxyPadding', 6.)
+        self.m_proxy_padding=self.view().settings().getfloat('proxyPadding', 0.)
         self.m_device_pixel_ration=self.view().settings().getfloat('devicePixelRatio', 1.)
         self.m_use_tiling=self.view().settings().getboolean('useTiling', False)
 
         self.setup()
-
-    def setPaintLinks(self, condition=True): self.m_paint_links=condition
 
     def setup(self):
 
@@ -58,6 +56,8 @@ class PageItem(QGraphicsObject):
             tile=TileItem(self)
             self.m_tileItems=[tile]
         self.redraw()
+
+    def setBlock(self, blocks=[]): raise
 
     def setSelection(self, selections=[]):
 
@@ -87,25 +87,10 @@ class PageItem(QGraphicsObject):
         painter.setRenderHint(QPainter.Antialiasing)
 
         self.paintPage(painter, options.exposedRect)
-
-        self.paintLinks(painter, options, widgets)
         self.paintSearch(painter, options, widgets)
         self.paintSelection(painter, options, widgets)
         # self.paintAnnottions(painter, options, widgets)
-
         self.pageHasBeenJustPainted.emit(painter, options, widgets, self)
-
-    def paintLinks(self, painter, options, widgets):
-
-        if self.m_paint_links:
-
-            links=self.m_page.links()
-
-            painter.save()
-            painter.setTransform(self.m_normalizedTransform, True)
-            painter.setPen(QPen(Qt.red, 0.0))
-            for link in links: painter.drawRect(link['boundary'])
-            painter.restore()
 
     def paintSelection(self, painter, options, widgets):
 
@@ -114,12 +99,17 @@ class PageItem(QGraphicsObject):
         if selections:
 
             painter.save()
-            painter.setBrush(QBrush(QColor(88, 139, 174, 30)))
 
             for selection in selections:
                 box=selection['box']
                 area_item=[self.mapToItem(b) for b in box]
-                if self==selection['item']: painter.drawRects(area_item)
+                if self==selection['item']: 
+
+
+                    painter.setBrush(QBrush(QColor(88, 139, 174, 30)))
+                    painter.drawRects(area_item)
+                    painter.setPen(QPen(Qt.red, 0.0))
+                    painter.drawRects(area_item)
 
             painter.restore()
 
@@ -132,7 +122,7 @@ class PageItem(QGraphicsObject):
             painter.drawRects(self.m_searched)
             painter.restore()
 
-    def setSearched(self, searched): self.m_searched=searched
+    def setSearched(self, searched=[]): self.m_searched=searched
 
     def paintPage(self, painter, exposedRect):
 
@@ -283,16 +273,12 @@ class PageItem(QGraphicsObject):
     def mapToItem(self, polygon, isUnified=False):
 
         if type(polygon) in [QPoint, QPointF]:
-            if isUnified:
-                return self.m_normalizedTransform.map(polygon)
-            else:
-                return self.m_transform.map(polygon)
+            if isUnified: polygon=self.m_normalizedTransform.map(polygon)
+            return self.m_transform.map(polygon)
         else:
             polygon=polygon.normalized()
-            if isUnified:
-                return self.m_normalizedTransform.mapRect(polygon)
-            else:
-                return self.m_transform.mapRect(polygon)
+            if isUnified: polygon=self.m_normalizedTransform.mapRect(polygon)
+            return self.m_transform.mapRect(polygon)
 
     def setActions(self, actions):
 

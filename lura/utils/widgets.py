@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import InputListStack, CommandStack, register
+from plugin import InputListStack, CommandStack, ListWidget, register 
 
 class Base:
 
@@ -12,21 +12,25 @@ class Base:
 
         self.plugin=plugin
         self.app=plugin.app
+        self.activated=False
 
-        self.app.window.docks.setTab(self, location)
+        self.app.main.docks.setTab(self, location)
 
     def deactivate(self): 
 
-        self.activated=False
-        self.dock.deactivate(self)
+        if self.activated:
 
-        self.plugin.deactivateCommandMode()
-        self.app.window.display.focusCurrentView()
+            self.activated=False
+            self.plugin.actOnDefocus()
+            self.dock.deactivate(self)
 
     def activate(self): 
 
         self.activated=True
+        self.plugin.actOnFocus()
         self.dock.activate(self)
+
+class BaseListWidget(Base, ListWidget): pass
 
 class BaseCommandStack(Base, CommandStack): pass
 

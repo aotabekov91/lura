@@ -4,29 +4,13 @@ from types import MethodType, BuiltinFunctionType
 
 class Plugin(WidgetPlug):
 
-    def __init__(self,
-
-                 app, 
-                 name=None, 
-                 bar_data={},
-                 mode_keys={}, 
-                 position=None,
-                 listening=False,
-                 exclude_widget=[],
-                 listen_leader=None,
-                 listen_widget=None,
-                 **kwargs):
+    def __init__(self, app, name=None, mode_keys={}, position=None, **kwargs):
 
         self.position=position
-        self.bar_data=bar_data
-        self.listening=listening
         self.mode_keys=mode_keys
-        self.listen_widget=listen_widget
-        self.exclude_widget=exclude_widget
-        self.listen_leader=listen_leader
 
         if not 'argv' in kwargs: 
-            kwargs['argv']=app.window
+            kwargs['argv']=app.main
 
         super(Plugin, self).__init__(app=app, name=name, **kwargs)
 
@@ -35,14 +19,31 @@ class Plugin(WidgetPlug):
     def setUI(self): 
 
         self.ui=BaseCommandStack(self, self.position)
-        self.ui.focusGained.connect(self.setFocus)
 
-    def setFocus(self):
+        self.ui.focusGained.connect(self.actOnFocus)
+        self.ui.focusLost.connect(self.actOnDefocus)
 
-        self.app.modes.plug.setClient(self)
-        self.app.modes.plug.activate()
+    def actOnDefocus(self): 
 
-    def modeKeys(self, mode): return self.mode_keys.get(mode, '')
+        self.deactivateCommandMode()
+        self.app.modes.setMode('normal')
+
+    def actOnFocus(self):
+
+        self.setStatusbarData()
+        self.app.modes.setMode('me')
+
+    def setStatusbarData(self):
+
+        self.data={
+                'detail': '',
+                'client': self,
+                'visible': True, 
+                'info': self.name.title()
+                }
+        self.app.main.bar.setData(self.data)
+
+    def modeKey(self, mode): return self.mode_keys.get(mode, '')
 
     def toggle(self):
 
@@ -59,9 +60,9 @@ class Plugin(WidgetPlug):
                 func=getattr(self, func_name, None)
                 if func and hasattr(func, 'widget'): 
                     if func.widget=='window':
-                        widget=self.app.window
+                        widget=self.app.main
                     elif func.widget=='display':
-                        widget=self.app.window.display
+                        widget=self.app.main.display
                     else:
                         setattr(func, 'key', key)
                         continue

@@ -16,7 +16,7 @@ class StatusBar(QStatusBar):
         self.clients={}
 
         self.window=window
-        self.configure=Configure(window.app, 'Statusbar', self)
+        self.configure=Configure(window.app, 'Statusbar', self, mode_keys={'command': 's'})
 
         self.window.display.viewChanged.connect(self.on_viewChanged)
         self.window.display.currentPageChanged.connect(self.on_currentPageChanged)
@@ -39,7 +39,7 @@ class StatusBar(QStatusBar):
                 '''
 
         layout=self.layout()
-        layout.setContentsMargins(1,1,1,1)
+        layout.setContentsMargins(0,0,0,0)
         self.setLayout(layout)
 
         self.info=QLabel('Info')
@@ -93,7 +93,7 @@ class StatusBar(QStatusBar):
         total_pages=document.numberOfPages()
         self.page.setText(f'{current_page}/{total_pages}')
 
-    @register('tb', modes=['normal', 'command'])
+    @register('i', modes=['normal', 'command'])
     def toggle(self):
 
         if self.isVisible():

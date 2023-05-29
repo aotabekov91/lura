@@ -11,7 +11,7 @@ from .statusbar import StatusBar
 
 from lura.utils import Configure, register, getBoundaries
 
-class Window(QMainWindow):
+class MainWindow(QMainWindow):
 
     def __init__(self, app):
 
@@ -28,7 +28,10 @@ class Window(QMainWindow):
 
         # Order matters
         self.display=Display(self.app)
+
         self.docks=Docks(self)
+        
+
         self.bar=StatusBar(self)
 
         self.setStatusBar(self.bar)
@@ -37,12 +40,14 @@ class Window(QMainWindow):
         stl='''
             QWidget {
                 color: white;
-                border-color: #101010;
-                background-color: #101010;
+                border-color: transparent;
+                background-color: transparent;
                 }
                ''' 
         self.setStyleSheet(stl)
         self.setAcceptDrops(True)
+
+        self.setContentsMargins(2, 2, 2, 2)
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -69,7 +74,6 @@ class Window(QMainWindow):
 
         elif kind=='bookmark':
             data=self.app.tables.bookmark.getRow({'id':criteria})
-            print(data)
             if data:
                 data=data[0]
                 dhash=data['hash']
@@ -78,10 +82,9 @@ class Window(QMainWindow):
 
         if dhash:
             self.openBy(kind='hash', criteria=dhash)
-            view=self.app.window.display.currentView()
+            view=self.app.main.display.currentView()
             if view: view.jumpToPage(page, x, y)
 
-    @register('o', modes=['normal', 'command'])
     def open(self, filePath=None, how='reset', focus=True):
 
         filePath=os.path.abspath(filePath)
@@ -89,25 +92,4 @@ class Window(QMainWindow):
         if document: self.display.open(document, how, focus=focus)
 
     @register('q', modes=['normal', 'command'])
-    def close(self): super().close()
-
-    @register('ffj')
-    def focusLeftDock(self): self.docks.focus('left')
-
-    @register('ffl')
-    def focusRightDock(self): self.docks.focus('right')
-
-    @register('ffk')
-    def focusTopDock(self): self.docks.focus('top')
-
-    @register('ffh')
-    def focusBottomDock(self): self.docks.focus('bottom')
-
-    @register(key='ffc')
-    def focusCurrentView(self): self.display.setFocus()
-
-    @register(key='ffu')
-    def focusUpView(self): self.display.focusUp()
-
-    @register(key='ffd')
-    def focusDownView(self): self.display.focusDown()
+    def close(self): self.app.exit()

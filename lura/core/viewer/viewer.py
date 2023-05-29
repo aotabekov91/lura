@@ -8,7 +8,7 @@ from .cursor import Cursor
 from .pageitem import PageItem
 from .layout import DocumentLayout
 
-from lura.utils import Configure
+from lura.utils import Configure, register
 
 class View(QGraphicsView):
 
@@ -29,12 +29,11 @@ class View(QGraphicsView):
 
     annotationAdded=pyqtSignal(object)
     annotationRemoved=pyqtSignal(object)
-
     pageHasBeenJustPainted = pyqtSignal(object, object, object, object, object)
 
     def __init__(self, app, document=None):
 
-        super().__init__(app.window)
+        super().__init__(app.main)
 
         self.app=app
 
@@ -42,6 +41,8 @@ class View(QGraphicsView):
         self.m_selection=[]
         self.m_prevPage = 1 
         self.m_currentPage = 1 
+
+        self.m_paintlinks=False
 
         self.configure=Configure(app, 'View', self)
         self.s_settings=self.configure.getSettings()
@@ -53,6 +54,7 @@ class View(QGraphicsView):
         self.m_outlineModel = QStandardItemModel(self)
         self.m_propertiesModel = QStandardItemModel(self)
 
+
         self.setup()
         self.connect()
 
@@ -62,13 +64,9 @@ class View(QGraphicsView):
 
     def setSelection(self, selections=[]): self.m_selection=selections
 
-    def setId(self, vid):
+    def setId(self, vid): self.m_id=vid
 
-        self.m_id=vid
-
-    def id(self):
-
-        return self.m_id
+    def id(self): return self.m_id
 
     def show(self):
 
@@ -79,16 +77,16 @@ class View(QGraphicsView):
 
     def connect(self):
 
-        self.annotationAdded.connect(self.app.window.display.annotationAdded)
-        self.currentPageChanged.connect(self.app.window.display.currentPageChanged)
-        self.mouseDoubleClickOccured.connect(self.app.window.display.mouseDoubleClickOccured)
-        self.mouseReleaseEventOccured.connect(self.app.window.display.mouseReleaseEventOccured)
-        self.mouseMoveEventOccured.connect(self.app.window.display.mouseMoveEventOccured)
-        self.mousePressEventOccured.connect(self.app.window.display.mousePressEventOccured)
-        self.hoverMoveEventOccured.connect(self.app.window.display.hoverMoveEventOccured)
-        self.pageHasBeenJustPainted.connect(self.app.window.display.pageHasBeenJustPainted)
+        self.annotationAdded.connect(self.app.main.display.annotationAdded)
+        self.currentPageChanged.connect(self.app.main.display.currentPageChanged)
+        self.mouseDoubleClickOccured.connect(self.app.main.display.mouseDoubleClickOccured)
+        self.mouseReleaseEventOccured.connect(self.app.main.display.mouseReleaseEventOccured)
+        self.mouseMoveEventOccured.connect(self.app.main.display.mouseMoveEventOccured)
+        self.mousePressEventOccured.connect(self.app.main.display.mousePressEventOccured)
+        self.hoverMoveEventOccured.connect(self.app.main.display.hoverMoveEventOccured)
+        self.pageHasBeenJustPainted.connect(self.app.main.display.pageHasBeenJustPainted)
 
-        self.app.window.display.annotationAdded.connect(self.on_annotationChanged)
+        self.app.main.display.annotationAdded.connect(self.on_annotationChanged)
 
     def on_annotationChanged(self, page):
 
@@ -155,9 +153,7 @@ class View(QGraphicsView):
 
         return left, top
 
-    def nextPage(self):
-
-        self.jumpToPage(self.m_layout.nextPage(self.m_currentPage, len(self.m_pages)))
+    def nextPage(self): self.jumpToPage(self.m_layout.nextPage(self.m_currentPage, len(self.m_pages)))
 
     def prevPage(self):
 
@@ -276,7 +272,7 @@ class View(QGraphicsView):
         for i, page in enumerate(self.m_pages):
             pageItem = PageItem(page, self)
             page.setPageItem(pageItem)
-            page.annotationAdded.connect(self.app.window.display.annotationAdded)
+            page.annotationAdded.connect(self.app.main.display.annotationAdded)
             self.m_pageItems += [pageItem]
 
             self.scene().addItem(pageItem)
@@ -500,20 +496,25 @@ class View(QGraphicsView):
 
         return len(self.m_pages)
 
+    def paintLinks(self): return self.m_paintlinks
+
     def setPaintLinks(self, condition=True):
+
+        self.m_paintlinks=condition
 
         for pageItem in self.m_pageItems:
             pageItem.setPaintLinks(condition)
             pageItem.refresh(dropCachedPixmap=True)
 
-    def update(self):
+    def update(self, refresh=False):
 
         pageItem=self.m_pageItems[self.m_currentPage-1]
-        pageItem.refresh(dropCachedPixmap=True)
+        pageItem.refresh(dropCachedPixmap=refresh)
 
-    def updateAll(self):
+    def updateAll(self, refresh=False):
 
-        for pageItem in self.m_pageItems: pageItem.refresh(dropCachedPixmap=True)
+        for pageItem in self.m_pageItems: 
+            pageItem.refresh(dropCachedPixmap=refresh)
 
     def wheelEvent(self, event):
 
@@ -524,12 +525,12 @@ class View(QGraphicsView):
 
         if event.type()==QEvent.Enter:
             self.setFocus()
-            self.app.window.display.setCurrentView(self)
+            self.app.main.display.setCurrentView(self)
+            self.app.modes.setMode('normal')
         return super().event(event)
 
-    def keyPressEvent(self, event):
+    def cleanUp(self):
 
-        if event.key()==Qt.Key_Escape:
-            for pageItem in self.pageItems(): pageItem.setSelection()
-        self.keyPressEventOccurred.emit(event)
-        super().keyPressEvent(event)
+        for pageItem in self.pageItems(): 
+            pageItem.setSelection()
+            pageItem.setSearched()

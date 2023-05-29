@@ -1,114 +1,129 @@
+import subprocess
+
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import InputList
-from lura.utils import Plugin, register
+from plugin import ListWidget, Item
+from lura.utils import Mode, register
 
-class Links(Plugin):
+class Links(Mode):
+
+    hintSelected=pyqtSignal()
 
     def __init__(self, app):
 
-        super().__init__(app, position='bottom', mode_keys={'command': 'l'})
+        super().__init__(app, show_statusbar=True)
 
-        self.data={}
-        self.links={}
-
-        self.app.window.display.viewChanged.connect(self.on_viewChanged)
-        self.app.window.display.mousePressEventOccured.connect(self.on_mousePressEventOccured)
+        self.links=None
+        self.selection=None
+        self.activated=False
 
         self.setUI()
+            
+    def addKeys(self, event):
 
-    def setUI(self):
+        self.timer.stop()
 
-        super().setUI()
+        if self.activated:
+            if self.registerKey(event): self.updateHint()
+        else:
+            super().addKeys(event)
 
-        self.ui.addWidget(InputList(), 'main', main=True)
-        self.ui.main.input.hideLabel()
-        self.ui.main.returnPressed.connect(self.on_returnPressed)
-        self.ui.main.list.currentItemChanged.connect(self.on_itemChanged)
-        self.ui.hideWanted.connect(self.deactivate)
-        self.ui.installEventFilter(self)
+    def updateHint(self):
 
-    def jump(self, match): pass
+        key=''.join(self.keys_pressed)
 
-    def on_itemChanged(self, item):
+        links={}
+        for i, h in self.links.items():
+            if key==i[:len(key)]: links[i]=h
 
-        if item: self.jump(match=item.itemData)
+        self.links=links
 
-    def on_returnPressed(self): self.deactivate()
+        self.app.main.display.view.updateAll()
 
-    def on_viewChanged(self, view):
+        if len(self.links)<=1:
 
-        document=view.document()
-        if not document in self.links:
-            self.data[document.hash()]=[]
-            self.links[document.hash()]=[]
-            for page in document.pages().values():
-                links=page.links()
-                if links:
-                    data=[page.pageNumber(), links]
-                    self.links[document.hash()]+=[data]
-                    for link in links:
-                        self.data[document.hash()]+=[self.updateLink(link)]
+            if len(self.links)==1: self.open(links[key])
+            self.delisten()
 
-        self.ui.main.setList(self.data[document.hash()])
+    def open(self, link): 
 
-    def updateLink(self, link):
-
-        if 'page' in link:
-            link['up']=link['page']
-            link['down']='goto'
-        elif 'url' in link:
-            link['up']=link['url']
-            link['down']='link'
-        return link
-
-    @register('d')
-    def deactivate(self):
-
-        self.app.window.display.view.setPaintLinks(True)
-        self.activated=False
-        self.listening=False
-
-        self.app.modes.plug.setClient()
-        self.app.modes.setMode('normal')
-        self.ui.deactivate()
-
-        self.app.window.display.view.setPaintLinks(False)
-
-    @register('a')
-    def activate(self):
-
-        self.activated=True
-        self.listening=True
-
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
-
-        self.app.window.display.view.setPaintLinks(True)
+        if 'url' in link: 
+            cmd=['qutebrowser', link['url']]
+            subprocess.Popen(cmd)
+        elif 'page' in link:
+            y=link['top']
+            page=link['page']
+            self.app.main.display.view.jumpToPage(page, changeTop=y)
 
     @register('l')
-    def toggleList(self):
+    def delisten(self, *args, **kwargs): 
 
-        if not self.ui.isVisible():
-            self.ui.activate()
-        else:
+        super().delisten(*args, **kwargs)
+        
+        if self.activated:
+
+            self.links=None
+            self.activated=False
+
             self.ui.deactivate()
 
-    @register('t')
-    def toggle(self):
+            self.app.main.display.pageHasBeenJustPainted.disconnect(self.paint)
+            self.app.main.display.view.updateAll()
 
-        if not self.activated:
-            self.activate()
-        else:
-            self.deactivate()
+    @register('l', modes=['command'])
+    def listen(self):
 
-    def on_mousePressEventOccured(self, event, pageItem, view):
+        super().listen()
 
-        pos=pageItem.mapToPage(event.pos())
-        links=pageItem.m_page.links()
-        for link in links:
-            if link['boundary'].contains(pos):
-                if link.get('page', None):
-                    view.jumpToPage(link['page'])
+        self.links=None
+        self.activated=True
+
+        self.app.main.display.pageHasBeenJustPainted.connect(self.paint)
+        self.app.main.display.view.updateAll()
+
+    def generate(self, item):
+
+        alphabet = 'abcdefghijkmnopqrstuvwxyz'
+        len_of_codes = 2
+        char_to_pos = {}
+
+        def number_to_string(n):
+            chars = []
+            for _ in range(len_of_codes):
+                chars.append(alphabet[n % len(alphabet)])
+                n = n // len(alphabet)
+            return "".join(reversed(chars))
+
+        for i in range(len(alphabet)): char_to_pos[alphabet[i]] = i
+
+        links=item.page().links()
+
+        return {number_to_string(i):h  for i, h in enumerate(links)}
+
+    def paint(self, painter, options, widget, pageItem, view):
+
+        if self.activated:
+
+            if self.links is None: self.links=self.generate(pageItem)
+
+            painter.save()
+
+            for i, link in self.links.items():
+
+                transformed_rect=pageItem.mapToItem(link['boundary'], isUnified=True)
+                page_rect=pageItem.mapToPage(transformed_rect, unify=False)
+
+                link['down']=i
+                link['up']=text=pageItem.page().find(page_rect)
+
+                pen=QPen(QColor(88, 139, 174, 220), 0.0)
+                painter.setPen(pen)
+                painter.drawRect(transformed_rect)
+
+                pen=QPen(Qt.red, 0.0)
+                painter.setPen(pen)
+                painter.drawText(transformed_rect.topLeft(), i)
+
+            painter.restore()

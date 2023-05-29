@@ -6,8 +6,7 @@ from .viewer import View
 
 from lura.utils import Configure, register
 
-class Display(QWidget):
-
+class Display(QSplitter):
 
     viewCreated=pyqtSignal(object)
     viewChanged=pyqtSignal(object)
@@ -31,7 +30,7 @@ class Display(QWidget):
 
     def __init__(self, app):
 
-        super().__init__()
+        super().__init__(Qt.Vertical)
 
         self.app=app
 
@@ -40,33 +39,36 @@ class Display(QWidget):
         self.view=None
         self.activated=False
 
-        self.configure=Configure(app, 'Display', self, mode_keys={'command': 'D'})
+        self.configure=Configure(app, 
+                                 'Display', 
+                                 self, 
+                                 mode_keys={'command': 'w', 'focus':'v'})
 
-        self.style_sheet='''QWidget {background-color: black}'''
-        self.setStyleSheet(self.style_sheet)
+        # self.style_sheet='''QWidget {background-color: transparent}'''
+        # self.setStyleSheet(self.style_sheet)
 
         self.setup()
 
     def setup(self):
 
-        self.m_hsplit=QSplitter(Qt.Vertical)
-        self.m_hlayout=QVBoxLayout(self.m_hsplit)
+        # self.m_hsplit=QSplitter(Qt.Vertical)
+        # self.m_hsplit.hide()
+
+        self.m_hlayout=QVBoxLayout(self)#.m_hsplit)
         self.m_hlayout.setSpacing(0)
         self.m_hlayout.setContentsMargins(0,0,0,0)
 
-        layout=QHBoxLayout(self)
-        layout.setSpacing(0)
-        layout.setContentsMargins(0,0,0,0)
-        layout.addWidget(self.m_hsplit)
-
-        self.m_hsplit.hide()
+        # layout=QHBoxLayout(self)
+        # layout.setSpacing(0)
+        # layout.setContentsMargins(0,0,0,0)
+        # layout.addWidget(self.m_hsplit)
 
     def clear(self):
 
         for index in range(self.m_hlayout.count(),-1, -1):
             item=self.m_hlayout.takeAt(index)
             if item: item.widget().hide()
-        self.m_hsplit.hide()
+        self.hide()
 
     def setView(self, view, how=None, focus=True):
 
@@ -75,10 +77,10 @@ class Display(QWidget):
         if how=='reset':
             self.clear()
             self.m_hlayout.addWidget(view)
-            self.m_hsplit.show()
+            self.show()
         elif how=='below':
             self.m_hlayout.addWidget(view)
-            self.m_hsplit.show()
+            self.show()
 
         view.show()
 
@@ -95,13 +97,13 @@ class Display(QWidget):
             if view: view.setFocus()
         else:
             currentView=self.currentView()
-            index=self.m_hsplit.indexOf(currentView)
+            index=self.indexOf(currentView)
             index+=increment
             if index>=self.m_hlayout.count():
                 index=0
             elif index<0:
                 index=self.m_hlayout.count()-1
-            view=self.m_hsplit.widget(index)
+            view=self.widget(index)
             self.setCurrentView(view)
         self.focusCurrentView()
 
@@ -124,11 +126,14 @@ class Display(QWidget):
             index-=1
             if index<0: index=0
             if self.m_hlayout.count()>0:
-                view=self.m_hsplit.widget(index)
+                view=self.widget(index)
                 self.setCurrentView(view)
                 self.focusCurrentView()
 
     def open(self, document, how='reset', focus=True):
+
+        if how=='rest':
+            if self.view and self.view.document()==document: return
 
         view=self.createView(document)
         self.setView(view, how, focus)
@@ -143,9 +148,7 @@ class Display(QWidget):
         self.viewCreated.emit(view)
         return view
 
-    def currentView(self):
-
-        return self.view
+    def currentView(self): return self.view
 
     def setCurrentView(self, view):
 
@@ -157,14 +160,14 @@ class Display(QWidget):
 
         if self.activated:
             self.activated=False
-            statusbar=self.app.window.statusBar()
+            statusbar=self.app.main.statusBar()
             statusbar.details.setText('')
             statusbar.hide()
             if focusView: self.focusCurrentView()
 
     def toggle(self):
 
-        statusbar=self.app.window.statusBar()
+        statusbar=self.app.main.statusBar()
         if not self.activated:
             self.activated=True
             statusbar.details.setText(self.configure.name)
@@ -274,23 +277,28 @@ class Display(QWidget):
 
         if self.view: self.view.toggleContinuousMode()
 
-    @register(key='s', modes=['command'])
+    @register(key='S', modes=['command'])
     def saveDocument(self): 
 
         if self.view: self.view.save()
 
-    @register(key='vC', modes=['command'])
+    @register(key='X', modes=['normal'])
     def closeCurrentView(self): self.closeView(self.currentView())
 
-    @register(key='vd', modes=['command', 'normal'])
-    def focusDown(self): self.focus(+1)
-
-    @register(key='vu', modes=['command', 'normal'])
-    def focusUp(self): self.focus(-1)
-
-    @register(key='vc', modes=['command', 'normal'])
-    def focusCurrentView(self):
+    @register('c', modes=['focus']) 
+    def focusCurrentView(self): 
 
         self.deactivate(focusView=False)
         self.setFocus()
         if self.view: self.view.setFocus()
+
+    @register('k', modes=['focus'])
+    def focusUpView(self): self.focus(-1)
+
+    @register('j', modes=['focus'])
+    def focusDownView(self): self.focus(+1)
+
+    @register('C', modes=['command'])
+    def cleanUp(self): 
+
+        if self.view: self.view.cleanUp()

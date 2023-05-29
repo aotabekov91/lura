@@ -1,1 +1,1 @@
-from .window import Window
+from .stack import StackWindow

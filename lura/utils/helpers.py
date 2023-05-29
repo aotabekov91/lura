@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-def register(key=None, info=None, modes=['command']):
+def register(key=None, info=None, modes=[]):
 
     def _key(func):
         def inner(self, *args, **kwargs): 

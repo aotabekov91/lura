@@ -13,13 +13,13 @@ class Outline(Plugin):
     
     def __init__(self, app):
 
-        super().__init__(app, position='left', mode_keys={'command': 'o'})
+        super().__init__(app, position='bottom', mode_keys={'command': 'o'})
 
         self.outlines={}
 
-        self.app.window.buffer.documentCreated.connect(self.registerDocument)
-        self.app.window.display.viewChanged.connect(self.on_viewChanged)
-        self.app.window.display.currentPageChanged.connect(self.on_currentPageChanged)
+        self.app.main.buffer.documentCreated.connect(self.registerDocument)
+        self.app.main.display.viewChanged.connect(self.on_viewChanged)
+        self.app.main.display.currentPageChanged.connect(self.on_currentPageChanged)
 
         self.setUI()
 
@@ -45,7 +45,7 @@ class Outline(Plugin):
             page=index.data(Qt.UserRole+1)
             left=index.data(Qt.UserRole+2)
             top=index.data(Qt.UserRole+3)
-            self.app.window.display.currentView().jumpToPage(page, left, top)
+            self.app.main.display.currentView().jumpToPage(page, left, top)
 
     def on_outlineExpanded(self, index):
 
@@ -69,7 +69,7 @@ class Outline(Plugin):
         outline=self.outlines.get(document, None)
         if outline: self.ui.tree.setModel(outline)
 
-    @register('t')
+    @register('t', modes=['command'])
     def toggle(self): super().toggle()
 
     @register('o')
@@ -81,8 +81,8 @@ class Outline(Plugin):
             page=index.data(Qt.UserRole+1)
             left=index.data(Qt.UserRole+2)
             top=index.data(Qt.UserRole+3)
-            self.app.window.display.currentView().jumpToPage(page, left, top)
-            self.app.window.display.currentView().setFocus()
+            self.app.main.display.currentView().jumpToPage(page, left, top)
+            self.app.main.display.currentView().setFocus()
 
     def registerDocument(self, document):
 
@@ -94,17 +94,12 @@ class Outline(Plugin):
         t.daemon=True
         t.start()
 
-    @register('a')
     def activate(self):
 
         self.activated=True
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
         self.ui.activate()
 
-    @register('d')
     def deactivate(self):
 
         self.activated=False
-        self.app.modes.setMode('normal')
         self.ui.deactivate()

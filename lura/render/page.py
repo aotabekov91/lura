@@ -43,7 +43,7 @@ class PdfPage(QObject):
 
     def find(self, rect): return self.m_data.text(rect)
 
-    def search(self, string): return self.m_data.search(string)
+    def search(self, string): return self.m_data.search(string, Poppler.Page.CaseInsensitive)
 
     def annotate(self, aData, kind, **kwargs):
 
@@ -142,6 +142,7 @@ class PdfPage(QObject):
         links = []
         for link in self.m_data.links():
             boundary = link.linkArea().normalized()
+            data={}
             if link.linkType() == Poppler.Link.Goto:
                 linkGoto = link
                 page = linkGoto.destination().pageNumber()
@@ -155,24 +156,26 @@ class PdfPage(QObject):
                     left = (left > 1.)*1.+(left < 0.)*0.
                 if not 0 <= top <= 1:
                     top = (top > 1.)*1.+(top < 0.)*0.
+
                 if linkGoto.isExternal():
-                    links.append({'boundary': boundary,
-                                  'file': linkGoto.fileName(),
-                                  'page': page})
+                    data={'boundary': boundary, 'file': linkGoto.fileName(), 'page': page}
                 else:
-                    links.append({'boundary': boundary,
-                                  'page': page,
-                                  'left': left,
-                                  'top': top})
+                    data={'boundary': boundary, 'page': page, 'left': left, 'top': top}
+
+
             elif link.linkType() == Poppler.Link.Browse:
                 linkBrowse = link
                 url = linkBrowse.url()
-                links.append({'boundary': boundary,
-                              'url': url})
+                data={'boundary': boundary, 'url': url}
             elif link.linkType() == Poppler.Link.Execute:
                 url = link.fileName()
-                links.append({'boundary': boundary,
-                             'url': url})
+                data={'boundary': boundary, 'path': url}
+
+            if data:
+
+                data['sourcePage'] = self.pageNumber()
+                links.append(data)
+
         return links
 
     def data(self): return self.m_data

@@ -1,11 +1,11 @@
 from PyQt5.QtCore import *
 
 from .plug import Plug
+
 from .focus import Focus
+from .visual import Visual
 from .normal import Normal
 from .command import Command
-
-from .visual import Visual
 
 from lura.utils import register
 
@@ -16,56 +16,41 @@ class Modes(QObject):
         super().__init__(app)
 
         self.app=app
-        self.modes=[]
-        self.current=None
 
-        self.addMode(Plug)
-        self.addMode(Normal)
-        self.addMode(Focus)
-        self.addMode(Command)
-        self.addMode(Visual)
+        self.modes=[]
+        self.leaders={}
+
+    def addModes(self):
+
+        self.addMode(Focus(self.app))
+        self.normal=Normal(self.app)
+        self.visual=Visual(self.app)
+        self.command=Command(self.app)
 
         self.setMode('normal')
 
-        self.app.window.bar.hideWanted.connect(self.setMode)
+        # self.app.main.bar.hideWanted.connect(self.setMode)
 
-    def addMode(self, mode_class):
+    def addMode(self, mode):
 
-        mode=mode_class(self.app)
+        self.modes+=[mode]
+        mode.setData()
 
         mode.listenWanted.connect(self.setMode)
         mode.delistenWanted.connect(self.setMode)
 
-        self.modes+=[mode]
+        if mode.listen_leader: self.leaders[mode.listen_leader]=mode
+
         setattr(self, mode.name, mode) 
 
-    def setData(self):
+    def delisten(self):
 
-        for mode in self.modes: mode.setData()
-
-    def delisten(self, mode_name=None):
-
-        if not mode_name:
-            for mode in self.modes: 
-                mode.listening=False
-        else:
-            mode=getattr(self, mode_name)
-            mode.listening=False
-
-    def listen(self, mode_name):
-
-        self.delisten()
-        mode=getattr(self, mode_name)
-        mode.listening=True
-        self.current=mode
+        for mode in self.modes: mode.listening=False
 
     def setMode(self, mode_name=None):
 
+        for mode in self.modes: mode.delisten()
+
         if not mode_name: mode_name='normal'
-
-        for mode in self.modes: 
-            if mode.name!=mode_name: 
-                mode.delisten(force=True)
-
-        self.current=getattr(self, mode_name)
-        self.current.listen()
+        mode=getattr(self, mode_name, None)
+        if mode: mode.listen()

@@ -2,6 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from lura.utils import Configure, register
+
 class Dock(QDockWidget):
 
     def __init__(self, docks, loc):
@@ -15,28 +17,20 @@ class Dock(QDockWidget):
         self.setUI()
         self.createTab()
 
-        # self.dockLocationChanged.connect(self.test)
-    # def test(self, area): print(area.size())
-
     def setUI(self):
 
         self.style_sheet = '''
-
             QWidget{
-                color: transparent;
+                color: white;
                 border-color: transparent; 
                 background-color: transparent; 
-                border-style: outset;
                 border-width: 0px;
-                padding: 0px 0px 5px 0px;
-                border-radius: 5px;
-                color: white;
+                padding: 0px 0px 0px 0px;
                 }
                 '''
+        self.setStyleSheet(self.style_sheet)
 
         self.setContentsMargins(0, 0, 0, 0)
-
-        self.setStyleSheet(self.style_sheet)
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -52,7 +46,7 @@ class Dock(QDockWidget):
 
         if not widget: widget=self.current()
         if widget:
-            self.docks.current=self
+            self.docks.setCurrent(self)
 
             # self.hide() # was kept
             self.show()
@@ -75,7 +69,7 @@ class Dock(QDockWidget):
         widget.setFocus()
         widget.focusGained.emit()
 
-        self.docks.readjustAllDocks()
+        self.docks.adjustDocks()
 
     def deactivate(self, widget, restore=False):
 
@@ -87,16 +81,24 @@ class Dock(QDockWidget):
             self.activate(prev)
         else:
             self.hide()
-            self.docks.readjustAllDocks()
+            self.docks.adjustDocks()
             self.parent().display.setFocus()
 
-        self.docks.readjustAllDocks()
+        self.docks.adjustDocks()
 
     def event(self, event):
+
         if event.type()==QEvent.Enter:
             current=self.current()
             if current: current.focusGained.emit()
+        if event.type()==QEvent.Leave:
+            current=self.current()
+            if current: current.focusLost.emit()
         return super().event(event)
+
+    # def resizeEvent(self, event): 
+    #     self.docks.adjustDocks()
+    #     return super().resizeEvent(event)
 
     # def adjustWidgetSize(self):
     #     widget=self.current()
@@ -119,7 +121,7 @@ class Dock(QDockWidget):
 
         if not widget: widget=self.current()
 
-        if widget and widget.dock==self:
+        if widget:
             if fullscreen:
                 widget.prev_size=widget.dock.tab.size()
                 self.parent().display.hide()

@@ -12,26 +12,38 @@ from .plugin import Plugin
 class Mode(Plugin):
 
     returnPressed=pyqtSignal()
-    delistenWanted=pyqtSignal()
     listenWanted=pyqtSignal(str)
+    delistenWanted=pyqtSignal(str)
 
     def __init__(self, app, 
 
                  wait_time=250,
+                 listening=False,
+                 position='bottom',
+                 listen_leader=None,
                  show_commands=False,
                  show_statusbar=False,
                  delisten_on_exec=True,
+                 delisten_wanted='normal',
+                 listen_widget=[],
+                 exclude_widget=[],
                  **kwargs):
 
-        self.client=None
         self.commands=[]
         self.keys_pressed=[]
         self.wait_time=wait_time
+        self.listening=listening
+
         self.show_commands=show_commands
+        self.listen_widget=listen_widget
+        self.listen_leader=listen_leader
+        self.exclude_widget=exclude_widget
+
         self.show_statusbar=show_statusbar
+        self.delisten_wanted=delisten_wanted
         self.delisten_on_exec=delisten_on_exec
 
-        super(Mode, self).__init__(app, position='bottom', command_leader=[], **kwargs)
+        super(Mode, self).__init__(app, position=position, command_leader=[], **kwargs)
 
         self.timer=QTimer()
         self.timer.timeout.connect(self.delisten)
@@ -39,35 +51,21 @@ class Mode(Plugin):
         self.setUI()
         self.setBarData()
 
+        self.app.modes.addMode(self)
         self.app.installEventFilter(self)
 
     def setBarData(self):
         
         self.data={
-                'info': f'[{self.name.title()}]',
                 'detail': '',
                 'client': self,
                 'visible': self.show_statusbar,
+                'info':f'[{self.name.title()}]',
                 }
 
-        if getattr(self, 'client', None):
-            self.data['info']=f'[{self.client.name.title()}]'
+    def actOnDefocus(self): pass
 
-    def setClient(self, client=None): 
-
-        self.commands=[]
-
-        self.client=client
-        if self.client:
-            self.name=self.client.name
-            self.setBarData()
-            self.data.update(self.client.bar_data)
-            self.name='plug'
-            if self.client.listening:
-                self.listen_widget=self.client.listen_widget
-                self.exclude_widget=self.client.exclude_widget
-                self.setPluginData(self.client, self.app.manager.actions[self.client])
-                self.commands=sorted(self.commands, key=lambda x: x['plugin'])
+    def actOnFocus(self): pass
 
     def setData(self):
 
@@ -93,8 +91,8 @@ class Mode(Plugin):
                 data={'id': method, 'up': name, 'plugin': plugin_name}
                 if method.key: 
                     key=method.key
-                    if hasattr(plugin, 'modeKeys'): 
-                        prefix=plugin.modeKeys(self.name)
+                    if hasattr(plugin, 'modeKey'): 
+                        prefix=plugin.modeKey(self.name)
                         key=f'{prefix}{key}'
                     data['down']=key
                 self.commands+=[data]
@@ -113,8 +111,10 @@ class Mode(Plugin):
 
     def activate(self):
 
-        self.app.modes.listen(self.name)
-        self.app.window.bar.setData(self.data)
+        self.app.modes.delisten()
+
+        self.app.main.bar.setData(self.data)
+        self.listening=True
 
     def confirm(self):
         
@@ -128,28 +128,56 @@ class Mode(Plugin):
                 self.reportMatches(matches, [])
                 self.runMatches(matches, [], None, None)
 
-    def eventFilter(self, widget, event):
+    def checkListenWanted(self, widget, event): return True
 
-        if self.client and not self.client.listening: return False
+    def eventFilter(self, widget, event):
 
         if self.listen_leader or self.listening:
 
             if event.type()==QEvent.KeyPress:
+                
+                if self.listening:
 
-                print(self.__class__.__name__, event.text())
+                    cond1=True 
+                    if self.listen_widget:
+                        if not widget in self.listen_widget: cond1=False
 
-                cond1=not self.listen_widget or widget in self.listen_widget
-                cond2=not widget in self.exclude_widget
+                    cond2=True
+                    if self.exclude_widget:
+                        if widget in self.exclude_widget: 
+                            cond2=False
 
-                if cond1 and cond2:
+                    if cond1 and cond2:
 
-                    if not self.listening and event.text() == self.listen_leader:
+                        mode=None
 
-                        self.listenWanted.emit(self.name)
-                        event.accept()
-                        return True
+                        if self.name=='normal':
+                            mode=self.app.modes.leaders.get(event.text(), None)
 
-                    elif self.listening:
+                        if mode: 
+                            self.app.modes.setMode(mode.name)
+                            event.accept()
+                            return True 
+
+                        if event.key() in  [Qt.Key_Enter, Qt.Key_Return]: 
+
+                            self.confirm()
+                            event.accept()
+                            return True
+                                
+                        if event.key()==Qt.Key_Backspace:
+
+                            self.clearKeys()
+                            event.accept()
+                            return True
+
+                        if event.key()==Qt.Key_Escape or event.text() == self.listen_leader:
+
+                            if self.name!='normal':
+
+                                self.delistenWanted.emit(self.delisten_wanted)
+                                event.accept()
+                                return True
 
                         if event.modifiers() and self.ui.isVisible():
 
@@ -172,52 +200,34 @@ class Mode(Plugin):
                                 self.confirm()
                                 event.accept()
                                 return True
-                                
-                        elif event.key() in  [Qt.Key_Enter, Qt.Key_Return]: 
-                            self.confirm()
-                            event.accept()
-                            return True
-                                
-                        elif event.key()==Qt.Key_Backspace:
-                            self.clearKeys()
-                            event.accept()
-                            return True
 
-                        elif event.key()==Qt.Key_Escape or event.text() == self.listen_leader:
-                            self.delistenWanted.emit()
-                            event.accept()
-                            return True
-
-                        elif event.text() != self.listen_leader:
-                            self.addKeys(event)
-                            event.accept()
-                            return True
+                        self.addKeys(event)
+                        event.accept()
+                        return True
 
         return super().eventFilter(widget, event)
 
     def clearKeys(self):
 
         self.timer.stop()
-        if self.keys_pressed:
+        self.keys_pressed=[]
+        self.app.main.bar.detail.clear()
+        self.ui.mode.unfilter()
 
-            self.keys_pressed=[]
-            self.ui.mode.unfilter()
-            self.app.window.bar.detail.clear()
-
-    def delisten(self, force=True):
+    def delisten(self):
 
         self.clearKeys()
-        self.setBarData()
-        if force:
-            self.listening=False
-            self.ui.deactivate()
-            self.app.window.bar.setData()
+        self.listening=False
+
+        if self.ui.activated: self.ui.deactivate()
+        if self.show_statusbar: self.app.main.bar.setData()
 
     def listen(self):
 
         self.listening=True
-        self.keys_pressed=[]
-        self.app.window.bar.setData(self.data)
+
+        self.clearKeys()
+        self.app.main.bar.setData(self.data)
 
         if self.show_commands: 
             self.ui.activate()
@@ -234,14 +244,23 @@ class Mode(Plugin):
 
     def registerKey(self, event):
         
+        moddies=QApplication.keyboardModifiers()
+
         text=event.text()
+
+        # if not text and moddies & Qt.ShiftModifier: 
+        #     text='Shift'
+        # if not text and moddies & Qt.ControlModifier: 
+        #     text='Ctrl'
+        
         if text: self.keys_pressed+=[text]
+
         return text
 
     def reportMatches(self, matches, partial):
 
         if self.ui.isVisible(): self.ui.mode.setFilterList(matches+partial)
-        self.app.window.bar.detail.setText(
+        self.app.main.bar.detail.setText(
                 f'{"".join(self.keys_pressed)}')
 
     def runMatches(self, matches, partial, key, digit):
@@ -251,7 +270,7 @@ class Mode(Plugin):
         if len(matches)==1 and not partial:
             self.timer.start(0)
         else:
-            self.timer.start(self.wait_time)
+            if self.wait_time: self.timer.start(self.wait_time)
 
     def getKeys(self):
 
@@ -292,7 +311,6 @@ class Mode(Plugin):
 
             if not matches:
                 self.clearKeys()
-                self.listen()
             elif len(matches)==1:
                 self.clearKeys()
                 if self.delisten_on_exec: self._onExecuteMatch()
@@ -304,7 +322,18 @@ class Mode(Plugin):
                     match()
 
     def _getFunc(self, data):
+
         return data['id'].func
 
     def _onExecuteMatch(self):
-        self.delistenWanted.emit()
+
+        self.app.modes.setMode(self.delisten_wanted)
+        # self.delistenWanted.emit(self.delisten_wanted)
+
+    def toggleCommands(self):
+
+        if self.ui.mode.isVisible():
+            self.ui.deactivate()
+        else:
+            self.ui.activate()
+            self.ui.show(self.ui.mode)

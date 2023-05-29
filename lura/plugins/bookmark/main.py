@@ -10,11 +10,7 @@ class Bookmark(Plugin):
 
     def __init__(self, app):
 
-        super().__init__(app,
-                         position='right',
-                         mode_keys={'command':'b'},
-                         bar_data={'edit': ''},
-                         ) 
+        super().__init__(app, position='right', mode_keys={'command':'b'}) 
 
         self.app.tables.add_table(Table, 'bookmark')
 
@@ -38,21 +34,7 @@ class Bookmark(Plugin):
     def open(self):
 
         item=self.ui.main.list.currentItem()
-        dhash=item.itemData['hash']
-        page=item.itemData['page']
-        x, y=(float(i) for i in item.itemData['position'].split(':'))
-        data=self.app.tables.hash.getPath(dhash)
-
-        view=self.app.window.display.currentView()
-        if view and view.document():
-            if dhash!=view.document().hash():
-                path=self.app.tables.hash.getPath(dhash)
-                if os.path.exists(path): self.app.window.open(path, how='reset')
-
-        view=self.app.window.display.currentView()
-        if view: view.jumpToPage(page, x, y-0.4)
-
-        self.ui.show()
+        if item: self.app.main.openBy('bookmark', item.itemData['id'])
 
     def on_contentChanged(self, widget):
 
@@ -80,7 +62,7 @@ class Bookmark(Plugin):
     @register('u')
     def updateData(self, view=None):
 
-        if not view: view=self.app.window.display.currentView()
+        if not view: view=self.app.main.display.currentView()
 
         if view:
             criteria={'hash': view.document().hash()}
@@ -92,28 +74,19 @@ class Bookmark(Plugin):
             self.bookmarks=sorted(self.bookmarks, key=lambda x: (x['page'], x['position']))
             self.ui.main.setList(self.bookmarks)
 
-    @register('a')
     def activateDisplay(self):
 
         self.activated=True
 
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
-
         self.updateData()
         self.ui.activate()
 
-    @register('a')
     def deactivateDisplay(self):
 
         self.activated=False
-
-        self.app.modes.plug.setClient()
-        self.app.modes.setMode('normal')
-
         self.ui.deactivate()
 
-    @register('t')
+    @register('t', modes=['command'])
     def toggle(self): 
 
         if self.activated:
@@ -124,36 +97,33 @@ class Bookmark(Plugin):
     @register('b', modes=['normal', 'command'])
     def bookmark(self):
 
-        view=self.app.window.display.currentView()
+        view=self.app.main.display.currentView()
         if view:
+
             self.activated=True
 
-            self.app.modes.plug.setClient(self)
-            self.app.modes.setMode('plug')
-
-            self.app.window.bar.show()
-            self.app.window.bar.edit.setFocus()
-            self.app.window.bar.edit.returnPressed.connect(self.writeBookmark)
-            self.app.window.bar.hideWanted.connect(self.deactivate)
+            self.app.main.bar.show()
+            self.app.main.bar.edit.show()
+            self.app.main.bar.edit.setFocus()
+            self.app.main.bar.edit.returnPressed.connect(self.writeBookmark)
+            self.app.main.bar.hideWanted.connect(self.deactivate)
 
             data=self.getBookmark()
-            if data: self.app.window.bar.edit.setText(data[0]['text'])
+            if data: self.app.main.bar.edit.setText(data[0]['text'])
 
     def deactivate(self):
 
         self.activated=False
 
-        self.app.modes.plug.setClient()
-        self.app.modes.setMode('normal')
+        self.app.main.bar.hide()
+        self.app.main.bar.edit.hide()
 
-        self.app.window.bar.hide()
-
-        self.app.window.bar.edit.returnPressed.disconnect(self.writeBookmark)
-        self.app.window.bar.hideWanted.disconnect(self.deactivate)
+        self.app.main.bar.edit.returnPressed.disconnect(self.writeBookmark)
+        self.app.main.bar.hideWanted.disconnect(self.deactivate)
 
     def getBookmark(self):
 
-        view=self.app.window.display.currentView()
+        view=self.app.main.display.currentView()
         if view:
             data={}
             data['hash']=view.document().hash()
@@ -163,10 +133,10 @@ class Bookmark(Plugin):
 
     def writeBookmark(self):
 
-        text=self.app.window.bar.edit.text()
+        text=self.app.main.bar.edit.text()
         self.deactivate()
 
-        view=self.app.window.display.currentView()
+        view=self.app.main.display.currentView()
 
         if view:
             data=self.getBookmark()
@@ -176,6 +146,7 @@ class Bookmark(Plugin):
                         {'id':bid}, {'text':text})
             else:
                 data={}
+                data['title']=text
                 data['text']=text
                 data['kind']='document'
                 data['hash']=view.document().hash()

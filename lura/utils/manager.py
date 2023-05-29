@@ -15,7 +15,6 @@ class Manager(QObject):
 
         self.actions={}
         self.plugins={}
-        self.speakers={}
 
     def loadPlugins(self):
 

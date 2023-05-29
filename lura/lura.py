@@ -12,10 +12,11 @@ from PyQt5.QtWidgets import *
 
 import argparse
 
-from .core import Window
 from .modes import Modes
 from .utils import Tables
 from .utils import Manager
+
+from .core import StackWindow
 
 class Lura(QApplication):
 
@@ -28,13 +29,13 @@ class Lura(QApplication):
         self.setConfig()
 
         self.tables=Tables()
+        self.modes=Modes(self)
         self.manager=Manager(self)
 
-        self.window=Window(self)
-        self.modes=Modes(self)
+        self.stack=StackWindow(self)
 
         self.manager.loadPlugins()
-        self.modes.setData()
+        self.modes.addModes()
 
         self.parse()
 
@@ -50,18 +51,30 @@ class Lura(QApplication):
     def parse(self):
 
         parser = argparse.ArgumentParser()
-        parser.add_argument('-f', '--file')
+
+        parser.add_argument('-a', '--aid', default=None, type=int)
+        parser.add_argument('-b', '--bid', default=None, type=int)
+        parser.add_argument('-d', '--dhash', default=None, type=str)
+
+        parser.add_argument('file', nargs='?', default=None, type=str)
+        parser.add_argument('-p', '--page', default=0, type=int)
         parser.add_argument('-x', '--xaxis', default=0., type=float)
         parser.add_argument('-y', '--yaxis', default=0., type=float)
-        parser.add_argument('-p', '--page', default=0, type=int)
-        parser.add_argument('open', nargs='?')
+
         parsed_args, unparsed_args = parser.parse_known_args()
 
-        if parsed_args.open:
-            self.window.open(parsed_args.open)
-        view=self.window.display.currentView()
-        if view:
-            view.jumpToPage(parsed_args.page, parsed_args.xaxis, parsed_args.yaxis)
+        if parsed_args.file:
+            self.main.open(filePath=parsed_args.file)
+        elif parsed_args.dhash:
+            self.main.openBy(kind='hash', criteria=parsed_args.dhash)
+        elif parsed_args.aid:
+            self.main.openBy(kind='annotation', criteria=parsed_args.aid)
+        elif parsed_args.bid:
+            self.main.openBy(kind='bookmark', criteria=parsed_args.bid)
+
+        if parsed_args.page:
+            view=self.main.display.currentView()
+            if view: view.jumpToPage(parsed_args.page, parsed_args.xaxis, parsed_args.yaxis)
 
 if __name__ == "__main__":
     app = Lura()

@@ -10,6 +10,7 @@ class Configure(Plugin):
         self.app=app
         self.name=name
         self.parent=parent
+        self.parent.modeKey=self.modeKey
         self.setSettings()
 
         super().__init__(app, name, argv=None, **kwargs)

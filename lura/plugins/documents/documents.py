@@ -26,22 +26,17 @@ class Documents(Plugin):
         self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
 
-    @register('a')
     def activate(self):
 
         self.activated=True
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
         self.ui.activate()
 
-    @register('d')
     def deactivate(self):
 
         self.activated=False
-        self.app.modes.setMode('normal')
         self.ui.deactivate()
 
-    @register('t')
+    @register('t', modes=['command'])
     def toggle(self):
 
         if self.activated:
@@ -66,7 +61,6 @@ class Documents(Plugin):
         self.open(focus=False)
         self.ui.show()
 
-    @register('o')
     def open(self, focus=True, how='reset', hide=False):
 
         if self.activated:
@@ -77,19 +71,16 @@ class Documents(Plugin):
             item=self.ui.main.list.currentItem()
             if item:
                 path=self.app.tables.hash.getPath(item.itemData['hash'])
-                if path: self.app.window.open(path, how=how)
+                if path: self.app.main.open(path, how=how)
 
-    @register('O')
     def openAndHide(self): 
 
         if self.activated: self.open(focus=True, hide=True)
 
-    @register('i')
     def openBelow(self): 
 
         if self.activated: self.open(focus=True, how='below')
 
-    @register('I')
     def openBelowAndHide(self): 
 
         if self.activated: self.open(how='below', hide=True)

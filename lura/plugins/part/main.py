@@ -6,11 +6,15 @@ from tables import Part as Table
 from plugin import Item, InputList
 from lura.utils import Plugin, register
 
+from .widget import PartTree
+
 class Part(Plugin):
 
     def __init__(self, app):
 
         super(Part, self).__init__(app, position='right', mode_keys={'command': 'p'})
+
+        self.app.main.display.viewChanged.connect(self.update)
 
         self.part=Table()
         self.setUI()
@@ -19,15 +23,32 @@ class Part(Plugin):
 
         super().setUI()
 
+        tree=PartTree()
+        self.ui.addWidget(tree, 'tree')
+
         main=InputList(item_widget=Item)
         self.ui.addWidget(main, 'main', main=True)
         self.ui.main.input.hideLabel()
         self.ui.main.returnPressed.connect(self.open)
-        self.ui.hideWanted.connect(self.deactivate)
 
+        self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
 
-    @register('t')
+    @register('tr')
+    def toggleTree(self):
+
+        if self.ui.tree.isVisible():
+            self.ui.show()
+        else:
+            self.ui.show(self.ui.tree)
+
+    def update(self, view):
+
+        dhash=view.document().hash()
+        data=self.part.getTreeDict(dhash)
+        if data: self.ui.tree.installData({'root': data})
+
+    @register('t', modes=['command'])
     def toggle(self):
 
         if not self.activated:
@@ -35,51 +56,43 @@ class Part(Plugin):
         else:
             self.deactivate()
                 
-    @register('a')
     def activate(self):
 
         self.activated=True
-
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
-
-        self.setData('abstract')
         self.ui.activate()
+        self.toggleTree()
 
-    @register('d')
     def deactivate(self):
 
         self.activated=False
-
-        self.app.modes.setMode('normal')
         self.ui.deactivate()
 
-    @register('pr')
+    @register('sr')
     def showReference(self): self.setData('reference')
 
-    @register('pa')
+    @register('sa')
     def showAbstract(self): self.setData('abstract')
 
-    @register('po')
+    @register('so')
     def showOutline(self): self.setData('section')
 
-    @register('pk')
+    @register('sk')
     def showKeyword(self): self.setData('keyword')
 
-    @register('ps')
+    @register('ss')
     def showSummary(self): self.setData('summary')
 
-    @register('pp')
+    @register('sp')
     def showParagraph(self): self.setData('paragraph')
 
-    @register('pb')
+    @register('sb')
     def showBibliography(self): self.setData('bibliography')
 
     def setData(self, kind):
 
         if not self.activated: self.activate()
 
-        view=self.app.window.display.currentView()
+        view=self.app.main.display.currentView()
         if view: 
             dhash=view.document().hash() 
             data=self.part.search(f'hash:{dhash} kind:{kind}')
@@ -96,5 +109,5 @@ class Part(Plugin):
         if self.activated and item:
             page=item.itemData['page']+1
             y=item.itemData['y1']-0.05
-            view=self.app.window.display.currentView()
+            view=self.app.main.display.currentView()
             if view: view.jumpToPage(page, 0, y)

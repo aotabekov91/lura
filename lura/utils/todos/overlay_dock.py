@@ -1,116 +1,127 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import *
+import sys
+from PyQt5 import QtWidgets, QtCore, QtGui
 
+class TranslucentWidgetSignals(QtCore.QObject):
+    # SIGNALS
+    CLOSE = QtCore.pyqtSignal()
 
-class OverlayWidget(QWidget):
-    def __init__(self, window):
-        QWidget.__init__(self, window)
-        self.window = window
+class TranslucentWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(TranslucentWidget, self).__init__(parent)
 
-        self.collapse_threshold = 0.8
-        self.down = 1
+        # make the window frameless
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-        self.label = QLabel("This is an overlay widget")
-        self.label.setStyleSheet("background-color: rgba(100, 150, 100, 0.5)")
+        self.fillColor = QtGui.QColor(30, 30, 30, 120)
+        self.penColor = QtGui.QColor("#333333")
 
-        self.size_grip = QLabel("...")
-        self.size_grip.setStyleSheet("background-color: rgba(255, 0, 0, 0.5);")
-        self.size_grip.setAlignment(Qt.AlignHCenter)
-        self.size_grip.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        self.popup_fillColor = QtGui.QColor(240, 240, 240, 255)
+        self.popup_penColor = QtGui.QColor(200, 200, 200, 255)
 
-        self.central_layout = QVBoxLayout()
-        self.central_layout.setContentsMargins(0, 0, 0, 0)
-        self.central_layout.addWidget(self.size_grip)
-        self.central_layout.addWidget(self.label)
+        self.close_btn = QtWidgets.QPushButton(self)
+        self.close_btn.setText("x")
+        font = QtGui.QFont()
+        font.setPixelSize(18)
+        font.setBold(True)
+        self.close_btn.setFont(font)
+        self.close_btn.setStyleSheet("background-color: rgb(0, 0, 0, 0)")
+        self.close_btn.setFixedSize(30, 30)
+        self.close_btn.clicked.connect(self._onclose)
 
-        self.setLayout(self.central_layout)
-
-
-class Window(QMainWindow):
-    def __init__(self):
-        QMainWindow.__init__(self)
-        self.setWindowTitle("Overlay proof of concept")
-        self.central_widget = QLabel(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n "
-            "Sed euismod, urna eu tempor congue, nisi nisl aliquet "
-            "nunc, euismod egestas nisl nisl euismod nunc.\n "
-            "Sed euismod, urna eu tempor congue, nisi nisl aliquet "
-            "nunc, euismod egestas nisl nisl euismod nunc. \n"
-            "Sed euismod, urna eu tempor congue, nisi nisl aliquet "
-            "nunc, euismod egestas nisl nisl euismod nunc. "
-        )
-        self.setCentralWidget(self.central_widget)
-
-        self.error_widget = OverlayWidget(self)
-
-        self.resize(800, 600)
-        self.show()
-
-        # Initially hide the widget
-        self.error_widget.label.setVisible(False)
-        self.error_widget.setGeometry(
-            0,
-            600 - self.error_widget.size_grip.height(),
-            800,
-            self.error_widget.size_grip.height(),
-        )
-
-    def mouseMoveEvent(self, event):
-        if self.error_widget.size_grip.underMouse():
-            self.update_error_widget(event.position().y())
-
-    def update_error_widget(self, y):
-        self.error_widget.down = y / self.height()
-        self.error_widget.size_grip.setMaximumWidth(self.width())
-        self.error_widget.size_grip.setMinimumWidth(self.width())
-
-        if y < self.error_widget.size_grip.height():
-            # Cursor over the window
-            pass
-
-        elif (1 - self.error_widget.down) < (1 - self.error_widget.collapse_threshold) / 2:
-            # Hide the widget
-            self.error_widget.label.setVisible(False)
-            self.error_widget.setGeometry(
-                0,
-                self.height() - self.error_widget.size_grip.height(),
-                self.width(),
-                self.error_widget.size_grip.height(),
-            )
-
-        elif (1 - self.error_widget.down) > (1 - self.error_widget.collapse_threshold):
-            # Default behavior
-            self.error_widget.label.setVisible(True)
-            self.error_widget.setGeometry(
-                0,
-                self.error_widget.down * self.height() - self.error_widget.size_grip.height(),
-                self.width(),
-                self.height() - self.error_widget.down * self.height(),
-            )
-
-        else:
-            # Block the widget
-            self.error_widget.label.setVisible(True)
-            self.error_widget.setGeometry(
-                0,
-                self.error_widget.collapse_threshold * self.height() - self.error_widget.size_grip.height(),
-                self.width(),
-                self.height() - self.error_widget.collapse_threshold * self.height(),
-            )
+        self.SIGNALS = TranslucentWidgetSignals()
 
     def resizeEvent(self, event):
-        # Hacky easy solution: hide the widget
-        self.error_widget.label.setVisible(False)
-        self.error_widget.setGeometry(
-            0,
-            self.height() - self.error_widget.size_grip.height(),
-            self.width(),
-            self.error_widget.size_grip.height(),
-        )
-        self.error_widget.size_grip.setMaximumWidth(self.width())
-        self.error_widget.size_grip.setMinimumWidth(self.width())
+        s = self.size()
+        popup_width = 300
+        popup_height = 120
+        ow = int(s.width() / 2 - popup_width / 2)
+        oh = int(s.height() / 2 - popup_height / 2)
+        self.close_btn.move(ow + 265, oh + 5)
+
+    def paintEvent(self, event):
+        # This method is, in practice, drawing the contents of
+        # your window.
+
+        # get current window size
+        s = self.size()
+        qp = QtGui.QPainter()
+        qp.begin(self)
+        qp.setRenderHint(QtGui.QPainter.Antialiasing, True)
+        qp.setPen(self.penColor)
+        qp.setBrush(self.fillColor)
+        qp.drawRect(0, 0, s.width(), s.height())
+
+        # drawpopup
+        qp.setPen(self.popup_penColor)
+        qp.setBrush(self.popup_fillColor)
+        popup_width = 300
+        popup_height = 120
+        ow = int(s.width()/2-popup_width/2)
+        oh = int(s.height()/2-popup_height/2)
+        qp.drawRoundedRect(ow, oh, popup_width, popup_height, 5, 5)
+
+        font = QtGui.QFont()
+        font.setPixelSize(18)
+        font.setBold(True)
+        qp.setFont(font)
+        qp.setPen(QtGui.QColor(70, 70, 70))
+        tolw, tolh = 80, -5
+        qp.drawText(ow + int(popup_width/2) - tolw, oh + int(popup_height/2) - tolh, "Yep, I'm a pop up.")
+
+        qp.end()
+
+    def _onclose(self):
+        print("Close")
+        self.SIGNALS.CLOSE.emit()
 
 
-app = QApplication()
-window = Window()
-app.exec()
+class ParentWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(ParentWidget, self).__init__(parent)
+
+        self._popup = QtWidgets.QPushButton("Gimme Popup!!!")
+        self._popup.setFixedSize(150, 40)
+        self._popup.clicked.connect(self._onpopup)
+
+        self._other1 = QtWidgets.QPushButton("A button")
+        self._other2 = QtWidgets.QPushButton("A button")
+        self._other3 = QtWidgets.QPushButton("A button")
+        self._other4 = QtWidgets.QPushButton("A button")
+
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.addWidget(self._popup)
+        hbox.addWidget(self._other1)
+        hbox.addWidget(self._other2)
+        hbox.addWidget(self._other3)
+        hbox.addWidget(self._other4)
+        self.setLayout(hbox)
+
+        self._popframe = None
+        self._popflag = False
+
+    def resizeEvent(self, event):
+        if self._popflag:
+            self._popframe.move(0, 0)
+            self._popframe.resize(self.width(), self.height())
+
+    def _onpopup(self):
+        self._popframe = TranslucentWidget(self)
+        self._popframe.move(0, 0)
+        self._popframe.resize(self.width(), self.height())
+        self._popframe.SIGNALS.CLOSE.connect(self._closepopup)
+        self._popflag = True
+        self._popframe.show()
+
+    def _closepopup(self):
+        self._popframe.close()
+        self._popflag = False
+
+
+if __name__ == '__main__':
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    main = ParentWidget()
+    main.resize(500, 500)
+    main.show()
+    sys.exit(app.exec_())

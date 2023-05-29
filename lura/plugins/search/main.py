@@ -2,24 +2,18 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import ListWidget
-from plugin.widget import Item
+from plugin import ListWidget, Item
 
-from lura.utils import Plugin, BaseCommandStack, register
+from lura.utils import Mode, register
 
-class Search(Plugin):
+class Search(Mode):
 
     def __init__(self, app):
 
-        super(Search, self).__init__(
-                app=app, 
-                name='search', 
-                position='bottom',
-                bar_data={'edit':''},
-                mode_keys={'command':'s'},
-                listen_widget=[app.window],
-                exclude_widget=[app.window.bar.edit],
-                )
+        super(Search, self).__init__(app=app, 
+                                     listen_leader='/', 
+                                     show_statusbar=True,
+                                     )
 
         self.index=-1
         self.matches=[]
@@ -30,77 +24,60 @@ class Search(Plugin):
     def setUI(self):
         
         super().setUI()
+        self.ui.addWidget(
+                ListWidget(item_widget=Item, check_fields=['up']), 
+                'main', 
+                main=True)
 
-        self.listen_widget+=[self.ui]
-        main=ListWidget(item_widget=Item, check_fields=['up'])
-
-        self.ui.focusGained.connect(self.setFocus)
-        self.ui.addWidget(main, 'main', main=True)
         self.ui.installEventFilter(self)
 
-    @register('l', modes=['command', 'search'])
+    @register('l')
     def toggleList(self):
 
         if self.ui.isVisible():
             self.ui.deactivate()
         else:
             self.ui.activate()
-            self.app.window.setFocus()
+            self.app.main.setFocus()
 
-    @register('n', modes=['command', 'search'])
+    @register('j')
     def next(self): self.jump(+1)
 
-    @register('p', modes=['command', 'search'])
+    @register('k')
     def prev(self): self.jump(-1)
 
-    @register('f', modes=['command', 'search'])
-    def focusSearch(self): self.app.window.statusBar().edit.setFocus()
+    @register('f')
+    def focusSearch(self): 
 
-    @register('/', modes=['normal', 'command', 'search'])
-    def toggle(self):
+        self.listen_widget=[self.app.main.display]
+        self.exclude_widget=[self.app.main.bar.edit]
 
-        if not self.activated:
-            self.activate()
-        else:
-            self.deactivate()
+        self.app.main.bar.edit.setFocus()
 
-    @register('a')
-    def activate(self):
+    def listen(self): 
 
-        view=self.app.window.display.currentView()
+        super().listen()
 
-        if view:
+        self.listen_widget=[self.app.main.display]
+        self.exclude_widget=[self.app.main.bar.edit]
 
-            self.activated=True
-            self.listening=True
+        self.app.main.bar.edit.show()
+        self.app.main.bar.edit.setFocus()
+        self.app.main.bar.edit.returnPressed.connect(self.find)
 
-            self.app.modes.plug.setClient(self)
-            self.app.modes.plug.delistenWanted.connect(self.deactivate)
+        self.app.main.bar.hideWanted.connect(lambda: self.delistenWanted.emit('normal'))
 
-            self.app.modes.setMode('plug')
+    def delisten(self, *args, **kwargs):
 
-            self.app.window.bar.edit.setFocus()
-            self.app.window.bar.edit.returnPressed.connect(self.find)
+        super().delisten(*args, **kwargs)
 
-            self.app.window.bar.hideWanted.connect(self.deactivate)
-
-    @register('d')
-    def deactivate(self):
-
-        if self.activated:
-            
-            self.activated=False
-            self.listening=False
+        if self.listening:
 
             self.clear()
             self.ui.deactivate()
-
-            self.app.modes.plug.setClient()
-            self.app.modes.plug.delistenWanted.disconnect(self.deactivate)
-
-            self.app.modes.setMode('normal')
-
-            self.app.window.bar.edit.returnPressed.disconnect(self.find)
+            self.app.main.bar.hideWanted.disconnect()
+            self.app.main.bar.edit.returnPressed.disconnect(self.find)
+            self.app.main.display.view.cleanUp()
 
     def clear(self):
 
@@ -109,6 +86,9 @@ class Search(Plugin):
         self.matches=[]
 
     def find(self):
+
+        self.listen_widget=[]
+        self.exclude_widget=[]
 
         def search(text, view, found=[]):
             if view:
@@ -121,14 +101,13 @@ class Search(Plugin):
                             found+=[{'page': page.pageNumber(), 'rect': rect, 'up': line}]
             return found
 
-        text=self.app.window.bar.edit.text()
+        text=self.app.main.bar.edit.text()
 
         self.clear()
-
-        self.app.window.setFocus()
+        self.app.main.setFocus()
 
         if text:
-            self.matches=search(text, self.app.window.display.view)
+            self.matches=search(text, self.app.main.display.view)
             if len(self.matches) > 0: 
                 self.ui.main.setList(self.matches)
                 self.jump()
@@ -153,13 +132,13 @@ class Search(Plugin):
         page=match['page']
         rect=match['rect']
 
-        pageItem=self.app.window.display.view.pageItem(page-1)
+        pageItem=self.app.main.display.view.pageItem(page-1)
         matchMapped=pageItem.mapToItem(rect)
         pageItem.setSearched([matchMapped])
         sceneRect=pageItem.mapRectToScene(matchMapped)
 
-        self.app.window.display.view.jumpToPage(page)
-        self.app.window.display.view.centerOn(0, sceneRect.y())
+        self.app.main.display.view.jumpToPage(page)
+        self.app.main.display.view.centerOn(0, sceneRect.y())
 
     def getLine(self, text, page, rectF):
 

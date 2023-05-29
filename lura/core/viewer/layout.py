@@ -58,17 +58,11 @@ class DocumentLayout:
         self.s_settings=documentView.s_settings
         self.fromLayoutMode(self.s_settings.get('layoutMode', 'SinglePageLayout'))
 
-    def layoutMode(self):
+    def layoutMode(self): return self.m_layoutMode
 
-        return self.m_layoutMode
+    def leftIndex(self, index): return self.m_layoutMode.leftIndex(index)
 
-    def leftIndex(self, index):
-
-        return self.m_layoutMode.leftIndex(index)
-
-    def rightIndex(self, index, count):
-
-        return self.m_layoutMode.rightIndex(index, count)
+    def rightIndex(self, index, count): return self.m_layoutMode.rightIndex(index, count)
 
     def fromLayoutMode(self, layoutMode):
 

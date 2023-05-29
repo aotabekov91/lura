@@ -14,7 +14,7 @@ class Metadata(Plugin):
         super().__init__(app, position='right', name='metadata', mode_keys={'command': 'm'})
 
         self.setUI()
-        self.app.window.display.viewChanged.connect(self.update)
+        self.app.main.display.viewChanged.connect(self.update)
 
     def setUI(self):
 
@@ -36,27 +36,22 @@ class Metadata(Plugin):
         field=widget.data['field']
         self.app.tables.metadata.updateRow({'hash':dhash}, {field:value})
 
-    @register('a')
     def activate(self):
 
         self.activated=True
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
         self.ui.activate()
 
-    @register('d')
     def deactivate(self):
 
         self.activated=False
-        self.app.modes.setMode('normal')
         self.ui.deactivate()
 
-    @register('t')
+    @register('t', modes=['command'])
     def toggle(self): super().toggle()
 
     def update(self):
 
-        view=self.app.window.display.view
+        view=self.app.main.display.view
         if view and view.document():
 
             dhash=view.document().hash()

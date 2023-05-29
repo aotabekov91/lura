@@ -25,22 +25,17 @@ class FileBrowser(Plugin):
         self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
 
-    @register('a')
     def activate(self):
 
         self.activated=True
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
         self.ui.activate()
 
-    @register('d')
     def deactivate(self):
 
         self.activated=False
-        self.app.modes.setMode('normal')
         self.ui.deactivate()
 
-    @register('t')
+    @register('t', modes=['command'])
     def toggle(self): super().toggle()
 
     @register('i')
@@ -78,10 +73,10 @@ class FileBrowser(Plugin):
             if os.path.isdir(path): 
                 self.ui.main.tree.expand(self.ui.main.tree.currentIndex())
             else:
-                self.app.window.open(path, how=how, focus=focus)
+                self.app.main.open(path, how=how, focus=focus)
 
         if focus:
             self.app.modes.setMode('normal')
-            self.app.window.setFocus()
+            self.app.main.setFocus()
         else:
             self.ui.show()

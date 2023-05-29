@@ -10,19 +10,13 @@ class Quickmark(Plugin):
 
     def __init__(self, app):
 
-        super().__init__(app,
-                         position='right',
-                         mode_keys={'command': 't'},
-                         bar_data={'edit':''},
-                         listen_widget=[app.window],
-                         exclude_widget=[app.window.bar.edit]
-                         )
+        super().__init__(app, position='right', mode_keys={'command': 't'})
 
         self.marks = Table() 
 
         self.setUI()
 
-        self.app.window.display.viewChanged.connect(self.setData)
+        self.app.main.display.viewChanged.connect(self.setData)
 
     def setUI(self):
 
@@ -59,37 +53,29 @@ class Quickmark(Plugin):
         self.app.modes.plug.setClient()
         self.ui.deactivate()
 
-
-    @register('d')
     def deactivate(self):
 
         if self.activated:
 
             self.activated=False
 
-            self.app.modes.setMode('normal')
-            self.app.modes.plug.setClient()
+            self.app.main.bar.hide()
 
-            self.app.window.bar.hide()
+            self.app.main.bar.edit.textChanged.disconnect(self.write)
+            self.app.main.bar.hideWanted.disconnect(self.deactivate)
 
-            self.app.window.bar.edit.textChanged.disconnect(self.write)
-            self.app.window.bar.hideWanted.disconnect(self.deactivate)
-
-    @register('a')
     def activate(self):
 
-        view=self.app.window.display.currentView()
+        view=self.app.main.display.currentView()
         if view:
 
             self.activated=True
-            self.app.modes.plug.setClient(self)
-            self.app.modes.setMode('plug')
 
-            self.app.window.bar.show()
-            self.app.window.bar.edit.setFocus()
+            self.app.main.bar.show()
+            self.app.main.bar.edit.setFocus()
 
-            self.app.window.bar.hideWanted.connect(self.deactivate)
-            self.app.window.bar.edit.textChanged.connect(self.write)
+            self.app.main.bar.hideWanted.connect(self.deactivate)
+            self.app.main.bar.edit.textChanged.connect(self.write)
 
     @register('m', modes=['normal', 'command'])
     def mark(self): self.activate()
@@ -104,7 +90,7 @@ class Quickmark(Plugin):
 
     def setData(self):
 
-        document= self.app.window.display.view.document()
+        document= self.app.main.display.view.document()
         if document:
             dhash = document.hash()
             rows=self.marks.getRow({'hash': dhash})
@@ -122,14 +108,14 @@ class Quickmark(Plugin):
 
     def write(self):
 
-        mark=self.app.window.bar.edit.text()
+        mark=self.app.main.bar.edit.text()
         self.deactivate()
 
         if mark: 
-            view = self.app.window.display.currentView()
-            dhash= self.app.window.display.currentView().document().hash()
-            page = self.app.window.display.currentView().currentPage()
-            left, top = self.app.window.display.currentView().saveLeftAndTop()
+            view = self.app.main.display.currentView()
+            dhash= self.app.main.display.currentView().document().hash()
+            page = self.app.main.display.currentView().currentPage()
+            left, top = self.app.main.display.currentView().saveLeftAndTop()
             position=f'{page}:{left}:{top}'
             data={'hash':dhash, 'position': position, 'mark':mark}
             self.marks.writeRow(data)
@@ -138,6 +124,6 @@ class Quickmark(Plugin):
     def jump(self, mark):
 
         page, left, top = tuple(mark['position'].split(':'))
-        self.app.window.display.currentView().jumpToPage(
+        self.app.main.display.currentView().jumpToPage(
                 int(page), float(left), float(top))
-        self.app.window.display.currentView().setFocus()
+        self.app.main.display.currentView().setFocus()
