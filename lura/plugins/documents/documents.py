@@ -2,8 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import UpDown, InputList
 from lura.utils import Plugin, register
+
+from plugin.widget import UpDown, InputList
 
 class Documents(Plugin):
 
@@ -12,7 +13,6 @@ class Documents(Plugin):
         super().__init__(app, position='right', mode_keys={'command': 'd'})
 
         self.setUI()
-        self.ui.main.setList(self.getList())
 
     def setUI(self):
 
@@ -28,21 +28,14 @@ class Documents(Plugin):
 
     def activate(self):
 
-        self.activated=True
-        self.ui.activate()
+        if not hasattr(self, 'dlist'): 
+            self.dlist=self.getList()
+            self.ui.main.setList(self.dlist)
 
-    def deactivate(self):
-
-        self.activated=False
-        self.ui.deactivate()
+        super().activate()
 
     @register('t', modes=['command'])
-    def toggle(self):
-
-        if self.activated:
-            self.deactivate()
-        else:
-            self.activate()
+    def toggle(self): super().toggle()
 
     def getList(self):
 

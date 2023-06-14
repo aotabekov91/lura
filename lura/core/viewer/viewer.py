@@ -8,7 +8,7 @@ from .cursor import Cursor
 from .pageitem import PageItem
 from .layout import DocumentLayout
 
-from lura.utils import Configure, register
+from lura.utils import Configure 
 
 class View(QGraphicsView):
 
@@ -31,7 +31,7 @@ class View(QGraphicsView):
     annotationRemoved=pyqtSignal(object)
     pageHasBeenJustPainted = pyqtSignal(object, object, object, object, object)
 
-    def __init__(self, app, document=None):
+    def __init__(self, app, layout=DocumentLayout):
 
         super().__init__(app.main)
 
@@ -41,24 +41,21 @@ class View(QGraphicsView):
         self.m_selection=[]
         self.m_prevPage = 1 
         self.m_currentPage = 1 
-
         self.m_paintlinks=False
 
         self.configure=Configure(app, 'View', self)
         self.s_settings=self.configure.getSettings()
 
         self.cursor=Cursor(self)
+        self.m_cursor=Qt.ArrowCursor
 
-        self.m_layout = DocumentLayout(self)
-        self.m_thumbnailsScene = QGraphicsScene(self)
-        self.m_outlineModel = QStandardItemModel(self)
-        self.m_propertiesModel = QStandardItemModel(self)
-
+        self.m_layout = layout(self)
+        # self.m_thumbnailsScene = QGraphicsScene(self)
+        # self.m_outlineModel = QStandardItemModel(self)
+        # self.m_propertiesModel = QStandardItemModel(self)
 
         self.setup()
         self.connect()
-
-        if document: self.open(document)
 
     def selection(self): return self.m_selection
 
@@ -103,6 +100,7 @@ class View(QGraphicsView):
     def setup(self):
 
         self.proxyWidget=None
+
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
@@ -310,7 +308,8 @@ class View(QGraphicsView):
 
     def toggleContinuousMode(self):
 
-        self.s_settings['continuousView']=~str(self.s_settings.getboolean('continuousView', False))
+        cond=str(self.s_settings.getboolean('continuousView', False))
+        self.s_settings['continuousView']= not cond
         left, top = self.saveLeftAndTop()
         self.adjustScrollBarPolicy()
         self.prepareView(left, top)
@@ -534,3 +533,12 @@ class View(QGraphicsView):
         for pageItem in self.pageItems(): 
             pageItem.setSelection()
             pageItem.setSearched()
+
+    def toggleCursor(self):
+
+        if self.m_cursor==Qt.BlankCursor:
+            self.m_cursor=Qt.ArrowCursor
+        else:
+            self.m_cursor=Qt.BlankCursor
+
+        for item in self.m_pageItems: item.setCursor(self.m_cursor)

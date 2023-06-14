@@ -68,6 +68,13 @@ class PdfDocument(QObject):
 
         return self.m_pages.get(pageNumber, None)
 
+    def nativeAnnotations(self):
+
+        annotations=[]
+        for pageNumber, page in self.m_pages.items():
+            annotations+=page.nativeAnnotations()
+        return annotations
+
     def annotations(self):
 
         annotations=[]

@@ -5,8 +5,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import ListWidget, UpDown
 from lura.utils import Mode, getPosition 
+from plugin.widget import ListWidget, UpDown
 
 class Annotate(Mode):
 
@@ -34,7 +34,8 @@ class Annotate(Mode):
 
                 color, function= tuple(col.split(' '))
 
-                self.colorList+=[{'up': function, 'down':key, 'up_color':color}]
+                up=f'{key} - {function}'
+                self.colorList+=[{'up': up, 'up_color':color}]
 
                 self.annotation.functions[function]=color
                 func=functools.partial(self.annotate, function=function)
@@ -55,12 +56,13 @@ class Annotate(Mode):
 
         self.ui.hideWanted.connect(lambda: self.app.modes.setMode('normal'))
 
-
     def listen(self):
 
         if self.app.main.display.view: super().listen()
 
     def annotate(self, function):
+
+        self.deactivate()
 
         selections=self.app.main.display.view.selection()
 
@@ -85,8 +87,6 @@ class Annotate(Mode):
             pageItem.refresh(dropCachedPixmap=True)
             self.update()
 
-        self.deactivate()
-
     def write(self, dhash, pageNumber, text, boundaries, function):
 
         position=getPosition(boundaries)
@@ -102,3 +102,16 @@ class Annotate(Mode):
 
         self.app.tables.annotation.writeRow(data)
         return self.app.tables.annotation.getRow(data)[0]
+
+    def activateCheck(self, event): 
+
+        if super().activateCheck(event):
+
+            view=self.app.main.display.view
+            if view:
+                v=self.app.modes.visual
+                visual=v.listening and not v.hinting
+                normal=self.app.modes.normal.listening
+                return normal or visual
+            else:
+                return False

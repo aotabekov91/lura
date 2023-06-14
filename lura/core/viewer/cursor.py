@@ -22,7 +22,8 @@ class Cursor(QObject):
 
         if self.start and current:
 
-            selection=item.page().getRows(self.start['box'][0], current['box'][0])
+            selection=item.page().getRows(
+                    self.start['box'][0], current['box'][0])
             item.setSelection([selection])
 
     def on_mousePress(self, event, item):

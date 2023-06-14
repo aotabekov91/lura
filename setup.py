@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='lura', 
       version='1.0.0', 
+      description='Lura',
       packages=find_packages(),
       entry_points = {
           'console_scripts': [

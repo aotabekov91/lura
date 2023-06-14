@@ -62,6 +62,7 @@ class PageItem(QGraphicsObject):
     def setSelection(self, selections=[]):
 
         for selection in selections:
+
             box=selection['box']
             selection['item']=self
 
@@ -73,7 +74,6 @@ class PageItem(QGraphicsObject):
                 selection['area_unified']+=[self.mapToPage(b, unify=True)]
 
         self.m_view.setSelection(selections)
-
         self.update()
 
     def boundingRect(self):

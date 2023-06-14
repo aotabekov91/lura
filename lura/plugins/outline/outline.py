@@ -13,13 +13,7 @@ class Outline(Plugin):
     
     def __init__(self, app):
 
-        super().__init__(app, position='bottom', mode_keys={'command': 'o'})
-
-        self.outlines={}
-
-        self.app.main.buffer.documentCreated.connect(self.registerDocument)
-        self.app.main.display.viewChanged.connect(self.on_viewChanged)
-        self.app.main.display.currentPageChanged.connect(self.on_currentPageChanged)
+        super().__init__(app, position='left', mode_keys={'command': 'o'})
 
         self.setUI()
 
@@ -57,17 +51,15 @@ class Outline(Plugin):
 
     def on_currentPageChanged(self, document, currentPage, prevPage):
 
-        outline=self.outlines.get(document, None)
-        if outline:
+        if self.outline:
             index=self.ui.tree.currentIndex()
-            found=self.ui.tree.synchronizeOutlineView(currentPage, outline, QModelIndex()) 
+            found=self.ui.tree.synchronizeOutlineView(currentPage, self.outline, QModelIndex()) 
             if found.isValid(): self.ui.tree.setCurrentIndex(found)
 
     def on_viewChanged(self, view):
 
-        document=view.document()
-        outline=self.outlines.get(document, None)
-        if outline: self.ui.tree.setModel(outline)
+        self.setData()
+        if self.outline: self.ui.tree.setModel(self.outline)
 
     @register('t', modes=['command'])
     def toggle(self): super().toggle()
@@ -84,22 +76,29 @@ class Outline(Plugin):
             self.app.main.display.currentView().jumpToPage(page, left, top)
             self.app.main.display.currentView().setFocus()
 
-    def registerDocument(self, document):
+    def setData(self):
 
-        def _run():
+        self.outline=None
 
-            outline=document.loadOutline()
-            self.outlines[document]=outline
-        t=threading.Thread(target=_run)
-        t.daemon=True
-        t.start()
+        view=self.app.main.display.view
+        if view:
+            document=view.document()
+            self.outline=document.loadOutline()
 
     def activate(self):
 
         self.activated=True
+
+        self.setData()
         self.ui.activate()
+
+        self.app.main.display.viewChanged.connect(self.on_viewChanged)
+        self.app.main.display.currentPageChanged.connect(self.on_currentPageChanged)
 
     def deactivate(self):
 
         self.activated=False
         self.ui.deactivate()
+
+        self.app.main.display.viewChanged.disconnect(self.on_viewChanged)
+        self.app.main.display.currentPageChanged.disconnect(self.on_currentPageChanged)

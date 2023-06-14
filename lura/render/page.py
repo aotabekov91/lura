@@ -19,6 +19,12 @@ class PdfPage(QObject):
         self.m_data = popplerPage
         self.m_pageNumber=pageNumber
 
+        self.m_normalizedTransform=QTransform()
+        self.m_normalizedTransform.reset()
+        self.m_normalizedTransform.scale(self.size().width(), self.size().height())
+
+        self.m_native_annotations=self.getNativeAnnotations()
+
     def document(self): return self.m_document
 
     def pageNumber(self): return self.m_pageNumber
@@ -41,22 +47,29 @@ class PdfPage(QObject):
 
         return self.m_data.renderToImage(hResol, vResol, x, y, w, h, rotate)
 
-    def find(self, rect): return self.m_data.text(rect)
+    def find(self, rect, unified=False): 
 
-    def search(self, string): return self.m_data.search(string, Poppler.Page.CaseInsensitive)
+        if unified: rect=self.m_normalizedTransform.mapRect(rect)
+        return self.m_data.text(rect)
+
+    def search(self, string): 
+
+        return self.m_data.search(string, Poppler.Page.CaseInsensitive)
 
     def annotate(self, aData, kind, **kwargs):
 
-        boundary=aData['boundaries']
-        # boundary=aData['areas']
         color=aData['color']
+        boundary=aData['boundaries']
 
         if kind=='highlightAnnotation':
             annotation=self.addHighlightAnnotation(boundary, color)
         elif kind=='textAnnotation':
             annotation=self.addTextAnnotation(boundary, color)
-        aData['annotation']=annotation
+
+        aData['pAnn']=annotation
         self.m_annotations+=[aData]
+
+        return aData
 
     def addHighlightAnnotation(self, boundary, color):
 
@@ -109,31 +122,54 @@ class PdfPage(QObject):
 
     def removeAnnotation(self, aData):
 
-        for annotation in self.m_annotations:
-            if annotation['id']==aData['id']:
-                self.m_data.removeAnnotation(annotation['annotation'].data())
-                self.m_annotations.pop(self.m_annotations.index(annotation))
-                self.annotationRemoved.emit(self)
-        
-    def setAnnotations(self, annotations=[]): self.m_annotations=annotations
+        aid=aData.get('id')
 
-    def addAnnotation(self, annotation): self.m_annotations+=[annotation]
+        if aid:
 
-    def getAnnotations(self):
+            for data in self.m_annotations:
+                if data['id']==aid:
+                    self.m_annotations.pop(self.m_annotations.index(data))
+                    self.m_data.removeAnnotation(data['pAnn'].data())
+                    self.annotationRemoved.emit(self)
 
-        # document annotations
+        # else:
+        #     self.m_data.removeAnnotation(aData['pAnn'].data())
+
+    # def removeAnnotation(self, aData):
+    #     self.m_data.removeAnnotation(aData['pAnn'].data())
+    #     # aid=aData.get('id', None)
+    #     # if aid:
+    #     #     for data in self.m_annotations:
+    #     #         if data['id']==aid:
+    #     #             self.m_annotations.pop(self.m_annotations.index(aData))
+    #     #             break
+    #     self.annotationRemoved.emit(self)
+
+    # def setAnnotations(self, annotations=[]): self.m_annotations=annotations
+
+    # def addAnnotation(self, annotation): self.m_annotations+=[annotation]
+
+    def nativeAnnotations(self): return self.m_native_annotations
+
+    def getNativeAnnotations(self):
+
         annotations=[]
-        for annotation in self.m_data.annotations():
-            kind = annotation.subType()
+
+        for data in self.m_data.annotations():
+            kind = data.subType()
             cond = kind in [
                 Poppler.Annotation.AText,
                 Poppler.Annotation.AHighlight,
                 Poppler.Annotation.AFileAttachment]
             if cond:
-                annotation=PdfAnnotation(annotation)
+                data.setContents(self.find(data.boundary(), unified=True))
+                annotation=PdfAnnotation(data)
                 annotation.setPage(self)
                 annotations+=[annotation]
-        self.m_annotations=annotations
+
+        return annotations
+
+        # self.m_annotations=annotations
 
     def annotations(self): return self.m_annotations
 
@@ -220,9 +256,9 @@ class PdfPage(QObject):
 
             area=list(rects.values())
 
-        text=''
+        text=[]
 
-        for a in area: text=[self.find(a)]
+        for a in area: text+=[self.find(a)]
 
         data=[]
         for t in self.data().textList():

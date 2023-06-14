@@ -30,25 +30,15 @@ class SinglePageLayout:
             height+=pageSpacing+pageHeight
         return left, right, height
 
-    def leftIndex(self, index):
+    def leftIndex(self, index): return index
 
-        return index
+    def rightIndex(self, index, count): return index
 
-    def rightIndex(self, index, count):
+    def nextPage(self, page, count): return min(page+1, count)
 
-        return index
+    def previousPage(self, page, count): return max(page-1, 1)
 
-    def nextPage(self, page, count):
-
-        return min(page+1, count)
-
-    def previousPage(self, page, count):
-
-        return max(page-1, 1)
-
-    def currentPage(self, page):
-
-        return page
+    def currentPage(self, page): return page
 
 
 class DocumentLayout:
@@ -69,9 +59,7 @@ class DocumentLayout:
         layoutModes={'SinglePageLayout': SinglePageLayout}
         self.m_layoutMode=layoutModes[layoutMode](self.s_settings)
 
-    def visibleWidth(self, viewportWidth):
-
-        return self.m_layoutMode.visibleWidth(viewportWidth)
+    def visibleWidth(self, viewportWidth): return self.m_layoutMode.visibleWidth(viewportWidth)
 
     def visibleHeight(self, viewportHeight):
 
@@ -84,14 +72,8 @@ class DocumentLayout:
         return self.m_layoutMode.prepareLayout(
                 pageItems, rightToLeftMode, left, right, height)
 
-    def nextPage(self, page, count):
+    def nextPage(self, page, count): return self.m_layoutMode.nextPage(page, count)
 
-        return self.m_layoutMode.nextPage(page, count)
+    def previousPage(self, page, count): return self.m_layoutMode.previousPage(page, count)
 
-    def previousPage(self, page, count):
-
-        return self.m_layoutMode.previousPage(page, count)
-
-    def currentPage(self, page):
-
-        return self.m_layoutMode.currentPage(page)
+    def currentPage(self, page): return self.m_layoutMode.currentPage(page)

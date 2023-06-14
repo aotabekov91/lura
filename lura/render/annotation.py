@@ -5,36 +5,34 @@ from PyQt5.QtCore import *
 class PdfAnnotation(QObject):
 
     def __init__(self, annotationData):
+
         super().__init__()
+
         self.m_data = annotationData
-        self.m_id=None
+        self.m_aData={'data': annotationData}
 
-    def id(self):
-        return self.m_id
+    def id(self): return self.m_aData.get('id', None)
 
-    def setId(self, m_id):
+    def setId(self, m_id): 
+
         self.m_id=m_id
+        self.m_aData['id']=m_id
 
-    def page(self):
-        return self.m_page
+    def page(self): return self.m_page
 
-    def setPage(self, page):
-        self.m_page=page
+    def setPage(self, page): self.m_page=page
 
-    def color(self):
-        return self.m_data.style().color().name()
+    def color(self): return self.m_aData['data'].style().color().name()
 
-    def type(self):
-        return self.m_data.subType()
+    def type(self): return self.m_aData['data'].subType()
 
-    def data(self):
-        return self.m_data
+    def data(self): return self.m_aData['data']
 
-    def setData(self, data):
-        self.m_data=data
+    def aData(self): return self.m_aData
 
-    def boundary(self):
-        return self.m_data.boundary()
+    def setAData(self, data): self.m_aData=data
+
+    def boundary(self): return self.m_aData['data'].boundary()
 
     def position(self):
 
@@ -54,21 +52,8 @@ class PdfAnnotation(QObject):
 
         return f'{first_line}_{last_line}'
 
-        # q=[]
-        # end=self.m_data.highlightQuads()[-1]
-        # for quad in self.m_data.highlightQuads():
-        #     p=quad.points
-        #     q+=['{}:{}:{}:{}'.format(
-        #         round(p[0], 8), round(p[1], 8), round(p[2], 8), round(p[3], 8))]
-        # r='_'.join(q)
-
-        # return '{}:{}:{}:{}'.format(
-        #     round(self.boundary().x(), 8),
-        #     round(self.boundary().y(), 8),
-        #     round(self.boundary().width(), 8),
-        #     round(self.boundary().height(), 8))
-
     def contains(self, point):
+
         for quad in self.m_data.highlightQuads():
             points=quad.points
             rectF=QRectF()
@@ -79,6 +64,9 @@ class PdfAnnotation(QObject):
             if rectF.contains(point): return True
         return False
 
+    def contents(self): return self.m_data.contents()
+
     def setColor(self, color):
+
         style.setColor(color)
         self.m_data.setStyle(style)

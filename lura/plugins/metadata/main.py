@@ -2,8 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from plugin.widget import UpDownEdit, InputList
 from lura.utils import Plugin, register
+from plugin.widget import UpDownEdit, InputList
 
 class Metadata(Plugin):
 
@@ -14,7 +14,6 @@ class Metadata(Plugin):
         super().__init__(app, position='right', name='metadata', mode_keys={'command': 'm'})
 
         self.setUI()
-        self.app.main.display.viewChanged.connect(self.update)
 
     def setUI(self):
 
@@ -38,13 +37,14 @@ class Metadata(Plugin):
 
     def activate(self):
 
-        self.activated=True
-        self.ui.activate()
+        super().activate()
+        self.update()
+        self.app.main.display.viewChanged.connect(self.update)
 
     def deactivate(self):
 
-        self.activated=False
-        self.ui.deactivate()
+        super().deactivate()
+        self.app.main.display.viewChanged.disconnect(self.update)
 
     @register('t', modes=['command'])
     def toggle(self): super().toggle()

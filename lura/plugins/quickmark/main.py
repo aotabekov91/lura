@@ -48,44 +48,37 @@ class Quickmark(Plugin):
     def deactivateDisplay(self):
 
         self.activated=False
-
-        self.app.modes.setMode('normal')
-        self.app.modes.plug.setClient()
         self.ui.deactivate()
 
     def deactivate(self):
 
-        if self.activated:
+        self.activated=False
 
-            self.activated=False
+        self.app.main.bar.hide()
+        self.app.main.bar.edit.hide()
+        self.app.main.bar.edit.textChanged.disconnect(self.write)
+        self.app.main.bar.hideWanted.disconnect(self.deactivate)
 
-            self.app.main.bar.hide()
-
-            self.app.main.bar.edit.textChanged.disconnect(self.write)
-            self.app.main.bar.hideWanted.disconnect(self.deactivate)
-
-    def activate(self):
+    @register('m', modes=['normal', 'command'])
+    def mark(self):
 
         view=self.app.main.display.currentView()
+
         if view:
 
             self.activated=True
 
             self.app.main.bar.show()
+            self.app.main.bar.edit.show()
             self.app.main.bar.edit.setFocus()
 
             self.app.main.bar.hideWanted.connect(self.deactivate)
             self.app.main.bar.edit.textChanged.connect(self.write)
 
-    @register('m', modes=['normal', 'command'])
-    def mark(self): self.activate()
-
     @register('t', modes=['normal', 'command'])
     def goto(self): 
 
         self.activated=True
-        self.app.modes.plug.setClient(self)
-        self.app.modes.setMode('plug')
         self.ui.activate()
 
     def setData(self):

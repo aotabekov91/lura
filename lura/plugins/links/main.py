@@ -4,8 +4,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import ListWidget, Item
 from lura.utils import Mode, register
+from plugin.widget import ListWidget, Item
 
 class Links(Mode):
 

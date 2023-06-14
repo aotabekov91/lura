@@ -20,7 +20,9 @@ class Annotation(Plugin):
         self.annotate=Annotate(app, self)
         self.annotations=Annotations(app, self)
 
-        self.app.main.display.mousePressEventOccured.connect(self.on_mousePressEvent)
+        self.paint()
+        self.app.main.buffer.documentCreated.connect(self.paint)
+        # self.app.main.display.mousePressEventOccured.connect(self.on_mousePressEvent)
 
     def select(self, function): return
 
@@ -55,6 +57,21 @@ class Annotation(Plugin):
 
         dhash = document.hash()
         page=document.page(annotation['page'])
-        annotation['color'] = QColor(self.functions.get(annotation['function'], 'cyan'))
-        annotation['boundaries']=getBoundaries(annotation['position'])
-        annotation=page.annotate(annotation, kind='highlightAnnotation')
+        annotation['color'] = QColor(
+                self.functions.get(annotation['function'], 'cyan'))
+        annotation['boundaries']=getBoundaries(
+                annotation['position'])
+        return page.annotate(annotation, kind='highlightAnnotation')
+
+    def paint(self, document=None):
+
+        if not document: 
+
+            view=self.app.main.display.view
+            if view: document=view.document()
+
+        if document:
+
+            dhash = document.hash()
+            aData=self.app.tables.annotation.getRow({'hash':dhash})
+            for annotation in aData: self.add(document, annotation)

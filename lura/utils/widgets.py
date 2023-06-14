@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import InputListStack, CommandStack, ListWidget, register 
+from plugin.widget import InputListStack, CommandStack, ListWidget
 
 class Base:
 

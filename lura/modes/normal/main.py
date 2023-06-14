@@ -6,6 +6,7 @@ class Normal(Mode):
 
         super(Normal, self).__init__(app=app, 
                                      name='normal',
+                                     listen_leader='@',
                                      show_commands=False,
                                      delisten_on_exec=False,
                                     )

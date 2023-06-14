@@ -1,8 +1,5 @@
 from PyQt5.QtCore import *
 
-from .plug import Plug
-
-from .focus import Focus
 from .visual import Visual
 from .normal import Normal
 from .command import Command
@@ -16,13 +13,13 @@ class Modes(QObject):
         super().__init__(app)
 
         self.app=app
+        self.current=None
 
         self.modes=[]
         self.leaders={}
 
     def addModes(self):
 
-        self.addMode(Focus(self.app))
         self.normal=Normal(self.app)
         self.visual=Visual(self.app)
         self.command=Command(self.app)
@@ -52,5 +49,6 @@ class Modes(QObject):
         for mode in self.modes: mode.delisten()
 
         if not mode_name: mode_name='normal'
-        mode=getattr(self, mode_name, None)
-        if mode: mode.listen()
+        current=getattr(self, mode_name, None)
+
+        if current: current.listen()

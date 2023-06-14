@@ -23,10 +23,7 @@ class Docks(QObject):
 
         self.createDocks()
 
-        self.configure=Configure(window.app, 
-                                 'Docks', 
-                                 self, 
-                                 mode_keys={'command':'d'})
+        self.configure=Configure(window.app, 'Docks', self, mode_keys={'command':'d'})
 
     def createDocks(self):
 
@@ -71,13 +68,7 @@ class Docks(QObject):
         else:
             return super().eventFilter(widget, event)
 
-    def focus(self, position): 
-
-        dock=getattr(self, f'{position}')
-        current=dock.current()
-        if current: 
-            dock.setFocus(current)
-            current.focusGained.emit()
+    def focus(self, position): getattr(self, f'{position}').setFocus()
 
     def resize(self, ratio): 
 
@@ -106,7 +97,6 @@ class Docks(QObject):
 
             # self.current.current().focusGained.emit()
             self.focus(self.current.loc)
-
 
     def adjustDocks(self): 
 
@@ -152,31 +142,55 @@ class Docks(QObject):
             self.prev=self.current
             self.current=dock
 
-    def zoom(self, kind='in'): 
+    def zoom(self, kind='in', digit=1): 
 
         if self.current:
+
             if kind=='in': 
-                self.current.resize(factor=1.1)
-            elif kind=='out':
-                self.current.resize(factor=0.9)
+                factor=1.1**digit
+            else:
+                factor=.9**digit
+            self.current.resize(factor=factor)
+            self.current.setFocus()
 
-    @register('h', modes=['focus'])
-    def focusLeftDock(self): self.focus('left')
+    @register('h', modes=['command'])
+    def focusLeftDock(self): 
 
-    @register('l', modes=['focus'])
-    def focusRightDock(self): self.focus('right')
+        self.window.app.modes.command.delisten_wanted=None
+        self.focus('left')
 
-    @register('k', modes=['focus'])
-    def focusTopDock(self): self.focus('top')
+    @register('l', modes=['command'])
+    def focusRightDock(self): 
 
-    @register('j', modes=['focus'])
-    def focusBottomDock(self): self.focus('bottom') 
+        self.window.app.modes.command.delisten_wanted=None
+        self.focus('right')
+
+    @register('k', modes=['command'])
+    def focusTopDock(self): 
+
+        self.window.app.modes.command.delisten_wanted=None
+        self.focus('top')
+
+    @register('j', modes=['command'])
+    def focusBottomDock(self): 
+
+        self.window.app.modes.command.delisten_wanted=None
+        self.focus('bottom') 
 
     @register('f', modes=['command'])
-    def toggleDockFullscreen(self): self.toggleFullscreen()
+    def toggleDockFullscreen(self): 
+
+        self.window.app.modes.command.delisten_wanted=None
+        self.toggleFullscreen()
 
     @register('i', modes=['command'])
-    def zoomInDock(self): self.zoom('in')
+    def zoomInDock(self, digit=1): 
 
-    @register('d', modes=['command'])
-    def zoomOutDock(self): self.zoom('out')
+        self.window.app.modes.command.delisten_wanted=None
+        self.zoom('in', digit)
+
+    @register('o', modes=['command'])
+    def zoomOutDock(self, digit=1): 
+
+        self.window.app.modes.command.delisten_wanted=None
+        self.zoom('out', digit)

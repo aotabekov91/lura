@@ -56,40 +56,46 @@ class MainWindow(QMainWindow):
 
     def openBy(self, kind, criteria):
  
-        dhash=None
-
         if kind=='hash':
+
             filePath=self.app.tables.hash.getPath(criteria)
             self.open(filePath)
 
-        elif kind=='annotation':
-            data=self.app.tables.annotation.getRow({'id':criteria})
-            if data:
-                data=data[0]
-                dhash=data['hash']
-                page=data['page']
-                boundary=getBoundaries(data['position'])[0]
-                topLeft=boundary.topLeft() 
-                x, y = topLeft.x(), topLeft.y()
+        else:
 
-        elif kind=='bookmark':
-            data=self.app.tables.bookmark.getRow({'id':criteria})
-            if data:
-                data=data[0]
-                dhash=data['hash']
-                page=data['page']
-                x, y=(float(i) for i in data['position'].split(':'))
+            dhash=None
+            
+            if kind=='annotation':
+                data=self.app.tables.annotation.getRow({'id':criteria})
+                if data:
+                    data=data[0]
+                    dhash=data['hash']
+                    page=data['page']
+                    boundary=getBoundaries(data['position'])[0]
+                    topLeft=boundary.topLeft() 
+                    x, y = topLeft.x(), topLeft.y()
 
-        if dhash:
-            self.openBy(kind='hash', criteria=dhash)
-            view=self.app.main.display.currentView()
-            if view: view.jumpToPage(page, x, y)
+            elif kind=='bookmark':
+                data=self.app.tables.bookmark.getRow({'id':criteria})
+                if data:
+                    data=data[0]
+                    dhash=data['hash']
+                    page=data['page']
+                    x, y=(float(i) for i in data['position'].split(':'))
+
+            if dhash:
+
+                self.openBy(kind='hash', criteria=dhash)
+                view=self.app.main.display.currentView()
+                if view: view.jumpToPage(page, x, y)
 
     def open(self, filePath=None, how='reset', focus=True):
 
-        filePath=os.path.abspath(filePath)
-        document=self.buffer.loadDocument(filePath)
-        if document: self.display.open(document, how, focus=focus)
+        if filePath:
+
+            filePath=os.path.abspath(filePath)
+            document=self.buffer.loadDocument(filePath)
+            if document: self.display.open(document, how, focus=focus)
 
     @register('q', modes=['normal', 'command'])
     def close(self): self.app.exit()

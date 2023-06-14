@@ -5,10 +5,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import InputList, ListWidget, UpDownEdit
 
 from lura.utils import Plugin
 from lura.utils import register, getPosition, getBoundaries
+
+from plugin.widget import InputList, ListWidget, UpDownEdit
 
 class Annotations(Plugin):
 
@@ -18,8 +19,6 @@ class Annotations(Plugin):
 
         super().__init__(app, position='right', mode_keys={'command': 'a'})
 
-        self.app.main.buffer.documentCreated.connect(self.paint)
-        self.app.main.display.viewChanged.connect(self.update)
         # self.app.main.display.mousePressEventOccured.connect(self.on_mousePressEvent)
 
         self.setUI()
@@ -55,6 +54,7 @@ class Annotations(Plugin):
         super().setUI()
 
         self.ui.addWidget(InputList(item_widget=UpDownEdit), 'main', main=True)
+
         self.ui.main.input.hideLabel()
         self.ui.main.returnPressed.connect(self.open)
         self.ui.main.list.widgetDataChanged.connect(self.on_contentChanged)
@@ -63,11 +63,30 @@ class Annotations(Plugin):
         self.ui.installEventFilter(self)
 
     @register('o')
+    def openAndFocus(self):
+
+        self.open()
+        self.app.modes.setMode('normal')
+
+    @register('O')
     def open(self):
 
         item=self.ui.main.list.currentItem()
-        aid=item.itemData['id']
-        self.openById(aid)
+        if item:
+            aid=item.itemData.get('id', None)
+            if aid:
+                self.openById(aid)
+            else:
+                self.openByData(item.itemData['pAnn'])
+
+    def openByData(self, pAnn):
+
+        boundary=pAnn.boundary()
+        topLeft=boundary.topLeft() 
+        x, y = topLeft.x(), topLeft.y()
+        page=pAnn.page().pageNumber()
+        view=self.app.main.display.currentView()
+        if view: view.jumpToPage(page, x, y-0.05)
 
     def openById(self, aid):
 
@@ -104,9 +123,12 @@ class Annotations(Plugin):
 
         if item:
 
-            self.app.tables.annotation.removeRow({'id': item.itemData['id']})
+            self.app.tables.annotation.removeRow(
+                    {'id': item.itemData.get('id', None)})
 
-            page=self.app.main.display.view.document().page(item.itemData['page'])
+            page=self.app.main.display.view.document().page(
+                item.itemData['page'])
+
             page.removeAnnotation(item.itemData)
             page.pageItem().refresh(dropCachedPixmap=True)
 
@@ -118,11 +140,30 @@ class Annotations(Plugin):
 
         view=self.app.main.display.currentView()
         annotations=view.document().annotations()
+        native=view.document().nativeAnnotations()
+
+        dhash=view.document().hash()
 
         for a in annotations:
+
             a['up']=f'# {a.get("id")}'
             a['down']=a['content']
             a['up_color']=a['color'].name()
+
+        for n in native:
+            data={
+                  'pAnn':n,
+                  'up': 'Native',
+                  'hash': dhash,
+                  'up_color':n.color(),
+                  'down':n.contents(),
+                  'kind': 'document',
+                  'text': n.contents(),
+                  'content': n.contents(),
+                  'color': QColor(n.color()),
+                  'page': n.page().pageNumber(),
+                  }
+            annotations+=[data]
 
         if annotations:
             self.ui.main.setList(annotations)
@@ -130,26 +171,16 @@ class Annotations(Plugin):
             self.ui.main.setList([])
 
     @register('t', modes=['command'])
-    def toggle(self):
-
-        if self.activated:
-            self.deactivate()
-        else:
-            self.activate()
+    def toggle(self): super().toggle()
 
     def activate(self):
 
-        self.activated=True
-        self.ui.activate()
+        self.update()
+        self.app.main.display.viewChanged.connect(self.update)
+
+        super().activate()
 
     def deactivate(self):
 
-        self.activated=False
-        self.ui.deactivate()
-
-    def paint(self, document):
-
-        dhash = document.hash()
-        aData=self.app.tables.annotation.getRow({'hash':dhash})
-        for annotation in aData: 
-            self.app.manager.annotation.add(document, annotation)
+        self.app.main.display.viewChanged.disconnect(self.update)
+        super().deactivate()

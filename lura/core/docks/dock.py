@@ -47,20 +47,19 @@ class Dock(QDockWidget):
         if not widget: widget=self.current()
         if widget:
             self.docks.setCurrent(self)
-
-            # self.hide() # was kept
             self.show()
-
             self.tab.setCurrentIndex(widget.index)
             self.tab.show()
-            widget.show()
             widget.setFocus()
+            widget.focusGained.emit()
 
     def activate(self, widget): 
 
         if not self.widgets or self.widgets[-1]!=widget: self.widgets+=[widget]
 
         self.setFocus(widget)
+
+        widget.show()
 
         widget.setFixedSize(self.tab.size())
         widget.prev_size=self.tab.size()

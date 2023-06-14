@@ -1,8 +1,8 @@
-from plugin import WidgetPlug 
+from plugin.plug import PlugWidget 
 from lura.utils import BaseCommandStack 
 from types import MethodType, BuiltinFunctionType
 
-class Plugin(WidgetPlug):
+class Plugin(PlugWidget):
 
     def __init__(self, app, name=None, mode_keys={}, position=None, **kwargs):
 
@@ -51,6 +51,17 @@ class Plugin(WidgetPlug):
             self.activate()
         else:
             self.deactivate()
+
+    def activate(self):
+
+        self.activated=True
+        if hasattr(self, 'ui'): self.ui.activate()
+
+    def deactivate(self):
+
+        self.activated=False
+        if hasattr(self, 'ui'): self.ui.deactivate()
+
 
     def setShortcuts(self):
 
@@ -102,7 +113,10 @@ class Plugin(WidgetPlug):
                 data=(self.name, method.name)
                 if not data in self.actions:
                     self.actions[data]=method 
-                    self.commandKeys[method.key]=method
+                    if type(method.key)==str:
+                        self.commandKeys[method.key]=method
+                    elif type(method.key)==list:
+                        for k in method.key: self.commandKeys[k]=method
 
     def registerActions(self):
 

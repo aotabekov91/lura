@@ -20,6 +20,12 @@ class Visual(Mode):
         self.hinting=False
         self.selection=None
 
+    def listen(self):
+
+        super().listen()
+        selection=self.app.main.display.view.selection()
+        if not selection: self.hint()
+
     def jump(self):
 
         selection=self.app.main.display.view.selection()
@@ -294,7 +300,7 @@ class Visual(Mode):
 
     def generate(self, item):
 
-        alphabet = 'abcdefghijklmnopqrstuvwxyz'
+        alphabet = 'abcdefghijklmnopqrstuwxyz'
         len_of_codes = 2
         char_to_pos = {}
 
@@ -327,3 +333,8 @@ class Visual(Mode):
 
     @register('.')
     def toggleCommands(self): super().toggleCommands()
+
+    def activateCheck(self, event):
+
+        leaderPressed=super().activateCheck(event)
+        return leaderPressed and self.app.modes.normal.listening

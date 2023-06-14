@@ -1,133 +1,140 @@
-import os
-
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils import watch
-from lura.utils import Plugin
-from lura.utils.widgets import InputListLabel
+from tables import Part as Table
+from lura.utils import Plugin, register
+from plugin.widget import Item, InputList
 
-from plugin.utils import register
+from .widget import PartTree
 
-from tables import DocumentParts
-
-class Parts(Plugin):
+class Part(Plugin):
 
     def __init__(self, app):
-        super(Parts, self).__init__(app)
 
-        self.parts=DocumentParts()
+        super(Part, self).__init__(app, position='left', mode_keys={'command': 'p'})
+
+        self.follow=False
+        self.part=Table()
         self.setUI()
 
+    @register('f')
+    def toggleFollow(self): self.follow=not self.follow
+
     def setUI(self):
-        self.list=InputListLabel(self.app, self, 'right', 'Parts')
-        self.list.returnPressed.connect(self.on_returnPressed)
-        self.list.installEventFilter(self)
 
-    def getHash(self):
-        view=self.app.window.display.currentView()
-        if view: return view.document().hash() 
+        super().setUI()
 
-    def remove(self):
-        item=self.list.currentItem()
-        nrow=self.list.currentRow()-1
-        aid=item.itemData['id']
-        self.app.manager.annotation.removeById(aid=aid)
-        self.list.clear()
+        self.ui.addWidget(PartTree(), 'tree')
+        self.ui.tree.returnPressed.connect(self.open)
+        self.ui.tree.itemChanged.connect(self.on_itemChanged)
 
-        criteria={'dhash':self.app.window.display.currentView().document().hash()}
-        annotations = self.app.tables.get('annotations', criteria, unique=False)
-        if annotations:
-            for a in annotations:
-                a['head']=f'# {a.get("id")}'
-            self.list.setList(annotations)
-            self.list.setCurrentRow(nrow)
-        self.list.input.setFocus()
+        self.ui.addWidget(InputList(item_widget=Item), 'main', main=True)
+        self.ui.main.input.hideLabel()
+        self.ui.main.returnPressed.connect(self.open)
 
-    @watch('display', Qt.WidgetWithChildrenShortcut)
+        self.ui.hideWanted.connect(self.deactivate)
+        self.ui.installEventFilter(self)
+
+    def on_itemChanged(self, item): 
+
+        if self.follow: self.open(item=item)
+
+    @register('tr')
+    def toggleTree(self):
+
+        if self.ui.tree.isVisible():
+            self.ui.show()
+        else:
+            self.ui.show(self.ui.tree)
+
+    @register('r')
+    def refresh(self):
+
+        view=self.app.main.display.view
+        if view:
+            dhash=view.document().hash()
+            data=self.part.getTreeDict(dhash)
+            if data: self.ui.tree.installData({'root': data})
+
+    @register('t', modes=['command'])
     def toggle(self):
+
         if not self.activated:
             self.activate()
         else:
             self.deactivate()
                 
     def activate(self):
+
         self.activated=True
-        self.setDataFor('abstract')
-        self.list.activate()
-        self.list.input.setFocus()
+        self.refresh()
+        self.ui.activate()
+        self.toggleTree()
 
-    @register('q')
     def deactivate(self):
+
         self.activated=False
-        self.list.deactivate()
+        self.ui.deactivate()
 
-    @register('r')
-    def showReference(self):
-        self.setDataFor('reference')
+    @register('sr')
+    def showReference(self): self.setData('reference')
 
-    @register('a')
-    def showAbstract(self):
-        self.setDataFor('abstract')
+    @register('sa')
+    def showAbstract(self): self.setData('abstract')
 
-    @register('o')
-    def showOutline(self):
-        self.setDataFor('section')
+    @register('so')
+    def showOutline(self): self.setData('section')
 
-    @register('k')
-    def showKeyword(self):
-        self.setDataFor('keyword')
+    @register('sk')
+    def showKeyword(self): self.setData('keyword')
 
-    @register('s')
-    def showSummary(self):
-        self.setDataFor('summary')
+    @register('ss')
+    def showSummary(self): self.setData('summary')
+
+    @register('sp')
+    def showParagraph(self): self.setData('paragraph')
+
+    @register('sb')
+    def showBibliography(self): self.setData('bibliography')
+
+    def setData(self, kind):
+
+        if not self.activated: self.activate()
+
+        view=self.app.main.display.currentView()
+        if view: 
+            dhash=view.document().hash() 
+            data=self.part.search(f'hash:{dhash} kind:{kind}')
+            for d in data:
+                d['up']=d['text']
+                d['up_color']='green'
+            data=sorted(data, key=lambda x: (x['page'], x['y1']))
+            self.ui.main.setList(data)
 
     @register('p')
-    def showParagraph(self):
-        dlist=self.setDataFor('paragraph')
+    def parse(self):
 
-    @register('b')
-    def showBibliography(self):
-        self.setDataFor('bibliography')
+        if self.app.main.display.view:
+            path=self.app.main.display.view.document().filePath()
+            self.app.tables.hash.hash(path, force_parse=True)
 
-    def setDataFor(self, kind):
-        dhash=self.getHash()
-        if not dhash: return
-        dlist=[]
-        if kind=='reference':
-            cites=[]
-            if dhash:
-                data=self.parts.cite.getRow({'citing_hash':dhash})
-                if data:
-                    for d in data:
-                        cites+=self.parts.metadata.getRow({'bibkey':d['cited_bibkey']})
-            else:
-                cites=self.parts.metadata.getAll()
-            for d in cites:
-                b=f'{d["author"]}, {d["year"]}'
-                dlist+=[{'up':d['title'], 'down':b, 'kind':'cite'}]
-        else:
-            table=getattr(self.parts, kind, None)
-            if table:
-                if dhash:
-                    data=table.getRow({'hash':dhash})
-                else:
-                    data=table.getAll()
-                for d in data:
-                    doc_data=self.parts.metadata.getRow({'hash':d['hash']})
-                    if doc_data:
-                        name=doc_data[0]['title']
-                    else:
-                        name=d['hash']
-                    dlist+=[{'up':d['text'], 'down':name, id:d['hash'], 'kind':kind}]
-        self.list.setList(dlist)
-        self.list.show()
-        return dlist
+    @register('o')
+    def openAndFocus(self): self.open(focus=True)
 
-    def on_returnPressed(self):
-        page=0
-        x, y = 0, 0
-        view=self.app.window.display.currentView()
-        if view:
-            view.jumpToPage(page, x, y)
+    @register('O')
+    def open(self, item=None, focus=False):
+
+        if item is None:
+            if self.ui.main.isVisible():
+                item=self.ui.main.list.currentItem()
+            elif self.ui.tree.isVisible():
+                item=self.ui.tree.currentItem()
+
+        if item:
+            page=item.itemData['page']+1
+            y=item.itemData['y1']-0.05
+            view=self.app.main.display.currentView()
+            if view: 
+                view.jumpToPage(page, 0, y)
+                if focus: self.app.modes.setMode('normal')

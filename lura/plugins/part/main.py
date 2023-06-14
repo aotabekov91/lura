@@ -12,9 +12,7 @@ class Part(Plugin):
 
     def __init__(self, app):
 
-        super(Part, self).__init__(app, position='right', mode_keys={'command': 'p'})
-
-        self.app.main.display.viewChanged.connect(self.update)
+        super(Part, self).__init__(app, position='left', mode_keys={'command': 'p'})
 
         self.part=Table()
         self.setUI()
@@ -23,16 +21,18 @@ class Part(Plugin):
 
         super().setUI()
 
-        tree=PartTree()
-        self.ui.addWidget(tree, 'tree')
+        self.ui.addWidget(PartTree(), 'tree')
+        self.ui.tree.returnPressed.connect(self.open)
+        self.ui.tree.itemChanged.connect(self.on_itemChanged)
 
-        main=InputList(item_widget=Item)
-        self.ui.addWidget(main, 'main', main=True)
+        self.ui.addWidget(InputList(item_widget=Item), 'main', main=True)
         self.ui.main.input.hideLabel()
         self.ui.main.returnPressed.connect(self.open)
 
         self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
+
+    def on_itemChanged(self, item): self.open(item=item)
 
     @register('tr')
     def toggleTree(self):
@@ -42,11 +42,14 @@ class Part(Plugin):
         else:
             self.ui.show(self.ui.tree)
 
-    def update(self, view):
+    @register('r')
+    def refresh(self):
 
-        dhash=view.document().hash()
-        data=self.part.getTreeDict(dhash)
-        if data: self.ui.tree.installData({'root': data})
+        view=self.app.main.display.view
+        if view:
+            dhash=view.document().hash()
+            data=self.part.getTreeDict(dhash)
+            if data: self.ui.tree.installData({'root': data})
 
     @register('t', modes=['command'])
     def toggle(self):
@@ -59,6 +62,7 @@ class Part(Plugin):
     def activate(self):
 
         self.activated=True
+        self.refresh()
         self.ui.activate()
         self.toggleTree()
 
@@ -102,12 +106,29 @@ class Part(Plugin):
             data=sorted(data, key=lambda x: (x['page'], x['y1']))
             self.ui.main.setList(data)
 
-    @register('o')
-    def open(self):
+    @register('p')
+    def parse(self):
 
-        item=self.ui.main.list.currentItem()
-        if self.activated and item:
+        if self.app.main.display.view:
+            path=self.app.main.display.view.document().filePath()
+            self.app.tables.hash.hash(path, force_parse=True)
+
+    @register('o')
+    def openAndFocus(self): self.open(focus=True)
+
+    @register('O')
+    def open(self, item=None, focus=False):
+
+        if item is None:
+            if self.ui.main.isVisible():
+                item=self.ui.main.list.currentItem()
+            elif self.ui.tree.isVisible():
+                item=self.ui.tree.currentItem()
+
+        if item:
             page=item.itemData['page']+1
             y=item.itemData['y1']-0.05
             view=self.app.main.display.currentView()
-            if view: view.jumpToPage(page, 0, y)
+            if view: 
+                view.jumpToPage(page, 0, y)
+                if focus: self.app.modes.setMode('normal')

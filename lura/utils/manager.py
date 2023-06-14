@@ -17,7 +17,6 @@ class Manager(QObject):
         self.plugins={}
 
     def loadPlugins(self):
-
         if self.app.config.has_section('Manager'):
             self.plugins_path=self.app.config.get('Manager', 'plugins_path') 
             sys.path.append(self.plugins_path)
@@ -29,7 +28,6 @@ class Manager(QObject):
                         plugin=plugin_class(self.app)
                         self.plugins[plugin.name]=plugin
                         setattr(self, plugin.name, plugin)
-
         self.app.actionRegistered.emit()
 
     def register(self, plugin, actions): 

@@ -34,10 +34,10 @@ class Lura(QApplication):
 
         self.stack=StackWindow(self)
 
+        self.parse()
+
         self.manager.loadPlugins()
         self.modes.addModes()
-
-        self.parse()
 
     def setConfig(self):
 

@@ -39,10 +39,7 @@ class Display(QSplitter):
         self.view=None
         self.activated=False
 
-        self.configure=Configure(app, 
-                                 'Display', 
-                                 self, 
-                                 mode_keys={'command': 'w', 'focus':'v'})
+        self.configure=Configure(app, 'Display', self, mode_keys={'command': 'w'})
 
         # self.style_sheet='''QWidget {background-color: transparent}'''
         # self.setStyleSheet(self.style_sheet)
@@ -182,6 +179,11 @@ class Display(QSplitter):
         self.keyPressEventOccurred.emit(event)
         super().keyPressEvent(event)
 
+    @register(key='H', modes=['command'])
+    def toggleCursor(self): 
+
+        if self.view: self.view.toggleCursor()
+
     @register(key='u', modes=['command'])
     def updateView(self): 
 
@@ -285,17 +287,17 @@ class Display(QSplitter):
     @register(key='X', modes=['normal'])
     def closeCurrentView(self): self.closeView(self.currentView())
 
-    @register('c', modes=['focus']) 
+    @register('c', modes=['command']) 
     def focusCurrentView(self): 
 
         self.deactivate(focusView=False)
         self.setFocus()
         if self.view: self.view.setFocus()
 
-    @register('k', modes=['focus'])
+    @register('k', modes=['command'])
     def focusUpView(self): self.focus(-1)
 
-    @register('j', modes=['focus'])
+    @register('j', modes=['command'])
     def focusDownView(self): self.focus(+1)
 
     @register('C', modes=['command'])

@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from plugin import ListWidget, Item
+from plugin.widget import ListWidget, Item
 
 from lura.utils import Mode, register
 
@@ -13,6 +13,7 @@ class Search(Mode):
         super(Search, self).__init__(app=app, 
                                      listen_leader='/', 
                                      show_statusbar=True,
+                                     delisten_on_exec=False,
                                      )
 
         self.index=-1
@@ -69,15 +70,15 @@ class Search(Mode):
 
     def delisten(self, *args, **kwargs):
 
-        super().delisten(*args, **kwargs)
-
         if self.listening:
 
             self.clear()
             self.ui.deactivate()
             self.app.main.bar.hideWanted.disconnect()
             self.app.main.bar.edit.returnPressed.disconnect(self.find)
-            self.app.main.display.view.cleanUp()
+            self.app.main.display.cleanUp()
+
+        super().delisten(*args, **kwargs)
 
     def clear(self):
 
