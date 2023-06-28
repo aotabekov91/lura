@@ -1,1 +1,0 @@
-from .anki import Anki

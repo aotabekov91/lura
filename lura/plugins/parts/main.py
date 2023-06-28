@@ -3,7 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from tables import Part as Table
-from lura.utils import Plugin, register
+
+from plugin.app import register
+from plugin.app.plugin import Plugin 
 from plugin.widget import Item, InputList
 
 from .widget import PartTree
@@ -53,7 +55,7 @@ class Part(Plugin):
 
         view=self.app.main.display.view
         if view:
-            dhash=view.document().hash()
+            dhash=view.model().hash()
             data=self.part.getTreeDict(dhash)
             if data: self.ui.tree.installData({'root': data})
 
@@ -104,7 +106,7 @@ class Part(Plugin):
 
         view=self.app.main.display.currentView()
         if view: 
-            dhash=view.document().hash() 
+            dhash=view.model().hash() 
             data=self.part.search(f'hash:{dhash} kind:{kind}')
             for d in data:
                 d['up']=d['text']
@@ -116,7 +118,7 @@ class Part(Plugin):
     def parse(self):
 
         if self.app.main.display.view:
-            path=self.app.main.display.view.document().filePath()
+            path=self.app.main.display.view.model().filePath()
             self.app.tables.hash.hash(path, force_parse=True)
 
     @register('o')
@@ -136,5 +138,5 @@ class Part(Plugin):
             y=item.itemData['y1']-0.05
             view=self.app.main.display.currentView()
             if view: 
-                view.jumpToPage(page, 0, y)
+                view.goto(page, 0, y)
                 if focus: self.app.modes.setMode('normal')

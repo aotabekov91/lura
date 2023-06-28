@@ -1,60 +1,41 @@
-#!/usr/bin/env python
-
-import os
-import sys
-import inspect
-
-from configparser import RawConfigParser
+import argparse
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-import argparse
+from tables import Tables
+from tables import Metadata, Hash, Annotation
 
-from .modes import Modes
-from .utils import Tables
-from .utils import Manager
+from plugin.app import BaseApp
 
-from .core import StackWindow
+from .modes import *
+from .viewer import LuraView
+from .utils import LuraDisplay, LuraBuffer
 
-class Lura(QApplication):
+class Lura(BaseApp):
 
     actionRegistered=pyqtSignal()
 
     def __init__(self):
 
-        super().__init__([])
+        self.loadTables()
+        super().__init__()
 
-        self.setConfig()
+    def setStack(self, display_class=None, view_class=None):
+
+        super().setStack(LuraDisplay, LuraView)
+
+    def loadTables(self):
 
         self.tables=Tables()
-        self.modes=Modes(self)
-        self.manager=Manager(self)
-
-        self.stack=StackWindow(self)
-
-        self.parse()
-
-        self.manager.loadPlugins()
-        self.modes.addModes()
-
-    def setConfig(self):
-
-        file_path=os.path.abspath(inspect.getfile(self.__class__))
-        mode_path=os.path.dirname(file_path).replace('\\', '/')
-        self.configPath=f'{mode_path}/config.ini'
-        self.config=RawConfigParser()
-        self.config.optionxform=str
-        self.config.read(self.configPath)
+        self.tables.add_table(Hash, 'hash')
+        self.tables.add_table(Metadata, 'metadata')
+        self.tables.add_table(Annotation, 'annotation') 
 
     def parse(self):
 
         parser = argparse.ArgumentParser()
-
-        parser.add_argument('-a', '--aid', default=None, type=int)
-        parser.add_argument('-b', '--bid', default=None, type=int)
-        parser.add_argument('-d', '--dhash', default=None, type=str)
 
         parser.add_argument('file', nargs='?', default=None, type=str)
         parser.add_argument('-p', '--page', default=0, type=int)
@@ -65,16 +46,28 @@ class Lura(QApplication):
 
         if parsed_args.file:
             self.main.open(filePath=parsed_args.file)
-        elif parsed_args.dhash:
-            self.main.openBy(kind='hash', criteria=parsed_args.dhash)
-        elif parsed_args.aid:
-            self.main.openBy(kind='annotation', criteria=parsed_args.aid)
-        elif parsed_args.bid:
-            self.main.openBy(kind='bookmark', criteria=parsed_args.bid)
 
         if parsed_args.page:
             view=self.main.display.currentView()
-            if view: view.jumpToPage(parsed_args.page, parsed_args.xaxis, parsed_args.yaxis)
+            if view: 
+                view.goto(
+                        parsed_args.page, 
+                        parsed_args.xaxis, 
+                        parsed_args.yaxis)
+
+    def initiate(self):
+
+        self.manager.setBufferManager(LuraBuffer)
+        super().initiate()
+
+    def loadModes(self): 
+
+        for mode_class in [Normal, Command, Visual]: 
+
+            mode=mode_class(self)
+            self.modes.addMode(mode)
+
+        self.modes.setMode('normal')
 
 if __name__ == "__main__":
     app = Lura()

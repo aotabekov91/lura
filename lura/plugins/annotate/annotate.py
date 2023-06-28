@@ -1,12 +1,13 @@
-import os
 import functools
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils import Mode, getPosition 
+from plugin.app.mode import Mode
 from plugin.widget import ListWidget, UpDown
+
+from lura.utils import getPosition 
 
 class Annotate(Mode):
 
@@ -53,8 +54,12 @@ class Annotate(Mode):
 
         self.ui.addWidget(ListWidget(item_widget=UpDown), 'mode', main=True)
         self.ui.main.setList(self.colorList)
+        self.ui.mode.hideWanted.connect(self._onExecuteMatch)
 
-        self.ui.hideWanted.connect(lambda: self.app.modes.setMode('normal'))
+    def _onExecuteMatch(self):
+
+        self.ui.dock.hide()
+        super()._onExecuteMatch()
 
     def listen(self):
 
@@ -64,7 +69,7 @@ class Annotate(Mode):
 
         self.deactivate()
 
-        selections=self.app.main.display.view.selection()
+        selections=self.app.main.display.view.selected()
 
         if selections:
 
@@ -81,9 +86,10 @@ class Annotate(Mode):
             aData=self.write(dhash, pageNumber, text, area, function)
 
             self.annotation.add(page.document(), aData)
+
             self.annotation.update()
 
-            pageItem.setSelection()
+            pageItem.select()
             pageItem.refresh(dropCachedPixmap=True)
             self.update()
 
@@ -95,12 +101,13 @@ class Annotate(Mode):
                 'page': pageNumber,
                 'position': position,
                 'kind':'document',
-                'text':text,
                 'content':text,
                 'function':function,
                 }
 
         self.app.tables.annotation.writeRow(data)
+
+        for f in ['function', 'kind', 'content']: data.pop(f)
         return self.app.tables.annotation.getRow(data)[0]
 
     def activateCheck(self, event): 

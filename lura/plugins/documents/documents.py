@@ -2,8 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils import Plugin, register
-
+from plugin.app import register
+from plugin.app.plugin import Plugin 
 from plugin.widget import UpDown, InputList
 
 class Documents(Plugin):

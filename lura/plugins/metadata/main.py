@@ -1,8 +1,9 @@
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
-from lura.utils import Plugin, register
+from plugin.app import register
+from plugin.app.plugin import Plugin 
 from plugin.widget import UpDownEdit, InputList
 
 class Metadata(Plugin):
@@ -52,23 +53,20 @@ class Metadata(Plugin):
     def update(self):
 
         view=self.app.main.display.view
-        if view and view.document():
+        if view and view.model():
 
-            dhash=view.document().hash()
+            dhash=view.model().hash()
             meta=self.app.tables.metadata.getRow({'hash':dhash})
-            dlist=[]
             if meta:
+                dlist=[]
                 for f, v in meta[0].items():
                     if f in self.excludeFields: continue
                     data={'up':f.title(), 'down':v, 'hash':dhash, 'field':f}
                     data['up_color']='green'
                     dlist+=[data]
+                self.ui.main.setList(dlist)
+                text=self.ui.main.input.text()
+                if text: self.ui.main.list.filter(text)
             else:
-                table_fields=self.app.tables.metadata.cleanFields()
-                for f in table_fields:
-                    if not f in self.excludeFields:
-                        data={'up':f.title(), 'down':'', 'hash':dhash, 'field': f}
-                        data['down_color']='green'
-                        dlist+=[data]
-
-            self.ui.main.setList(dlist)
+                self.app.tables.metadata.writeRow({'hash':dhash})
+                self.update()

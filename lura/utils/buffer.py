@@ -1,79 +1,28 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+import os
 
-from collections import OrderedDict
+from plugin.app import Buffer
+from ..render import PdfDocument
 
-from lura.render import PdfDocument
-from lura.view import DocumentView
+class LuraBuffer(Buffer):
 
-class BufferManager(QObject):
+    def __init__(self, *args, **kwargs):
 
-    documentCreated=pyqtSignal(object)
-    documentRegistered=pyqtSignal(object)
-
-    def __init__(self, app):
-        super().__init__(app)
-        self.app=app
-        self.config=app.config
-        self.views=OrderedDict()
+        super().__init__(*args, **kwargs)
         self.documents={}
 
-    def addView(self, filePath):
+    def load(self, filePath):
 
-        if filePath in self.views: return self.views[filePath]
+        filePath=os.path.abspath(filePath)
 
-        document=self.loadDocument(filePath)
-        if document is None: return 
-
-        view=DocumentView(self.app.window, self.config.copy())
-        view.open(document)
-
-        self.views[filePath]=view
-        return view
-
-    def updateViews(self):
-        for view in self.views.values():
-            if view.isVisible(): view.readjust()
-
-    def loadDocument(self, filePath):
-        
         if filePath in self.documents:
             return self.documents[filePath]
-
         document=PdfDocument(filePath)
         if document.readSuccess():
-
-            data=self.app.tables.get('documents', {'loc':filePath})
-
-            if data is None:
-
-                self.app.tables.write('documents', {'loc': filePath})
-                data=self.app.tables.get('documents', {'loc':filePath})
-
-            document.setParent(self.app)
-            document.setId(data['id'])
-
-            return document
-
-    def getAllViews(self):
-        return list(self.views.values())
-
-    def getView(self, filePath=None): 
-        if filePath is None and len(self.views)>0: return self.views[list(self.views.keys())[-1]]
-        if filePath in self.views: return self.views[filePath]
-
-    def open(self, filePath):
-
-        if filePath is None: return
-        if filePath in self.views: return self.views[filePath]
-        if type(filePath)!=list: filePath=[filePath,]
-        [self.addView(path) for path in filePath]
-        return self.views.get(filePath[-1], None)
-
-    def close(self, filePath):
-        if not filePath in self.views: return
-        return self.views.pop(filePath)
-
-    def hideViews(self):
-        [view.hide() for view in self.views.values()]
+            self.documents[filePath]=document
+            dhash=self.app.tables.hash.hash(filePath)
+            if dhash:
+                document.setParent(self.app)
+                document.setHash(dhash)
+                document.setId(dhash)
+                self.bufferCreated.emit(document)
+                return document

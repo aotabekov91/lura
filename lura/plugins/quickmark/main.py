@@ -3,7 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from tables import Quickmark as Table
-from lura.utils import Plugin, register
+
+from plugin.app import register
+from plugin.app.plugin import Plugin
 from plugin.widget import Item, InputList 
 
 class Quickmark(Plugin):
@@ -83,7 +85,7 @@ class Quickmark(Plugin):
 
     def setData(self):
 
-        document= self.app.main.display.view.document()
+        document= self.app.main.display.view.model()
         if document:
             dhash = document.hash()
             rows=self.marks.getRow({'hash': dhash})
@@ -117,6 +119,6 @@ class Quickmark(Plugin):
     def jump(self, mark):
 
         page, left, top = tuple(mark['position'].split(':'))
-        self.app.main.display.currentView().jumpToPage(
+        self.app.main.display.currentView().goto(
                 int(page), float(left), float(top))
         self.app.main.display.currentView().setFocus()

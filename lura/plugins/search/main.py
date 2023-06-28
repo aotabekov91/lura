@@ -2,9 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from plugin.app import register
+from plugin.app.mode import Mode
 from plugin.widget import ListWidget, Item
-
-from lura.utils import Mode, register
 
 class Search(Mode):
 
@@ -93,7 +93,7 @@ class Search(Mode):
 
         def search(text, view, found=[]):
             if view:
-                document=view.document()
+                document=view.model()
                 for page in document.pages().values():
                     rects=page.search(text)
                     if rects:
@@ -138,7 +138,7 @@ class Search(Mode):
         pageItem.setSearched([matchMapped])
         sceneRect=pageItem.mapRectToScene(matchMapped)
 
-        self.app.main.display.view.jumpToPage(page)
+        self.app.main.display.view.goto(page)
         self.app.main.display.view.centerOn(0, sceneRect.y())
 
     def getLine(self, text, page, rectF):

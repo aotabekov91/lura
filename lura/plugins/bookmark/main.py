@@ -1,10 +1,12 @@
 import os
 
 from tables import Bookmark as Table
-from plugin.widget import UpDownEdit, InputList
 
-from lura.utils import Plugin, register
-from lura.utils import getPosition, getBoundaries, BaseInputListStack
+from plugin.app import register
+from plugin.app.plugin import Plugin 
+from plugin.widget import UpDownEdit, InputList, BaseInputListStack
+
+from lura.utils import getPosition, getBoundaries
 
 class Bookmark(Plugin):
 
@@ -65,7 +67,7 @@ class Bookmark(Plugin):
         if not view: view=self.app.main.display.currentView()
 
         if view:
-            criteria={'hash': view.document().hash()}
+            criteria={'hash': view.model().hash()}
             self.bookmarks = self.app.tables.bookmark.getRow(criteria)
             if self.bookmarks:
                 for a in self.bookmarks:
@@ -126,7 +128,7 @@ class Bookmark(Plugin):
         view=self.app.main.display.currentView()
         if view:
             data={}
-            data['hash']=view.document().hash()
+            data['hash']=view.model().hash()
             data['page']=view.pageItem().page().pageNumber()
             data['position']=':'.join([str(f) for f in view.saveLeftAndTop()])
             return self.app.tables.bookmark.getRow(data)
@@ -149,7 +151,7 @@ class Bookmark(Plugin):
                 data['title']=text
                 data['text']=text
                 data['kind']='document'
-                data['hash']=view.document().hash()
+                data['hash']=view.model().hash()
                 data['page']=view.pageItem().page().pageNumber()
                 data['position']=':'.join([str(f) for f in view.saveLeftAndTop()])
                 self.app.tables.bookmark.writeRow(data)

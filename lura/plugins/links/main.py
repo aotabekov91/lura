@@ -4,7 +4,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils import Mode, register
+from plugin.app import register
+from plugin.app.mode import Mode
 from plugin.widget import ListWidget, Item
 
 class Links(Mode):
@@ -55,7 +56,7 @@ class Links(Mode):
         elif 'page' in link:
             y=link['top']
             page=link['page']
-            self.app.main.display.view.jumpToPage(page, changeTop=y)
+            self.app.main.display.view.goto(page, changeTop=y)
 
     @register('l')
     def delisten(self, *args, **kwargs): 
@@ -69,7 +70,7 @@ class Links(Mode):
 
             self.ui.deactivate()
 
-            self.app.main.display.pageHasBeenJustPainted.disconnect(self.paint)
+            self.app.main.display.itemPainted.disconnect(self.paint)
             self.app.main.display.view.updateAll()
 
     @register('l', modes=['command'])
@@ -80,7 +81,7 @@ class Links(Mode):
         self.links=None
         self.activated=True
 
-        self.app.main.display.pageHasBeenJustPainted.connect(self.paint)
+        self.app.main.display.itemPainted.connect(self.paint)
         self.app.main.display.view.updateAll()
 
     def generate(self, item):

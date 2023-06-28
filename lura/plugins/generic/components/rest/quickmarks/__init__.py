@@ -1,1 +1,0 @@
-from .quickmarks import Quickmarks

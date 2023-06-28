@@ -1,3 +1,3 @@
-from .main import Modes
-
-def get_plugin_class(): return Modes
+from .normal import Normal
+from .visual import Visual
+from .command import Command

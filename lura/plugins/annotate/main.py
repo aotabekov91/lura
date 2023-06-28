@@ -5,7 +5,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from lura.utils import Plugin, register, getBoundaries
+from plugin.app import register
+from plugin.app.plugin import Plugin 
+
+from lura.utils import getBoundaries
 
 from .annotate import Annotate
 from .annotations import Annotations
@@ -21,8 +24,8 @@ class Annotation(Plugin):
         self.annotations=Annotations(app, self)
 
         self.paint()
-        self.app.main.buffer.documentCreated.connect(self.paint)
-        # self.app.main.display.mousePressEventOccured.connect(self.on_mousePressEvent)
+        self.app.buffer.bufferCreated.connect(self.paint)
+        # self.app.main.display.mousePressOccured.connect(self.on_mousePressEvent)
 
     def select(self, function): return
 
@@ -35,7 +38,7 @@ class Annotation(Plugin):
 
         # self.selected=None
         # pos=pageItem.mapToPage(event.pos())
-        # for annotation in view.document().annotations(): 
+        # for annotation in view.model().annotations(): 
         #     if annotation.page().pageItem()==pageItem:
         #         if annotation.contains(pos):
         #             self.selected=annotation
@@ -68,7 +71,7 @@ class Annotation(Plugin):
         if not document: 
 
             view=self.app.main.display.view
-            if view: document=view.document()
+            if view: document=view.model()
 
         if document:
 

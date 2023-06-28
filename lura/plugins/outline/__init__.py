@@ -1,4 +1,3 @@
-from .outline import Outline
+from .main import Outline
 
-def get_plugin_class():
-    return Outline
+def get_plugin_class(): return Outline
