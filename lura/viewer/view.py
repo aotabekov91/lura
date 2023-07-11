@@ -415,7 +415,8 @@ class LuraView(View):
     def updateAll(self, refresh=False):
 
         for pageItem in self.m_pageItems: 
-            pageItem.refresh(dropCachedPixmap=refresh)
+            if pageItem.isVisible():
+                pageItem.refresh(dropCachedPixmap=refresh)
 
     def wheelEvent(self, event):
 
