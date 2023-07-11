@@ -27,9 +27,7 @@ class Annotations(Plugin):
     def setActions(self):
 
         super().setActions()
-
         self.functions={}
-
         self.annotateActions={(self.__class__.__name__, 'toggle'): self.toggle}
 
         if self.config.has_section('Colors'):
