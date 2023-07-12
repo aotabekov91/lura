@@ -1,3 +1,5 @@
+from threading import Thread
+
 from plyer import notification
 from ankipulator import Submitter
 
@@ -25,7 +27,7 @@ class Card(Plugin):
         self.submitter=Submitter()
 
         self.setUI()
-        self.setData()
+        self.update()
 
     def setUI(self):
 
@@ -52,16 +54,22 @@ class Card(Plugin):
         self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
 
-    def setData(self):
+    @register(key='u')
+    def update(self):
 
-        for d in self.submitter.getDecks():
-            self.decks+=[{'up':d}]
-            self.ui.decks.setList(self.decks)
+        def _update():
 
-        for m, flds in self.submitter.getModels().items():
-            self.models+=[{'up':m}]
-            self.ui.models.setList(self.models)
-            self.fields[m]=flds
+            for d in self.submitter.getDecks():
+                self.decks+=[{'up':d}]
+                self.ui.decks.setList(self.decks)
+
+            for m, flds in self.submitter.getModels().items():
+                self.models+=[{'up':m}]
+                self.ui.models.setList(self.models)
+                self.fields[m]=flds
+
+        t=Thread(target=_update)
+        t.run()
 
     def on_contentChanged(self, widget):
 
@@ -90,6 +98,15 @@ class Card(Plugin):
             self.ui.main.setList(data)
             self.ui.models.clear()
             self.ui.show(self.ui.main)
+
+    @register('f', modes=['command'])
+    def focusField(self, digit=1):
+
+        digit-=1
+
+        if hasattr(self.ui.current, 'list'):
+            self.actOnFocus()
+            self.ui.current.list.focusItem(digit)
 
     @register('t', modes=['command'])
     def toggle(self): super().toggle()
