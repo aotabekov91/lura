@@ -174,7 +174,7 @@ class Card(Plugin):
             note['fields'][data['up']]=data['down']
         return note
 
-    @register('s')
+    @register('s', modes=['command'])
     def submit(self, note=None):
 
         if not note: note=self.createNote()
