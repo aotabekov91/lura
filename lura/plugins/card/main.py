@@ -99,6 +99,20 @@ class Card(Plugin):
             self.ui.models.clear()
             self.ui.show(self.ui.main)
 
+    @register('y', modes=['command'])
+    def yankToField(self, digit=1):
+
+        digit-=1
+
+        if hasattr(self.ui.current, 'list'):
+            widget=self.ui.current.list.getWidget(digit)
+            view=self.app.main.display.view
+            if view.selected(): 
+                text=[]
+                for s in view.selected(): text+=[s['text']]
+                text=' '.join(text)
+                widget.setTextDown(text)
+
     @register('f', modes=['command'])
     def focusField(self, digit=1):
 
