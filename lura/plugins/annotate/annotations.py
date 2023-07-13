@@ -1,4 +1,3 @@
-import os
 import functools
 
 from PyQt5.QtGui import *
@@ -14,6 +13,9 @@ from lura.utils import getPosition, getBoundaries
 class Annotations(Plugin):
 
     def __init__(self, app, annotation):
+
+        self.sort_by='id'
+        self.sort_order='descending'
 
         self.annotation=annotation
 
@@ -47,6 +49,63 @@ class Annotations(Plugin):
         self.app.manager.register(self, self.actions)
 
     def select(self, function): pass
+
+    @register('f', modes=['command'])
+    def focusOnField(self, digit=1):
+
+        digit-=1
+        if hasattr(self.ui.current, 'list'):
+            widget=self.ui.current.list.getWidget(digit)
+            self.actOnFocus()
+            widget.setFocus()
+            widget.down.moveCursor(QTextCursor.End)
+
+    @register('sid')
+    def sortByIdDescending(self): 
+
+        self.sort_by='id'
+        self.sort_order='descending'
+        self.update()
+
+    @register('sia')
+    def sortByIdAscending(self): 
+        self.sort_by='id'
+        self.sort_order='ascending'
+        self.update()
+
+    @register('spd')
+    def sortByPageDescending(self): 
+
+        self.sort_by='page'
+        self.sort_order='descending'
+        self.update()
+
+    @register('spa')
+    def sortByPageAscending(self): 
+
+        self.sort_by='page'
+        self.sort_order='ascending'
+        self.update()
+
+    def sort(self, annotations):
+
+        if self.sort_by=='page':
+            func=lambda x: (x.get('page', -1), x.get('position', 0))
+        else:
+            func=lambda x: x.get('id', -1)
+
+        if self.sort_order=='descending':
+            annotations=sorted(
+                    annotations, 
+                    key=lambda x: x.get('id', -1), 
+                    reverse=True)
+        else:
+            annotations=sorted(
+                    annotations, 
+                    key=func,
+                    reverse=False)
+
+        return annotations
 
     def setUI(self):
 
@@ -92,7 +151,7 @@ class Annotations(Plugin):
             annotations+=[data]
 
         if annotations:
-            self.ui.main.setList(annotations)
+            self.ui.main.setList(self.sort(annotations))
         else:
             self.ui.main.setList([])
 
