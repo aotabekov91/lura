@@ -36,9 +36,14 @@ class Outline(TreePlugin):
     def on_viewItemChanged(self, model, pageItem):
 
         if self.outline:
+            return
             page=pageItem.page().pageNumber()
-            found=self.find(page, self.outline)
+            found=self.find(page)
             if found: self.ui.main.tree.setCurrentIndex(found)
+
+    def find(self, page):
+
+        return super().find(item, self.outline)
 
     def open(self, how='reset', focus=True):
 
@@ -64,7 +69,6 @@ class Outline(TreePlugin):
             document=view.model()
             self.outline=document.loadOutline()
             self.ui.main.tree.setModel(self.outline)
-            print(self.outline.invisibleRootItem().rowCount())
 
     def activate(self):
 

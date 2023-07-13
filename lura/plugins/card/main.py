@@ -186,7 +186,6 @@ class Card(Plugin):
                     title='LookupMode', 
                     message='Submitted to Anki')
             self.clear()
-            self.ui.main.setFocus()
 
         except:
             notification.notify(
