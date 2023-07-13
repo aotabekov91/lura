@@ -27,7 +27,6 @@ class Card(Plugin):
         self.submitter=Submitter()
 
         self.setUI()
-        self.update()
 
     def setUI(self):
 
@@ -100,19 +99,30 @@ class Card(Plugin):
             self.ui.show(self.ui.main)
 
     @register('y', modes=['command'])
-    def yankToField(self, digit=1):
+    def yankToField(self, digit=1, append=False, separator=' '):
 
         digit-=1
 
         if hasattr(self.ui.current, 'list'):
             widget=self.ui.current.list.getWidget(digit)
             view=self.app.main.display.view
-            if view.selected(): 
+            if view.selected() and widget: 
                 text=[]
                 for s in view.selected(): text+=[s['text']]
                 text=' '.join(text)
+                if append:
+                    wtext=widget.textDown()
+                    text=f'{wtext}{separator}{text}'
                 widget.setTextDown(text)
                 view.select()
+
+    @register('a', modes=['command'])
+    def appendToField(self, digit=1): self.yankToField(digit, append=True)
+
+    @register('A', modes=['command'])
+    def AppendToField(self, digit=1): 
+
+        self.yankToField(digit, append=True, separator='\n\n')
 
     @register('f', modes=['command'])
     def focusField(self, digit=1):
@@ -128,6 +138,7 @@ class Card(Plugin):
 
         super().toggle()
         if self.model=='No model chosen': self.toggleModels()
+        if not self.decks: self.update()
 
     @register('p')
     def togglePin(self):

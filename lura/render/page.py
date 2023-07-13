@@ -21,7 +21,9 @@ class PdfPage(QObject):
 
         self.m_normalizedTransform=QTransform()
         self.m_normalizedTransform.reset()
-        self.m_normalizedTransform.scale(self.size().width(), self.size().height())
+        self.m_normalizedTransform.scale(
+                self.size().width(), 
+                self.size().height())
 
         self.m_native_annotations=self.getNativeAnnotations()
 

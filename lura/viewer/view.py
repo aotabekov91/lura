@@ -219,6 +219,8 @@ class LuraView(View):
 
     def toggleContinuousMode(self):
 
+        # Todo
+        return
         cond=str(self.s_settings.getboolean('continuousView', False))
         self.s_settings['continuousView']= not cond
         left, top = self.saveLeftAndTop()
