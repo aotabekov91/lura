@@ -12,6 +12,7 @@ class Normal(Mode):
             for s in view.selected(): text+=[s['text']]
             text=' '.join(text)
             self.app.clipboard().setText(text)
+            view.select()
 
     @register(key='w')
     def fitToPageWidth(self): 

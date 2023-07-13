@@ -112,6 +112,7 @@ class Card(Plugin):
                 for s in view.selected(): text+=[s['text']]
                 text=' '.join(text)
                 widget.setTextDown(text)
+                view.select()
 
     @register('f', modes=['command'])
     def focusField(self, digit=1):
@@ -123,7 +124,10 @@ class Card(Plugin):
             self.ui.current.list.focusItem(digit)
 
     @register('t', modes=['command'])
-    def toggle(self): super().toggle()
+    def toggle(self): 
+
+        super().toggle()
+        if self.model=='No model chosen': self.toggleModels()
 
     @register('p')
     def togglePin(self):
