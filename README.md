@@ -1,6 +1,6 @@
 # Lura 
 
-A PDF viewer
+A PDF viewer written in Python with PyQt.
 
 ## Install
 
