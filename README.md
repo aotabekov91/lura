@@ -16,7 +16,7 @@ To install plugins, have a look at [lura plugins](https://github.com/aotabekov91
 
 | Action                      | Shortcut   |
 | -------------------         | ---------- |
-| Enter normal mode (default) | $          |
+| Enter normal mode (default) | @          |
 | Up                          | k          |
 | Down                        | j          |
 | Page up                     | Shift+k    |
