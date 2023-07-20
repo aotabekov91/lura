@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='lura', 
-      version='1.0.0', 
+      version='0.0.1', 
       description='Lura',
       entry_points = {
           'console_scripts': [
