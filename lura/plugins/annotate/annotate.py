@@ -9,6 +9,8 @@ from plugin.widget import ListWidget, UpDown
 
 from lura.utils import getPosition 
 
+from .widget import PieChart
+
 class Annotate(Mode):
 
     def __init__(self, app, annotation):
@@ -91,7 +93,7 @@ class Annotate(Mode):
 
             pageItem.select()
             pageItem.refresh(dropCachedPixmap=True)
-            self.update()
+            # self.update()
 
     def write(self, dhash, pageNumber, text, boundaries, function):
 

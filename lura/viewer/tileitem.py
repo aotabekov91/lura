@@ -17,17 +17,15 @@ class TileItem(QObject):
         self.s_cache=parent.s_cache
         self.setup()
 
-    def pageItem(self):
-        return self.m_parent
+    def pageItem(self): return self.m_parent
 
     def setup(self):
-        self.m_renderTask = RenderTask(self)
 
+        self.m_renderTask = RenderTask(self)
         self.m_renderTask.finished.connect(
             self.on_renderTask_finished)
         self.m_renderTask.imageReady.connect(
             self.on_renderTask_imageReady)
-
         self.m_renderTask.cancel(True)
         self.m_renderTask.wait()
 
@@ -37,11 +35,29 @@ class TileItem(QObject):
             self.m_pixmapError=True
             return
         if self.m_rect==rect:
+
             self.m_obsoletePixmap=QPixmap()
             if prefetch and not self.m_renderTask.wasCanceledForcibly():
                 self.s_cache[self.cacheKey()]=QPixmap.fromImage(image)
             elif not self.m_renderTask.wasCanceled():
+                # image=self.revert(image)
                 self.m_pixmap=QPixmap.fromImage(image)
+
+    def revert(self, image):
+
+        # todo: very slow
+        for y in range(image.height()):
+            for x in range(image.width()):
+
+                pc=image.pixel(x, y)
+                red=abs(255-qRed(pc))
+                green=abs(255-qGreen(pc))
+                blue=abs(255-qBlue(pc))
+                c=[red, green, blue]
+                if c!=[0, 0, 0]: c=[124, green, 0]
+                nc=QColor(*c).rgb()
+                image.setPixel(x, y, nc)
+        return image
 
     def takePixmap(self):
         key = self.cacheKey()

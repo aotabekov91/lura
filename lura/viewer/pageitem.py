@@ -1,7 +1,7 @@
 import math
 
-from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from .tileitem import TileItem
@@ -89,7 +89,6 @@ class PageItem(QGraphicsObject):
         self.paintPage(painter, options.exposedRect)
         self.paintSearch(painter, options, widgets)
         self.paintSelection(painter, options, widgets)
-        # self.paintAnnottions(painter, options, widgets)
         self.itemPainted.emit(painter, options, widgets, self)
 
     def paintSelection(self, painter, options, widgets):

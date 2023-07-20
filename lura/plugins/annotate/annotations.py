@@ -37,9 +37,11 @@ class Annotations(Plugin):
             for key, col in self.colors.items():
 
                 color, function= tuple(col.split(' '))
-
-                func=functools.partial(self.select, function=function)
+                func=functools.partial(self.update, function=function)
                 func.key=f'{key.title()}'
+                func.info=None
+                func.command=True
+                func.name=function
                 func.modes=[]
 
                 self.commandKeys[key]=func
@@ -48,7 +50,20 @@ class Annotations(Plugin):
 
         self.app.manager.register(self, self.actions)
 
-    def select(self, function): pass
+    @register('st')
+    def selectTerm(self): self.update(function='Term')
+
+    @register('sm')
+    def selectMain(self): self.update(function='Main')
+
+    @register('sd')
+    def selectData(self): self.update(function='Data')
+
+    @register('sq')
+    def selectQuestion(self): self.update(function='Question')
+
+    @register('sm')
+    def selectMethodology(self): self.update(function='methodology')
 
     @register('f', modes=['command'])
     def focusOnField(self, digit=1):
@@ -121,7 +136,7 @@ class Annotations(Plugin):
         self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
 
-    def update(self):
+    def update(self, function=None):
 
         view=self.app.main.display.currentView()
         annotations=view.model().annotations()
@@ -151,7 +166,14 @@ class Annotations(Plugin):
             annotations+=[data]
 
         if annotations:
-            self.ui.main.setList(self.sort(annotations))
+            annotations=self.sort(annotations)
+            if function: 
+                tmp=[]
+                for a in annotations:
+                    if a.get('function', None)==function:
+                        tmp+=[a]
+                annotations=tmp
+            self.ui.main.setList(annotations)
         else:
             self.ui.main.setList([])
 

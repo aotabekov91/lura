@@ -148,3 +148,7 @@ class Search(Mode):
         line=f'<html>{page.find(lineRectF)}</html>'
         replacement=f'<font color="red">{text}</font>'
         return line.replace(text, replacement)
+
+    def activateCheck(self, event): 
+        if super().activateCheck(event):
+            return self.app.modes.normal.listening
