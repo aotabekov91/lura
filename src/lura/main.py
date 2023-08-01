@@ -47,3 +47,8 @@ class Lura(BaseApp):
             view=self.main.display.currentView()
             if view: 
                 view.goto(args.page, args.xaxis, args.yaxis)
+
+def run():
+
+    app=Lura()
+    app.run()

@@ -1,1 +1,1 @@
-from .lura import Lura
+from .main import Lura

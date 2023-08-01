@@ -9,7 +9,7 @@ class Visual(Mode):
 
     def __init__(self, app):
 
-        super().__init__(app, listen_leader='v')
+        super().__init__(app=app, listen_leader='v')
         self.hints=None
         self.hinting=False
         self.selection=None

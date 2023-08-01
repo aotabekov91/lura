@@ -16,7 +16,7 @@ dependencies=[
 
 [project.scripts]
 
-lura = "lura.run:main"
+lura = "lura.main:run"
 
 [tools.setuptools.package-data]
 
