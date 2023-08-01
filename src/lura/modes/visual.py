@@ -1,4 +1,4 @@
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 
 from qapp.utils import register
 from qapp.app.mode import Visual as Mode
@@ -358,7 +358,7 @@ class Visual(Mode):
             if self.hints is None: self.hints=self.generate(view)
 
             painter.save()
-            pen=QPen(Qt.red, 0.0)
+            pen=QtGui.QPen(QtCore.Qt.red, 0.0)
             painter.setPen(pen)
 
             item_hints=self.hints.get(pageItem, None)
