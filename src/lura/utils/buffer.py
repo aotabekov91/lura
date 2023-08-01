@@ -1,4 +1,5 @@
 import os
+import hashlib
 
 from qapp.app import Buffer
 from ..render import PdfDocument
@@ -7,11 +8,12 @@ class LuraBuffer(Buffer):
 
     def getHash(self, path):
 
-        if os.path.isfile(filePath):
+        if os.path.isfile(path):
 
             path=os.path.expanduser(path)
             file_hash = hashlib.md5()
-            with open(filePath, 'rb') as f:
+
+            with open(path, 'rb') as f:
                 chunk = f.read(4096)
                 while chunk:
                     file_hash.update(chunk)

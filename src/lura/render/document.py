@@ -1,11 +1,7 @@
-import hashlib
-import threading
-
-from PyQt5 import QtCore
 from popplerqt5 import Poppler
+from PyQt5 import QtCore, QtGui
 
 from .page import PdfPage
-from .annotation import PdfAnnotation
 
 class PdfDocument(QtCore.QObject):
 
@@ -14,7 +10,7 @@ class PdfDocument(QtCore.QObject):
         super().__init__()
         self.m_data=None
         self.m_hash=None
-        self.m_mutex=QMutex()
+        self.m_mutex=QtCore.QMutex()
         self.m_filePath=filePath
         self.readFilepath(filePath)
 
@@ -32,38 +28,6 @@ class PdfDocument(QtCore.QObject):
             return m_data, m_pages
         else:
             return None, {}
-
-    def filePath(self):
-
-        return self.m_filePath
-
-    def readSuccess(self):
-
-        return self.m_data is not None
-
-    def numberOfPages(self):
-
-        return self.m_data.numPages()
-
-    def setHash(self, dhash):
-
-        self.m_hash=dhash
-
-    def hash(self):
-
-        return self.m_hash
-
-    def author(self):
-
-        return self.m_data.author()
-
-    def title(self):
-
-        return self.m_data.title()
-
-    def page(self, pageNumber):
-
-        return self.m_pages.get(pageNumber, None)
 
     def nativeAnnotations(self):
 
@@ -90,9 +54,6 @@ class PdfDocument(QtCore.QObject):
 
         return pdfConverter.convert()
 
-    def pages(self):
-
-        return self.m_pages
 
     def setPages(self, m_data):
 
@@ -113,7 +74,7 @@ class PdfDocument(QtCore.QObject):
 
     def loadOutline(self):
 
-        outlineModel=QStandardItemModel()
+        outlineModel=QtGui.QStandardItemModel()
         toc=self.m_data.toc()
         if toc!=0:
             try:
@@ -125,9 +86,8 @@ class PdfDocument(QtCore.QObject):
     def outline(self, document, node, parent):
 
         element=node.toElement()
-
-        item=QStandardItem(element.tagName())
-        item.setFlags(Qt.ItemIsEnabled or Qt.ItemIsSelectable)
+        item=QtGui.QStandardItem(element.tagName())
+        item.setFlags(QtCore.Qt.ItemIsEnabled or QtCore.Qt.ItemIsSelectable)
 
         linkDestination=0
 
@@ -164,15 +124,14 @@ class PdfDocument(QtCore.QObject):
 
             del linkDestination
 
-            item.setData(page, Qt.UserRole+1)
-            item.setData(left, Qt.UserRole+2)
-            item.setData(top, Qt.UserRole+3)
-            item.setData(element.tagName(), Qt.UserRole+5)
+            item.setData(page, QtCore.Qt.UserRole+1)
+            item.setData(left, QtCore.Qt.UserRole+2)
+            item.setData(top, QtCore.Qt.UserRole+3)
+            item.setData(element.tagName(), QtCore.Qt.UserRole+5)
 
             pageItem=item.clone()
             pageItem.setText(str(page))
-            pageItem.setTextAlignment(Qt.AlignRight)
-
+            pageItem.setTextAlignment(QtCore.Qt.AlignRight)
 
             # if allow also pages the look of outline becomes ugly
             # parent.appendRow([item, pageItem])
@@ -181,27 +140,35 @@ class PdfDocument(QtCore.QObject):
         siblingNode=node.nextSibling()
 
         if not siblingNode.isNull():
-
             self.outline(document, siblingNode, parent)
 
         childNode=node.firstChild()
 
         if not childNode.isNull():
-
             self.outline(document, childNode, item)
 
-    def __eq__(self, other):
+    def __eq__(self, other): return self.m_data==other.m_data
 
-        return self.m_data==other.m_data
+    def __hash__(self): return hash(self.m_data)
 
-    def __hash__(self):
+    def id(self): return self.m_id
 
-        return hash(self.m_data)
+    def setId(self, m_id): self.m_id=m_id
 
-    def id(self):
+    def filePath(self): return self.m_filePath
 
-        return self.m_id
+    def readSuccess(self): return self.m_data is not None
 
-    def setId(self, m_id):
+    def numberOfPages(self): return self.m_data.numPages()
 
-        self.m_id=m_id
+    def setHash(self, dhash): self.m_hash=dhash
+
+    def hash(self): return self.m_hash
+
+    def author(self): return self.m_data.author()
+
+    def title(self): return self.m_data.title()
+
+    def page(self, pageNumber): return self.m_pages.get(pageNumber, None)
+
+    def pages(self): return self.m_pages

@@ -1,4 +1,4 @@
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 
 from popplerqt5 import Poppler
 from .annotation import PdfAnnotation
@@ -17,7 +17,7 @@ class PdfPage(QtCore.QObject):
         self.m_data = popplerPage
         self.m_pageNumber=pageNumber
 
-        self.m_normalizedTransform=QTransform()
+        self.m_normalizedTransform=QtGui.QTransform()
         self.m_normalizedTransform.reset()
         self.m_normalizedTransform.scale(
                 self.size().width(), 
@@ -92,9 +92,8 @@ class PdfPage(QtCore.QObject):
                            bound.bottomLeft()]
             quads+=[quad]
 
-        bound=QRectF()
-        for b in boundary:
-            bound=bound.united(b)
+        bound=QtCore.QRectF()
+        for b in boundary: bound=bound.united(b)
 
         annotation=Poppler.HighlightAnnotation()
         annotation.setHighlightQuads(quads)
@@ -132,23 +131,6 @@ class PdfPage(QtCore.QObject):
                     self.m_data.removeAnnotation(data['pAnn'].data())
                     self.annotationRemoved.emit(self)
 
-        # else:
-        #     self.m_data.removeAnnotation(aData['pAnn'].data())
-
-    # def removeAnnotation(self, aData):
-    #     self.m_data.removeAnnotation(aData['pAnn'].data())
-    #     # aid=aData.get('id', None)
-    #     # if aid:
-    #     #     for data in self.m_annotations:
-    #     #         if data['id']==aid:
-    #     #             self.m_annotations.pop(self.m_annotations.index(aData))
-    #     #             break
-    #     self.annotationRemoved.emit(self)
-
-    # def setAnnotations(self, annotations=[]): self.m_annotations=annotations
-
-    # def addAnnotation(self, annotation): self.m_annotations+=[annotation]
-
     def nativeAnnotations(self): return self.m_native_annotations
 
     def getNativeAnnotations(self):
@@ -168,8 +150,6 @@ class PdfPage(QtCore.QObject):
                 annotations+=[annotation]
 
         return annotations
-
-        # self.m_annotations=annotations
 
     def annotations(self): return self.m_annotations
 
@@ -219,7 +199,7 @@ class PdfPage(QtCore.QObject):
     def getRows(self, start, end):
 
         if start.y()==end.y():
-            rect=QRectF()
+            rect=QtCore.QRectF()
             if start.x()<end.x():
                 rect.setTopLeft(start.topLeft())
                 rect.setBottomRight(end.bottomRight())
