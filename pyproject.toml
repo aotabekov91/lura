@@ -11,7 +11,6 @@ description='Lura - a document viewer'
 dependencies=[
 	"plug==0.0.1",
 	"qapp==0.0.1",
-	"tables==0.0.1",
 	"python-poppler-qt5==21.3.0",
 	]
 
