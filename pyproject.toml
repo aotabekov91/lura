@@ -1,0 +1,28 @@
+[build-system]
+
+requires=["setuptools"]
+build-backend="setuptools.build_meta"
+
+[project]
+
+name="lura"
+version='0.0.1'
+description='Lura - a document viewer'
+dependencies=[
+	"plug==0.0.1",
+	"qapp==0.0.1",
+	"tables==0.0.1",
+	"python-poppler-qt5==21.3.0",
+	]
+
+[project.scripts]
+
+lura = "lura.run:main"
+
+[tools.setuptools.package-data]
+
+"*"=["*"]
+
+[tools.setuptools.packages.find]
+
+where=["src"]

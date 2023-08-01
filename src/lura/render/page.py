@@ -1,14 +1,12 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
 from popplerqt5 import Poppler
 from .annotation import PdfAnnotation
 
-class PdfPage(QObject):
+class PdfPage(QtCore.QObject):
 
-    annotationAdded=pyqtSignal(object)
-    annotationRemoved=pyqtSignal(object)
+    annotationAdded=QtCore.pyqtSignal(object)
+    annotationRemoved=QtCore.pyqtSignal(object)
 
     def __init__(self, popplerPage, pageNumber, document):
 

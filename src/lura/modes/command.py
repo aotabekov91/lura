@@ -1,9 +1,9 @@
-from plugin.app import register
-from plugin.app.mode import Command as Mode
+from qapp.utils import register
+from qapp.app.mode import Command as Mode
 
 class Command(Mode):
 
-    @register('wsp')
+    @register('sp')
     def splitHorizontally(self):
 
         view=self.app.main.display.view

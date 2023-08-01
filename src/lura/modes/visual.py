@@ -1,13 +1,11 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
-from plugin.app import register
-from plugin.app.mode import Visual as Mode
+from qapp.utils import register
+from qapp.app.mode import Visual as Mode
 
 class Visual(Mode):
 
-    hintSelected=pyqtSignal()
+    hintSelected=QtCore.pyqtSignal()
 
     def __init__(self, app):
 
@@ -96,7 +94,7 @@ class Visual(Mode):
             if kind=='select':
 
                 if direction=='next':
-                    edge=QRectF(end.x(), 
+                    edge=QtCore.QRectF(end.x(), 
                                 end.y()+end.height()+2, 
                                 end.width(), 
                                 end.height())
@@ -107,7 +105,7 @@ class Visual(Mode):
                         selected=[page.getRows(start, edge)]
                         if selected: item.select(selected)
                 elif direction=='prev':
-                    edge=QRectF(start.x(),
+                    edge=QtCore.QRectF(start.x(),
                                 start.y()-start.height()-2, 
                                 start.width(), 
                                 start.height())
@@ -184,7 +182,7 @@ class Visual(Mode):
 
         if word=='first':
 
-            rect=QRectF(0, start.y(), start.x(), start.height())
+            rect=QtCore.QRectF(0, start.y(), start.x(), start.height())
             selected=page.getRows(rect, end)
             if selected:
                 first_word=selected['data'][0].boundingBox()
@@ -192,7 +190,7 @@ class Visual(Mode):
 
         elif word=='last':
 
-            rect=QRectF(end.x(), end.y(), page.size().width(), end.height())
+            rect=QtCore.QRectF(end.x(), end.y(), page.size().width(), end.height())
             selected=page.getRows(rect, end)
             if selected:
                 last_word=selected['data'][-1].boundingBox()
@@ -202,7 +200,7 @@ class Visual(Mode):
 
             if direction=='forward':
 
-                edge_horizontal=QRectF(end.x()+end.width()+2, end.y(), 5, end.height())
+                edge_horizontal=QtCore.QRectF(end.x()+end.width()+2, end.y(), 5, end.height())
                 data=page.getRow(edge_horizontal.bottomRight())
 
                 if data: 
@@ -211,7 +209,7 @@ class Visual(Mode):
 
                 else:
                     for i in range(1, int(end.x())):
-                        edge=QRectF(i, end.y()+end.height()+2, 2, end.height())
+                        edge=QtCore.QRectF(i, end.y()+end.height()+2, 2, end.height())
                         data=page.getRow(edge.bottomRight())
 
                         if data: 
@@ -221,7 +219,7 @@ class Visual(Mode):
 
             elif direction=='backward':
 
-                edge_horizontal=QRectF(start.x()-7, start.y(), 5, start.height())
+                edge_horizontal=QtCore.QRectF(start.x()-7, start.y(), 5, start.height())
                 data=page.getRow(edge_horizontal.topLeft())
                 if data: 
                     edge=data['box'][-1]
@@ -230,7 +228,7 @@ class Visual(Mode):
                 else:
                     width=page.size().width()
                     for i in range(int(width), int(start.x()), -1):
-                        edge=QRectF(i, start.y()-start.height(), 2, start.height()/2.)
+                        edge=QtCore.QRectF(i, start.y()-start.height(), 2, start.height()/2.)
                         data=page.getRow(edge.bottomRight())
 
                         if data: 

@@ -1,5 +1,5 @@
-from plugin.app import register
-from plugin.app.mode import Normal as Mode
+from qapp.utils import register
+from qapp.app.mode import Normal as Mode
 
 class Normal(Mode):
 

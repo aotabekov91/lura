@@ -8,7 +8,7 @@ from .cursor import Cursor
 from .pageitem import PageItem
 from .layout import DocumentLayout
 
-from plugin.app import View
+from qapp.app import View
 
 class LuraView(View):
 

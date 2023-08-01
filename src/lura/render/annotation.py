@@ -1,8 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5 import QtCore
 
-class PdfAnnotation(QObject):
+class PdfAnnotation(QtCore.QObject):
 
     def __init__(self, annotationData):
 
@@ -56,7 +54,7 @@ class PdfAnnotation(QObject):
 
         for quad in self.m_data.highlightQuads():
             points=quad.points
-            rectF=QRectF()
+            rectF=QtCore.QRectF()
             rectF.setTopLeft(points[0])
             rectF.setTopRight(points[1])
             rectF.setBottomRight(points[2])

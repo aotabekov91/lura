@@ -1,6 +1,6 @@
 import sys
 
-from lura import Lura
+from .lura import Lura
 
 def main():
     app = Lura()

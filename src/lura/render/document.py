@@ -1,16 +1,13 @@
 import hashlib
 import threading
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-
+from PyQt5 import QtCore
 from popplerqt5 import Poppler
 
 from .page import PdfPage
 from .annotation import PdfAnnotation
 
-class PdfDocument(QObject):
+class PdfDocument(QtCore.QObject):
 
     def __init__(self, filePath):
 
