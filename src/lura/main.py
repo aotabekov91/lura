@@ -10,6 +10,8 @@ class Lura(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
+    def __init__(self): super().__init__(initiate_stack=True)
+
     def setParser(self):
 
         super().setParser()
