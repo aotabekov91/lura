@@ -23,16 +23,14 @@ class Lura(PlugApp):
 
         data={}
         for plug, actions in self.manager.actions.items():
-            name=None
             plug_data=[]
+            if hasattr(plug, 'name'):
+                name=plug.name
+            else:
+                name=plug.__class__.__name__
             for d, a in actions.items():
-                if hasattr(plug, 'name'):
-                    name=plug.name
-                else:
-                    name=plug.__class__.__name__
                 plug_data+=['_'.join(d)]
-
-            if name: data[name]=plug_data
+            data[name]=plug_data
 
         return data
 
