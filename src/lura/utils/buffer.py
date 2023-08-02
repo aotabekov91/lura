@@ -1,10 +1,10 @@
 import os
 import hashlib
 
-from qapp.app import Buffer
+from qapp.core.manager import Buffman
 from ..render import PdfDocument
 
-class LuraBuffer(Buffer):
+class LuraBuffer(Buffman):
 
     def getHash(self, path):
 

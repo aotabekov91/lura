@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
 
-from qapp.app import Display
+from qapp.core.ui import Display
 
 class LuraDisplay(Display):
 

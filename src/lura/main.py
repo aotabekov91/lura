@@ -1,18 +1,21 @@
 from PyQt5 import QtCore
 
-from qapp.app import BaseApp
+from qapp.plug import PlugApp
 
 from .viewer import LuraView
 from .modes import Normal, Command, Visual
 from .utils import LuraDisplay, LuraBuffer
 
-class Lura(BaseApp):
+class Lura(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
     def setParser(self):
 
         super().setParser()
+
+        self.parser.add_argument(
+                'file', nargs='?', default=None, type=str)
         self.parser.add_argument(
                 '-p', '--page', default=0, type=int)
         self.parser.add_argument(
@@ -20,25 +23,19 @@ class Lura(BaseApp):
         self.parser.add_argument(
                 '-y', '--yaxis', default=0., type=float)
 
-    def setStack(self, display_class=None, view_class=None):
+    def setStack(self): super().setStack(LuraDisplay, LuraView)
 
-        super().setStack(LuraDisplay, LuraView)
-
-    def initiate(self):
-
-        self.manager.setBufferManager(LuraBuffer)
-        super().initiate()
+    def setManager(self): super().setManager(buffer=LuraBuffer)
 
     def loadModes(self): 
 
-        for mode_class in [Normal, Command, Visual]: 
-            self.modes.addMode(mode_class(self))
-
+        for m in [Normal, Command, Visual]: 
+            self.modes.addMode(m(self))
         self.modes.setMode('normal')
 
     def parse(self):
 
-        args, unkw = self.parser.parse_known_args()
+        args, unkw = super().parse()
 
         if args.file:
             self.main.open(filePath=args.file)
