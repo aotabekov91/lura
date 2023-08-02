@@ -14,7 +14,7 @@ class LuraCLI(Plug):
         super().setParser()
 
         self.parser.add_argument('command')
-        self.parser.add_argument('-m', '--mode')
+        self.parser.add_argument('-p', '--part')
 
     def setConnection(self): 
 
@@ -23,10 +23,10 @@ class LuraCLI(Plug):
 
     def modeAction(self, mode, action, request={}):
 
-        request['mode']=mode
+        request['part']=mode
         request['action']=action
-        self.socket.send_json(request)
 
+        self.socket.send_json(request)
         response=self.socket.recv_json()
         json_object = json.dumps(response, indent = 4) 
         print(json_object)
@@ -39,7 +39,7 @@ class LuraCLI(Plug):
         for i in range(0, len(unkw), 2):
             request[unkw[i][2:]]=unkw[i+1]
         if args.command:
-            self.modeAction(args.mode, args.command, request)
+            self.modeAction(args.part, args.command, request)
 
 def run():
 
