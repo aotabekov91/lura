@@ -1,3 +1,4 @@
+import zmq
 from PyQt5 import QtCore
 
 from qapp.plug import PlugApp
@@ -10,7 +11,16 @@ class Lura(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
-    def __init__(self): super().__init__(initiate_stack=True)
+    def __init__(self): 
+
+        super().__init__(
+            respond_port=True,
+            initiate_stack=True
+            )
+
+    def setConnection(self): 
+
+        super().setConnection(zmq.REP)
 
     def setParser(self):
 
