@@ -24,8 +24,9 @@ class Visual(Mode):
     def listen(self):
 
         super().listen()
-        selection=self.app.main.display.view.selected()
-        if not selection: self.hint()
+        if self.app.main.display.view:
+            selection=self.app.main.display.view.selected()
+            if not selection: self.hint()
 
     def jump(self):
 
