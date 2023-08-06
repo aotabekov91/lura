@@ -291,18 +291,11 @@ class View(BaseView):
 
     def setCurrentPageFromVisiblePages(self):
 
-        items=self.items(self.viewport().rect())
-        if len(items)==1:
+        r=self.viewport().rect()
+        v=QRect(int(r.width()/2)-5, int(r.height()/2-5), 10, 10)
+        items=self.items(v)
+        if items:
             self.setCurrentPage(items[0].page().pageNumber())
-        elif len(items)>1:
-            visibleHeight=0
-            for item in items:
-                r=self.viewport().rect()
-                viewportRectF=QRectF(r.x(), r.y(), r.width(), r.height())
-                intersected=item.boundingRect().intersected(viewportRectF)
-                if intersected.height()>visibleHeight:
-                    visibleHeight=intersected.height()
-                    self.setCurrentPage(item.page().pageNumber())
 
     def scaleMode(self):
 

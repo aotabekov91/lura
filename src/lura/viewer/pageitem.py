@@ -79,7 +79,6 @@ class PageItem(QGraphicsObject):
     def boundingRect(self):
 
         self.prepareGeometry()
-
         return self.m_boundingRect
 
     def paint(self, painter, options, widgets):
@@ -285,7 +284,11 @@ class PageItem(QGraphicsObject):
 
         self.hoverMoveOccured.emit(event, self)
 
-    def showOverlay(self, overlay, hideOverlay, elements, selectedElement):
+    def showOverlay(self, 
+                    overlay, 
+                    hideOverlay, 
+                    elements, 
+                    selectedElement):
 
         for element in elements:
             if not element in overlay:
