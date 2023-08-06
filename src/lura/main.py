@@ -80,7 +80,11 @@ class Lura(PlugApp):
                 response['result']=result
         return response
 
-    def setConnection(self): super().setConnection(kind='REP')
+    def registerByUmay(self, path=None, kind=None):
+        super().registerByUmay(path, kind='REQ')
+
+    def setConnection(self): 
+        super().setConnection(kind='REP')
 
     def setParser(self):
 

@@ -14,9 +14,13 @@ class SinglePageLayout:
         pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
         return viewportWidth-self.viewportPadding-2.*pageSpacing
 
-    def prepareLayout(self, pageItems, rightToLeftMode, left, 
+    def prepareLayout(self, 
+                      pageItems, 
+                      rightToLeftMode, 
+                      left, 
+                      right, 
+                      height):
 
-            right, height):
         pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
         pageHeight=0.
         for page in pageItems:
@@ -72,9 +76,13 @@ class DocumentLayout:
         pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
         return viewportHeight-2.0*pageSpacing
 
-    def prepareLayout(self, pageItems, rightToLeftMode=False,
+    def prepareLayout(self, 
+                      pageItems, 
+                      rightToLeftMode=False, 
+                      left=0., 
+                      right=0, 
+                      height=0.):
 
-            left=0., right=0, height=0.):
         return self.m_layoutMode.prepareLayout(
                 pageItems, rightToLeftMode, left, right, height)
 
