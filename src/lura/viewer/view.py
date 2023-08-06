@@ -12,11 +12,11 @@ from qapp.core.ui import View as BaseView
 
 class View(BaseView):
 
-    continuousModeChanged = pyqtSignal(bool, object)
     annotationAdded=pyqtSignal(object)
     annotationRemoved=pyqtSignal(object)
     scaleModeChanged = pyqtSignal(object, object)
     scaleFactorChanged = pyqtSignal(object, object)
+    continuousModeChanged = pyqtSignal(bool, object)
 
     def __init__(self, app, layout=DocumentLayout):
 
