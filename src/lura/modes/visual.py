@@ -349,13 +349,10 @@ class Visual(Mode):
 
         return hints
 
-        # return {number_to_string(i): [h, item] for i, h in enumerate(hints)}
-
     def paint(self, painter, options, widget, pageItem, view):
 
         if self.hinting:
 
-            # if self.hints is None: self.hints=self.generate(pageItem)
             if self.hints is None: self.hints=self.generate(view)
 
             painter.save()

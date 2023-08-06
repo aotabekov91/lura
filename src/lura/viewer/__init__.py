@@ -1,1 +1,1 @@
-from .view import LuraView
+from .view import View

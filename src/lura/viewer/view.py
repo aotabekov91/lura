@@ -8,9 +8,9 @@ from .cursor import Cursor
 from .pageitem import PageItem
 from .layout import DocumentLayout
 
-from qapp.core.ui import View
+from qapp.core.ui import View as BaseView
 
-class LuraView(View):
+class View(BaseView):
 
     continuousModeChanged = pyqtSignal(bool, object)
     annotationAdded=pyqtSignal(object)

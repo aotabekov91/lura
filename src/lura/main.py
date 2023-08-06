@@ -1,22 +1,22 @@
-import zmq
 import inspect
 from PyQt5 import QtCore
 
 from qapp.plug import PlugApp
 
-from .viewer import LuraView
+from .viewer import View
+from .utils import Display, Buffer
 from .modes import Normal, Command, Visual
-from .utils import LuraDisplay, LuraBuffer
 
 class Lura(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
-    def __init__(self): 
+    def __init__(self, **kwargs): 
 
         super().__init__(
             respond_port=True,
-            initiate_stack=True
+            initiate_stack=True,
+            **kwargs
             )
 
     def getActions(self):
@@ -80,9 +80,7 @@ class Lura(PlugApp):
                 response['result']=result
         return response
 
-    def setConnection(self): 
-
-        super().setConnection(zmq.REP)
+    def setConnection(self): super().setConnection(kind='REP')
 
     def setParser(self):
 
@@ -97,9 +95,9 @@ class Lura(PlugApp):
         self.parser.add_argument(
                 '-y', '--yaxis', default=0., type=float)
 
-    def setStack(self): super().setStack(LuraDisplay, LuraView)
+    def setStack(self): super().setStack(Display, View)
 
-    def setManager(self): super().setManager(buffer=LuraBuffer)
+    def setManager(self): super().setManager(buffer=Buffer)
 
     def loadModes(self): 
 

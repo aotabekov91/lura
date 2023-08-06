@@ -1,4 +1,3 @@
-import zmq
 import json
 
 from plug import Plug
@@ -18,7 +17,7 @@ class LuraCLI(Plug):
 
     def setConnection(self): 
 
-        self.socket = zmq.Context().socket(zmq.REQ)
+        self.socket = self.getConnection(kind='REQ')
         self.socket.connect(f'tcp://localhost:{self.port}')
 
     def modeAction(self, mode, action, request={}):
