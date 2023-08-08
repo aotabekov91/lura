@@ -5,7 +5,7 @@ from qapp.plug import PlugApp
 
 from .viewer import View
 from .utils import Display, Buffer
-from .modes import Normal, Command, Visual
+from .modes import Normal, Command, Visual, Input
 
 class Lura(PlugApp):
 
@@ -105,8 +105,8 @@ class Lura(PlugApp):
 
     def loadModes(self): 
 
-        for m in [Normal, Command, Visual]: 
-            self.modes.addMode(m(self))
+        modes=[Normal, Command, Visual, Input]
+        for m in modes: self.modes.addMode(m(self))
         self.modes.setMode('normal')
 
     def parse(self):
