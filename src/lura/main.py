@@ -2,10 +2,11 @@ import inspect
 from PyQt5 import QtCore
 
 from qapp.plug import PlugApp
+from qapp.core.modes import Input
 
 from .viewer import View
 from .utils import Display, Buffer
-from .modes import Normal, Command, Visual, Input
+from .modes import Normal, Command, Visual
 
 class Lura(PlugApp):
 
