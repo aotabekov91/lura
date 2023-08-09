@@ -21,7 +21,7 @@ class PdfDocument(QtCore.QObject):
     def loadDocument(self, filePath):
 
         m_data = Poppler.Document.load(filePath)
-        if m_data is not None:
+        if m_data:
             m_data.setRenderHint(Poppler.Document.Antialiasing)
             m_data.setRenderHint(Poppler.Document.TextAntialiasing)
             m_pages=self.setPages(m_data)

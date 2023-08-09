@@ -1,26 +1,40 @@
 import os
-import hashlib
+
+from PyQt5 import QtCore
 
 from qapp.core.manager import Buffman as BaseBuffmann
 
+from .hashman import Hashman
 from ..render import PdfDocument
 
 class Buffer(BaseBuffmann):
 
-    def getHash(self, path):
+    hashChanged=QtCore.pyqtSignal(object)
 
-        if os.path.isfile(path):
+    def __init__(self, *args, **kwargs):
 
-            path=os.path.expanduser(path)
-            file_hash = hashlib.md5()
+        super().__init__(*args, **kwargs)
+        self.setHashman()
 
-            with open(path, 'rb') as f:
-                chunk = f.read(4096)
-                while chunk:
-                    file_hash.update(chunk)
-                    chunk = f.read(4096)
+    def setHashman(self):
 
-            return file_hash.hexdigest()
+        self.hash_thread=QtCore.QThread()
+
+        self.hashman=Hashman(self)
+        self.hashman.moveToThread(self.hash_thread)
+
+        self.hash_thread.started.connect(self.hashman.loop)
+        self.hashman.hashed.connect(self.setHash)
+        QtCore.QTimer.singleShot(0, self.hash_thread.start)
+
+    def setHash(self, path, dhash):
+
+        if dhash:
+            buffer=self.buffers.get(path)
+            if buffer:
+                buffer.setHash(dhash)
+                buffer.setId(dhash)
+                self.hashChanged.emit(buffer)
 
     def load(self, path):
 
@@ -29,13 +43,11 @@ class Buffer(BaseBuffmann):
         if path in self.buffers:
             return self.buffers[path]
 
+        self.hashman.path=path
+
         buffer=PdfDocument(path)
         if buffer.readSuccess():
+            buffer.setParent(self.app)
             self.buffers[path]=buffer
-            dhash=self.getHash(path)
-            if dhash:
-                buffer.setParent(self.app)
-                buffer.setHash(dhash)
-                buffer.setId(dhash)
-                self.bufferCreated.emit(buffer)
-                return buffer
+            self.bufferCreated.emit(buffer)
+            return buffer
