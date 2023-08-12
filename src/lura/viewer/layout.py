@@ -12,7 +12,7 @@ class SinglePageLayout:
     def visibleWidth(self, viewportWidth):
 
         pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
-        return viewportWidth-self.viewportPadding-2.*pageSpacing
+        return viewportWidth-self.viewportPadding#-2.*pageSpacing
 
     def prepareLayout(self, 
                       pageItems, 
