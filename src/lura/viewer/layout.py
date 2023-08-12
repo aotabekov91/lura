@@ -29,8 +29,8 @@ class SinglePageLayout:
             top=height-boundingRect.top()
             page.setPos(left, top)
             pageHeight=boundingRect.height()
-            left=min(left, -0.5*boundingRect.width()-pageSpacing)
-            right=max(right, 0.5*boundingRect.width()+pageSpacing)
+            left=min(left, -0.5*boundingRect.width())#-pageSpacing)
+            right=max(right, 0.5*boundingRect.width())#+pageSpacing)
             height+=pageSpacing+pageHeight
         return left, right, height
 

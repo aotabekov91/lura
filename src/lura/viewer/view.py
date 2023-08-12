@@ -1,8 +1,6 @@
 import math
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
 from .cursor import Cursor
 from .pageitem import PageItem
@@ -12,11 +10,11 @@ from qapp.core.ui import View as BaseView
 
 class View(BaseView):
 
-    annotationAdded=pyqtSignal(object)
-    annotationRemoved=pyqtSignal(object)
-    scaleModeChanged = pyqtSignal(object, object)
-    scaleFactorChanged = pyqtSignal(object, object)
-    continuousModeChanged = pyqtSignal(bool, object)
+    annotationAdded=QtCore.pyqtSignal(object)
+    annotationRemoved=QtCore.pyqtSignal(object)
+    scaleModeChanged = QtCore.pyqtSignal(object, object)
+    scaleFactorChanged = QtCore.pyqtSignal(object, object)
+    continuousModeChanged = QtCore.pyqtSignal(bool, object)
 
     def __init__(self, app, layout=DocumentLayout):
 
@@ -27,6 +25,8 @@ class View(BaseView):
         self.m_currentPage = 1 
         self.m_paintlinks=False
         self.cursor=Cursor(self)
+        self.setBackgroundBrush(QtCore.Qt.black)
+        self.setContentsMargins(0,0,0,0)
 
     def show(self):
 
@@ -154,10 +154,8 @@ class View(BaseView):
             else:
                 if self.m_layout.leftIndex(index) == self.m_currentPage-1:
                     page.setVisible(True)
-                    top = boundingRect.top() - \
-                        self.s_settings.getfloat('pageSpacing', 0.0)
-                    height = boundingRect.height()+2. * \
-                        self.s_settings.getfloat('pageSpacing', 0,0)
+                    top = boundingRect.top()# -  self.s_settings.getfloat('pageSpacing', 0.0)
+                    height = boundingRect.height()# + 2. *  self.s_settings.getfloat('pageSpacing', 0,0)
                 else:
                     page.setVisible(False)
                     page.cancelRender()
@@ -183,9 +181,11 @@ class View(BaseView):
             dw, dh = page.displayedWidth(), page.displayedHeight()
             fitPageSize=[w/float(dw), h/float(dh)]
 
+            width_ratio=w/dw
+            
             scale = {
                 'ScaleFactor': page.scale(),
-                'FitToPageWidth': w/dw,
+                'FitToPageWidth': width_ratio,
                 'FitToPageHeight': min(fitPageSize)
                 }
 
@@ -193,6 +193,7 @@ class View(BaseView):
             page.setScaleFactor(s)
 
         height = self.s_settings.getfloat('pageSpacing', 0.0)
+        # height=0
         left, right, height = self.m_layout.prepareLayout(
             self.m_pageItems, height=height)
         self.scene().setSceneRect(left, 0.0, right-left, height)
@@ -232,14 +233,14 @@ class View(BaseView):
 
         scaleMode = self.s_settings.get('scaleMode', 'FitToPageHeight')
         if scaleMode == 'ScaleFactor':
-            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         elif scaleMode == 'FitToPageWidth':
-            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         elif scaleMode == 'FitToPageHeight':
-            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            policy = Qt.ScrollBarAlwaysOff
+            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            policy = QtCore.Qt.ScrollBarAlwaysOff
             if self.s_settings.getboolean('continuousView', True):
-                policy = Qt.ScrollBarAsNeeded
+                policy = QtCore.Qt.ScrollBarAsNeeded
 
     def down(self):
 
@@ -292,7 +293,7 @@ class View(BaseView):
     def setCurrentPageFromVisiblePages(self):
 
         r=self.viewport().rect()
-        v=QRect(int(r.width()/2)-5, int(r.height()/2-5), 10, 10)
+        v=QtCore.QRect(int(r.width()/2)-5, int(r.height()/2-5), 10, 10)
         items=self.items(v)
         if items:
             self.setCurrentPage(items[0].page().pageNumber())
@@ -364,7 +365,7 @@ class View(BaseView):
         if filePath is False: 
             filePath=self.m_model.filePath()
 
-        tFile=QTemporaryFile()
+        tFile=QtCore.QTemporaryFile()
 
         if tFile.open(): tFile.close()
 

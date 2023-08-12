@@ -2,7 +2,7 @@ import inspect
 from PyQt5 import QtCore
 
 from qapp.plug import PlugApp
-from qapp.core.modes import Input
+from qapp.core.modes import Input, Exec
 
 from .viewer import View
 from .utils import Display, Buffer
@@ -106,7 +106,7 @@ class Lura(PlugApp):
 
     def loadModes(self): 
 
-        modes=[Normal, Command, Visual, Input]
+        modes=[Normal, Command, Visual, Input, Exec]
         for m in modes: self.modes.addMode(m(self))
         self.modes.setMode('normal')
 

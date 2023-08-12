@@ -196,12 +196,16 @@ class PageItem(QGraphicsObject):
         self.m_transform.scale(xScale, yScale)
 
         self.m_normalizedTransform.reset()
-        self.m_normalizedTransform.scale(self.m_size.width(), self.m_size.height())
+        self.m_normalizedTransform.scale(
+                self.m_size.width(), 
+                self.m_size.height())
 
         self.m_boundingRect=self.m_transform.mapRect(QRectF(QPointF(), self.m_size))
 
-        self.m_boundingRect.setWidth(math.floor(self.m_boundingRect.width()))
-        self.m_boundingRect.setHeight(math.floor(self.m_boundingRect.height()))
+        self.m_boundingRect.setWidth(
+                math.floor(self.m_boundingRect.width()))
+        self.m_boundingRect.setHeight(
+                math.floor(self.m_boundingRect.height()))
         
         self.prepareTiling()
 
