@@ -7,11 +7,11 @@ class SinglePageLayout:
     def __init__(self, settings):
 
         self.s_settings=settings
-        self.viewportPadding=settings.getfloat('viewportPadding', 0) 
+        self.viewportPadding=settings.get('viewportPadding', 0) 
 
     def visibleWidth(self, viewportWidth):
 
-        pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
+        pageSpacing=self.s_settings.get('pageSpacing', 0.0)
         return viewportWidth-self.viewportPadding#-2.*pageSpacing
 
     def prepareLayout(self, 
@@ -21,7 +21,7 @@ class SinglePageLayout:
                       right, 
                       height):
 
-        pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
+        pageSpacing=self.s_settings.get('pageSpacing', 0.0)
         pageHeight=0.
         for page in pageItems:
             boundingRect=page.boundingRect()
@@ -73,7 +73,7 @@ class DocumentLayout:
 
     def visibleHeight(self, viewportHeight):
 
-        pageSpacing=self.s_settings.getfloat('pageSpacing', 0.0)
+        pageSpacing=self.s_settings.get('pageSpacing', 0.0)
         return viewportHeight-2.0*pageSpacing
 
     def prepareLayout(self, 

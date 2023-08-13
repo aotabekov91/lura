@@ -40,13 +40,13 @@ class PageItem(QGraphicsObject):
         self.m_paint_links=False
         self.setAcceptHoverEvents(True)
 
-        self.m_scaleFactor=self.view().settings().getfloat('scaleFactor', 1.)
-        self.m_rotation=self.view().settings().getint('rotation', 0)
-        self.m_xresol=self.view().settings().getint('resolutionX', 72)
-        self.m_yresol=self.view().settings().getint('resolutionY', 72)
-        self.m_proxy_padding=self.view().settings().getfloat('proxyPadding', 0.)
-        self.m_device_pixel_ration=self.view().settings().getfloat('devicePixelRatio', 1.)
-        self.m_use_tiling=self.view().settings().getboolean('useTiling', False)
+        self.m_scaleFactor=self.view().settings().get('scaleFactor', 1.)
+        self.m_rotation=self.view().settings().get('rotation', 0)
+        self.m_xresol=self.view().settings().get('resolutionX', 72)
+        self.m_yresol=self.view().settings().get('resolutionY', 72)
+        self.m_proxy_padding=self.view().settings().get('proxyPadding', 0.)
+        self.m_device_pixel_ration=self.view().settings().get('devicePixelRatio', 1.)
+        self.m_use_tiling=self.view().settings().get('useTiling', False)
 
         self.setup()
 

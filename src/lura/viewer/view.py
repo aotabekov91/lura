@@ -149,13 +149,13 @@ class View(BaseView):
 
             boundingRect = page.boundingRect().translated(page.pos())
 
-            if self.s_settings.getboolean('continuousMode', True):
+            if self.s_settings.get('continuousMode', True):
                 page.setVisible(True)
             else:
                 if self.m_layout.leftIndex(index) == self.m_currentPage-1:
                     page.setVisible(True)
-                    top = boundingRect.top()# -  self.s_settings.getfloat('pageSpacing', 0.0)
-                    height = boundingRect.height()# + 2. *  self.s_settings.getfloat('pageSpacing', 0,0)
+                    top = boundingRect.top()# -  self.s_settings.get('pageSpacing', 0.0)
+                    height = boundingRect.height()# + 2. *  self.s_settings.get('pageSpacing', 0,0)
                 else:
                     page.setVisible(False)
                     page.cancelRender()
@@ -192,7 +192,7 @@ class View(BaseView):
             s=scale[self.s_settings.get('scaleMode', 'FitToPageHeight')]
             page.setScaleFactor(s)
 
-        height = self.s_settings.getfloat('pageSpacing', 0.0)
+        height = self.s_settings.get('pageSpacing', 0.0)
         # height=0
         left, right, height = self.m_layout.prepareLayout(
             self.m_pageItems, height=height)
@@ -222,12 +222,12 @@ class View(BaseView):
 
         # Todo
         return
-        cond=str(self.s_settings.getboolean('continuousView', False))
+        cond=str(self.s_settings.get('continuousView', False))
         self.s_settings['continuousView']= not cond
         left, top = self.saveLeftAndTop()
         self.adjustScrollBarPolicy()
         self.prepareView(left, top)
-        self.continuousModeChanged.emit(self.s_settings.getboolean('continuousView'), self)
+        self.continuousModeChanged.emit(self.s_settings.get('continuousView'), self)
 
     def adjustScrollBarPolicy(self):
 
@@ -239,7 +239,7 @@ class View(BaseView):
         elif scaleMode == 'FitToPageHeight':
             self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
             policy = QtCore.Qt.ScrollBarAlwaysOff
-            if self.s_settings.getboolean('continuousView', True):
+            if self.s_settings.get('continuousView', True):
                 policy = QtCore.Qt.ScrollBarAsNeeded
 
     def down(self):
@@ -304,7 +304,7 @@ class View(BaseView):
 
     def zoom(self, kind='out'):
 
-        zoomFactor = self.s_settings.getfloat('zoomFactor', .1)
+        zoomFactor = self.s_settings.get('zoomFactor', .1)
         if self.scaleMode() != 'ScaleFactor': self.setScaleMode('ScaleFactor')
 
         if kind=='out':
@@ -318,7 +318,7 @@ class View(BaseView):
 
     def setScaleFactor(self, scaleFactor):
 
-        if self.s_settings.getfloat('scaleFactor', 1.) != scaleFactor:
+        if self.s_settings.get('scaleFactor', 1.) != scaleFactor:
             if self.scaleMode() == 'ScaleFactor':
                 self.s_settings['scaleFactor'] = str(scaleFactor)
                 for page in self.m_pageItems:

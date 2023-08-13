@@ -255,14 +255,14 @@ class Visual(Mode):
 
         if selected: item.select(selected)
 
-    def addKeys(self, event):
+    def addKeys(self, event, widget):
 
         self.timer.stop()
 
         if self.hinting:
             if self.registerKey(event): self.updateHint()
         else:
-            super().addKeys(event)
+            super().addKeys(event, widget)
 
     def updateHint(self):
 
