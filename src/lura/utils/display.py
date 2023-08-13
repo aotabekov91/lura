@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
 
-from qapp.core.ui import Display as BaseDisplay
+from gizmo.ui import Display as BaseDisplay
 
 class Display(BaseDisplay):
 

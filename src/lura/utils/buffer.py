@@ -2,7 +2,7 @@ import os
 
 from PyQt5 import QtCore
 
-from qapp.core.manager import Buffman as BaseBuffmann
+from qplug.manager import Buffman as BaseBuffmann
 
 from .hashman import Hashman
 from ..render import PdfDocument

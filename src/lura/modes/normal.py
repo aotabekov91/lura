@@ -1,5 +1,5 @@
-from qapp.utils import register
-from qapp.core.modes import Normal as Mode
+from qplug.utils import register
+from qplug.modes import Normal as Mode
 
 class Normal(Mode):
 

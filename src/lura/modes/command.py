@@ -1,5 +1,5 @@
-from qapp.utils import register
-from qapp.core.modes import Command as Mode
+from qplug.utils import register
+from qplug.modes import Command as Mode
 
 class Command(Mode):
 

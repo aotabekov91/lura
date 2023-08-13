@@ -1,12 +1,11 @@
 import math
 
 from PyQt5 import QtCore
+from gizmo.ui import View as BaseView
 
 from .cursor import Cursor
 from .pageitem import PageItem
 from .layout import DocumentLayout
-
-from qapp.core.ui import View as BaseView
 
 class View(BaseView):
 

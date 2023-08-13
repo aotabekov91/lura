@@ -1,8 +1,8 @@
 import inspect
 from PyQt5 import QtCore
 
-from qapp.plug import PlugApp
-from qapp.core.modes import Input, Exec
+from qplug import PlugApp
+from qplug.modes import Input, Exec
 
 from .viewer import View
 from .utils import Display, Buffer
