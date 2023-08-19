@@ -1,37 +1,41 @@
 Settings:
   port: 20002
-  plugs: ~/.config/lura/plugs
-  modes: ~/.config/lura/modes
 
 Lookup:
   Settings: 
     lookup_port: 43110
 
-Plugs:
-  - aotabekov91/lura_plugins:
-      subdir: 
-        - tree/main/src/plugs/card
-        - tree/main/src/plugs/autosave
-        - tree/main/src/plugs/bookmark
-        - tree/main/src/plugs/documents
-        - tree/main/src/plugs/files
-        - tree/main/src/plugs/jumper
-        - tree/main/src/plugs/links
-        - tree/main/src/plugs/lookup
-        - tree/main/src/plugs/metadata
-        - tree/main/src/plugs/outline
-        - tree/main/src/plugs/pager
-        - tree/main/src/plugs/parts
-        - tree/main/src/plugs/quickmark
-        - tree/main/src/plugs/rlist
-        - tree/main/src/plugs/search
-        - tree/main/src/plugs/annotate
+Plugman:
+  Settings: 
+    folder: /home/adam/picky
+    base: https://github.com
 
-Modes:
-  - aotabekov91/lura_modes:
-    - input
-    - search
-    - normal 
+  Picky:
+    - aotabekov91/lura_plugins:
+        subdir: 
+          - src/plugs/card
+          - src/plugs/autosave
+          - src/plugs/bookmark
+          - src/plugs/documents
+          - src/plugs/files
+          - src/plugs/jumper
+          - src/plugs/links
+          - src/plugs/lookup
+          - src/plugs/metadata
+          - src/plugs/outline
+          - src/plugs/pager
+          - src/plugs/parts
+          - src/plugs/quickmark
+          - src/plugs/rlist
+          - src/plugs/search
+          - src/plugs/annotate
+          - src/modes/normal
+          - src/modes/visual
+    - aotabekov91/plug:
+        subdir: 
+          - src/plug/qt/modes/exec
+          - src/plug/qt/modes/command
+          - src/plug/qt/plugs/powerline
 
 View:
   rotation: 0

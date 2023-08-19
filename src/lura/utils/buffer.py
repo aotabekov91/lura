@@ -2,12 +2,12 @@ import os
 
 from PyQt5 import QtCore
 
-from qplug.manager import Buffman as BaseBuffmann
+from plug.qt.utils import Buffer as Base
 
 from .hashman import Hashman
 from ..render import PdfDocument
 
-class Buffer(BaseBuffmann):
+class Buffer(Base):
 
     hashChanged=QtCore.pyqtSignal(object)
 

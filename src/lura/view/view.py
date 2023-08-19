@@ -38,13 +38,13 @@ class View(BaseView):
 
         super().connect()
         self.annotationAdded.connect(
-                self.app.main.display.annotationAdded)
-        self.app.main.display.annotationAdded.connect(
+                self.app.window.main.display.annotationAdded)
+        self.app.window.main.display.annotationAdded.connect(
                 self.on_annotationChanged)
         self.verticalScrollBar().valueChanged.connect(
                 self.on_verticalScrollBar_valueChaged)
         self.selection.connect(
-                self.app.main.display.viewSelection)
+                self.app.window.main.display.viewSelection)
 
     def on_annotationChanged(self, page):
 
@@ -213,7 +213,7 @@ class View(BaseView):
         for i, page in enumerate(self.m_pages):
             pageItem = PageItem(page, self)
             page.setPageItem(pageItem)
-            page.annotationAdded.connect(self.app.main.display.annotationAdded)
+            page.annotationAdded.connect(self.app.window.main.display.annotationAdded)
             self.m_pageItems += [pageItem]
             self.scene().addItem(pageItem)
 

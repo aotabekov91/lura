@@ -1,12 +1,10 @@
 import inspect
 from PyQt5 import QtCore
 
-from qplug import PlugApp
-from qplug.modes import Input, Exec
+from plug.qt import PlugApp
 
-from .viewer import View
+from .view import View
 from .utils import Display, Buffer
-from .modes import Normal, Command, Visual
 
 class Lura(PlugApp):
 
@@ -100,15 +98,18 @@ class Lura(PlugApp):
         self.parser.add_argument(
                 '-y', '--yaxis', default=0., type=float)
 
-    def setStack(self): super().setStack(Display, View)
 
-    def setManager(self): super().setManager(buffer=Buffer)
+    def setup(self): 
 
-    def loadModes(self): 
+        super().setup()
 
-        modes=[Normal, Command, Visual, Input, Exec]
-        for m in modes: self.modes.addMode(m(self))
-        self.modes.setMode('normal')
+        self.setParser()
+        self.setPlugman()
+        self.setGUI(
+            display_class=Display, 
+            view_class=View)
+        self.buffer=Buffer(self)
+        self.plugman.load()
 
     def parse(self):
 

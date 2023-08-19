@@ -10,7 +10,7 @@ version='0.0.1'
 description='Lura - a document viewer'
 dependencies=[
 	"gizmo==0.0.1",
-	"plug[qplug]==0.0.1",
+	"plug[qt]==0.0.1",
 	"python-poppler-qt5==21.3.0",
 	]
 
