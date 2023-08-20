@@ -7,7 +7,7 @@ Lookup:
 
 Plugman:
   Settings: 
-    folder: /home/adam/picky
+    folder: ~/.config/lura/picky
     base: https://github.com
 
   Picky:
@@ -31,6 +31,7 @@ Plugman:
           - src/plugs/annotate
           - src/modes/normal
           - src/modes/visual
+
     - aotabekov91/plug:
         subdir: 
           - src/plug/qt/modes/exec
