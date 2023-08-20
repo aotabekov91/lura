@@ -1,0 +1,79 @@
+QWidget {
+	color: #101010;
+	border-color: #101010;
+	background-color: #101010;
+}
+
+QGraphicsScene {
+	border-width: 0px;
+	padding: 0 0 0 0;
+}
+
+QGraphicsView {
+	padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QGraphicsObject {
+	border-width: 0px;
+	padding: 0 0 0 0;
+}
+
+QSplitter {
+	border-width: 0px;
+	padding: 0 0 0 0;
+}
+
+QLineEdit#Statusbar_edit {
+	color: white;
+	border-width: 0px;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QLabel#Powerline_mode {
+	color: black;
+	padding: 0 5px 0 5px;
+	qproperty-alignment: AlignCenter;
+	background-color: green;
+}
+
+QLabel#Powerline_keys {
+	color: white;
+	padding: 0 5px 0 5px;
+	qproperty-alignment: AlignCenter;
+}
+
+QLabel#Powerline_page {
+	color: black;
+	padding: 0 5px 0 5px;
+	qproperty-alignment: AlignCenter;
+	background-color: yellow ;
+}
+
+QLabel#Statusbar_colon {
+	color: white;
+}
+
+QListWidget#ExecMode_List {
+	border-width: 0px;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QListWidget#ExecMode_List::item {
+	border-width: 0px;
+	border-radius: 0px;
+	background-color: gray;
+}
+
+QListWidget#ExecMode_List::item:selected {
+	background-color: blue;
+}
+
+QListWidget#ExecMode_List QLabel#ListItemUp{
+	color: white;
+	border-width: 0px;
+	background-color: transparent;
+}

@@ -116,10 +116,10 @@ class Lura(PlugApp):
         args, unkw = super().parse()
 
         if args.file:
-            self.main.open(filePath=args.file)
+            self.window.main.open(filePath=args.file)
 
         if args.page:
-            view=self.main.display.currentView()
+            view=self.window.main.display.currentView()
             if view: 
                 view.goto(args.page, args.xaxis, args.yaxis)
 
