@@ -32,26 +32,6 @@ QLineEdit#Statusbar_edit {
 	background-color: transparent;
 }
 
-QLabel#Powerline_mode {
-	color: black;
-	padding: 0 5px 0 5px;
-	qproperty-alignment: AlignCenter;
-	background-color: green;
-}
-
-QLabel#Powerline_keys {
-	color: white;
-	padding: 0 5px 0 5px;
-	qproperty-alignment: AlignCenter;
-}
-
-QLabel#Powerline_page {
-	color: black;
-	padding: 0 5px 0 5px;
-	qproperty-alignment: AlignCenter;
-	background-color: yellow ;
-}
-
 QLabel#Statusbar_colon {
 	color: white;
 }
