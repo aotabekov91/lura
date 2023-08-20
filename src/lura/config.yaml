@@ -1,6 +1,24 @@
 Settings:
   port: 20002
 
+Card:
+  Settings:
+    mode_keys:
+      command: c
+  Keys:
+    inputField: 
+      key: cu
+      modes: 
+        - normal
+        - command
+
+FileBrowser:
+  Settings:
+    mode_keys:
+      command: f
+  Keys:
+    toggle: t
+
 Lookup:
   Settings: 
     lookup_port: 43110
