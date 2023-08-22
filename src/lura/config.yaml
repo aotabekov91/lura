@@ -27,7 +27,6 @@ Plugman:
   Settings: 
     folder: ~/.config/lura/picky
     base: https://github.com
-
   Picky:
     - aotabekov91/lura_plugins:
         subdir: 

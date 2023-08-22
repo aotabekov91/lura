@@ -98,7 +98,6 @@ class Lura(PlugApp):
         self.parser.add_argument(
                 '-y', '--yaxis', default=0., type=float)
 
-
     def setup(self): 
 
         super().setup()
