@@ -179,6 +179,10 @@ class View(BaseView):
         self.verticalScrollBar().setValue(verticalValue)
         self.viewport().update()
 
+        left, top = self.saveLeftAndTop()
+        self.positionChanged.emit(
+                self, self.pageItem(), left, top)
+
     def prepareScene(self, w, h):
 
         for page in self.m_pageItems:
@@ -307,9 +311,6 @@ class View(BaseView):
         if items:
             self.setCurrentPage(items[0].page().pageNumber())
 
-        left, top = self.saveLeftAndTop()
-        self.positionChanged.emit(
-                self, self.pageItem(), left, top)
 
     def scaleMode(self):
 
