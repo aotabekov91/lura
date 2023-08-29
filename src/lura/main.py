@@ -90,24 +90,36 @@ class Lura(PlugApp):
         super().setParser()
 
         self.parser.add_argument(
-                'file', nargs='?', default=None, type=str)
+                'file',
+                nargs='?',
+                default=None,
+                type=str)
         self.parser.add_argument(
-                '-p', '--page', default=0, type=int)
+                '-p',
+                '--page',
+                default=0,
+                type=int)
         self.parser.add_argument(
-                '-x', '--xaxis', default=0., type=float)
+                '-x',
+                '--xaxis',
+                default=0.,
+                type=float)
         self.parser.add_argument(
-                '-y', '--yaxis', default=0., type=float)
+                '-y', 
+                '--yaxis', 
+                default=0., 
+                type=float)
 
     def setup(self): 
 
         super().setup()
 
         self.setParser()
+        self.buffer=Buffer(self)
         self.setPlugman()
         self.setGUI(
             display_class=Display, 
             view_class=View)
-        self.buffer=Buffer(self)
         self.plugman.load()
 
     def parse(self):
@@ -115,12 +127,17 @@ class Lura(PlugApp):
         args, unkw = super().parse()
 
         if args.file:
-            self.window.main.open(filePath=args.file)
+            self.window.main.open(
+                    filePath=args.file)
 
-        if args.page:
-            view=self.window.main.display.currentView()
-            if view: 
-                view.goto(args.page, args.xaxis, args.yaxis)
+        view=self.window.main.display.currentView()
+
+        if args.page and view:
+
+            view.goto(
+                    args.page, 
+                    args.xaxis, 
+                    args.yaxis)
 
 def run():
 

@@ -11,9 +11,12 @@ class View(BaseView):
 
     annotationAdded=QtCore.pyqtSignal(object)
     annotationRemoved=QtCore.pyqtSignal(object)
-    scaleModeChanged = QtCore.pyqtSignal(object, object)
-    scaleFactorChanged = QtCore.pyqtSignal(object, object)
-    continuousModeChanged = QtCore.pyqtSignal(bool, object)
+    scaleModeChanged = QtCore.pyqtSignal(
+            object, object)
+    scaleFactorChanged = QtCore.pyqtSignal(
+            object, object)
+    continuousModeChanged = QtCore.pyqtSignal(
+            bool, object)
 
     def __init__(self, app, layout=DocumentLayout):
 
@@ -117,12 +120,12 @@ class View(BaseView):
                 self.m_model = model
                 self.preparePages()
 
-            self.setCurrentPage(0)
+            # self.setCurrentPage(0)
 
             self.refresh()
             self.updateSceneAndView()
 
-            self.setCurrentPage(1)
+            # self.setCurrentPage(1)
             self.fitToPageWidth()
 
     def refresh(self):
@@ -130,7 +133,11 @@ class View(BaseView):
         for pageItem in self.m_pageItems:
             pageItem.refresh(dropCachedPixmap=True)
 
-    def prepareView(self, changeLeft=0., changeTop=0., visiblePage=0):
+    def prepareView(
+            self, 
+            changeLeft=0., 
+            changeTop=0., 
+            visiblePage=0):
 
         rect = self.scene().sceneRect()
 
@@ -160,9 +167,9 @@ class View(BaseView):
                     page.cancelRender()
 
             if index == visiblePage-1:
-                horizontalValue = math.floor(
+                horizontalValue = int(
                     boundingRect.left()+changeLeft*boundingRect.width())
-                verticalValue = math.floor(
+                verticalValue = int(
                     boundingRect.top()+changeTop*boundingRect.height())
 
         #raise highlightIsOnPage
@@ -253,15 +260,18 @@ class View(BaseView):
 
     def left(self):
 
-        self.horizontalScrollBar().setValue(int(self.horizontalScrollBar().value()*1.1))
+        self.horizontalScrollBar().setValue(
+                int(self.horizontalScrollBar().value()*1.1))
 
     def right(self):
 
-        self.horizontalScrollBar().setValue(int(self.horizontalScrollBar().value()*0.9))
+        self.horizontalScrollBar().setValue(
+                int(self.horizontalScrollBar().value()*0.9))
 
     def up(self):
 
-        visibleHeight=self.m_layout.visibleHeight(self.size().height())*.05
+        visibleHeight=self.m_layout.visibleHeight(
+                self.size().height())*.05
         dx=self.verticalScrollBar().value() - visibleHeight
         if dx>=0:
             self.verticalScrollBar().setValue(int(dx+0.5))
@@ -296,6 +306,10 @@ class View(BaseView):
         items=self.items(v)
         if items:
             self.setCurrentPage(items[0].page().pageNumber())
+
+        left, top = self.saveLeftAndTop()
+        self.positionChanged.emit(
+                self, self.pageItem(), left, top)
 
     def scaleMode(self):
 
