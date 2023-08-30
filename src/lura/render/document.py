@@ -74,11 +74,15 @@ class PdfDocument(QtCore.QObject):
 
     def loadOutline(self):
 
-        outlineModel=QtGui.QStandardItemModel()
         toc=self.m_data.toc()
+        outlineModel=QtGui.QStandardItemModel()
         if toc!=0:
             try:
-                self.outline(self.m_data, toc.firstChild(), outlineModel.invisibleRootItem())
+                self.outline(
+                        self.m_data,
+                        toc.firstChild(),
+                        outlineModel.invisibleRootItem()
+                        )
             except:
                 pass
         return outlineModel

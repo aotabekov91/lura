@@ -57,3 +57,25 @@ QListWidget#ExecMode_List QLabel#ListItemUp{
 	border-width: 0px;
 	background-color: transparent;
 }
+
+QTreeView{
+	border-width: 0px;
+	color: transparent;
+	border-color: transparent; 
+	background-color: transparent; 
+	show-decoration-selected: 0;
+
+	}
+
+QTreeView::item{
+	color: white;
+	border-color: transparent;
+	background-color: transparent;
+	border-radius: 0px;
+	padding: 5px 5px 5px 10px;
+	}
+
+QTreeView::item:selected:active{
+	color: black;
+	background-color: yellow;
+	}
