@@ -40,13 +40,14 @@ class PageItem(QGraphicsObject):
         self.m_paint_links=False
         self.setAcceptHoverEvents(True)
 
-        self.m_scaleFactor=self.view().settings().get('scaleFactor', 1.)
-        self.m_rotation=self.view().settings().get('rotation', 0)
-        self.m_xresol=self.view().settings().get('resolutionX', 72)
-        self.m_yresol=self.view().settings().get('resolutionY', 72)
-        self.m_proxy_padding=self.view().settings().get('proxyPadding', 0.)
-        self.m_device_pixel_ration=self.view().settings().get('devicePixelRatio', 1.)
-        self.m_use_tiling=self.view().settings().get('useTiling', False)
+        settings=self.view().settings()
+        self.m_rotation=settings.get('rotation', 0)
+        self.m_xresol=settings.get('resolutionX', 72)
+        self.m_yresol=settings.get('resolutionY', 72)
+        self.m_use_tiling=settings.get('useTiling', False)
+        self.m_scaleFactor=settings.get('scaleFactor', 1.)
+        self.m_proxy_padding=settings.get('proxyPadding', 0.)
+        self.m_device_pixel_ration=settings.get('devicePixelRatio', 1.)
 
         self.setup()
 
@@ -65,7 +66,6 @@ class PageItem(QGraphicsObject):
 
             box=selection['box']
             selection['item']=self
-
             selection['area_item']=[]
             selection['area_unified']=[]
 
@@ -83,7 +83,8 @@ class PageItem(QGraphicsObject):
 
     def paint(self, painter, options, widgets):
 
-        painter.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
+        painter.setRenderHints(
+                QPainter.Antialiasing | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
 
         self.paintPage(painter, options.exposedRect)
         self.paintSearch(painter, options, widgets)
@@ -102,13 +103,11 @@ class PageItem(QGraphicsObject):
                 box=selection['box']
                 area_item=[self.mapToItem(b) for b in box]
                 if self==selection['item']: 
-
-
-                    painter.setBrush(QBrush(QColor(88, 139, 174, 30)))
+                    painter.setBrush(
+                            QBrush(QColor(88, 139, 174, 30)))
                     painter.drawRects(area_item)
                     painter.setPen(QPen(Qt.red, 0.0))
                     painter.drawRects(area_item)
-
             painter.restore()
 
     def paintSearch(self, painter, options, widgets):
@@ -120,12 +119,16 @@ class PageItem(QGraphicsObject):
             painter.drawRects(self.m_searched)
             painter.restore()
 
-    def setSearched(self, searched=[]): self.m_searched=searched
+    def setSearched(self, searched=[]): 
+
+        self.m_searched=searched
 
     def paintPage(self, painter, exposedRect):
 
-        painter.fillRect(self.m_boundingRect, QBrush(QColor('white')))
-        self.m_tileItems[0].paint(painter, self.m_boundingRect.topLeft())
+        painter.fillRect(
+                self.m_boundingRect, QBrush(QColor('white')))
+        self.m_tileItems[0].paint(
+                painter, self.m_boundingRect.topLeft())
 
     def setResolution(self, resolutionX, resolutionY):
 

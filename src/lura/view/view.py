@@ -316,7 +316,17 @@ class View(BaseView):
 
         return self.s_settings.get('scaleMode', 'FitToPageHeight')
 
-    def zoom(self, kind='out'):
+    def zoomIn(self, digit=1):
+
+        for i in range(digit):
+            self._zoom(kind='in')
+
+    def zoomOut(self, digit=1): 
+
+        for i in range(digit):
+            self._zoom(kind='out')
+
+    def _zoom(self, kind='out'):
 
         zoomFactor = self.s_settings.get('zoomFactor', .1)
         if self.scaleMode() != 'ScaleFactor': self.setScaleMode('ScaleFactor')
@@ -327,7 +337,8 @@ class View(BaseView):
             zoomFactor=1.+zoomFactor
 
         left, top = self.saveLeftAndTop()
-        for page in self.m_pageItems: page.setScaleFactor(zoomFactor*page.scale())
+        for page in self.m_pageItems: 
+            page.setScaleFactor(zoomFactor*page.scale())
         self.updateSceneAndView(left=left, top=top)
 
     def setScaleFactor(self, scaleFactor):
