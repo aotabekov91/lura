@@ -21,7 +21,7 @@ inputField = {key='cu', modes=['normal', 'command']}
 toggle = 't'
 
 [FileBrowser.Settings.UI.Keys]
-# [FileBrowser.Settings.UI.Tree.Keys]
+# [FileBrowser.Settings.UI.Tree.Keys] Todo
 moveUp = 'k'
 moveDown = 'j'
 
@@ -54,6 +54,7 @@ subdir = [
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/modes/exec',
+	'src/plug/qt/modes/resize',
 	'src/plug/qt/modes/command', 
 	'src/plug/qt/plugs/powerline',
 	]
