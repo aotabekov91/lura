@@ -24,6 +24,9 @@ QSplitter {
 	padding: 0 0 0 0;
 }
 
+#Statusbar {
+	background-color: black;
+}
 
 #Statusbar #Bottom QLineEdit#Edit{
 	color: white;
@@ -33,7 +36,7 @@ QSplitter {
 	background-color: transparent;
 }
 
-#Statusbar #Bottom QLabel#Mode{
+#Statusbar QLabel#Mode{
 	color: white;
 }
 

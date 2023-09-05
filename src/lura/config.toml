@@ -5,6 +5,10 @@ port = 20002
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
+[Colorscheme.Settings]
+
+colorscheme = 'default'
+
 [Lookup.Settings]
 lookup_port = 43110
 
@@ -54,9 +58,10 @@ subdir = [
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/modes/exec',
-	'src/plug/qt/modes/move',
-	'src/plug/qt/modes/hint',
-	'src/plug/qt/modes/resize',
+	# 'src/plug/qt/modes/move',
+	# 'src/plug/qt/modes/hint',
+	# 'src/plug/qt/modes/resize',
+	'src/plug/qt/plugs/styler',
 	'src/plug/qt/modes/command', 
 	'src/plug/qt/plugs/powerline',
 	]
