@@ -113,7 +113,6 @@ class Lura(PlugApp):
     def setup(self): 
 
         super().setup()
-
         self.setParser()
         self.buffer=Buffer(self)
         self.setPlugman()

@@ -4,6 +4,14 @@ QWidget {
 	background-color: #101010;
 }
 
+#DockWidget QWidget{
+	color: white;
+	border-color: transparent; 
+	background-color: transparent; 
+	border-width: 0px;
+	padding: 0px 0px 0px 0px;
+	}
+
 QGraphicsScene {
 	border-width: 0px;
 	padding: 0 0 0 0;
@@ -24,10 +32,13 @@ QSplitter {
 	padding: 0 0 0 0;
 }
 
+<<<<<<< HEAD
 #Statusbar {
 	background-color: black;
 }
 
+=======
+>>>>>>> e7d95c0
 #Statusbar #Bottom QLineEdit#Edit{
 	color: white;
 	border-width: 0px;
@@ -103,4 +114,22 @@ QListWidget::item:selected{
 
 #Search QLabel{
 	color: black;
+}
+
+#ViewContainer QWidget{
+	border-width: 0px;
+	background-color: red;
+}
+
+#ViewContainer_focus QWidget{
+	border-width: 5px;
+	background-color: red;
+}
+
+#Display QWidget{
+	background-color: blue;
+}
+
+QWidget#Display{
+	background-color: yellow; 
 }
