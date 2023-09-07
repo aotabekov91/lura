@@ -62,6 +62,7 @@ subdir = [
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
 	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/colorscheme',
 	'src/plug/qt/modes/command', 
 	'src/plug/qt/plugs/powerline',
