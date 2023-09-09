@@ -44,11 +44,10 @@ padding: 0 0 0 0;
 
 }
 
-#Statusbar {
-
-background-color: black;
-
+#Powerline{
+	background-color: green;
 }
+
 
 #Statusbar #Bottom QLineEdit#Edit {
 
@@ -61,9 +60,11 @@ background-color: transparent;
 }
 
 #Statusbar QLabel#Mode {
+	color: white;
+}
 
-color: white;
-
+#Statusbar QLineEdit#Edit {
+	color: green;
 }
 
 QListWidget#ExecMode_List {
@@ -174,7 +175,21 @@ background-color: blue;
 }
 
 QWidget#Display {
+	background-color: yellow ;
+}
 
-background-color: yellow ;
+QStatusBar {
+	background: transparent;
+}
 
+QStatusBar::item {
+	border: None;
+	padding: 0 0 0 0;
+	border-width: 0px;
+	background: red;
+}
+
+#Statusbar QWidget#Container {
+	padding: 0 0 0 0;
+	border-width: 0px;
 }
