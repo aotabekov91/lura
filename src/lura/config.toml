@@ -72,7 +72,7 @@ subdir = [
 
 rotation = 0
 zoomFactor = 0.1
-pageSpacing = 2
+pageSpacing = 3 
 scaleFactor = 1.0
 tileSize =  1024
 resolutionX = 72

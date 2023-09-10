@@ -27,7 +27,7 @@ class View(BaseView):
         self.m_currentPage = 1 
         self.m_paintlinks=False
         self.cursor=Cursor(self)
-        self.setBackgroundBrush(QtCore.Qt.black)
+        # self.setBackgroundBrush(QtCore.Qt.green)
         self.setContentsMargins(0,0,0,0)
 
     def show(self):
