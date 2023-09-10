@@ -1,5 +1,5 @@
 [Settings]
-port = 20002
+handler_port = 20002
 
 [Plugman.Settings]
 base = 'https://github.com'
@@ -65,6 +65,7 @@ subdir = [
 	# 'src/plug/qt/modes/resize',
 	'src/plug/qt/plugs/umay',
 	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/handler',
 	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/styles/green_elf',
