@@ -47,8 +47,9 @@ subdir = [
 	'src/plugs/parts',
 	'src/plugs/quickmark',
 	'src/plugs/rlist',
-	'src/plugs/search',
 	'src/plugs/annotate',
+	'src/plugs/parser',
+	'src/modes/search',
 	'src/modes/normal',
 	'src/modes/visual',
 	]
@@ -62,6 +63,7 @@ subdir = [
 	# 'src/plug/qt/modes/move',
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
+	'src/plug/qt/plugs/umay',
 	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/powerline',

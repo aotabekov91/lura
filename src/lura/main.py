@@ -1,5 +1,4 @@
 import inspect
-from PyQt5 import QtCore
 
 from plug.qt import PlugApp
 
@@ -7,8 +6,6 @@ from .view import View
 from .utils import Display, Buffer
 
 class Lura(PlugApp):
-
-    actionRegistered=QtCore.pyqtSignal()
 
     def __init__(self, **kwargs): 
 
@@ -30,20 +27,15 @@ class Lura(PlugApp):
             for d, a in actions.items():
                 plug_data+=['_'.join(d)]
             data[name]=plug_data
-
         return data
 
     def handle(self, request):
 
         response=super().handle(request)
-
         action=request.get('action', None)
         part=request.get('part', None)
-
         c1=response.get('status', 'nok')!='ok'
-
         if c1 or part:
-
             if part:
                 obj=self
                 parts=part.split('.')
@@ -55,12 +47,9 @@ class Lura(PlugApp):
                 print('here', obj, func)
             else:
                 func=self.manager.all_actions.get(action, None)
-            
             if func:
-
                 result=None
                 prmts=inspect.signature(func).parameters
-
                 if len(prmts)==0:
                     if action=='quit' and self.respond_port:
                         msg={'status':'ok', 'info':'quitting'}
@@ -79,64 +68,37 @@ class Lura(PlugApp):
                 response['result']=result
         return response
 
-    def registerByUmay(self, path=None, kind=None):
-        super().registerByUmay(path, kind='REQ')
-
-    def setConnection(self): 
-        super().setConnection(kind='REP')
-
-    def setParser(self):
-
-        super().setParser()
-
-        self.parser.add_argument(
-                'file',
-                nargs='?',
-                default=None,
-                type=str)
-        self.parser.add_argument(
-                '-p',
-                '--page',
-                default=0,
-                type=int)
-        self.parser.add_argument(
-                '-x',
-                '--xaxis',
-                default=0.,
-                type=float)
-        self.parser.add_argument(
-                '-y', 
-                '--yaxis', 
-                default=0., 
-                type=float)
-
     def setup(self): 
 
         super().setup()
-        self.setParser()
         self.buffer=Buffer(self)
-        self.setPlugman()
         self.setGUI(
-            display_class=Display, 
-            view_class=View)
-        self.plugman.load()
+                display_class=Display, 
+                view_class=View)
+
+    def initialize(self):
+
+        super().initialize()
+        self.parser=self.plugman.plugs.get(
+                'Parser', None)
 
     def parse(self):
 
-        args, unkw = super().parse()
+        if self.parser:
+            args, unkw = self.parser.parse()
+            view=self.window.main.display.currentView()
+            if args.file:
+                self.window.main.open(
+                        filePath=args.file)
+            if args.page and view:
+                view.goto(args.page, 
+                          args.xaxis, 
+                          args.yaxis)
 
-        if args.file:
-            self.window.main.open(
-                    filePath=args.file)
+    def run(self):
 
-        view=self.window.main.display.currentView()
-
-        if args.page and view:
-
-            view.goto(
-                    args.page, 
-                    args.xaxis, 
-                    args.yaxis)
+        self.parse()
+        super().run()
 
 def run():
 
