@@ -6,7 +6,6 @@ base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
 [Styler.Settings]
-
 style = 'GreenElf'
 
 [Lookup.Settings]
@@ -30,7 +29,6 @@ moveUp = 'k'
 moveDown = 'j'
 
 [[Plugman.Picky]]
-
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/plugs/card',
@@ -55,7 +53,6 @@ subdir = [
 	]
 
 [[Plugman.Picky]]
-
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/modes/exec',
@@ -72,7 +69,6 @@ subdir = [
 	]
 
 [View]
-
 rotation = 0
 zoomFactor = 0.1
 pageSpacing = 3 

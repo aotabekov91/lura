@@ -30,15 +30,12 @@ class Lura(PlugApp):
     def parse(self):
 
         if self.parser:
-            args, unkw = self.parser.parse()
+            a, u = self.parser.parse()
             view=self.window.main.display.currentView()
-            if args.file:
-                self.window.main.open(
-                        filePath=args.file)
-            if args.page and view:
-                view.goto(args.page, 
-                          args.xaxis, 
-                          args.yaxis)
+            if a.file:
+                self.window.main.open(filePath=a.file)
+            if a.page and view:
+                view.goto(a.page, a.xaxis, a.yaxis)
 
     def run(self):
 

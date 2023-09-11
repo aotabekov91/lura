@@ -1,47 +1,35 @@
 QWidget {
-
-color: #101010;
-border-color: #101010;
-background-color: #101010;
-
+	color: #101010;
+	border-color: #101010;
+	background-color: #101010;
 }
 
 #DockWidget QWidget {
-
-color: white;
-border-width: 0px;
-padding: 0px 0px 0px 0px;
-border-color: transparent ;
-background-color: transparent ;
-
+	color: white;
+	border-width: 0px;
+	padding: 0px 0px 0px 0px;
+	border-color: transparent ;
+	background-color: transparent ;
 }
 
 QGraphicsScene {
-
-padding: 0 0 0 0;
-border-width: 0px;
-
+	padding: 0 0 0 0;
+	border-width: 0px;
 }
 
 QGraphicsView {
-
-padding: 0 0 0 0;
-border-width: 0px;
-
+	padding: 0 0 0 0;
+	border-width: 0px;
 }
 
 QGraphicsObject {
-
-padding: 0 0 0 0;
-border-width: 0px;
-
+	padding: 0 0 0 0;
+	border-width: 0px;
 }
 
 QSplitter {
-
-border-width: 0px;
-padding: 0 0 0 0;
-
+	border-width: 0px;
+	padding: 0 0 0 0;
 }
 
 #Powerline{
@@ -50,13 +38,11 @@ padding: 0 0 0 0;
 
 
 #Statusbar #Bottom QLineEdit#Edit {
-
-color: white;
-border-width: 0px;
-border-radius: 0px;
-border-color: transparent;
-background-color: transparent;
-
+	color: white;
+	border-width: 0px;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: transparent;
 }
 
 #Statusbar QLabel#Mode {
@@ -68,110 +54,82 @@ background-color: transparent;
 }
 
 QListWidget#ExecMode_List {
-
-border-width: 0px;
-border-color: transparent;
-background-color: transparent;
-
+	border-width: 0px;
+	border-color: transparent;
+	background-color: transparent;
 }
 
 QListWidget#ExecMode_List::item {;
-
-border-width: 0px;
-border-radius: 0px;
-background-color: gray;
-
+	border-width: 0px;
+	border-radius: 0px;
+	background-color: gray;
 }
 
 QListWidget#ExecMode_List::item:selected {;
-
-background-color: blue;
-
+	background-color: blue;
 }
 
 QListWidget#ExecMode_List QLabel#ListItemUp {
-
-color: white;
-border-width: 0px;
-background-color: transparent;
-
+	color: white;
+	border-width: 0px;
+	background-color: transparent;
 }
 
 QTreeView {
-
-border-width: 0px;
-color: transparent;
-border-color: transparent ;
-background-color: transparent ;
-show-decoration-selected: 0;
-
+	border-width: 0px;
+	color: transparent;
+	border-color: transparent ;
+	background-color: transparent ;
+	show-decoration-selected: 0;
 }
 
 QTreeView::item {;
-
-color: white;
-border-radius: 0px;
-padding: 5px 5px 5px 5px;
-border-color: transparent;
-background-color: transparent;
-
+	color: white;
+	border-radius: 0px;
+	padding: 5px 5px 5px 5px;
+	border-color: transparent;
+	background-color: transparent;
 }
 
 QTreeView::item:selected {;
-
-background-color: yellow;
-
+	background-color: yellow;
 }
 
 QListWidget {
-
-border-width: 0px;
-color: transparent;
-border-color: transparent ;
-background-color: transparent ;
-show-decoration-selected: 0;
-
+	border-width: 0px;
+	color: transparent;
+	border-color: transparent ;
+	background-color: transparent ;
+	show-decoration-selected: 0;
 }
 
 QListWidget::item {;
-
-color: white;
-border-radius: 0px;
-border-color: transparent;
-background-color: transparent;
-
+	color: white;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: transparent;
 }
 
 QListWidget::item:selected {;
-
-background-color: green;
-
+	background-color: green;
 }
 
 #Search QLabel {
-
-color: black;
-
+	color: black;
 }
 
 #ViewContainer QWidget {
-
-border-width: 0px;
-background-color: red;
-
+	border-width: 0px;
+	background-color: red;
 }
 
 #ViewContainer_focus QWidget {
-
-border-width: 5px;
-background-color: red;
-
+	border-width: 5px;
+	background-color: red;
 }
 
 #Display QWidget {
-
-background-color: blue;
-
+	background-color: blue;
 }
 
 QWidget#Display {

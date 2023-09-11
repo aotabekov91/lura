@@ -1,7 +1,5 @@
 import os
-
 from PyQt5 import QtCore
-
 from plug.qt.utils import Buffer as Base
 
 from .hashman import Hashman
