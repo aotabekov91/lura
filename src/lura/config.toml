@@ -46,7 +46,6 @@ subdir = [
 	'src/plugs/quickmark',
 	'src/plugs/rlist',
 	'src/plugs/annotate',
-	'src/plugs/parser',
 	'src/modes/search',
 	'src/modes/normal',
 	'src/modes/visual',
@@ -55,6 +54,7 @@ subdir = [
 [[Plugman.Picky]]
 pick = 'aotabekov91/plug'
 subdir = [
+	'src/plug/plugs/parser',
 	'src/plug/qt/modes/exec',
 	'src/plug/qt/modes/command', 
 	# 'src/plug/qt/modes/move',

@@ -1,3 +1,4 @@
+import sys
 from plug.qt import PlugApp
 
 from .view import View
@@ -26,6 +27,10 @@ class Lura(PlugApp):
         super().initialize()
         self.parser=self.plugman.plugs.get(
                 'Parser', None)
+        self.parser.addArgument('file', nargs='?')
+        self.parser.addArgument('-p', '--page', default=0)
+        self.parser.addArgument('-x', '--x-axis', default=0)
+        self.parser.addArgument('-y', '--y-axis', default=0)
 
     def parse(self):
 
