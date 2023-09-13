@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = "^3.8"
 PyQt5 = ">=5.15.6"
 python-poppler-qt5 = ">=21.3.0"
 gizmo = {git = "https://github.com/aotabekov91/gizmo", branch='main'}
