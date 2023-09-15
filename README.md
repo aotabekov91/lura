@@ -18,7 +18,7 @@ $ poetry run lura /path/to/file.pdf
 
 At the initial run: 
 
-* Enter the exec mode (by default <c-e>)
+* Enter the exec mode (by default \<c-e\>)
 * Select installPicks 
 
 This will install plug dependencies.
