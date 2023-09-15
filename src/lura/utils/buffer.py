@@ -13,29 +13,12 @@ class Buffer(Base):
 
         super().__init__(*args, **kwargs)
         self.hashman=Hashman(self)
-        # self.setHashman()
-
-    def setHashman(self):
-
-        self.hash_thread=QtCore.QThread()
-
-        self.hashman=Hashman(self)
-        self.hashman.moveToThread(
-                self.hash_thread)
-        self.hash_thread.started.connect(
-                self.hashman.loop)
-        self.hashman.hashed.connect(
-                self.setHash)
-        QtCore.QTimer.singleShot(
-                0, self.hash_thread.start)
 
     def setHash(self, path, dhash=None):
 
         if not dhash: 
             dhash=self.hashman.getHash(path)
-
         if dhash:
-
             buffer=self.buffers.get(path)
             if buffer:
                 buffer.setHash(dhash)
@@ -45,11 +28,8 @@ class Buffer(Base):
     def load(self, path):
 
         path=os.path.abspath(path)
-
         if path in self.buffers:
             return self.buffers[path]
-
-        # self.hashman.path=path
         buffer=PdfDocument(path)
         if buffer.readSuccess():
             buffer.setParent(self.app)

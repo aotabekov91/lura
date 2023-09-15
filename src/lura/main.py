@@ -1,18 +1,10 @@
-import sys
+import os
 from plug.qt import PlugApp
 
 from .view import View
 from .utils import Display, Buffer
 
 class Lura(PlugApp):
-
-    def __init__(self, **kwargs): 
-
-        super().__init__(
-            respond_port=True,
-            initiate_stack=True,
-            **kwargs
-            )
 
     def setup(self): 
 
