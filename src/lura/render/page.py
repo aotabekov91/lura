@@ -78,12 +78,9 @@ class PdfPage(QtCore.QObject):
         popup=Poppler.Annotation.Popup()
         popup.setFlags(Poppler.Annotation.Hidden or
                 Poppler.Annotation.ToggleHidingOnMouse)
-
         if not type(boundary)==list:
             boundary=[boundary]
-
         quads=[]
-
         for bound in boundary:
             quad = Poppler.HighlightAnnotation.Quad()
             quad.points = [bound.topLeft(),
@@ -91,16 +88,17 @@ class PdfPage(QtCore.QObject):
                            bound.bottomRight(),
                            bound.bottomLeft()]
             quads+=[quad]
-
         bound=QtCore.QRectF()
-        for b in boundary: bound=bound.united(b)
-
+        for b in boundary: 
+            bound=bound.united(b)
         annotation=Poppler.HighlightAnnotation()
         annotation.setHighlightQuads(quads)
         annotation.setStyle(style)
         annotation.setBoundary(bound)
         self.m_data.addAnnotation(annotation)
-        return PdfAnnotation(annotation)
+        ann=PdfAnnotation(annotation)
+        ann.setPage(self)
+        return ann
 
     def addTextAnnotation(self, boundary, color):
 
@@ -117,7 +115,9 @@ class PdfPage(QtCore.QObject):
         annotation.setPopup(popup)
 
         self.m_data.addAnnotation(annotation)
-        return PdfAnnotation(annotation)
+        ann=PdfAnnotation(annotation)
+        ann.setPage(self)
+        return ann
 
     def removeAnnotation(self, aData):
 

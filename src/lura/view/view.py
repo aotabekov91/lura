@@ -78,13 +78,16 @@ class View(BaseView):
     def goto(self, page, changeLeft=0., changeTop=0.):
 
         if page and page >= 0 and page <= len(self.m_pages):
+            print(page, changeLeft, changeTop)
             left, top = self.saveLeftAndTop()
-            cond1 = self.m_currentPage != self.m_layout.currentPage(page)
-            cond = any([cond1, abs(left-changeLeft) > 0.01])
-            cond = any([cond, abs(top-changeTop) > 0.01])
-            if cond:
-                self.setCurrentPage(self.m_layout.currentPage(page))
-                self.prepareView(changeLeft, changeTop, page)
+            c1 = self.m_currentPage != self.m_layout.currentPage(page)
+            c = any([c1, abs(left-changeLeft) > 0.01])
+            c = any([c, abs(top-changeTop) > 0.01])
+            if c:
+                self.setCurrentPage(
+                        self.m_layout.currentPage(page))
+                self.prepareView(
+                        changeLeft, changeTop, page)
 
     def saveLeftAndTop(self, left=0., top=0.):
 
@@ -178,10 +181,16 @@ class View(BaseView):
         self.horizontalScrollBar().setValue(horizontalValue)
         self.verticalScrollBar().setValue(verticalValue)
         self.viewport().update()
+        self.reportPosition()
+
+    def reportPosition(self):
 
         left, top = self.saveLeftAndTop()
         self.positionChanged.emit(
-                self, self.pageItem(), left, top)
+                self, 
+                self.pageItem(), 
+                left, 
+                top)
 
     def prepareScene(self, w, h):
 
@@ -224,7 +233,8 @@ class View(BaseView):
         for i, page in enumerate(self.m_pages):
             pageItem = PageItem(page, self)
             page.setPageItem(pageItem)
-            page.annotationAdded.connect(self.app.window.main.display.annotationAdded)
+            page.annotationAdded.connect(
+                    self.app.window.main.display.annotationAdded)
             self.m_pageItems += [pageItem]
             self.scene().addItem(pageItem)
 
@@ -262,16 +272,6 @@ class View(BaseView):
             self.verticalScrollBar().setValue(int(self.scene().sceneRect().height()))
         self.setCurrentPageFromVisiblePages()
 
-    def left(self):
-
-        self.horizontalScrollBar().setValue(
-                int(self.horizontalScrollBar().value()*1.1))
-
-    def right(self):
-
-        self.horizontalScrollBar().setValue(
-                int(self.horizontalScrollBar().value()*0.9))
-
     def up(self):
 
         visibleHeight=self.m_layout.visibleHeight(
@@ -281,6 +281,18 @@ class View(BaseView):
             self.verticalScrollBar().setValue(int(dx+0.5))
         else:
             self.verticalScrollBar().setValue(0)
+        self.setCurrentPageFromVisiblePages()
+        
+    def left(self):
+
+        self.horizontalScrollBar().setValue(
+                int(self.horizontalScrollBar().value()*1.1))
+        self.setCurrentPageFromVisiblePages()
+
+    def right(self):
+
+        self.horizontalScrollBar().setValue(
+                int(self.horizontalScrollBar().value()*0.9))
         self.setCurrentPageFromVisiblePages()
 
     def pageUp(self):
@@ -310,7 +322,7 @@ class View(BaseView):
         items=self.items(v)
         if items:
             self.setCurrentPage(items[0].page().pageNumber())
-
+        self.reportPosition()
 
     def scaleMode(self):
 
@@ -368,9 +380,11 @@ class View(BaseView):
         self.updateSceneAndView()
         self.scaleModeChanged.emit(scaleMode, self)
 
-    def gotoEnd(self): self.goto(len(self.m_pages))
+    def gotoEnd(self): 
+        self.goto(len(self.m_pages))
 
-    def gotoBegin(self): self.goto(1)
+    def gotoBegin(self): 
+        self.goto(1)
 
     def activateRubberBand(self, listener=None):
 

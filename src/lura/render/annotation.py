@@ -5,32 +5,40 @@ class PdfAnnotation(QtCore.QObject):
     def __init__(self, annotationData):
 
         super().__init__()
-
         self.m_data = annotationData
         self.m_aData={'data': annotationData}
 
-    def id(self): return self.m_aData.get('id', None)
+    def id(self): 
+        return self.m_aData.get('id', None)
 
     def setId(self, m_id): 
 
         self.m_id=m_id
         self.m_aData['id']=m_id
 
-    def page(self): return self.m_page
+    def page(self): 
+        return self.m_page
 
-    def setPage(self, page): self.m_page=page
+    def setPage(self, page): 
+        self.m_page=page
 
-    def color(self): return self.m_aData['data'].style().color().name()
+    def color(self): 
+        return self.m_aData['data'].style().color().name()
 
-    def type(self): return self.m_aData['data'].subType()
+    def type(self): 
+        return self.m_aData['data'].subType()
 
-    def data(self): return self.m_aData['data']
+    def data(self): 
+        return self.m_aData['data']
 
-    def aData(self): return self.m_aData
+    def aData(self): 
+        return self.m_aData
 
-    def setAData(self, data): self.m_aData=data
+    def setAData(self, data): 
+        self.m_aData=data
 
-    def boundary(self): return self.m_aData['data'].boundary()
+    def boundary(self): 
+        return self.m_aData['data'].boundary()
 
     def position(self):
 
@@ -59,10 +67,12 @@ class PdfAnnotation(QtCore.QObject):
             rectF.setTopRight(points[1])
             rectF.setBottomRight(points[2])
             rectF.setBottomLeft(points[3])
-            if rectF.contains(point): return True
+            if rectF.contains(point): 
+                return True
         return False
 
-    def contents(self): return self.m_data.contents()
+    def contents(self): 
+        return self.m_data.contents()
 
     def setColor(self, color):
 

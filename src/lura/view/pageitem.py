@@ -62,17 +62,14 @@ class PageItem(QGraphicsObject):
 
     def select(self, selections=[]):
 
-        for selection in selections:
-
-            box=selection['box']
-            selection['item']=self
-            selection['area_item']=[]
-            selection['area_unified']=[]
-
+        for s in selections:
+            box=s['box']
+            s['item']=self
+            s['area_item']=[]
+            s['area_unified']=[]
             for b in box:
-                selection['area_item']+=[self.mapToItem(b)]
-                selection['area_unified']+=[self.mapToPage(b, unify=True)]
-
+                s['area_item']+=[self.mapToItem(b)]
+                s['area_unified']+=[self.mapToPage(b, unify=True)]
         self.m_view.select(selections)
         self.update()
 
@@ -94,15 +91,12 @@ class PageItem(QGraphicsObject):
     def paintSelection(self, painter, options, widgets):
 
         selections=self.m_view.selected()
-
         if selections:
-
             painter.save()
-
-            for selection in selections:
-                box=selection['box']
-                area_item=[self.mapToItem(b) for b in box]
-                if self==selection['item']: 
+            for s in selections:
+                if self==s['item']: 
+                    box=s['box']
+                    area_item=[self.mapToItem(b) for b in box]
                     painter.setBrush(
                             QBrush(QColor(88, 139, 174, 30)))
                     painter.drawRects(area_item)
@@ -274,11 +268,13 @@ class PageItem(QGraphicsObject):
     def mapToItem(self, polygon, isUnified=False):
 
         if type(polygon) in [QPoint, QPointF]:
-            if isUnified: polygon=self.m_normalizedTransform.map(polygon)
+            if isUnified: 
+                polygon=self.m_normalizedTransform.map(polygon)
             return self.m_transform.map(polygon)
         else:
             polygon=polygon.normalized()
-            if isUnified: polygon=self.m_normalizedTransform.mapRect(polygon)
+            if isUnified: 
+                polygon=self.m_normalizedTransform.mapRect(polygon)
             return self.m_transform.mapRect(polygon)
 
     def setActions(self, actions):

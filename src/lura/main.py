@@ -1,26 +1,24 @@
-import os
-from plug.qt import PlugApp
+from plug.qt import Plug
+from plug.plugs.parser import Parser
 
 from .view import View
 from .utils import Display, Buffer
 
-class Lura(PlugApp):
+class Lura(Plug):
 
     def setup(self): 
 
+        self.setApp()
         super().setup()
         self.buffer=Buffer(self)
-        self.setGUI(
-                display_class=Display, 
-                view_class=View)
+        self.setAppUI(Display, View)
+        self.setParser()
 
-    def initialize(self):
+    def setParser(self):
 
-        super().initialize()
-        self.parser=self.plugman.plugs.get(
-                'Parser', None)
+        self.parser=Parser(self)
         self.parser.addArgument('file', nargs='?')
-        self.parser.addArgument('-p', '--page', default=0)
+        self.parser.addArgument('-p', '--page', default=None)
         self.parser.addArgument('-x', '--x-axis', default=0)
         self.parser.addArgument('-y', '--y-axis', default=0)
 
@@ -32,6 +30,8 @@ class Lura(PlugApp):
             if a.file:
                 self.window.main.open(filePath=a.file)
             if a.page and view:
+                raise
+                print(a.page)
                 view.goto(a.page, a.xaxis, a.yaxis)
 
     def run(self):
