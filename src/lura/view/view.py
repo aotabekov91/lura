@@ -88,12 +88,10 @@ class View(BaseView):
     def saveLeftAndTop(self, left=0., top=0.):
 
         page=self.m_pageItems[self.m_currentPage-1]
-        boundingRect=page.boundingRect().translated(page.pos())
+        rec=page.boundingRect().translated(page.pos())
         topLeft=self.mapToScene(self.viewport().rect().topLeft())
-
-        left=(topLeft.x() -boundingRect.x())/boundingRect.width()
-        top=(topLeft.y() -boundingRect.y())/boundingRect.height()
-
+        left=(topLeft.x() -rec.x())/rec.width()
+        top=(topLeft.y() -rec.y())/rec.height()
         return left, top
 
     def next(self): 
