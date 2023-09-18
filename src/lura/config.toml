@@ -32,12 +32,12 @@ moveDown = 'j'
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/plugs/modes/normal',
-	'src/plugs/modes/search',
 	'src/plugs/modes/visual',
 	'src/plugs/annotate',
 	'src/plugs/annotations',
 	'src/plugs/annotate_list',
 	'src/plugs/autosave',
+	# 'src/plugs/modes/search',
 # 	# 'src/plugs/card',
 # 	# 'src/plugs/bookmark',
 # 	# 'src/plugs/documents',

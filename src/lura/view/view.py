@@ -56,38 +56,34 @@ class View(BaseView):
         if page.pageNumber()!=self.page().pageNumber(): return
         page.pageItem().refresh(dropCachedPixmap=True)
 
-    def readjust(self):
+    # def readjust(self):
+    #     left, top=self.saveLeftAndTop()
+    #     self.updateSceneAndView(left, top)
 
-        left, top=self.saveLeftAndTop()
-        self.updateSceneAndView(left, top)
-
-    def resizeEvent(self, event):
-
-        super().resizeEvent(event)
-        try:
-            left, top=self.saveLeftAndTop()
-            self.updateSceneAndView(left, top)
-        except:
-            pass
-        if not hasattr(self, 'm_pageItems'): return
-        for pageItem in self.m_pageItems:
-            pageItem.refresh()
+    # def resizeEvent(self, event):
+    #     super().resizeEvent(event)
+    #     try:
+    #         left, top=self.saveLeftAndTop()
+    #         self.updateSceneAndView(left, top)
+    #     except:
+    #         pass
+    #     if not hasattr(self, 'm_pageItems'): return
+    #     for pageItem in self.m_pageItems:
+    #         pageItem.refresh()
 
     def on_verticalScrollBar_valueChaged(self, int): pass
 
     def goto(self, page, changeLeft=0., changeTop=0.):
 
         if page and page >= 0 and page <= len(self.m_pages):
-            print(page, changeLeft, changeTop)
             left, top = self.saveLeftAndTop()
             c1 = self.m_currentPage != self.m_layout.currentPage(page)
-            c = any([c1, abs(left-changeLeft) > 0.01])
-            c = any([c, abs(top-changeTop) > 0.01])
+            c = any([c1, abs(left-changeLeft) > 0.001])
+            c = any([c, abs(top-changeTop) > 0.001])
             if c:
-                self.setCurrentPage(
-                        self.m_layout.currentPage(page))
                 self.prepareView(
                         changeLeft, changeTop, page)
+                self.setCurrentPageFromVisiblePages()
 
     def saveLeftAndTop(self, left=0., top=0.):
 
@@ -181,7 +177,6 @@ class View(BaseView):
         self.horizontalScrollBar().setValue(horizontalValue)
         self.verticalScrollBar().setValue(verticalValue)
         self.viewport().update()
-        self.reportPosition()
 
     def reportPosition(self):
 
@@ -341,7 +336,8 @@ class View(BaseView):
     def _zoom(self, kind='out'):
 
         zoomFactor = self.s_settings.get('zoomFactor', .1)
-        if self.scaleMode() != 'ScaleFactor': self.setScaleMode('ScaleFactor')
+        if self.scaleMode() != 'ScaleFactor': 
+            self.setScaleMode('ScaleFactor')
 
         if kind=='out':
             zoomFactor=1.-zoomFactor
@@ -391,8 +387,10 @@ class View(BaseView):
         for page in self.m_pageItems:
             page.activateRubberBand(listener)
 
-    def updateSceneAndView(self, left=0., top=0.):
+    def updateSceneAndView(self, left=None, top=None):
 
+        if not left or not top:
+            left, top = self.saveLeftAndTop()
         visibleWidth=self.m_layout.visibleWidth(self.size().width())
         visibleHeight=self.m_layout.visibleHeight(self.size().height())
 
