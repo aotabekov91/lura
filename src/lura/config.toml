@@ -1,37 +1,48 @@
 [Settings]
+
 handler_port = 20002
 
 [Plugman.Settings]
+
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
 [Styler.Settings]
+
 style = 'GreenElf'
 
 [Lookup.Settings]
+
 lookup_port = 43110
 
 [Card.Settings.mode_keys]
+
 command = 'c' 
 
 [FileBrowser.Settings.mode_keys]
+
 command = 'f' 
 
 [Card.Settings.Keys]
+
 inputField = {key='cu', modes=['normal', 'command']} 
 
 [FileBrowser.Settings.Keys]
+
 toggle = 't'
 
 [FileBrowser.Settings.UI.Keys]
+
 # [FileBrowser.Settings.UI.Tree.Keys] Todo
 moveUp = 'k'
 moveDown = 'j'
 
 [[Plugman.Picky]]
+
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/modes/normal',
+	'src/modes/search',
 	'src/modes/visual',
 	'src/annotate',
 	'src/annotations',
@@ -44,17 +55,17 @@ subdir = [
 	'src/metadata',
 	'src/outline',
 	'src/leaper',
-	# 'src/card',
-	# 'src/modes/search',
-# 	# 'src/documents',
-# 	# 'src/links',
+	'src/links',
+	'src/documents',
+	'src/card',
+	'src/parts',
 # 	# 'src/lookup',
 # 	# 'src/pager',
-# 	# 'src/parts',
 # 	# 'src/rlist',
 	]
 
 [[Plugman.Picky]]
+
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/plugs/modes/exec',
@@ -72,6 +83,7 @@ subdir = [
 	]
 
 [View]
+
 rotation = 0
 zoomFactor = 0.1
 pageSpacing = 3 
