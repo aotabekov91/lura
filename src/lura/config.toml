@@ -59,6 +59,7 @@ subdir = [
 	'src/documents',
 	'src/card',
 	'src/parts',
+	'src/search_list',
 # 	# 'src/lookup',
 # 	# 'src/pager',
 # 	# 'src/rlist',
