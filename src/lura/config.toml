@@ -4,6 +4,7 @@ handler_port = 20002
 
 [Plugman.Settings]
 
+install_requirements=true
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
