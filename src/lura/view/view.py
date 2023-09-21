@@ -210,19 +210,21 @@ class View(BaseView):
             self.m_pageItems, height=height)
         self.scene().setSceneRect(left, 0.0, right-left, height)
 
-    def pageItems(self): return self.m_pageItems
+    def pageItems(self): 
+        return self.m_pageItems
 
     def pageItem(self, index=None):
 
-        if index is None: index=self.m_currentPage-1
+        if index is None: 
+            index=self.m_currentPage-1
         return self.m_pageItems[index]
 
-    def settings(self): return self.s_settings
+    def settings(self): 
+        return self.s_settings
 
     def preparePages(self):
 
         self.m_pageItems = []
-
         for i, page in enumerate(self.m_pages):
             pageItem = PageItem(page, self)
             page.setPageItem(pageItem)
@@ -240,17 +242,22 @@ class View(BaseView):
         left, top = self.saveLeftAndTop()
         self.adjustScrollBarPolicy()
         self.prepareView(left, top)
-        self.continuousModeChanged.emit(self.s_settings.get('continuousView'), self)
+        self.continuousModeChanged.emit(
+                self.s_settings.get('continuousView'), self)
 
     def adjustScrollBarPolicy(self):
 
-        scaleMode = self.s_settings.get('scaleMode', 'FitToPageHeight')
+        scaleMode = self.s_settings.get(
+                'scaleMode', 'FitToPageHeight')
         if scaleMode == 'ScaleFactor':
-            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(
+                    QtCore.Qt.ScrollBarAlwaysOff)
         elif scaleMode == 'FitToPageWidth':
-            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(
+                    QtCore.Qt.ScrollBarAlwaysOff)
         elif scaleMode == 'FitToPageHeight':
-            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(
+                    QtCore.Qt.ScrollBarAlwaysOff)
             policy = QtCore.Qt.ScrollBarAlwaysOff
             if self.s_settings.get('continuousView', True):
                 policy = QtCore.Qt.ScrollBarAsNeeded
