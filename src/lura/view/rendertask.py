@@ -8,8 +8,6 @@ NotCanceled=0
 CanceledNormally=1
 CanceledForcibly=2
 
-from popplerqt5 import Poppler
-
 class RenderTask(QObject, QRunnable):
 
     finished = pyqtSignal()
