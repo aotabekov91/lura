@@ -16,23 +16,23 @@ style = 'GreenElf'
 
 lookup_port = 43110
 
-[Card.Settings.mode_keys]
+[Card.Settings]
 
-command = 'c' 
+prefix_key = {command = 'c'}
 
-[FileBrowser.Settings.mode_keys]
+[FileBrowser.Settings]
 
-command = 'f' 
+prefix_key = {command = 's'}
 
-[Card.Settings.Keys]
+[Card.Keys]
 
 inputField = {key='cu', modes=['normal', 'command']} 
 
-[FileBrowser.Settings.Keys]
+[FileBrowser.Keys]
 
 toggle = 't'
 
-[FileBrowser.Settings.UI.Keys]
+[FileBrowser.UI.Keys]
 
 # [FileBrowser.Settings.UI.Tree.Keys] Todo
 moveUp = 'k'
