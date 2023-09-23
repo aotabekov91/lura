@@ -34,7 +34,6 @@ toggle = 't'
 
 [FileBrowser.Keys.UI.main.tree]
 
-# [FileBrowser.Settings.UI.Tree.Keys] Todo
 moveUp = 'k'
 moveDown = 'j'
 
