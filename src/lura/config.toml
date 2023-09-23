@@ -18,11 +18,11 @@ lookup_port = 43110
 
 [Card.Settings]
 
-prefix_key = {command = 'c'}
+prefix_keys = {command = 'c'}
 
 [FileBrowser.Settings]
 
-prefix_key = {command = 's'}
+prefix_keys = {command = 'f'}
 
 [Card.Keys]
 
@@ -32,7 +32,7 @@ inputField = {key='cu', modes=['normal', 'command']}
 
 toggle = 't'
 
-[FileBrowser.UI.Keys]
+[FileBrowser.Keys.UI.main.tree]
 
 # [FileBrowser.Settings.UI.Tree.Keys] Todo
 moveUp = 'k'
