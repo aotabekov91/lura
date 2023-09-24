@@ -67,6 +67,12 @@ subdir = [
 
 [[Plugman.Picky]]
 
+pick = 'aotabekov91/render'
+subdir = [
+	'src/pdf',
+	]
+
+[[Plugman.Picky]]
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/plugs/modes/exec',

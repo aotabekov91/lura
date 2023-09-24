@@ -2,7 +2,6 @@ from plug.qt import Plug
 from plug.qt.utils import Plugman
 from plug.plugs.parser import Parser
 
-from .view import View
 from .utils import Display, Buffer
 
 class Lura(Plug):
@@ -12,9 +11,7 @@ class Lura(Plug):
         super().setup()
         self.setPlugman(Plugman)
         self.uiman.setApp()
-        self.uiman.setAppUI(Display, View)
-        self.display=self.uiman.window.main.display
-        self.buffer=Buffer(self)
+        self.uiman.setAppUI(Display, Buffer)
         self.setParser()
 
     def setParser(self):
@@ -25,15 +22,21 @@ class Lura(Plug):
         self.parser.addArgument('-x', '--x-axis', default=0)
         self.parser.addArgument('-y', '--y-axis', default=0)
 
+    def open(self, path, **kwargs):
+
+        model=self.buffer.load(path)
+        self.display.open(model=model, **kwargs)
+
     def parse(self):
 
         if self.parser:
             a, u = self.parser.parse()
-            view=self.uiman.window.main.display.currentView()
-            if a.file:
-                self.uiman.window.main.open(filePath=a.file)
-            if a.page and view:
-                view.goto(a.page, a.xaxis, a.yaxis)
+            self.open(a.file)
+            view=self.display.currentView()
+            if view and a.page:
+                view.goto(a.page, 
+                          a.xaxis, 
+                          a.yaxis)
 
     def run(self):
 
