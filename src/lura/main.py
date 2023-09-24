@@ -31,12 +31,13 @@ class Lura(Plug):
 
         if self.parser:
             a, u = self.parser.parse()
-            self.open(a.file)
-            view=self.display.currentView()
-            if view and a.page:
-                view.goto(a.page, 
-                          a.xaxis, 
-                          a.yaxis)
+            if a.file:
+                self.open(a.file)
+                view=self.display.currentView()
+                if view and a.page:
+                    view.goto(a.page, 
+                              a.xaxis, 
+                              a.yaxis)
 
     def run(self):
 
