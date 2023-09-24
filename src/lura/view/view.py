@@ -41,13 +41,13 @@ class View(BaseView):
 
         super().connect()
         self.annotationAdded.connect(
-                self.app.window.main.display.annotationAdded)
-        self.app.window.main.display.annotationAdded.connect(
+                self.app.display.annotationAdded)
+        self.app.display.annotationAdded.connect(
                 self.on_annotationChanged)
         self.verticalScrollBar().valueChanged.connect(
                 self.on_verticalScrollBar_valueChaged)
         self.selection.connect(
-                self.app.window.main.display.viewSelection)
+                self.app.display.viewSelection)
 
     def on_annotationChanged(self, page):
 
@@ -189,8 +189,11 @@ class View(BaseView):
 
         for page in self.m_pageItems:
 
-            page.setResolution(self.logicalDpiX(), self.logicalDpiY())
-            dw, dh = page.displayedWidth(), page.displayedHeight()
+            page.setResolution(
+                    self.logicalDpiX(), 
+                    self.logicalDpiY())
+            dw= page.displayedWidth()
+            dh = page.displayedHeight()
             fitPageSize=[w/float(dw), h/float(dh)]
 
             width_ratio=w/dw
@@ -229,7 +232,7 @@ class View(BaseView):
             pageItem = PageItem(page, self)
             page.setPageItem(pageItem)
             page.annotationAdded.connect(
-                    self.app.window.main.display.annotationAdded)
+                    self.app.display.annotationAdded)
             self.m_pageItems += [pageItem]
             self.scene().addItem(pageItem)
 
