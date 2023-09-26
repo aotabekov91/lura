@@ -1,24 +1,26 @@
-from PyQt5 import QtCore
+import os
+import hashlib
 from plug.qt.utils import Buffer as Base
-
-from .hashman import Hashman
 
 class Buffer(Base):
 
-    hashChanged=QtCore.pyqtSignal(object)
+    def setID(self, path, model):
 
-    def __init__(self, *args, **kwargs):
+        model=self.buffers.get(path, None)
+        if not model:
+            uid=self.getHash(path)
+            if uid:
+                model.setId(uid)
+                model.setHash(uid)
 
-        super().__init__(*args, **kwargs)
-        self.hashman=Hashman(self)
+    def getHash(self, path):
 
-    def setHash(self, path, dhash=None):
-
-        if not dhash: 
-            dhash=self.hashman.getHash(path)
-        if dhash:
-            model=self.buffers.get(path)
-            if model:
-                model.setHash(dhash)
-                model.setId(dhash)
-                self.hashChanged.emit(model)
+        if os.path.isfile(path):
+            path=os.path.expanduser(path)
+            file_hash = hashlib.md5()
+            with open(path, 'rb') as f:
+                chunk = f.read(4096)
+                while chunk:
+                    file_hash.update(chunk)
+                    chunk = f.read(4096)
+            return file_hash.hexdigest()
