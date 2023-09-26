@@ -6,14 +6,12 @@ class Buffer(Base):
 
     def setID(self, path, model):
 
-        model=self.buffers.get(path, None)
-        if not model:
-            uid=self.getHash(path)
+        if not model in self.buffers:
+            uid=self.getID(path)
             if uid:
                 model.setId(uid)
-                model.setHash(uid)
 
-    def getHash(self, path):
+    def getID(self, path):
 
         if os.path.isfile(path):
             path=os.path.expanduser(path)
