@@ -7,8 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-gizmo = {path = "/home/adama/code/gizmo", develop = true}
-plug = {path = "/home/adama/code/plug", extras=["qt"], develop = true}
+# gizmo = {path = "/home/adama/code/gizmo", develop = true}
+plug = {path = "/home/adam/code/plug", extras=["qt"], develop = true}
 
 [tool.poetry.scripts]
 lura = "lura.main:run"
