@@ -1,6 +1,9 @@
-[Settings]
+# [Settings]
+# handler_port = 20002
 
-handler_port = 20002
+[Umay.Settings]
+
+umay_port=19999
 
 [Plugman.Settings]
 
@@ -82,10 +85,10 @@ subdir = [
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/trees/file_tree',
+	'src/plug/qt/plugs/umay',
 	# 'src/plug/qt/modes/move',
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
-	# 'src/plug/qt/plugs/umay',
 	# 'src/plug/qt/plugs/handler',
 	]
 
