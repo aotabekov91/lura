@@ -1,5 +1,6 @@
-# [Settings]
-# handler_port = 20002
+[Settings]
+
+keywords=['document viewer', 'document']
 
 [Umay.Settings]
 
@@ -7,7 +8,7 @@ umay_port=19999
 
 [Plugman.Settings]
 
-install_requirements=true
+initial_install=false
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
@@ -37,8 +38,8 @@ toggle = 't'
 
 [FileBrowser.Keys.UI.main.tree]
 
-moveUp = 'k'
-moveDown = 'j'
+up = 'k'
+down = 'j'
 
 [[Plugman.Picky]]
 
@@ -85,7 +86,7 @@ subdir = [
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/trees/file_tree',
-	'src/plug/qt/plugs/umay',
+	'src/plug/qt/plugs/umay_plug',
 	# 'src/plug/qt/modes/move',
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
