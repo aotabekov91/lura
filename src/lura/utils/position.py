@@ -16,5 +16,10 @@ def getBoundaries(position):
     areas=[]
     for t in position.split('_'):
         x, y, w, h = tuple(t.split(':'))
-        areas+=[QRectF(float(x), float(y), float(w), float(h))]
+        areas+=[QRectF(
+            float(x), 
+            float(y), 
+            float(w), 
+            float(h)
+            )]
     return areas

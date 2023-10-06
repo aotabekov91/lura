@@ -16,7 +16,8 @@ class Model(QtCore.QObject):
 
     def readFilepath(self, filePath):
 
-        self.m_data, self.m_pages=self.loadDocument(filePath)
+        (d, p) =self.loadDocument(filePath)
+        self.m_data, self.m_pages= (d, p)
 
     def loadDocument(self, filePath):
 

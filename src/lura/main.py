@@ -4,7 +4,6 @@ from plug.plugs.parser import Parser
 
 from lura.utils.normal import Normal
 from lura.render.pdf import PdfRender
-from lura.utils import Display, Buffer
 
 class Lura(Plug):
 
@@ -13,8 +12,7 @@ class Lura(Plug):
         super().setup()
         self.setPlugman(Plugman)
         self.uiman.setApp()
-        self.uiman.setAppUI(
-                Display, Buffer)
+        self.uiman.setAppUI()
         self.setParser()
         self.setDefaultPlugs()
 
@@ -26,10 +24,14 @@ class Lura(Plug):
     def setParser(self):
 
         self.parser=Parser(self)
-        self.parser.addArgument('file', nargs='?')
-        self.parser.addArgument('-p', '--page', default=None)
-        self.parser.addArgument('-x', '--x-axis', default=0)
-        self.parser.addArgument('-y', '--y-axis', default=0)
+        self.parser.addArgument(
+                'file', nargs='?')
+        self.parser.addArgument(
+                '-p', '--page', default=None)
+        self.parser.addArgument(
+                '-x', '--x-axis', default=0)
+        self.parser.addArgument(
+                '-y', '--y-axis', default=0)
 
     def open(self, path, **kwargs):
 
