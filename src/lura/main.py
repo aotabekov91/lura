@@ -2,7 +2,9 @@ from plug.qt import Plug
 from plug.qt.utils import Plugman
 from plug.plugs.parser import Parser
 
-from .utils import Display, Buffer
+from lura.utils.normal import Normal
+from lura.render.pdf import PdfRender
+from lura.utils import Display, Buffer
 
 class Lura(Plug):
 
@@ -11,8 +13,15 @@ class Lura(Plug):
         super().setup()
         self.setPlugman(Plugman)
         self.uiman.setApp()
-        self.uiman.setAppUI(Display, Buffer)
+        self.uiman.setAppUI(
+                Display, Buffer)
         self.setParser()
+        self.setDefaultPlugs()
+
+    def setDefaultPlugs(self):
+
+        defaults=[Normal, PdfRender]
+        self.plugman.loadPlugs(defaults)
 
     def setParser(self):
 
@@ -24,20 +33,21 @@ class Lura(Plug):
 
     def open(self, path, **kwargs):
 
-        model=self.buffer.load(path)
-        self.display.open(model=model, **kwargs)
+        if path:
+            model=self.buffer.load(path)
+            self.display.open(
+                    model=model, **kwargs)
 
     def parse(self):
 
         if self.parser:
             a, u = self.parser.parse()
-            if a.file:
-                self.open(a.file)
-                view=self.display.currentView()
-                if view and a.page:
-                    view.goto(a.page, 
-                              a.xaxis, 
-                              a.yaxis)
+            self.open(a.file)
+            view=self.display.currentView()
+            if view and a.page:
+                view.goto(a.page, 
+                          a.xaxis, 
+                          a.yaxis)
 
     def run(self):
 

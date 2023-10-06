@@ -45,7 +45,6 @@ down = 'j'
 
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	'src/modes/normal',
 	'src/modes/search',
 	'src/modes/visual',
 	'src/annotate',
@@ -69,12 +68,11 @@ subdir = [
 # 	# 'src/rlist',
 	]
 
-[[Plugman.Picky]]
-
-pick = 'aotabekov91/render'
-subdir = [
-	'src/pdf',
-	]
+# [[Plugman.Picky]]
+# pick = 'aotabekov91/render'
+# subdir = [
+# 	'src/pdf',
+# 	]
 
 [[Plugman.Picky]]
 pick = 'aotabekov91/plug'
@@ -86,7 +84,7 @@ subdir = [
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/execlist',
 	'src/plug/qt/plugs/trees/file_tree',
-	'src/plug/qt/plugs/umay_plug',
+	# 'src/plug/qt/plugs/umay_plug',
 	# 'src/plug/qt/modes/move',
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
