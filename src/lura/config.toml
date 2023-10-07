@@ -1,6 +1,8 @@
+[Settings]
+keywords=['viewer', 'document']
+
 [Umay.Settings]
 umay_port=19999
-keywords=['viewer', 'document']
 
 [Styler.Settings]
 style = 'GreenElf'
