@@ -1,5 +1,5 @@
 from gizmo.utils import register
-from plug.qt.plugs.modes import Normal as Base
+from plug.qt.plugs.normal import Normal as Base
 
 class Normal(Base):
 

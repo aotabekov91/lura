@@ -6,12 +6,6 @@ keywords=['viewer', 'document']
 
 umay_port=19999
 
-[Plugman.Settings]
-
-initial_install=false
-base = 'https://github.com'
-folder = '~/.config/lura/picky'
-
 [Styler.Settings]
 
 style = 'GreenElf'
@@ -41,7 +35,12 @@ toggle = 't'
 up = 'k'
 down = 'j'
 
-[[Plugman.Picky]]
+[Picky.Settings]
+
+base = 'https://github.com'
+folder = '~/.config/lura/picky'
+
+[[Picky.Picks]]
 
 pick = 'aotabekov91/lura_plugins'
 subdir = [
@@ -68,8 +67,8 @@ subdir = [
 # 	# 'src/rlist',
 	]
 
+[[Picky.Picks]]
 
-[[Plugman.Picky]]
 pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/plugs/modes/exec',

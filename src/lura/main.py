@@ -1,6 +1,9 @@
 from plug.qt import Plug
-from plug.qt.utils import Plugman
+from plug.qt.utils import Moder
 from plug.plugs.parser import Parser
+
+from plug.qt.plugs.exec import Exec
+from plug.qt.plugs.command import Command
 
 from lura.utils.normal import Normal
 from lura.render.pdf import PdfRender
@@ -10,16 +13,21 @@ class Lura(Plug):
     def setup(self): 
 
         super().setup()
-        self.setPlugman(Plugman)
-        self.uiman.setApp()
-        self.uiman.setAppUI()
         self.setParser()
-        self.setDefaultPlugs()
+        self.uiman.setApp()
+        self.setModer(Moder)
+        self.uiman.setAppUI()
 
-    def setDefaultPlugs(self):
+    def loadModer(self):
 
-        defaults=[Normal, PdfRender]
-        self.plugman.loadPlugs(defaults)
+        defaults=set([
+            Exec, 
+            Normal, 
+            Command, 
+            PdfRender,
+            ])
+        super().loadModer(
+                plugs=defaults)
 
     def setParser(self):
 

@@ -7,7 +7,7 @@ from .model import Model
 
 class PdfRender(Render):
 
-    def setID(self, path, model):
+    def setId(self, path, model):
 
         if os.path.isfile(path):
             path=os.path.expanduser(path)
@@ -23,7 +23,8 @@ class PdfRender(Render):
     def isCompatible(self, path):
         
         if path:
-            return path.lower().endswith('pdf')
+            path=path.lower()
+            return path.endswith('pdf')
 
     def readFile(self, path):
 
