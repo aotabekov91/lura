@@ -1,47 +1,34 @@
-[Settings]
-
+[Umay.Settings]
+umay_port=19999
 keywords=['viewer', 'document']
 
-[Umay.Settings]
-
-umay_port=19999
-
 [Styler.Settings]
-
 style = 'GreenElf'
 
 [Lookup.Settings]
-
 lookup_port = 43110
 
 [Card.Settings]
-
 prefix_keys = {command = 'c'}
 
 [FileBrowser.Settings]
-
 prefix_keys = {command = 'f'}
 
 [Card.Keys]
-
 inputField = {key='cu', modes=['normal', 'command']} 
 
 [FileBrowser.Keys]
-
 toggle = 't'
 
 [FileBrowser.Keys.UI.main.tree]
-
 up = 'k'
 down = 'j'
 
 [Picky.Settings]
-
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
 [[Picky.Picks]]
-
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/modes/search',
@@ -68,11 +55,8 @@ subdir = [
 	]
 
 [[Picky.Picks]]
-
 pick = 'aotabekov91/plug'
 subdir = [
-	'src/plug/qt/plugs/modes/exec',
-	'src/plug/qt/plugs/modes/command', 
 	'src/plug/qt/plugs/styles/green_elf',
 	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/powerline',
@@ -82,11 +66,9 @@ subdir = [
 	# 'src/plug/qt/modes/move',
 	# 'src/plug/qt/modes/hint',
 	# 'src/plug/qt/modes/resize',
-	# 'src/plug/qt/plugs/handler',
 	]
 
 [View]
-
 rotation = 0
 zoomFactor = 0.1
 pageSpacing = 3 
