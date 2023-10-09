@@ -1,9 +1,7 @@
 from plug.qt import Plug
 from plug.qt.utils import Moder
 from plug.plugs.parser import Parser
-
-from plug.qt.plugs.exec import Exec
-from plug.qt.plugs.command import Command
+from plug.qt.plugs import exec, command
 
 from lura.utils.normal import Normal
 from lura.render.pdf import PdfRender
@@ -21,9 +19,9 @@ class Lura(Plug):
     def loadModer(self):
 
         defaults=set([
-            Exec, 
             Normal, 
-            Command, 
+            exec.Exec, 
+            command.Command, 
             PdfRender,
             ])
         super().loadModer(
