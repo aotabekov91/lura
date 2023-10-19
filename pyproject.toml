@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-python-poppler-qt5 = ">=21.3.0"
+# python-poppler-qt5 = ">=21.3.0" # Error with poetry install
 plug = {path = "/home/adam/code/plug", extras=["qt"], develop = true}
 # plug = {git = "https://github.com/aotabekov91/plug", extras=["qt"], branch='main'}
 

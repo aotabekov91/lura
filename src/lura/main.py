@@ -12,33 +12,25 @@ class Lura(Plug):
 
     def loadModer(self):
 
-        plugs=set([
-            Exec, 
-            Picky,
-            Normal, 
-            Command, 
-            PdfRender,
-            ])
-        self.moder.load(plugs=plugs)
-        print(self.moder.plugs.exec.actions)
+        self.moder.load(
+                plugs=set([
+                    Exec, 
+                    Picky, 
+                    Normal, 
+                    Command, 
+                    PdfRender,
+                    ])
+                )
+        self.moder.load()
 
     def setup(self): 
 
         super().setup()
         self.setParser()
-        self.setModer()
+        self.setModer(Moder)
         self.uiman.setApp()
         self.uiman.setAppUI()
         self.loadModer()
-
-    def setModer(self):
-
-        config=self.config.get(
-                'Moder', {})
-        self.moder=Moder(
-                app=self,
-                config=config,
-                )
 
     def setParser(self):
 
@@ -57,7 +49,9 @@ class Lura(Plug):
         if path:
             model=self.buffer.load(path)
             self.display.open(
-                    model=model, **kwargs)
+                    model=model, 
+                    **kwargs
+                    )
 
     def parse(self):
 
