@@ -31,6 +31,7 @@ class Lura(Plug):
         self.uiman.setApp()
         self.uiman.setAppUI()
         self.loadModer()
+        self.parse()
 
     def setParser(self):
 
@@ -64,11 +65,6 @@ class Lura(Plug):
                         a.page, 
                         a.xaxis, 
                         a.yaxis)
-
-    def run(self):
-
-        self.parse()
-        super().run()
 
 def run():
 
