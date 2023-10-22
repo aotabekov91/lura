@@ -1,1 +1,0 @@
-python-poppler-qt5 ==21.3.0

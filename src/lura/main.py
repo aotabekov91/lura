@@ -5,8 +5,8 @@ from plug.qt.plugs.moder import Moder
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.command import Command
 
+from ohu.pdf import PdfRender
 from lura.utils.normal import Normal
-from lura.render.pdf import PdfRender
 
 class Lura(Plug):
 
