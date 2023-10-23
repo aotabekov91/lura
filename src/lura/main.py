@@ -1,9 +1,9 @@
+from plug.qt import Plug
 from ohu.pdf import PdfRender
-from plug.qt import Plug, plugs
+from plug.qt.plugs.run import Run
 from plug.plugs.parser import Parser
 from lura.utils.normal import Normal
 from plug.qt.plugs.moder import Moder
-from plug.qt.plugs.exec import Exec
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.command import Command
 
@@ -14,7 +14,7 @@ class Lura(Plug):
         self.moder.load(
                 plugs=set([
                     Normal, 
-                    Exec, 
+                    Run, 
                     Picky, 
                     Command, 
                     PdfRender,
