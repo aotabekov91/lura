@@ -6,14 +6,14 @@ class Normal(Base):
     @register(key='yy')
     def yank(self):
 
-        view=self.currentView()
-        if view and view.selected(): 
+        v=self.currentView()
+        if v and v.selected(): 
             t=[]
-            for s in view.selected(): 
+            for s in v.selected(): 
                 t+=[s['text']]
             t=' '.join(t)
             self.app.clipboard().setText(t)
-            view.select()
+            v.select()
 
     @register(key='w')
     def fitToPageWidth(self): 
