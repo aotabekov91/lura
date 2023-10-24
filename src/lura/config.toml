@@ -40,8 +40,8 @@ subdir = [
 	'src/search',
 	'src/visual',
 	'src/outline',
-	'src/annotate',
 	'src/autosave',
+	'src/annotate',
 	'src/metadata',
 	'src/bookmark',
 	'src/documents',
@@ -51,6 +51,7 @@ subdir = [
 	'src/annotations',
 	'src/search_list',
 	'src/annotate_list',
+
 # 	# 'src/lookup',
 # 	# 'src/pager',
 # 	# 'src/rlist',
@@ -59,9 +60,9 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
-	# 'src/plug/qt/plugs/move',
-	# 'src/plug/qt/plugs/hint',
-	# 'src/plug/qt/plugs/resize',
+	'src/plug/qt/plugs/move',
+	'src/plug/qt/plugs/hint',
+	'src/plug/qt/plugs/resize',
 	'src/plug/qt/plugs/input',
 	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/runlist',
