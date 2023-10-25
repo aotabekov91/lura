@@ -152,7 +152,7 @@ displayedHeight	src/lura/view/pageitem.py	/^    def displayedHeight(self):$/;"	m
 displayedWidth	src/lura/view/pageitem.py	/^    def displayedWidth(self):$/;"	m	class:PageItem
 document	src/lura/render/page.py	/^    def document(self): return self.m_document$/;"	m	class:PdfPage
 down	src/lura/view/view.py	/^    def down(self):$/;"	m	class:View
-dropCachedPixmaps	src/lura/view/tileitem.py	/^    def dropCachedPixmaps(self, page):$/;"	m	class:TileItem
+dropCaches	src/lura/view/tileitem.py	/^    def dropCaches(self, page):$/;"	m	class:TileItem
 dropObsoletePixmap	src/lura/view/tileitem.py	/^    def dropObsoletePixmap(self):$/;"	m	class:TileItem
 dropPixmap	src/lura/view/tileitem.py	/^    def dropPixmap(self):$/;"	m	class:TileItem
 filePath	src/lura/render/document.py	/^    def filePath(self): return self.m_filePath$/;"	m	class:PdfDocument
@@ -264,8 +264,8 @@ readSuccess	src/lura/render/document.py	/^    def readSuccess(self): return self
 readjust	src/lura/view/view.py	/^    def readjust(self):$/;"	m	class:View
 rect	src/lura/view/tileitem.py	/^    def rect(self):$/;"	m	class:TileItem
 redraw	src/lura/view/pageitem.py	/^    def redraw(self, refresh=False):$/;"	m	class:PageItem
-refresh	src/lura/view/pageitem.py	/^    def refresh(self, dropCachedPixmap=False):$/;"	m	class:PageItem
-refresh	src/lura/view/tileitem.py	/^    def refresh(self, dropCachedPixmap=False):$/;"	m	class:TileItem
+refresh	src/lura/view/pageitem.py	/^    def refresh(self, dropCache=False):$/;"	m	class:PageItem
+refresh	src/lura/view/tileitem.py	/^    def refresh(self, dropCache=False):$/;"	m	class:TileItem
 refresh	src/lura/view/view.py	/^    def refresh(self):$/;"	m	class:View
 registerByUmay	src/lura/main.py	/^    def registerByUmay(self, path=None, kind=None):$/;"	m	class:Lura
 removeAnnotation	src/lura/render/page.py	/^    def removeAnnotation(self, aData):$/;"	m	class:PdfPage
@@ -282,7 +282,7 @@ run	src/lura/main.py	/^def run():$/;"	f
 run	src/lura/view/rendertask.py	/^    def run(self):$/;"	m	class:RenderTask
 save	src/lura/render/document.py	/^    def save(self, filePath, withChanges):$/;"	m	class:PdfDocument
 save	src/lura/view/view.py	/^    def save(self, filePath=False, withChanges=True):$/;"	m	class:View
-saveLeftAndTop	src/lura/view/view.py	/^    def saveLeftAndTop(self, left=0., top=0.):$/;"	m	class:View
+getPosition	src/lura/view/view.py	/^    def getPosition(self, left=0., top=0.):$/;"	m	class:View
 scale	src/lura/view/pageitem.py	/^    def scale(self):$/;"	m	class:PageItem
 scaleFactorChanged	src/lura/view/view.py	/^    scaleFactorChanged = QtCore.pyqtSignal(object, object)$/;"	v	class:View
 scaleMode	src/lura/view/view.py	/^    def scaleMode(self):$/;"	m	class:View

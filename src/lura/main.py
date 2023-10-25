@@ -13,14 +13,13 @@ class Lura(Plug):
 
         self.moder.load(
                 plugs=set([
-                    Normal, 
                     Run, 
                     Picky, 
+                    Normal, 
                     Command, 
                     PdfRender,
                     ])
                 )
-        self.moder.load()
 
     def setup(self): 
 
@@ -43,6 +42,8 @@ class Lura(Plug):
                 '-x', '--x-axis', default=0)
         self.parser.addArgument(
                 '-y', '--y-axis', default=0)
+        self.parser.addArgument(
+                '-n', '--naked', default=False)
 
     def open(self, path, **kwargs):
 
@@ -50,20 +51,20 @@ class Lura(Plug):
             model=self.buffer.load(path)
             self.display.open(
                     model=model, 
-                    **kwargs
-                    )
+                    **kwargs)
 
     def parse(self):
 
-        if self.parser:
-            a, u = self.parser.parse()
-            self.open(a.file)
-            view=self.display.currentView()
-            if view and a.page:
-                view.goto(
-                        a.page, 
-                        a.xaxis, 
-                        a.yaxis)
+        a, u = self.parser.parse()
+        self.open(a.file)
+        view=self.display.currentView()
+        if view and a.page:
+            view.goto(
+                    a.page, 
+                    a.xaxis, 
+                    a.yaxis)
+        if not a.naked:
+            self.moder.load()
 
 def run():
 
