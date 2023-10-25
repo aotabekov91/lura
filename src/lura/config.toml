@@ -60,11 +60,13 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
+	'src/plug/qt/plugs/run',
 	'src/plug/qt/plugs/move',
 	'src/plug/qt/plugs/hint',
-	'src/plug/qt/plugs/resize',
 	'src/plug/qt/plugs/input',
+	'src/plug/qt/plugs/resize',
 	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/command',
 	'src/plug/qt/plugs/runlist',
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/umay_plug',

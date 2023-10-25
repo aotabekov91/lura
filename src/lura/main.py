@@ -1,11 +1,9 @@
 from plug.qt import Plug
 from ohu.pdf import PdfRender
-from plug.qt.plugs.run import Run
 from plug.plugs.parser import Parser
 from lura.utils.normal import Normal
 from plug.qt.plugs.moder import Moder
 from plug.qt.plugs.picky import Picky
-from plug.qt.plugs.command import Command
 
 class Lura(Plug):
 
@@ -13,10 +11,8 @@ class Lura(Plug):
 
         self.moder.load(
                 plugs=set([
-                    Run, 
                     Picky, 
                     Normal, 
-                    Command, 
                     PdfRender,
                     ])
                 )
@@ -47,24 +43,23 @@ class Lura(Plug):
 
     def open(self, path, **kwargs):
 
-        if path:
-            model=self.buffer.load(path)
-            self.display.open(
-                    model=model, 
-                    **kwargs)
+        m=self.buffer.load(path)
+        self.display.open(
+                model=m, **kwargs)
 
     def parse(self):
 
         a, u = self.parser.parse()
-        self.open(a.file)
-        view=self.display.currentView()
-        if view and a.page:
-            view.goto(
-                    a.page, 
-                    a.xaxis, 
-                    a.yaxis)
         if not a.naked:
             self.moder.load()
+        if a.file:
+            self.open(a.file)
+            view=self.display.currentView()
+            if view and a.page:
+                view.goto(
+                        a.page, 
+                        a.xaxis, 
+                        a.yaxis)
 
 def run():
 
