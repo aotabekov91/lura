@@ -17,13 +17,17 @@ class Lura(Plug):
                     ])
                 )
 
+    def setUIMan(self):
+
+        super().setUIMan()
+        self.uiman.setApp()
+        self.uiman.setAppUI()
+
     def setup(self): 
 
         super().setup()
         self.setParser()
         self.setModer(Moder)
-        self.uiman.setApp()
-        self.uiman.setAppUI()
         self.loadModer()
         self.parse()
 
@@ -52,6 +56,11 @@ class Lura(Plug):
         a, u = self.parser.parse()
         if not a.naked:
             self.moder.load()
+
+    def launch(self):
+
+        super().launch()
+        a, u = self.parser.parse()
         if a.file:
             self.open(a.file)
             view=self.display.currentView()
