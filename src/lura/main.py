@@ -56,11 +56,6 @@ class Lura(Plug):
         a, u = self.parser.parse()
         if not a.naked:
             self.moder.load()
-
-    def launch(self):
-
-        super().launch()
-        a, u = self.parser.parse()
         if a.file:
             self.open(a.file)
             view=self.display.currentView()
