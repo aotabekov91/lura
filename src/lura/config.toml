@@ -1,5 +1,5 @@
 [Settings]
-keywords=['viewer', 'document']
+keywords=['viewer']
 
 [Umay.Settings]
 umay_port=19999
