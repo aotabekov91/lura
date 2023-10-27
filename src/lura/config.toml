@@ -74,28 +74,41 @@ subdir = [
 	'src/plug/qt/plugs/styles/green_elf',
 	]
 
-[View]
-rotation = 0
+[Display.View]
+foldlevel=0
 zoomFactor = 0.1
-pageSpacing = 3 
 scaleFactor = 1.0
-tileSize =  1024
-resolutionX = 72
-resolutionY = 72
-paperColor = 'gray'
+continuousMode = true
+layoutMode = 'SinglePage' 
+scaleMode = 'FitToWindowHeight' 
+
+[Display.View.Item]
+xresol = 72
+yresol = 72
+rotation = 0
 proxyPadding =  0
+viewportPadding = 0
+
+[Display.View.Layout]
+pageSpacing = 5 
+
+[Display.View.PdfView.Item]
+yresol=1
+
+[Display.View.PdfView.Layout]
+pageSpacing = 3 
+
+[Display.View.PdfView]
+tileSize =  1024
+paperColor = 'gray'
 useTiling =  false
 trimMargins = false
-viewportPadding = 0
 invertColors = false
 decorateLinks = true
 decoratePages = false
-continuousMode = true
 devicePixelRatio = 1.0
 drawMode = 'DefaultMode'
 annotationOverlay = true
-layoutMode = 'SinglePage' 
 convertToGrayscale = false
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1
-scaleMode = 'FitToWindowHeight' 

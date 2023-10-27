@@ -1,6 +1,6 @@
 # Lura 
 
-A document viewer written in Python with PyQt.
+A viewer written in Python with PyQt.
 
 ## Install
 
@@ -10,7 +10,7 @@ $ cd lura
 $ poetry install
 ```
 
-After the initial install, enter the exec mode (press \<c-.\>) and type installPicks and enter to install plugins. Then rerun the app.
+After the initial install, enter the exec mode (press \<c-r\>) and type installPicks and enter to install plugins. Then rerun the app.
 To exit press \<c-q\>.
 
 ## Usage
