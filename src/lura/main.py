@@ -3,6 +3,8 @@ from plug.plugs.parser import Parser
 from plug.qt.plugs.moder import Moder
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.normal import Normal
+
+from ohu.image import Image
 from ohu.pdf_poppler import PdfPoppler
 
 class Lura(Plug):
@@ -13,6 +15,7 @@ class Lura(Plug):
                 plugs=set([
                     Picky, 
                     Normal, 
+                    Image,
                     PdfPoppler,
                     ])
                 )

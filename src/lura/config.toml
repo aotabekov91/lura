@@ -112,3 +112,6 @@ annotationOverlay = true
 convertToGrayscale = false
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1
+
+[Display.View.ImageView]
+continuousMode = false
