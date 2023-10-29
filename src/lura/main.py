@@ -35,8 +35,6 @@ class Lura(Plug):
 
         self.parser=Parser(self)
         self.parser.addArgument(
-                'file', nargs='?')
-        self.parser.addArgument(
                 '-p', '--page', default=None)
         self.parser.addArgument(
                 '-x', '--x-axis', default=0)
@@ -44,26 +42,23 @@ class Lura(Plug):
                 '-y', '--y-axis', default=0)
         self.parser.addArgument(
                 '-n', '--naked', default=False)
-
-    def open(self, path, **kwargs):
-
-        m=self.buffer.load(path)
-        self.display.open(
-                model=m, **kwargs)
+        self.parser.addArgument(
+                'source', nargs='?', default=None)
 
     def parse(self):
 
         a, u = self.parser.parse()
         if not a.naked:
             self.moder.load()
-        if a.file:
-            self.open(a.file)
-            view=self.display.currentView()
-            if view and a.page:
-                view.goto(
-                        a.page, 
-                        a.xaxis, 
-                        a.yaxis)
+        self.open(source=a.source)
+
+            # a, **u)
+        # view=self.display.currentView()
+        # if view and a.page:
+        #     view.goto(
+        #             a.page, 
+        #             a.xaxis, 
+        #             a.yaxis)
 
 def run():
 
