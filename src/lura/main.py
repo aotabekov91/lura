@@ -4,9 +4,10 @@ from plug.qt.plugs.moder import Moder
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.normal import Normal
 
+# from ohu.djvu import Djvu
 from ohu.image_qt import ImageQt
 from ohu.media_qt import MediaQt
-from ohu.pdf_poppler import PdfPoppler
+from ohu.pdf_fitz import PdfFitz
 
 class Lura(Plug):
 
@@ -16,9 +17,10 @@ class Lura(Plug):
                 plugs=set([
                     Picky, 
                     Normal, 
+                    # Djvu,
                     ImageQt,
                     MediaQt,
-                    PdfPoppler,
+                    PdfFitz,
                     ])
                 )
 
