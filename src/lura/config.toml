@@ -30,32 +30,32 @@ down = 'j'
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
-[[Picky.Picks]]
-pick = 'aotabekov91/lura_plugins'
-subdir = [
-	'src/card',
-	'src/links',
-	'src/parts',
-	'src/leaper',
-	'src/search',
-	'src/visual',
-	'src/outline',
-	'src/autosave',
-	'src/annotate',
-	'src/metadata',
-	'src/bookmark',
-	'src/documents',
-	'src/bookmarks',
-	'src/quickmark',
-	'src/quickmarks',
-	'src/annotations',
-	'src/search_list',
-	'src/annotate_list',
+# [[Picky.Picks]]
+# pick = 'aotabekov91/lura_plugins'
+# subdir = [
+# 	'src/card',
+# 	'src/links',
+# 	'src/parts',
+# 	'src/leaper',
+# 	'src/search',
+# 	'src/visual',
+# 	'src/outline',
+# 	'src/autosave',
+# 	'src/annotate',
+# 	'src/metadata',
+# 	'src/bookmark',
+# 	'src/documents',
+# 	'src/bookmarks',
+# 	'src/quickmark',
+# 	'src/quickmarks',
+# 	'src/annotations',
+# 	'src/search_list',
+# 	'src/annotate_list',
 
 # 	# 'src/lookup',
 # 	# 'src/pager',
 # 	# 'src/rlist',
-	]
+	# ]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
