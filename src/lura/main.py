@@ -4,6 +4,7 @@ from plug.qt.plugs.moder import Moder
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.normal import Normal
 
+from ohu.epub import Epub
 from ohu.djvu import DjvuLibre
 from ohu.image_qt import ImageQt
 from ohu.media_qt import MediaQt
@@ -17,6 +18,7 @@ class Lura(Plug):
                 plugs=set([
                     Picky, 
                     Normal, 
+                    Epub,
                     ImageQt,
                     MediaQt,
                     PdfFitz,
