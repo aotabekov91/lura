@@ -11,10 +11,10 @@ style = 'GreenElf'
 lookup_port = 43110
 
 [Card.Settings]
-prefix_keys = {command = 'c'}
+leader_keys = {command = 'c'}
 
 [FileBrowser.Settings]
-prefix_keys = {command = 'f'}
+leader_keys = {command = 'f'}
 
 [Card.Keys]
 inputField = {key='cu', modes=['normal', 'command']} 
@@ -90,7 +90,7 @@ proxyPadding =  0
 viewportPadding = 0
 
 [Display.View.Layout]
-pageSpacing = 5 
+pageSpacing = 0 
 
 [Display.View.PdfView.Item]
 yresol=1

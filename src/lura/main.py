@@ -1,3 +1,5 @@
+from PyQt5 import QtCore
+
 from plug.qt import Plug
 from plug.plugs.parser import Parser
 from plug.qt.plugs.moder import Moder
@@ -44,12 +46,6 @@ class Lura(Plug):
 
         self.parser=Parser(self)
         self.parser.addArgument(
-                '-p', '--page', default=None)
-        self.parser.addArgument(
-                '-x', '--x-axis', default=0)
-        self.parser.addArgument(
-                '-y', '--y-axis', default=0)
-        self.parser.addArgument(
                 '-n', '--naked', default=False)
         self.parser.addArgument(
                 'source', nargs='?', default=None)
@@ -57,17 +53,9 @@ class Lura(Plug):
     def parse(self):
 
         a, u = self.parser.parse()
+        self.open(source=a.source)
         if not a.naked:
             self.moder.load()
-        self.open(source=a.source)
-
-            # a, **u)
-        # view=self.display.currentView()
-        # if view and a.page:
-        #     view.goto(
-        #             a.page, 
-        #             a.xaxis, 
-        #             a.yaxis)
 
 def run():
 
