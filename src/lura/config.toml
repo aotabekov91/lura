@@ -30,14 +30,14 @@ down = 'j'
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
-# [[Picky.Picks]]
-# pick = 'aotabekov91/lura_plugins'
-# subdir = [
+[[Picky.Picks]]
+pick = 'aotabekov91/lura_plugins'
+subdir = [
 # 	'src/card',
 # 	'src/links',
 # 	'src/parts',
 # 	'src/leaper',
-# 	'src/search',
+	'src/search',
 # 	'src/visual',
 # 	'src/outline',
 # 	'src/autosave',
@@ -55,7 +55,7 @@ folder = '~/.config/lura/picky'
 # 	# 'src/lookup',
 # 	# 'src/pager',
 # 	# 'src/rlist',
-	# ]
+	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
