@@ -80,7 +80,7 @@ zoomFactor = 0.1
 scaleFactor = 1.0
 continuousMode = true
 layoutMode = 'SinglePage' 
-scaleMode = 'FitToWindowHeight' 
+scaleMode = 'FitToWindowWidth' 
 
 [Display.View.Item]
 xresol = 72
