@@ -34,27 +34,26 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 # 	'src/card',
-# 	'src/links',
 # 	'src/parts',
 # 	'src/leaper',
+	'src/links',
 	'src/search',
-# 	'src/visual',
-# 	'src/outline',
-# 	'src/autosave',
-# 	'src/annotate',
-# 	'src/metadata',
-# 	'src/bookmark',
+	'src/visual',
+	'src/outline',
+	'src/autosave',
+	'src/bookmark',
+	'src/annotate',
+	'src/metadata',
+	'src/quickmark',
+	'src/quickmarks',
+	'src/bookmarks',
+	'src/annotations',
+	'src/annotate_list',
 # 	'src/documents',
-# 	'src/bookmarks',
-# 	'src/quickmark',
-# 	'src/quickmarks',
-# 	'src/annotations',
 # 	'src/search_list',
-# 	'src/annotate_list',
-
-# 	# 'src/lookup',
-# 	# 'src/pager',
-# 	# 'src/rlist',
+# 	'src/lookup',
+# 	'src/pager',
+# 	'src/rlist',
 	]
 
 [[Picky.Picks]]
@@ -74,7 +73,7 @@ subdir = [
 	'src/plug/qt/plugs/styles/green_elf',
 	]
 
-[Display.View]
+[View]
 foldlevel=0
 zoomFactor = 0.1
 scaleFactor = 1.0
@@ -82,23 +81,17 @@ continuousMode = true
 layoutMode = 'SinglePage' 
 scaleMode = 'FitToWindowWidth' 
 
-[Display.View.Item]
+[View.Item]
 xresol = 72
 yresol = 72
 rotation = 0
 proxyPadding =  0
 viewportPadding = 0
 
-[Display.View.Layout]
+[View.Layout]
 pageSpacing = 0 
 
-[Display.View.PdfView.Item]
-yresol=1
-
-[Display.View.PdfView.Layout]
-pageSpacing = 3 
-
-[Display.View.PdfView]
+[FitzView]
 tileSize =  1024
 paperColor = 'gray'
 useTiling =  false
@@ -113,5 +106,11 @@ convertToGrayscale = false
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1
 
-[Display.View.ImageView]
+[FitzView.Item]
+yresol=1
+
+[FitzView.Layout]
+pageSpacing = 3 
+
+[ImageView]
 continuousMode = false

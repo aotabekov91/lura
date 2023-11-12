@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "lura"
 version = "0.0.1"
+readme = "README.md"
 description = "A viewer"
 authors = ["A O <you@example.com>"]
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+tables = {path = "/home/adam/code/tables", develop=true}
 ohu = {path = "/home/adam/code/ohu", extras=["all"], develop = true}
 plug = {path = "/home/adam/code/plug", extras=["qt"], develop = true}
 
