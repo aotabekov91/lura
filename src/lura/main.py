@@ -53,9 +53,9 @@ class Lura(Plug):
     def parse(self):
 
         a, u = self.parser.parse()
-        self.open(source=a.source)
         if not a.naked:
             self.moder.load()
+        self.open(source=a.source)
 
 def run():
 
