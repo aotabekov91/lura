@@ -14,6 +14,8 @@ from ohu.pdf_fitz import PdfFitz
 
 class Lura(Plug):
 
+    main_app=True
+
     def loadModer(self):
 
         self.moder.load(
@@ -27,12 +29,6 @@ class Lura(Plug):
                     # DjvuLibre,
                     ])
                 )
-
-    def setUIMan(self):
-
-        super().setUIMan()
-        self.uiman.setApp()
-        self.uiman.setAppUI()
 
     def setup(self): 
 
@@ -59,5 +55,6 @@ class Lura(Plug):
 
 def run():
 
+    raise
     app=Lura()
     app.run()
