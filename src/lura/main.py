@@ -1,8 +1,6 @@
-from PyQt5 import QtCore
-
 from plug.qt import Plug
 from plug.plugs.parser import Parser
-from plug.qt.plugs.moder import Moder
+
 from plug.qt.plugs.picky import Picky
 from plug.qt.plugs.normal import Normal
 
@@ -10,6 +8,7 @@ from plug.qt.plugs.normal import Normal
 # from ohu.djvu import DjvuLibre
 # from ohu.image_qt import ImageQt
 # from ohu.media_qt import MediaQt
+
 from ohu.pdf_fitz import PdfFitz
 
 class Lura(Plug):
@@ -19,7 +18,7 @@ class Lura(Plug):
     def loadModer(self):
 
         self.moder.load(
-                plugs=set([
+                plugs=[
                     Picky, 
                     Normal, 
                     # Epub,
@@ -27,14 +26,13 @@ class Lura(Plug):
                     # MediaQt,
                     PdfFitz,
                     # DjvuLibre,
-                    ])
+                    ]
                 )
 
     def setup(self): 
 
         super().setup()
         self.setParser()
-        self.setModer(Moder)
         self.loadModer()
         self.parse()
 
@@ -55,6 +53,5 @@ class Lura(Plug):
 
 def run():
 
-    raise
     app=Lura()
     app.run()
