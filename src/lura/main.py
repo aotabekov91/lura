@@ -54,4 +54,4 @@ class Lura(Plug):
 def run():
 
     app=Lura()
-    app.run()
+    app.activate()

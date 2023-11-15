@@ -33,49 +33,49 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-# 	'src/card',
-# 	'src/parts',
-# 	'src/leaper',
-	# 'src/links',
-	# 'src/search',
-	# 'src/visual',
-	# 'src/outline',
-	# 'src/autosave',
-	# 'src/bookmark',
-	# 'src/annotate',
-	# 'src/metadata',
-	# 'src/quickmark',
-	# 'src/quickmarks',
-	# 'src/bookmarks',
-	# 'src/annotations',
-	# 'src/annotate_list',
-# 	'src/documents',
-# 	'src/search_list',
-# 	'src/lookup',
-# 	'src/pager',
-# 	'src/rlist',
+# # 	'src/card',
+# # 	'src/parts',
+# # 	'src/leaper',
+# 	# 'src/links',
+# 	# 'src/search',
+# 	# 'src/visual',
+# 	# 'src/outline',
+# 	# 'src/autosave',
+# 	# 'src/bookmark',
+# 	# 'src/annotate',
+	'src/metadata',
+# 	# 'src/quickmark',
+# 	# 'src/quickmarks',
+# 	# 'src/bookmarks',
+# 	# 'src/annotations',
+# 	# 'src/annotate_list',
+# # 	'src/documents',
+# # 	'src/search_list',
+# # 	'src/lookup',
+# # 	'src/pager',
+# # 	'src/rlist',
 	]
 
-[[Picky.Picks]]
-pick = 'aotabekov91/ohu'
-subdir = [
-	'src/ohu/file_browser'
-	]
+# [[Picky.Picks]]
+# pick = 'aotabekov91/ohu'
+# subdir = [
+# 	'src/ohu/file_browser'
+# 	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
-	'src/plug/qt/plugs/run',
-	'src/plug/qt/plugs/runlist',
-	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/command',
 	'src/plug/qt/plugs/powerline',
-	'src/plug/qt/plugs/styles/green_elf',
-	'src/plug/qt/plugs/move',
-	'src/plug/qt/plugs/hint',
-	'src/plug/qt/plugs/input',
-	'src/plug/qt/plugs/resize',
-	'src/plug/qt/plugs/umay_plug',
+	# 'src/plug/qt/plugs/styles/green_elf',
+	# 'src/plug/qt/plugs/run',
+	# 'src/plug/qt/plugs/runlist',
+	# 'src/plug/qt/plugs/styler',
+	# 'src/plug/qt/plugs/move',
+	# 'src/plug/qt/plugs/hint',
+	# 'src/plug/qt/plugs/input',
+	# 'src/plug/qt/plugs/resize',
+	# 'src/plug/qt/plugs/umay_plug',
 	]
 
 [View]
