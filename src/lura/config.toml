@@ -13,18 +13,8 @@ lookup_port = 43110
 [Card.Settings]
 leader_keys = {command = 'c'}
 
-[FileBrowser.Settings]
-leader_keys = {command = 'f'}
-
 [Card.Keys]
 inputField = {key='cu', modes=['normal', 'command']} 
-
-[FileBrowser.Keys]
-toggle = 't'
-
-[FileBrowser.Keys.UI.main.tree]
-up = 'k'
-down = 'j'
 
 [Picky.Settings]
 base = 'https://github.com'
@@ -33,22 +23,22 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-# # 	'src/card',
-# # 	'src/parts',
-# # 	'src/leaper',
-# 	# 'src/links',
+	'src/quickmark',
+	'src/quickmarks',
+	# 'src/links',
+	# 'src/metadata',
+	# 'src/annotations',
 # 	# 'src/search',
 # 	# 'src/visual',
 # 	# 'src/outline',
 # 	# 'src/autosave',
 # 	# 'src/bookmark',
 # 	# 'src/annotate',
-	'src/metadata',
-# 	# 'src/quickmark',
-# 	# 'src/quickmarks',
 # 	# 'src/bookmarks',
-# 	# 'src/annotations',
 # 	# 'src/annotate_list',
+# # 	'src/card',
+# # 	'src/parts',
+# # 	'src/leaper',
 # # 	'src/documents',
 # # 	'src/search_list',
 # # 	'src/lookup',
@@ -56,21 +46,21 @@ subdir = [
 # # 	'src/rlist',
 	]
 
-# [[Picky.Picks]]
-# pick = 'aotabekov91/ohu'
-# subdir = [
-# 	'src/ohu/file_browser'
-# 	]
+[[Picky.Picks]]
+pick = 'aotabekov91/ohu'
+subdir = [
+	'src/ohu/files'
+	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
+	'src/plug/qt/plugs/run',
+	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/runlist',
 	'src/plug/qt/plugs/command',
 	'src/plug/qt/plugs/powerline',
-	# 'src/plug/qt/plugs/styles/green_elf',
-	# 'src/plug/qt/plugs/run',
-	# 'src/plug/qt/plugs/runlist',
-	# 'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/styles/green_elf',
 	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/hint',
 	# 'src/plug/qt/plugs/input',
