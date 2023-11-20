@@ -25,6 +25,8 @@ pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/quickmark',
 	'src/quickmarks',
+	# 'src/bookmark',
+	'src/bookmarks',
 	# 'src/links',
 	# 'src/metadata',
 	# 'src/annotations',
@@ -32,9 +34,7 @@ subdir = [
 # 	# 'src/visual',
 # 	# 'src/outline',
 # 	# 'src/autosave',
-# 	# 'src/bookmark',
 # 	# 'src/annotate',
-# 	# 'src/bookmarks',
 # 	# 'src/annotate_list',
 # # 	'src/card',
 # # 	'src/parts',
