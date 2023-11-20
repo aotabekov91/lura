@@ -24,9 +24,9 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/quickmark',
-	'src/quickmarks',
-	# 'src/bookmark',
+	# 'src/quickmarks',
 	'src/bookmarks',
+	# 'src/bookmark',
 	# 'src/links',
 	# 'src/metadata',
 	# 'src/annotations',
