@@ -23,10 +23,17 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
+<<<<<<< HEAD
 	# 'src/quickmark',
 	'src/quickmarks',
 	# 'src/bookmark',
 	# 'src/bookmarks',
+=======
+	'src/quickmark',
+	# 'src/quickmarks',
+	'src/bookmarks',
+	# 'src/bookmark',
+>>>>>>> 481e384a4c7c0894122fb8e4b0e44ffde7415e52
 	# 'src/links',
 	# 'src/metadata',
 	# 'src/annotate',
