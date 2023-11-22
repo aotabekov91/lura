@@ -25,6 +25,7 @@ pick = 'aotabekov91/lura_plugins'
 subdir = [
 	# 'src/quickmark',
 	'src/quickmarks',
+	'src/quickmarks_view',
 	# 'src/bookmark',
 	# 'src/bookmarks',
 	# 'src/quickmark',
