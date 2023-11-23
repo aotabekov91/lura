@@ -10,6 +10,19 @@ style = 'GreenElf'
 [Lookup.Settings]
 lookup_port = 43110
 
+[TableView.Quickmarks]
+name='QView'
+pos='dock_right'
+kind='Quickmark'
+check_prop='canLocate'
+locator_kind='position'
+leader_keys={command = 'q', 'normal|QView' = '<c-.>'}
+
+[TableModel.Quickmarks]
+check_prop='canLocate'
+table_name='Quickmark'
+widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+
 [Card.Settings]
 leader_keys = {command = 'c'}
 
@@ -24,8 +37,8 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	# 'src/quickmark',
-	'src/quickmarks',
-	'src/quickmarks_view',
+	# 'src/quickmarks',
+	# 'src/quickmarks_view',
 	# 'src/bookmark',
 	# 'src/bookmarks',
 	# 'src/quickmark',
@@ -51,11 +64,11 @@ subdir = [
 # 	'src/rlist',
 	]
 
-[[Picky.Picks]]
-pick = 'aotabekov91/ohu'
-subdir = [
-	'src/ohu/files'
-	]
+# [[Picky.Picks]]
+# pick = 'aotabekov91/ohu'
+# subdir = [
+# 	'src/ohu/files'
+# 	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
@@ -65,6 +78,7 @@ subdir = [
 	'src/plug/qt/plugs/runlist',
 	'src/plug/qt/plugs/command',
 	'src/plug/qt/plugs/powerline',
+	# 'src/plug/qt/plugs/table/model',
 	'src/plug/qt/plugs/styles/green_elf',
 	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/hint',

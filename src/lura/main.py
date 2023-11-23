@@ -13,7 +13,7 @@ from ohu.pdf_fitz import PdfFitz
 
 class Lura(Plug):
 
-    main_app=True
+    isMainApp=True
 
     def loadModer(self):
 
