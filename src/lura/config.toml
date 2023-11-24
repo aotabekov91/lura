@@ -16,7 +16,7 @@ pos='dock_right'
 kind='Quickmark'
 check_prop='canLocate'
 locator_kind='position'
-leader_keys={command = 'q', 'normal|QView' = '<c-.>'}
+prefix_keys={command = 'q', 'normal|QView' = '<c-.>'}
 
 [TableModel.Quickmarks]
 check_prop='canLocate'
@@ -24,7 +24,7 @@ table_name='Quickmark'
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
 [Card.Settings]
-leader_keys = {command = 'c'}
+prefix_keys = {command = 'c'}
 
 [Card.Keys]
 inputField = {key='cu', modes=['normal', 'command']} 
@@ -64,11 +64,11 @@ subdir = [
 # 	'src/rlist',
 	]
 
-# [[Picky.Picks]]
-# pick = 'aotabekov91/ohu'
-# subdir = [
-# 	'src/ohu/files'
-# 	]
+[[Picky.Picks]]
+pick = 'aotabekov91/ohu'
+subdir = [
+	'src/ohu/files'
+	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
@@ -88,7 +88,7 @@ subdir = [
 	]
 
 [View]
-foldlevel=0
+# foldlevel=0
 zoomFactor = 0.1
 scaleFactor = 1.0
 continuousMode = true
