@@ -10,18 +10,25 @@ style = 'GreenElf'
 [Lookup.Settings]
 lookup_port = 43110
 
-[TableView.Quickmarks]
-name='QView'
-pos='dock_right'
-kind='Quickmark'
+[TableView.Settings]
+pattern='kind=table;'
+
+[TableView.General]
+uid='id'
 check_prop='canLocate'
 locator_kind='position'
-prefix_keys={command = 'q', 'normal|QView' = '<c-.>'}
 
-[TableModel.Quickmarks]
-check_prop='canLocate'
-table_name='Quickmark'
+[TableView.Quickmarks]
+table='Quickmark'
+position = {Quickmark = 'dock_right'}
+prefix_keys={command = 'q', '|Quickmark' = '<c-.>'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+
+[TableView.Bookmarks]
+table='Bookmark'
+position = {Bookmark = 'dock_right'}
+prefix_keys = {command = 'b', '|Bookmark' = '<c-.>'}
+widget_map={id = {w =  'Label', p = '0x0x1x1'},  text = {w = 'TextEdit', p = '1x0x1x1'}}
 
 [Card.Settings]
 prefix_keys = {command = 'c'}
@@ -78,7 +85,7 @@ subdir = [
 	'src/plug/qt/plugs/runlist',
 	'src/plug/qt/plugs/command',
 	'src/plug/qt/plugs/powerline',
-	# 'src/plug/qt/plugs/table/model',
+	'src/plug/qt/plugs/table_view',
 	'src/plug/qt/plugs/styles/green_elf',
 	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/hint',
