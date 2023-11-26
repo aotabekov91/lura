@@ -30,6 +30,12 @@ position = {Bookmark = 'dock_right'}
 prefix_keys = {command = 'b', '|Bookmark' = '<c-.>'}
 widget_map={id = {w =  'Label', p = '0x0x1x1'},  text = {w = 'TextEdit', p = '1x0x1x1'}}
 
+[TableView.Metadata]
+table='Metadata'
+position = {Metadata = 'dock_right'}
+prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
+widget_map={id = {w =  'Label', p = '0x0x1x1'},  title = {w = 'TextEdit', p = '1x0x1x1'}}
+
 [Card.Settings]
 prefix_keys = {command = 'c'}
 
@@ -43,29 +49,22 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	# 'src/quickmark',
-	# 'src/quickmarks',
-	# 'src/quickmarks_view',
-	# 'src/bookmark',
-	# 'src/bookmarks',
-	# 'src/quickmark',
-	# 'src/quickmarks',
-	# 'src/bookmarks',
-	# 'src/bookmark',
-	# 'src/links',
+	'src/bookmark',
+	'src/quickmark',
 	# 'src/metadata',
-	# 'src/annotate',
 	# 'src/annotations',
+	# 'src/links',
+	# 'src/outline',
+# 	'src/parts',
+# 	'src/documents',
+	# 'src/annotate',
 	# 'src/annotate_list',
 	# 'src/search',
 	# 'src/search_list',
 	# 'src/visual',
-	# 'src/outline',
 	# 'src/autosave',
 # 	'src/card',
-# 	'src/parts',
 # 	'src/leaper',
-# 	'src/documents',
 # 	'src/lookup',
 # 	'src/pager',
 # 	'src/rlist',
