@@ -1,15 +1,5 @@
-from plug.qt import Plug
+from plug.qt import plugs, Plug
 from plug.plugs.parser import Parser
-
-from plug.qt.plugs.picky import Picky
-from plug.qt.plugs.normal import Normal
-
-# from ohu.epub import Epub
-# from ohu.djvu import DjvuLibre
-# from ohu.image_qt import ImageQt
-# from ohu.media_qt import MediaQt
-
-from ohu.pdf_fitz import PdfFitz
 
 class Lura(Plug):
 
@@ -19,13 +9,15 @@ class Lura(Plug):
 
         self.moder.load(
                 plugs=[
-                    Picky, 
-                    Normal, 
-                    # Epub,
-                    # ImageQt,
-                    # MediaQt,
-                    PdfFitz,
-                    # DjvuLibre,
+                    plugs.Run,
+                    plugs.Picky, 
+                    plugs.Input,
+                    plugs.Normal, 
+                    plugs.Styler,
+                    plugs.Command, 
+                    plugs.GreenElf,
+                    plugs.Powerline,
+                    plugs.TableView,
                     ]
                 )
 

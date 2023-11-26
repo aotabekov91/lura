@@ -19,19 +19,19 @@ check_prop='canLocate'
 locator_kind='position'
 
 [TableView.Quickmarks]
-table='Quickmark'
+table_name='Quickmark'
 position = {Quickmark = 'dock_right'}
 prefix_keys={command = 'q', '|Quickmark' = '<c-.>'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
 [TableView.Bookmarks]
-table='Bookmark'
+table_name='Bookmark'
 position = {Bookmark = 'dock_right'}
 prefix_keys = {command = 'b', '|Bookmark' = '<c-.>'}
 widget_map={id = {w =  'Label', p = '0x0x1x1'},  text = {w = 'TextEdit', p = '1x0x1x1'}}
 
 [TableView.Metadata]
-table='Metadata'
+table_name='Metadata'
 position = {Metadata = 'dock_right'}
 prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
 widget_map={id = {w =  'Label', p = '0x0x1x1'},  title = {w = 'TextEdit', p = '1x0x1x1'}}
@@ -73,22 +73,16 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/ohu'
 subdir = [
-	'src/ohu/files'
+	'src/ohu/files',
+	'src/ohu/pdf_fitz',
 	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
-	'src/plug/qt/plugs/run',
-	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/runlist',
-	'src/plug/qt/plugs/command',
-	'src/plug/qt/plugs/powerline',
-	'src/plug/qt/plugs/table_view',
-	'src/plug/qt/plugs/styles/green_elf',
 	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/hint',
-	# 'src/plug/qt/plugs/input',
 	# 'src/plug/qt/plugs/resize',
 	# 'src/plug/qt/plugs/umay_plug',
 	]
