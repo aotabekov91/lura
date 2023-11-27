@@ -35,6 +35,7 @@ text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Annotations]
 table_name='Annotation'
+locator_kind='annotation'
 position = {Annotation = 'dock_right'}
 prefix_keys = {command = 'a', '|Annotation' = '<c-.>'}
 
@@ -66,22 +67,15 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/links',
+	'src/search',
 	'src/visual',
 	'src/outline',
+	'src/autosave',
+	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
-	# 'src/annotate',
-	# 'src/search',
-	# 'src/autosave',
-	# 'src/annotate_list',
-	# 'src/search_list',
-# 	'src/card',
-# 	'src/leaper',
-# 	'src/lookup',
-# 	'src/pager',
-# 	'src/rlist',
-# 	'src/parts',
-# 	'src/documents',
+# 	'src/leaper', [linked list]
+	# 'src/card',
 	]
 
 [[Picky.Picks]]
@@ -94,10 +88,10 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
-	'src/plug/qt/plugs/runlist',
-	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/hint',
+	# 'src/plug/qt/plugs/move',
 	# 'src/plug/qt/plugs/resize',
+	'src/plug/qt/plugs/runlist',
 	# 'src/plug/qt/plugs/umay_plug',
 	]
 
