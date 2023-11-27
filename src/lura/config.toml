@@ -28,13 +28,19 @@ widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 table_name='Bookmark'
 position = {Bookmark = 'dock_right'}
 prefix_keys = {command = 'b', '|Bookmark' = '<c-.>'}
-widget_map={id = {w =  'Label', p = '0x0x1x1'},  text = {w = 'TextEdit', p = '1x0x1x1'}}
+
+[TableView.Bookmarks.widget_map]
+id = {w =  'Label', p = '0x0x1x1'}
+text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Annotations]
 table_name='Annotation'
 position = {Annotation = 'dock_right'}
 prefix_keys = {command = 'a', '|Annotation' = '<c-.>'}
-widget_map={id = {w =  'Label', p = '0x0x1x1'},  text = {w = 'TextEdit', p = '1x0x1x1'}}
+
+[TableView.Annotations.widget_map]
+id = {w =  'Label', p = '0x0x1x1'}
+text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Metadata]
 table_name='Metadata'
