@@ -69,12 +69,12 @@ subdir = [
 	'src/links',
 	'src/search',
 	'src/visual',
+	'src/leaper',
 	'src/outline',
 	'src/autosave',
 	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
-# 	'src/leaper', [linked list]
 	# 'src/card',
 	]
 
