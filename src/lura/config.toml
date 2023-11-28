@@ -52,6 +52,7 @@ prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
 title = {w = 'TextEdit'}
 author = {w = 'TextEdit'}
 year = {w = 'TextEdit'}
+bibkey = {w = 'TextEdit'}
 
 [Card.Settings]
 prefix_keys = {command = 'c'}
@@ -68,14 +69,14 @@ pick = 'aotabekov91/lura_plugins'
 subdir = [
 	'src/links',
 	'src/search',
-	'src/visual',
 	'src/leaper',
 	'src/outline',
 	'src/autosave',
 	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
-	# 'src/card',
+	'src/visual', # todo a bug with mixin.Blocks
+	# 'src/card', # todo reimplementing with vimo in mind
 	]
 
 [[Picky.Picks]]
