@@ -88,10 +88,9 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
-	# 'src/plug/qt/plugs/hint',
-	# 'src/plug/qt/plugs/move',
-	# 'src/plug/qt/plugs/resize',
-	'src/plug/qt/plugs/runlist',
+	'src/plug/qt/plugs/follow',
+	'src/plug/qt/plugs/table_view',
+	# 'src/plug/qt/plugs/runlist',
 	# 'src/plug/qt/plugs/umay_plug',
 	]
 

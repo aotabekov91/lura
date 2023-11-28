@@ -17,7 +17,6 @@ class Lura(Plug):
                     plugs.Command, 
                     plugs.GreenElf,
                     plugs.Powerline,
-                    plugs.TableView,
                     ]
                 )
 
