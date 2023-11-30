@@ -9,9 +9,9 @@ class Lura(Plug):
 
         self.moder.load(
                 plugs=[
-                    plugs.Run,
-                    plugs.Picky, 
+                    plugs.Exec,
                     plugs.Input,
+                    plugs.Picky, 
                     plugs.Normal, 
                     plugs.Styler,
                     plugs.Command, 
