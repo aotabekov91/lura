@@ -75,7 +75,7 @@ subdir = [
 	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
-	'src/visual', # todo a bug with mixin.Blocks
+	'src/visual', # todo a bug with mixin.Blocks; maybe also move it to [plug]
 	# 'src/card', # todo reimplementing with vimo in mind
 	]
 
@@ -94,7 +94,6 @@ subdir = [
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/table_view',
 	'src/plug/qt/plugs/styles/green_elf',
-	# 'src/plug/qt/plugs/runlist',
 	# 'src/plug/qt/plugs/umay_plug',
 	]
 
