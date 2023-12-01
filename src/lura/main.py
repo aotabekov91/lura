@@ -13,10 +13,7 @@ class Lura(Plug):
                     plugs.Input,
                     plugs.Picky, 
                     plugs.Normal, 
-                    plugs.Styler,
                     plugs.Command, 
-                    plugs.GreenElf,
-                    plugs.Powerline,
                     ]
                 )
 
@@ -25,22 +22,19 @@ class Lura(Plug):
         super().setup()
         self.setParser()
         self.loadModer()
-        self.parse()
 
     def setParser(self):
 
         self.parser=Parser(self)
         self.parser.addArgument(
-                '-n', '--naked', default=False)
-        self.parser.addArgument(
                 'source', nargs='?', default=None)
 
-    def parse(self):
+    def activate(self):
 
+        self.moder.load()
         a, u = self.parser.parse()
-        if not a.naked:
-            self.moder.load()
         self.open(source=a.source)
+        super().activate()
 
 def run():
 
