@@ -67,6 +67,7 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
+	# 'src/card', # todo reimplementing with vimo in mind
 	'src/links',
 	'src/search',
 	'src/leaper',
@@ -75,8 +76,6 @@ subdir = [
 	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
-	'src/visual', # todo a bug with mixin.Blocks; maybe also move it to [plug]
-	# 'src/card', # todo reimplementing with vimo in mind
 	]
 
 [[Picky.Picks]]
@@ -91,6 +90,7 @@ pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/plugs/follow',
 	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/visual', # todo a bug with mixin.Blocks; maybe also move it to [plug]
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/table_view',
 	'src/plug/qt/plugs/styles/green_elf',
