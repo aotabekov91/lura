@@ -91,6 +91,7 @@ subdir = [
 	'src/plug/qt/plugs/follow',
 	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/visual',
+	'src/plug/qt/plugs/tabline',
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/table_view',
 	'src/plug/qt/plugs/styles/green_elf',
