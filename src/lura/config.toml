@@ -44,6 +44,7 @@ id = {w =  'Label', p = '0x0x1x1'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Metadata]
+autocreate=true
 table_name='Metadata'
 position = {Metadata = 'dock_right'}
 prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
