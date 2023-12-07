@@ -43,17 +43,17 @@ prefix_keys = {command = 'a', '|Annotation' = '<c-.>'}
 id = {w =  'Label', p = '0x0x1x1'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[TableView.Metadata]
-autocreate=true
-table_name='Metadata'
-position = {Metadata = 'dock_right'}
-prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
+# [TableView.Metadata]
+# autocreate=true
+# table_name='Metadata'
+# position = {Metadata = 'dock_right'}
+# prefix_keys = {command = 'm', '|Metadata' = '<c-.>'}
 
-[TableView.Metadata.row_map]
-title = {w = 'TextEdit'}
-author = {w = 'TextEdit'}
-year = {w = 'TextEdit'}
-bibkey = {w = 'TextEdit'}
+# [TableView.Metadata.row_map]
+# title = {w = 'TextEdit'}
+# author = {w = 'TextEdit'}
+# year = {w = 'TextEdit'}
+# bibkey = {w = 'TextEdit'}
 
 [Card.Settings]
 prefix_keys = {command = 'c'}
