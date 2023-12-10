@@ -7,8 +7,6 @@ authors = ["A O <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-tables = {path = "/home/adam/code/tables", develop=true}
-ohu = {path = "/home/adam/code/ohu", extras=["all"], develop = true}
 plug = {path = "/home/adam/code/plug", extras=["qt"], develop = true}
 
 [tool.poetry.scripts]
