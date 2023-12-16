@@ -22,14 +22,14 @@ locator_kind='position'
 toggler='q'
 table_name='Quickmark'
 position = {Quickmark = 'dock_right'}
-prefix_keys={'|Quickmark' = '<c-.>'}
+prefix_keys={'|[Quickmark]' = '<c-.>'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
 [TableView.Bookmarks]
 toggler='b'
 table_name='Bookmark'
 position = {Bookmark = 'dock_right'}
-prefix_keys = {'|Bookmark' = '<c-.>'}
+prefix_keys = {'|[Bookmark]' = '<c-.>'}
 
 [TableView.Bookmarks.widget_map]
 id = {w =  'Label', p = '0x0x1x1'}
@@ -40,10 +40,10 @@ toggler='a'
 table_name='Annotation'
 locator_kind='annotation'
 position = {Annotation = 'dock_right'}
-prefix_keys = {'|Annotation' = '<c-.>'}
+prefix_keys = {'|[Annotation]' = '<c-.>'}
 
 [TableView.Annotations.widget_map]
-id = {w =  'Label', p = '0x0x1x1'}
+id = {w =  'Label', p = '0x0x1x1', n='function'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Metadata]
@@ -52,7 +52,7 @@ row_model=true
 autocreate=true
 table_name='Metadata'
 position = {Metadata = 'dock_right'}
-prefix_keys = {'|Metadata' = '<c-.>'}
+prefix_keys = {'|[Metadata]' = '<c-.>'}
 
 [TableView.Metadata.widget_map]
 title = {id = {w='Label', p='0x0x1x1'}, title = {w = 'TextEdit', p='1x0x1x1'}}
