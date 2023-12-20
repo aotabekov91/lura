@@ -37,14 +37,11 @@ text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Annotations]
 toggler='a'
+default_color='cyan'
 table_name='Annotation'
 locator_kind='annotation'
 position = {Annotation = 'dock_right'}
 prefix_keys = {'|Annotation' = '<c-.>'}
-
-[TableView.Annotations.widget_map]
-id = {w =  'Label', p = '0x0x1x1', n='function'}
-text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [TableView.Metadata]
 toggler='m'
@@ -73,11 +70,9 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	'src/search',
 	'src/leaper',
 	'src/outline',
 	'src/autosave',
-	'src/annotate',
 	'src/bookmark',
 	'src/quickmark',
 	# 'src/card', # todo reimplementing with vimo in mind
@@ -95,13 +90,18 @@ pick = 'aotabekov91/plug'
 subdir = [
 	'src/plug/qt/plugs/follow',
 	'src/plug/qt/plugs/styler',
+	'src/plug/qt/plugs/search',
 	'src/plug/qt/plugs/visual',
 	'src/plug/qt/plugs/tabline',
+	'src/plug/qt/plugs/annotate',
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/table_view',
 	'src/plug/qt/plugs/styles/green_elf',
 	# 'src/plug/qt/plugs/umay_plug',
 	]
+
+[Model]
+is_test = false
 
 [View]
 zoomFactor = 0.1
@@ -119,6 +119,9 @@ viewportPadding = 0
 
 [View.Layout]
 pageSpacing = 0 
+
+[ImageView]
+continuousMode = false
 
 [FitzView]
 tileSize =  1024
@@ -141,5 +144,24 @@ yresol=72
 [FitzView.Layout]
 pageSpacing = 3 
 
-[ImageView]
-continuousMode = false
+[FitzView.Annotate.colors.highlight]
+t = {color = '#EEFC5E', name = 'Term'}  
+d = {color = '#0FF0FC', name = 'Data'}
+f = {color = '#A4DE02', name = 'Focus'}
+q = {color = '#1AA7EC', name = 'Question'}
+l = {color = '#D3D3D3', name = 'Literature'}
+m = {color = '#DE73FF', name = 'Methodology'}
+
+[FitzView.Annotate.colors.underline]
+m = {color = '#63C5DA', name = 'Main'}
+i = {color = 'red', name = 'Important'}  
+l = {color = 'orange', name = 'Lookup'}
+
+[FitzView.Annotate.colors.caret]
+i = {color = '#800000', name = 'Important'}
+
+[FitzView.Annotate.colors.text]
+s = {color = '#EEFC5E', name = 'Summary'}  
+
+[FitzView.Annotate.colors.strike-out]
+e = {color = 'red', name = 'Error'}  
