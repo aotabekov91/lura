@@ -10,58 +10,68 @@ style = 'GreenElf'
 [Lookup.Settings]
 lookup_port = 43110
 
-[TableView.Settings]
-pattern='kind=table;'
-
-[TableView.General]
+[TableModel.General]
 uid='id'
-check_prop='canLocate'
-locator_kind='position'
+view_mode='table'
+attach_mode='model'
+check_props=['canLocate']
 
-[TableView.Quickmarks]
-toggler='q'
-table_name='Quickmark'
-position = {Quickmark = 'dock_right'}
-prefix_keys={'|Quickmark' = '<c-.>'}
-widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
-
-[TableView.Bookmarks]
-toggler='b'
-table_name='Bookmark'
-position = {Bookmark = 'dock_right'}
-prefix_keys = {'|Bookmark' = '<c-.>'}
-
-[TableView.Bookmarks.widget_map]
-id = {w =  'Label', p = '0x0x1x1'}
-text = {w = 'TextEdit', p = '1x0x1x1'}
-
-[TableView.Annotations]
-toggler='a'
-default_color='cyan'
+[TableModel.tables.Annotation]
 table_name='Annotation'
-locator_kind='annotation'
-position = {Annotation = 'dock_right'}
-prefix_keys = {'|Annotation' = '<c-.>'}
+check_props=['canAnnotate']
 
-[TableView.Metadata]
-toggler='m'
-row_model=true
-autocreate=true
-table_name='Metadata'
-position = {Metadata = 'dock_right'}
-prefix_keys = {'|Metadata' = '<c-.>'}
+[TableModel.tables.Bookmark]
+table_name='Bookmark'
 
-[TableView.Metadata.widget_map]
-title = {id = {w='Label', p='0x0x1x1'}, title = {w = 'TextEdit', p='1x0x1x1'}}
-author = {id = {w='Label', p='0x0x1x1'}, author = {w = 'TextEdit', p='1x0x1x1'}}
-year = {id = {w='Label', p='0x0x1x1'}, year = {w = 'TextEdit', p='1x0x1x1'}}
-bibkey = {id = {w='Label', p='0x0x1x1'}, bibkey = {w = 'TextEdit', p='1x0x1x1'}}
+[TableModel.tables.Quickmark]
+table_name='Quickmark'
 
-[Card.Settings]
-prefix_keys = {command = 'c'}
+# [TableView.Settings]
+# pattern='kind=table;'
 
-[Card.Keys]
-inputField = {key='cu', modes=['normal', 'command']} 
+# [TableView.General]
+# uid='id'
+# check_prop='canLocate'
+# locator_kind='position'
+
+# [TableView.Quickmarks]
+# toggler='q'
+# table_name='Quickmark'
+# position = {Quickmark = 'dock_right'}
+# prefix_keys={'|Quickmark' = '<c-.>'}
+# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+
+# [TableView.Bookmarks]
+# toggler='b'
+# table_name='Bookmark'
+# position = {Bookmark = 'dock_right'}
+# prefix_keys = {'|Bookmark' = '<c-.>'}
+
+# [TableView.Bookmarks.widget_map]
+# id = {w =  'Label', p = '0x0x1x1'}
+# text = {w = 'TextEdit', p = '1x0x1x1'}
+
+# [TableView.Annotations]
+# toggler='a'
+# default_color='cyan'
+# table_name='Annotation'
+# locator_kind='annotation'
+# position = {Annotation = 'dock_right'}
+# prefix_keys = {'|Annotation' = '<c-.>'}
+
+# [TableView.Metadata]
+# toggler='m'
+# row_model=true
+# autocreate=true
+# table_name='Metadata'
+# position = {Metadata = 'dock_right'}
+# prefix_keys = {'|Metadata' = '<c-.>'}
+
+# [TableView.Metadata.widget_map]
+# title = {id = {w='Label', p='0x0x1x1'}, title = {w = 'TextEdit', p='1x0x1x1'}}
+# author = {id = {w='Label', p='0x0x1x1'}, author = {w = 'TextEdit', p='1x0x1x1'}}
+# year = {id = {w='Label', p='0x0x1x1'}, year = {w = 'TextEdit', p='1x0x1x1'}}
+# bibkey = {id = {w='Label', p='0x0x1x1'}, bibkey = {w = 'TextEdit', p='1x0x1x1'}}
 
 [Picky.Settings]
 base = 'https://github.com'
@@ -70,11 +80,7 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	'src/leaper',
 	'src/outline',
-	'src/autosave',
-	'src/bookmark',
-	'src/quickmark',
 	# 'src/card', # todo reimplementing with vimo in mind
 	]
 
@@ -88,20 +94,22 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/plug'
 subdir = [
+	# 'src/plug/qt/plugs/umay_plug', # todo
+	'src/plug/qt/plugs/stater',
+	'src/plug/qt/plugs/leaper',
 	'src/plug/qt/plugs/follow',
 	'src/plug/qt/plugs/styler',
 	'src/plug/qt/plugs/search',
 	'src/plug/qt/plugs/visual',
 	'src/plug/qt/plugs/tabline',
 	'src/plug/qt/plugs/annotate',
+	'src/plug/qt/plugs/bookmark',
+	'src/plug/qt/plugs/quickmark',
 	'src/plug/qt/plugs/powerline',
 	'src/plug/qt/plugs/table_view',
+	'src/plug/qt/plugs/table_model',
 	'src/plug/qt/plugs/styles/green_elf',
-	# 'src/plug/qt/plugs/umay_plug',
 	]
-
-[Model]
-is_test = false
 
 [View]
 zoomFactor = 0.1
