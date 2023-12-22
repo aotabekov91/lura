@@ -1,9 +1,7 @@
-from plug.qt import plugs, Plug
+from plug.qt import plugs, AppPlug
 from plug.plugs.parser import Parser
 
-class Lura(Plug):
-
-    isMainApp=True
+class Lura(AppPlug):
 
     def loadModer(self):
 
@@ -27,7 +25,10 @@ class Lura(Plug):
 
         self.parser=Parser(self)
         self.parser.addArgument(
-                'source', nargs='?', default=None)
+                'source', 
+                nargs='?', 
+                default=None
+                )
 
     def activate(self):
 

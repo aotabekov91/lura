@@ -80,7 +80,7 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	'src/outline',
+	# 'src/outline', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
 	]
 
