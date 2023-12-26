@@ -1,29 +1,10 @@
-from plug.qt import plugs, AppPlug
-from plug.plugs.parser import Parser
+from plug.qt import AppPlug
 
 class Lura(AppPlug):
 
-    def loadModer(self):
-
-        self.moder.load(
-                plugs=[
-                    plugs.Exec,
-                    plugs.Input,
-                    plugs.Picky, 
-                    plugs.Normal, 
-                    plugs.Command, 
-                    ]
-                )
-
-    def setup(self): 
-
-        super().setup()
-        self.setParser()
-        self.loadModer()
-
     def setParser(self):
 
-        self.parser=Parser(self)
+        super().setParser()
         self.parser.addArgument(
                 'source', 
                 nargs='?', 
@@ -32,12 +13,12 @@ class Lura(AppPlug):
 
     def activate(self):
 
-        self.moder.load()
-        a, u = self.parser.parse()
-        self.open(source=a.source)
         super().activate()
+        a, u = self.parser.parse()
+        self.ui.handler.open(source=a.source)
 
 def run():
 
     app=Lura()
     app.activate()
+    app.run()

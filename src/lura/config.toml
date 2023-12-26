@@ -1,14 +1,5 @@
-[Settings]
-keywords=['viewer']
-
-[Umay.Settings]
-umay_port=19999
-
 [Styler.Settings]
 style = 'GreenElf'
-
-[Lookup.Settings]
-lookup_port = 43110
 
 [TableModel.General]
 uid='id'
@@ -34,12 +25,12 @@ table_name='Quickmark'
 # check_prop='canLocate'
 # locator_kind='position'
 
-# [TableView.Quickmarks]
-# toggler='q'
-# table_name='Quickmark'
-# position = {Quickmark = 'dock_right'}
-# prefix_keys={'|Quickmark' = '<c-.>'}
-# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+[TableView.Quickmarks]
+toggler='q'
+table_name='Quickmark'
+position = {QuickmarkTab = 'dock_right'}
+prefix_keys={'|Quickmark' = '<c-.>'}
+widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
 # [TableView.Bookmarks]
 # toggler='b'
@@ -78,13 +69,6 @@ base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
 [[Picky.Picks]]
-pick = 'aotabekov91/lura_plugins'
-subdir = [
-	# 'src/outline', # todo
-	# 'src/card', # todo reimplementing with vimo in mind
-	]
-
-[[Picky.Picks]]
 pick = 'aotabekov91/ohu'
 subdir = [
 	'src/ohu/files',
@@ -92,23 +76,16 @@ subdir = [
 	]
 
 [[Picky.Picks]]
-pick = 'aotabekov91/plug'
+pick = 'aotabekov91/lura_plugins'
 subdir = [
+	# 'src/qt/table_view',
 	# 'src/plug/qt/plugs/umay_plug', # todo
-	'src/plug/qt/plugs/stater',
-	'src/plug/qt/plugs/leaper',
-	'src/plug/qt/plugs/follow',
-	'src/plug/qt/plugs/styler',
-	'src/plug/qt/plugs/search',
-	'src/plug/qt/plugs/visual',
-	'src/plug/qt/plugs/tabline',
-	'src/plug/qt/plugs/annotate',
-	'src/plug/qt/plugs/bookmark',
-	'src/plug/qt/plugs/quickmark',
-	'src/plug/qt/plugs/powerline',
-	'src/plug/qt/plugs/table_view',
-	'src/plug/qt/plugs/table_model',
-	'src/plug/qt/plugs/styles/green_elf',
+	# 'src/outline', # todo
+	# 'src/card', # todo reimplementing with vimo in mind
+	'src/qt/stater',
+	'src/qt/annotate',
+	'src/qt/green_elf',
+	'src/qt/table_model',
 	]
 
 [View]
