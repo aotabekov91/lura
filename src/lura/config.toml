@@ -83,7 +83,6 @@ subdir = [
 	# 'src/outline', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
 	'src/qt/stater',
-	'src/qt/annotate',
 	'src/qt/green_elf',
 	'src/qt/table_model',
 	]
