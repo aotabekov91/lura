@@ -1,4 +1,4 @@
-[Server]
+[Server.Settings]
 port=22222
 
 [Styler.Settings]
