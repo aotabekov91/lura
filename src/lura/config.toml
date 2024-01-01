@@ -1,5 +1,5 @@
 [Server.Settings]
-port=22222
+port=22223
 
 [Styler.Settings]
 style = 'GreenElf'
@@ -76,6 +76,7 @@ pick = 'aotabekov91/ohu'
 subdir = [
 	'src/ohu/files',
 	'src/ohu/pdf_fitz',
+	'src/ohu/server_zmq',
 	]
 
 [[Picky.Picks]]
@@ -83,9 +84,9 @@ pick = 'aotabekov91/lura_plugins'
 subdir = [
 	# 'src/qt/table_view',
 	# 'src/plug/qt/plugs/umay_plug', # todo
-	# 'src/outline', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
 	'src/qt/stater',
+	'src/qt/outline',
 	'src/qt/green_elf',
 	'src/qt/table_model',
 	]
