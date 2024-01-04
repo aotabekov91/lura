@@ -4,9 +4,50 @@ port=22223
 [Styler.Settings]
 style = 'GreenElf'
 
-# [QuickmarkView]
-# prefix_keys={'|Quickmark' = '<c-.>'}
-# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+[Views.Quickmark]
+model_name='quickmark'
+tab_prefix={command = 'q'}
+view_prefix={'|^own' = '<c-.>'}
+position={QuickmarkTab= 'D|R'}
+widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+
+[Views.Bookmark]
+model_name='bookmark'
+tab_prefix={command = 'b'}
+view_prefix={'|^own' = '<c-.>'}
+position={BookmarkTab= 'D|R'}
+
+[Views.Bookmark.widget_map]
+id = {w =  'Label', p = '0x0x1x1', n = 'BookmarkField'}
+text = {w = 'TextEdit', p = '1x0x1x1'}
+
+[Views.Metadata]
+model_name='metadata'
+tab_prefix={command = 'm'}
+position={MetadataTab= 'D|R'}
+view_prefix={'|^own' = '<c-.>'}
+include={field = ['title', 'author', 'year', 'bibkey']}
+
+[Views.Metadata.widget_map]
+field = {w = 'Label', p = '0x0x1x1', n='MetadataField'}
+value = {w = 'TextEdit', p = '1x0x1x1'}
+
+[DBTables.Quickmark]
+uid='id'
+name='quickmark'
+props=['canQuickmark']
+
+[DBTables.Bookmark]
+uid='id'
+name='bookmark'
+props=['canBookmark']
+
+[DBTables.Metadata]
+uid='id'
+name='metadata'
+row_model=true
+autocreate=true
+props=['hasMetadata']
 
 # [TableModel.General]
 # uid='id'
@@ -18,57 +59,6 @@ style = 'GreenElf'
 # table_name='Annotation'
 # check_props=['canAnnotate']
 
-# [TableModel.tables.Bookmark]
-# table_name='Bookmark'
-
-# [TableModel.tables.Quickmark]
-# table_name='Quickmark'
-
-# [TableView.Settings]
-# pattern='kind=table;'
-
-# [TableView.General]
-# uid='id'
-# check_prop='canLocate'
-# locator_kind='position'
-
-# [TableView.Quickmarks]
-# toggler='q'
-# table_name='Quickmark'
-# position = {QuickmarkTab = 'dock_right'}
-# prefix_keys={'|Quickmark' = '<c-.>'}
-# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
-
-# [Quicmark]
-# check_props=['canLocate']
-# prefix_keys={command= 'q'}
-
-# [Quicmark.Model]
-# uid='id'
-# database='sqlite_db'
-# table_name='Quickmark'
-
-# [Quicmark.Tab]
-# position='D|R'
-# identifier='QuickmarkTab'
-
-# [Quicmark.Shell]
-# suffix_separator='.'
-
-# [Quickmark.View]
-# prefix_keys={'|Quickmark' = '<c-.>'}
-# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
-
-# [TableView.Bookmarks]
-# toggler='b'
-# table_name='Bookmark'
-# position = {Bookmark = 'dock_right'}
-# prefix_keys = {'|Bookmark' = '<c-.>'}
-
-# [TableView.Bookmarks.widget_map]
-# id = {w =  'Label', p = '0x0x1x1'}
-# text = {w = 'TextEdit', p = '1x0x1x1'}
-
 # [TableView.Annotations]
 # toggler='a'
 # default_color='cyan'
@@ -76,20 +66,6 @@ style = 'GreenElf'
 # locator_kind='annotation'
 # position = {Annotation = 'dock_right'}
 # prefix_keys = {'|Annotation' = '<c-.>'}
-
-# [TableView.Metadata]
-# toggler='m'
-# row_model=true
-# autocreate=true
-# table_name='Metadata'
-# position = {Metadata = 'dock_right'}
-# prefix_keys = {'|Metadata' = '<c-.>'}
-
-# [TableView.Metadata.widget_map]
-# title = {id = {w='Label', p='0x0x1x1'}, title = {w = 'TextEdit', p='1x0x1x1'}}
-# author = {id = {w='Label', p='0x0x1x1'}, author = {w = 'TextEdit', p='1x0x1x1'}}
-# year = {id = {w='Label', p='0x0x1x1'}, year = {w = 'TextEdit', p='1x0x1x1'}}
-# bibkey = {id = {w='Label', p='0x0x1x1'}, bibkey = {w = 'TextEdit', p='1x0x1x1'}}
 
 [Picky.Settings]
 base = 'https://github.com'
@@ -106,14 +82,13 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	# 'src/qt/table_view',
 	# 'src/plug/qt/plugs/umay_plug', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
+	'src/qt/views',
 	'src/qt/stater',
 	'src/qt/outline',
-	'src/qt/quickmark',
 	'src/qt/green_elf',
-	'src/qt/table_model',
+	'src/qt/db_tables',
 	]
 
 [View]
