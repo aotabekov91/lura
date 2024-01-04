@@ -4,21 +4,25 @@ port=22223
 [Styler.Settings]
 style = 'GreenElf'
 
-[TableModel.General]
-uid='id'
-view_mode='table'
-attach_mode='model'
-check_props=['canLocate']
+# [QuickmarkView]
+# prefix_keys={'|Quickmark' = '<c-.>'}
+# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
-[TableModel.tables.Annotation]
-table_name='Annotation'
-check_props=['canAnnotate']
+# [TableModel.General]
+# uid='id'
+# view_mode='table'
+# attach_mode='model'
+# check_props=['canLocate']
 
-[TableModel.tables.Bookmark]
-table_name='Bookmark'
+# [TableModel.tables.Annotation]
+# table_name='Annotation'
+# check_props=['canAnnotate']
 
-[TableModel.tables.Quickmark]
-table_name='Quickmark'
+# [TableModel.tables.Bookmark]
+# table_name='Bookmark'
+
+# [TableModel.tables.Quickmark]
+# table_name='Quickmark'
 
 # [TableView.Settings]
 # pattern='kind=table;'
@@ -28,12 +32,32 @@ table_name='Quickmark'
 # check_prop='canLocate'
 # locator_kind='position'
 
-[TableView.Quickmarks]
-toggler='q'
-table_name='Quickmark'
-position = {QuickmarkTab = 'dock_right'}
-prefix_keys={'|Quickmark' = '<c-.>'}
-widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+# [TableView.Quickmarks]
+# toggler='q'
+# table_name='Quickmark'
+# position = {QuickmarkTab = 'dock_right'}
+# prefix_keys={'|Quickmark' = '<c-.>'}
+# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+
+# [Quicmark]
+# check_props=['canLocate']
+# prefix_keys={command= 'q'}
+
+# [Quicmark.Model]
+# uid='id'
+# database='sqlite_db'
+# table_name='Quickmark'
+
+# [Quicmark.Tab]
+# position='D|R'
+# identifier='QuickmarkTab'
+
+# [Quicmark.Shell]
+# suffix_separator='.'
+
+# [Quickmark.View]
+# prefix_keys={'|Quickmark' = '<c-.>'}
+# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
 # [TableView.Bookmarks]
 # toggler='b'
@@ -87,6 +111,7 @@ subdir = [
 	# 'src/card', # todo reimplementing with vimo in mind
 	'src/qt/stater',
 	'src/qt/outline',
+	'src/qt/quickmark',
 	'src/qt/green_elf',
 	'src/qt/table_model',
 	]
@@ -126,30 +151,30 @@ convertToGrayscale = false
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1
 
-[FitzView.Item]
-yresol=72
+# [FitzView.Item]
+# yresol=72
 
-[FitzView.Layout]
-pageSpacing = 3 
+# [FitzView.Layout]
+# pageSpacing = 3 
 
-[FitzView.Annotate.colors.highlight]
-t = {color = '#EEFC5E', name = 'Term'}  
-d = {color = '#0FF0FC', name = 'Data'}
-f = {color = '#A4DE02', name = 'Focus'}
-q = {color = '#1AA7EC', name = 'Question'}
-l = {color = '#D3D3D3', name = 'Literature'}
-m = {color = '#DE73FF', name = 'Methodology'}
+# [FitzView.Annotate.colors.highlight]
+# t = {color = '#EEFC5E', name = 'Term'}  
+# d = {color = '#0FF0FC', name = 'Data'}
+# f = {color = '#A4DE02', name = 'Focus'}
+# q = {color = '#1AA7EC', name = 'Question'}
+# l = {color = '#D3D3D3', name = 'Literature'}
+# m = {color = '#DE73FF', name = 'Methodology'}
 
-[FitzView.Annotate.colors.underline]
-m = {color = '#63C5DA', name = 'Main'}
-i = {color = 'red', name = 'Important'}  
-l = {color = 'orange', name = 'Lookup'}
+# [FitzView.Annotate.colors.underline]
+# m = {color = '#63C5DA', name = 'Main'}
+# i = {color = 'red', name = 'Important'}  
+# l = {color = 'orange', name = 'Lookup'}
 
-[FitzView.Annotate.colors.caret]
-i = {color = '#800000', name = 'Important'}
+# [FitzView.Annotate.colors.caret]
+# i = {color = '#800000', name = 'Important'}
 
-[FitzView.Annotate.colors.text]
-s = {color = '#EEFC5E', name = 'Summary'}  
+# [FitzView.Annotate.colors.text]
+# s = {color = '#EEFC5E', name = 'Summary'}  
 
-[FitzView.Annotate.colors.strike-out]
-e = {color = 'red', name = 'Error'}  
+# [FitzView.Annotate.colors.strike-out]
+# e = {color = 'red', name = 'Error'}  
