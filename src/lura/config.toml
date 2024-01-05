@@ -11,6 +11,13 @@ view_prefix={'|^own' = '<c-.>'}
 position={QuickmarkTab= 'D|R'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
+[Views.Outline]
+model_name='outline'
+view_kind='TreeView'
+tab_prefix={command = 'o'}
+position={OutlineTab= 'D|L'}
+view_prefix={'|^own' = '<c-.>'}
+
 [Views.Bookmark]
 model_name='bookmark'
 tab_prefix={command = 'b'}
@@ -84,7 +91,6 @@ subdir = [
 	# 'src/card', # todo reimplementing with vimo in mind
 	'src/qt/views',
 	'src/qt/states',
-	'src/qt/outline',
 	'src/qt/green_elf',
 	'src/qt/db_tables',
 	]
@@ -127,3 +133,6 @@ copyToClipboardModifiers = 1 #todo
 [FitzView.Layout]
 pageSpacing = 5
 padding = [5, 5, 5, 5] #todo
+
+[OverlayView]
+blur_color=[125, 125, 125, 200]
