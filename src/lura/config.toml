@@ -18,7 +18,18 @@ view_prefix={'|^own' = '<c-.>'}
 position={BookmarkTab= 'D|R'}
 
 [Views.Bookmark.widget_map]
-id = {w =  'Label', p = '0x0x1x1', n = 'BookmarkField'}
+id = {w =  'Label', p = '0x0x1x1'}
+text = {w = 'TextEdit', p = '1x0x1x1'}
+
+[Views.Annotation]
+locator='annotation'
+model_name='annotation'
+tab_prefix={command = 'a'}
+view_prefix={'|^own' = '<c-.>'}
+position={AnnotationTab= 'D|R'}
+
+[Views.Annotation.widget_map]
+id = {w =  'Label', p = '0x0x1x1', n = 'function'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [Views.Metadata]
@@ -29,7 +40,7 @@ view_prefix={'|^own' = '<c-.>'}
 include={field = ['title', 'author', 'year', 'bibkey']}
 
 [Views.Metadata.widget_map]
-field = {w = 'Label', p = '0x0x1x1', n='MetadataField'}
+field = {w = 'Label', p = '0x0x1x1', title=true}
 value = {w = 'TextEdit', p = '1x0x1x1'}
 
 [DBTables.Quickmark]
@@ -42,30 +53,17 @@ uid='id'
 name='bookmark'
 props=['canBookmark']
 
+[DBTables.Annotation]
+uid='id'
+name='annotation'
+props=['canAnnotate']
+
 [DBTables.Metadata]
 uid='id'
 name='metadata'
 row_model=true
 autocreate=true
 props=['hasMetadata']
-
-# [TableModel.General]
-# uid='id'
-# view_mode='table'
-# attach_mode='model'
-# check_props=['canLocate']
-
-# [TableModel.tables.Annotation]
-# table_name='Annotation'
-# check_props=['canAnnotate']
-
-# [TableView.Annotations]
-# toggler='a'
-# default_color='cyan'
-# table_name='Annotation'
-# locator_kind='annotation'
-# position = {Annotation = 'dock_right'}
-# prefix_keys = {'|Annotation' = '<c-.>'}
 
 [Picky.Settings]
 base = 'https://github.com'
@@ -85,7 +83,7 @@ subdir = [
 	# 'src/plug/qt/plugs/umay_plug', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
 	'src/qt/views',
-	'src/qt/stater',
+	'src/qt/states',
 	'src/qt/outline',
 	'src/qt/green_elf',
 	'src/qt/db_tables',
@@ -112,44 +110,20 @@ pageSpacing = 0
 continuousMode = false
 
 [FitzView]
-tileSize =  1024
-paperColor = 'gray'
-useTiling =  false
-trimMargins = false
-invertColors = false
+tileSize =  1024 #todo
+paperColor = 'gray' #todo
+useTiling =  false #todo
+trimMargins = false #todo
+invertColors = false #todo
 decorateLinks = true
 decoratePages = false
 devicePixelRatio = 1.0
 drawMode = 'DefaultMode'
 annotationOverlay = true
-convertToGrayscale = false
+convertToGrayscale = false #todo
 keepObsoletePixmaps = true
-copyToClipboardModifiers = 1
+copyToClipboardModifiers = 1 #todo
 
-# [FitzView.Item]
-# yresol=72
-
-# [FitzView.Layout]
-# pageSpacing = 3 
-
-# [FitzView.Annotate.colors.highlight]
-# t = {color = '#EEFC5E', name = 'Term'}  
-# d = {color = '#0FF0FC', name = 'Data'}
-# f = {color = '#A4DE02', name = 'Focus'}
-# q = {color = '#1AA7EC', name = 'Question'}
-# l = {color = '#D3D3D3', name = 'Literature'}
-# m = {color = '#DE73FF', name = 'Methodology'}
-
-# [FitzView.Annotate.colors.underline]
-# m = {color = '#63C5DA', name = 'Main'}
-# i = {color = 'red', name = 'Important'}  
-# l = {color = 'orange', name = 'Lookup'}
-
-# [FitzView.Annotate.colors.caret]
-# i = {color = '#800000', name = 'Important'}
-
-# [FitzView.Annotate.colors.text]
-# s = {color = '#EEFC5E', name = 'Summary'}  
-
-# [FitzView.Annotate.colors.strike-out]
-# e = {color = 'red', name = 'Error'}  
+[FitzView.Layout]
+pageSpacing = 5
+padding = [5, 5, 5, 5] #todo
