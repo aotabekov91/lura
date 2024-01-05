@@ -4,49 +4,49 @@ port=22223
 [Styler.Settings]
 style = 'GreenElf'
 
-[Views.Quickmark]
+[ModelView.Quickmark]
 model_name='quickmark'
 tab_prefix={command = 'q'}
 view_prefix={'|^own' = '<c-.>'}
 position={QuickmarkTab= 'D|R'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
-[Views.Outline]
+[ModelView.Outline]
 model_name='outline'
 view_kind='TreeView'
 tab_prefix={command = 'o'}
 position={OutlineTab= 'D|L'}
 view_prefix={'|^own' = '<c-.>'}
 
-[Views.Bookmark]
+[ModelView.Bookmark]
 model_name='bookmark'
 tab_prefix={command = 'b'}
 view_prefix={'|^own' = '<c-.>'}
 position={BookmarkTab= 'D|R'}
 
-[Views.Bookmark.widget_map]
+[ModelView.Bookmark.widget_map]
 id = {w =  'Label', p = '0x0x1x1'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[Views.Annotation]
+[ModelView.Annotation]
 locator='annotation'
 model_name='annotation'
 tab_prefix={command = 'a'}
 view_prefix={'|^own' = '<c-.>'}
 position={AnnotationTab= 'D|R'}
 
-[Views.Annotation.widget_map]
+[ModelView.Annotation.widget_map]
 id = {w =  'Label', p = '0x0x1x1', n = 'function'}
 text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[Views.Metadata]
+[ModelView.Metadata]
 model_name='metadata'
 tab_prefix={command = 'm'}
 position={MetadataTab= 'D|R'}
 view_prefix={'|^own' = '<c-.>'}
 include={field = ['title', 'author', 'year', 'bibkey']}
 
-[Views.Metadata.widget_map]
+[ModelView.Metadata.widget_map]
 field = {w = 'Label', p = '0x0x1x1', title=true}
 value = {w = 'TextEdit', p = '1x0x1x1'}
 
@@ -89,10 +89,10 @@ pick = 'aotabekov91/lura_plugins'
 subdir = [
 	# 'src/plug/qt/plugs/umay_plug', # todo
 	# 'src/card', # todo reimplementing with vimo in mind
-	'src/qt/views',
 	'src/qt/states',
 	'src/qt/green_elf',
 	'src/qt/db_tables',
+	'src/qt/model_view',
 	]
 
 [View]
