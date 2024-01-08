@@ -1,8 +1,14 @@
 [Server.Settings]
 port=22223
+_host='192.168.178.25'
 
 [Styler.Settings]
 style = 'GreenElf'
+
+[State.FitzView]
+scale=true
+position=true
+scaleMode=true
 
 [ModelView.Quickmark]
 model_name='quickmark'
@@ -50,6 +56,11 @@ include={field = ['title', 'author', 'year', 'bibkey']}
 field = {w = 'Label', p = '0x0x1x1', title=true}
 value = {w = 'TextEdit', p = '1x0x1x1'}
 
+[DBTables.State]
+uid='id'
+name='state'
+props=['hasStates']
+
 [DBTables.Quickmark]
 uid='id'
 name='quickmark'
@@ -87,12 +98,12 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/lura_plugins'
 subdir = [
-	# 'src/plug/qt/plugs/umay_plug', # todo
-	# 'src/card', # todo reimplementing with vimo in mind
-	'src/qt/states',
+	'src/qt/state',
 	'src/qt/green_elf',
 	'src/qt/db_tables',
 	'src/qt/model_view',
+	# 'src/card', # todo reimplementing with vimo in mind
+	# 'src/plug/qt/plugs/umay_plug', # todo
 	]
 
 [View]
