@@ -5,11 +5,6 @@ _host='192.168.178.25'
 [Styler.Settings]
 style = 'GreenElf'
 
-[State.FitzView]
-scale=true
-position=true
-scaleMode=true
-
 [ModelView.Quickmark]
 model_name='quickmark'
 tab_prefix={command = 'q'}
@@ -96,9 +91,8 @@ subdir = [
 	]
 
 [[Picky.Picks]]
-pick = 'aotabekov91/lura_plugins'
+pick = 'aotabekov91/janilai'
 subdir = [
-	'src/qt/state',
 	'src/qt/green_elf',
 	'src/qt/db_tables',
 	'src/qt/model_view',
@@ -111,7 +105,6 @@ zoomFactor = 0.1
 scaleFactor = 1.0
 continuousMode = true
 layoutMode = 'SinglePage' 
-scaleMode = 'FitToWindowWidth' 
 
 [View.Item]
 xresol = 72
@@ -147,3 +140,7 @@ padding = [5, 5, 5, 5] #todo
 
 [OverlayView]
 blur_color=[125, 125, 125, 200]
+
+[FitzView.State]
+scale=true
+position=true
