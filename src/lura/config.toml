@@ -1,6 +1,7 @@
 [Server.Settings]
-port=22223
-_host='192.168.178.25'
+router=22223
+publisher=22224
+host='tcp://192.168.178.25'
 
 [Styler.Settings]
 style = 'GreenElf'
