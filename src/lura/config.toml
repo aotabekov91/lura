@@ -94,10 +94,10 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
-	'src/qt/green_elf',
-	'src/qt/db_tables',
-	'src/qt/model_view',
-	# 'src/card', # todo reimplementing with vimo in mind
+	'src/janilai/card',
+	'src/janilai/db_tables',
+	'src/janilai/green_elf',
+	'src/janilai/model_view',
 	# 'src/plug/qt/plugs/umay_plug', # todo
 	]
 
