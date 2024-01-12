@@ -87,14 +87,15 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/ohu'
 subdir = [
 	'src/ohu/files',
+	'src/ohu/image_qt',
 	'src/ohu/pdf_fitz',
-	'src/ohu/server_zmq',
+	# 'src/ohu/server_zmq',
 	]
 
 [[Picky.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
-	'src/janilai/card',
+	# 'src/janilai/card',
 	'src/janilai/db_tables',
 	'src/janilai/green_elf',
 	'src/janilai/model_view',
@@ -116,9 +117,6 @@ viewportPadding = 0
 
 [View.Layout]
 pageSpacing = 0 
-
-[ImageView]
-continuousMode = false
 
 [FitzView]
 tileSize =  1024 #todo
@@ -145,3 +143,6 @@ blur_color=[125, 125, 125, 200]
 [FitzView.State]
 scale=true
 position=true
+
+[ImageQtView]
+continuousMode = false
