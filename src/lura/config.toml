@@ -89,7 +89,7 @@ subdir = [
 	'src/ohu/files',
 	'src/ohu/image_qt',
 	'src/ohu/pdf_fitz',
-	# 'src/ohu/server_zmq',
+	'src/ohu/server_zmq',
 	]
 
 [[Picky.Picks]]
