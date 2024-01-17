@@ -18,15 +18,15 @@ task = {w = 'Label', p = '0x0x1x1', title=true}
 worked = {w = 'Label', p = '1x0x1x1'}
 timestamp = {w = 'Label', p = '2x0x1x1'}
 
-[ModelView.Todo]
+[ModelView.Task]
 want='set'
-model_name='todo'
-position={TodoTab= 'D|R'}
+model_name='task'
+position={TaskTab= 'D|R'}
 tab_prefix={command = 't'}
 view_prefix={'|^own' = '<c-.>'}
 
-[ModelView.Todo.widget_map]
-id = {w = 'Label', p = '0x0x1x1', title = true}
+[ModelView.Task.widget_map]
+id = {w = 'Label', p = '0x0x1x1'}
 task = {w = 'TextEdit', p = '1x0x1x1'}
 status = {w = 'Label', p = '2x0x1x1', title = true}
 
@@ -81,10 +81,15 @@ include={field = ['title', 'author', 'year', 'bibkey']}
 field = {w = 'Label', p = '0x0x1x1', title=true}
 value = {w = 'TextEdit', p = '1x0x1x1'}
 
-[DBTables.Todo]
+[DBTables.Task]
 uid='id'
 want='set'
-name='todo'
+name='task'
+
+[DBTables.Event]
+uid='id'
+want='set'
+name='event'
 
 [DBTables.Pomodoro]
 uid='id'
@@ -133,6 +138,7 @@ subdir = [
 	'src/ohu/files',
 	'src/ohu/image_qt',
 	'src/ohu/pdf_fitz',
+	'src/ohu/kalendar',
 	'src/ohu/server_zmq',
 	]
 
@@ -140,7 +146,8 @@ subdir = [
 pick = 'aotabekov91/janilai'
 subdir = [
 	# 'src/janilai/card',
-	'src/janilai/todo',
+	'src/janilai/task',
+	'src/janilai/event',
 	'src/janilai/pomodoro',
 	'src/janilai/db_tables',
 	'src/janilai/green_elf',
