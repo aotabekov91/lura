@@ -147,6 +147,7 @@ pick = 'aotabekov91/janilai'
 subdir = [
 	# 'src/janilai/card',
 	'src/janilai/task',
+	'src/janilai/ctrlp',
 	'src/janilai/event',
 	'src/janilai/pomodoro',
 	'src/janilai/db_tables',
