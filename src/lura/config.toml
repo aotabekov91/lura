@@ -184,9 +184,10 @@ decoratePages = false
 devicePixelRatio = 1.0
 drawMode = 'DefaultMode'
 annotationOverlay = true
-convertToGrayscale = false #todo
+convertToGrayScale = true
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1 #todo
+
 
 [FitzView.Layout]
 pageSpacing = 5
