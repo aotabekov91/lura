@@ -1,34 +1,11 @@
 [Server.Settings]
+canRun=true
 router=22223
 publisher=22224
 host='tcp://192.168.178.25'
 
 [Styler.Settings]
 style = 'GreenElf'
-
-[ModelView.Pomodoro]
-want='set'
-model_name='pomodoro'
-tab_prefix={command = 'p'}
-position={PomodoroTab= 'D|R'}
-view_prefix={'|^own' = '<c-.>'}
-
-[ModelView.Pomodoro.widget_map]
-task = {w = 'Label', p = '0x0x1x1', title=true}
-worked = {w = 'Label', p = '1x0x1x1'}
-timestamp = {w = 'Label', p = '2x0x1x1'}
-
-[ModelView.Task]
-want='set'
-model_name='task'
-position={TaskTab= 'D|R'}
-tab_prefix={command = 't'}
-view_prefix={'|^own' = '<c-.>'}
-
-[ModelView.Task.widget_map]
-id = {w = 'Label', p = '0x0x1x1'}
-task = {w = 'TextEdit', p = '1x0x1x1'}
-status = {w = 'Label', p = '2x0x1x1', title = true}
 
 [ModelView.Quickmark]
 want='attach'
@@ -81,46 +58,31 @@ include={field = ['title', 'author', 'year', 'bibkey']}
 field = {w = 'Label', p = '0x0x1x1', title=true}
 value = {w = 'TextEdit', p = '1x0x1x1'}
 
-[DBTables.Task]
-uid='id'
-want='set'
-name='task'
-
-[DBTables.Event]
-uid='id'
-want='set'
-name='event'
-
-[DBTables.Pomodoro]
-uid='id'
-want='set'
-name='pomodoro'
-
-[DBTables.State]
+[Table.State]
 uid='id'
 name='state'
 want='attach'
 props=['hasStates']
 
-[DBTables.Quickmark]
+[Table.Quickmark]
 uid='id'
 want='attach'
 name='quickmark'
 props=['canQuickmark']
 
-[DBTables.Bookmark]
+[Table.Bookmark]
 uid='id'
 want='attach'
 name='bookmark'
 props=['canBookmark']
 
-[DBTables.Annotation]
+[Table.Annotation]
 uid='id'
 want='attach'
 name='annotation'
 props=['canAnnotate']
 
-[DBTables.Metadata]
+[Table.Metadata]
 uid='id'
 want='attach'
 name='metadata'
@@ -133,28 +95,12 @@ base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
 [[Picky.Picks]]
-pick = 'aotabekov91/ohu'
-subdir = [
-	'src/ohu/files',
-	'src/ohu/image_qt',
-	'src/ohu/pdf_fitz',
-	'src/ohu/kalendar',
-	'src/ohu/server_zmq',
-	]
-
-[[Picky.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
-	# 'src/janilai/card',
-	'src/janilai/task',
+	'src/janilai/table',
 	'src/janilai/ctrlp',
-	'src/janilai/event',
-	'src/janilai/pomodoro',
-	'src/janilai/db_tables',
 	'src/janilai/green_elf',
 	'src/janilai/model_view',
-	'src/janilai/word_lookup',
-	# 'src/plug/qt/plugs/umay_plug', # todo
 	]
 
 [View]
@@ -178,7 +124,7 @@ tileSize =  1024 #todo
 paperColor = 'gray' #todo
 useTiling =  false #todo
 trimMargins = false #todo
-invertColors = false #todo
+invertColors = false
 decorateLinks = true
 decoratePages = false
 devicePixelRatio = 1.0
@@ -187,7 +133,6 @@ annotationOverlay = true
 convertToGrayScale = true
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1 #todo
-
 
 [FitzView.Layout]
 pageSpacing = 5

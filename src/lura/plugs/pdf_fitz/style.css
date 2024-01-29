@@ -1,0 +1,62 @@
+#OverlayInputAnnotationFocus {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #A4DE02;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationQuestion {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #1AA7EC;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationError {
+	border-width: 5px;
+	border-color: red;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationTerm {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #EEFC5E;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationData {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #0FF0FC;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationLiterature {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #D3D3D3;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#OverlayInputAnnotationMethodology {
+	border-width: 5px;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	border-color: #DE73FF;
+	background-color: rgba(5, 5, 5, 200);
+}
