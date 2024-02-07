@@ -6,6 +6,8 @@ class ImageQtElement(
         QtCore.QObject
         ):
 
+    dataChanged=QtCore.pyqtSignal()
+
     def setup(self):
 
         super().setup()

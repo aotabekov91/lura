@@ -33,8 +33,9 @@ class FileBrowser(Plug):
     def openFile(self, path):
 
         p=os.path.abspath(path)
-        v=self.app.ui.handler.initiate(p)
-        v.activate()
+        if os.path.exists(p):
+            self.tab.activate()
+            self.tab.current.goTo(path=p)
 
     def pathFiller(self, path=None):
 

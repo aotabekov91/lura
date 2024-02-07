@@ -1,5 +1,4 @@
 from plug.qt import AppPlug
-from gizmo.vimo.view.app import AppView
 
 from .plugs.image_qt import ImageQt
 from .plugs.pdf_fitz import PdfFitz
@@ -7,18 +6,15 @@ from .plugs.files import FileBrowser
 
 class Lura(AppPlug):
 
-    def setView(self):
-        super().setView(AppView)
+    def activate(self):
 
-    def setup(self):
-
-        super().setup()
         p=[
            ImageQt,
            PdfFitz,
            FileBrowser,
           ]
         self.ui.moder.load(p)
+        self.ui.show()
 
 def run():
 

@@ -20,7 +20,7 @@ class Annotate:
         if self.checkProp('hasAnnotationColors', f):
             return
         if f:
-            c=f.config
+            c=f.m_config
             ac=c.get('Annotate', {})
             cs=ac.get('colors', {})
             f.m_annotation_colors=cs

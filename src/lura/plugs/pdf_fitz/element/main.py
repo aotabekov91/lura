@@ -14,6 +14,7 @@ class FitzElement(
         QtCore.QObject
         ):
 
+    dataUpdated=QtCore.pyqtSignal()
     repaintWanted=QtCore.pyqtSignal()
 
     def setup(self):

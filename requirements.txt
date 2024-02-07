@@ -1,0 +1,2 @@
+pymupdf==1.23.5
+plug[gizmo] @ git+https://github.com/aotabekov91/plug

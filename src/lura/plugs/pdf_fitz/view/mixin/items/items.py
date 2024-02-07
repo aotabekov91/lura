@@ -128,6 +128,9 @@ class Items(mixin.view.Scene):
         else:
             return self.m_items.get(idx, None)
 
+    def getItems(self):
+        return self.m_items.items()
+
     def count(self):
 
         if self.m_model:
