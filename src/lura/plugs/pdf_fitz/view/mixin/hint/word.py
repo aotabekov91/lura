@@ -22,10 +22,11 @@ class WordHint:
         alist=[]
         for i in self.m_hinting_items:
             tl=[]
+            e=i.element()
             tp=i.element().data().get_textpage()
             for t in tp.extractWORDS():
                 r=self.createRect(t)
-                r=i.mapToElement(r, unify=True)
+                r=e.unify(r)
                 tl+=[{'item': i, 'box': [r], 'text': t[4]}]
             alist+=tl
         return alist 

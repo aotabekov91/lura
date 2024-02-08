@@ -19,7 +19,6 @@ class WordVisual:
                 i=sel['item']
                 e=i.element()
                 s=self.selection()
-                print(s, sel)
                 if s and sel:
                     e.jumpToBlock(s, sel)
                 elif sel:

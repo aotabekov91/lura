@@ -8,36 +8,28 @@ class FitzElement(
         mixin.Block,
         mixin.Links,
         mixin.Search,
+        mixin.Normed,
         mixin.Annotate,
         mixin.TrimMargins,
         gizmo.vimo.element.Element, 
         QtCore.QObject
         ):
 
+    resized=QtCore.pyqtSignal()
     dataUpdated=QtCore.pyqtSignal()
     repaintWanted=QtCore.pyqtSignal()
 
     def setup(self):
 
         super().setup()
-        self.m_norm= QtGui.QTransform()
-        self.fmt = QtGui.QImage.Format_RGB888
         self.setSize()
-        self.updateTrans()
-        
-    def updateTrans(self):
-
-        n=self.m_norm
-        s=self.size()
-        n.scale(s.width(), s.height())
-        ninv=n.inverted()[0]
-        self.m_norm_inv=ninv
 
     def setSize(self):
 
         b=self.m_data.bound()
         w, h = b.width, b.height
         self.m_size=QtCore.QSizeF(w, h)
+        self.resized.emit()
 
     def size(self): 
         return self.m_size
@@ -72,8 +64,9 @@ class FitzElement(
             p.samples,
             p.width,
             p.height,
-            p.stride,
-            self.fmt)
+            p.stride, 
+            QtGui.QImage.Format_RGB888,
+            )
         img.setDevicePixelRatio(pratio)
         if trim: 
             img=self.trimMargins(img) # todo

@@ -5,7 +5,6 @@ class PLocate(mixin.view.Locate):
     def openPositionLocator(self, data={}, **kwargs):
         
         path=data.get('position')
-        print(path)
         if path: self.goTo(path=path)
         return path
 
