@@ -1,3 +1,4 @@
+import re
 import os
 import fitz
 import gizmo
@@ -55,3 +56,11 @@ class FitzModel(
             self.m_data=fitz.open(s)
             self.isLoaded=True
         super().load()
+
+    @classmethod
+    def isCompatible(cls, s, **kwargs):
+
+        if type(s)!=str: return
+        if not cls.pattern: return
+        if not os.path.exists(s): return
+        return re.match(cls.pattern, s, re.I)
