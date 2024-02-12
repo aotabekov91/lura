@@ -7,11 +7,20 @@ class DirElement(model.Dir):
 
     def setup(self):
 
-        super().setup()
         self.m_data = {} 
         self.m_loaded = {}
+        super().setup()
         self.assignId()
         self.setFiles()
+
+    def assignId(self):
+
+        if os.path.exists(self.m_source):
+            p=os.path.expanduser(self.m_source)
+            p=os.path.abspath(p)
+            self.m_source=p
+            f=os.path.dirname(p)
+            self.m_folder=f
 
     def loadImage(self, p):
 

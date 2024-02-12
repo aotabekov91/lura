@@ -1,20 +1,18 @@
 from plug.qt import AppPlug
 
-from .plugs.image_qt import ImageQt
-from .plugs.pdf_fitz import PdfFitz
-from .plugs.files import FileBrowser
+from . import plugs
 
 class Lura(AppPlug):
 
     def activate(self):
 
         p=[
-           ImageQt,
-           PdfFitz,
-           FileBrowser,
+           plugs.image_qt.ImageQt,
+           plugs.pdf_fitz.PdfFitz,
+           plugs.files.FileBrowser,
           ]
         self.ui.moder.load(p)
-        self.ui.show()
+        super().activate()
 
 def run():
 

@@ -53,8 +53,8 @@ class BoxHint:
     def getBoxTiles(self, i, r, inc):
 
         row, col = 0, 0
-        n=i.m_norm.inverted()
-        r=n[0].mapRect(r)
+        e=i.element()
+        r=e.unify(r)
         x, y = r.x(), r.y()
         w=x+r.width()
         h=y+r.height()
@@ -87,7 +87,7 @@ class BoxHint:
                 if d.get('isSelected'):
                     pen=QtGui.QPen(QtCore.Qt.green, 0.0)
                 else:
-                    pen=QtGui.QPen(QtCore.Qt.red, 0.0)
+                    pen=QtGui.QPen(QtCore.Qt.yellow, 0.0)
                 p.setPen(pen)
                 b=i.mapToItem(b, unified=True)
                 p.drawRect(b)

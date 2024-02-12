@@ -101,7 +101,9 @@ class DirItem(mixin.view.Scene):
         return self.m_curr
 
     def setVisibleItem(self):
-        return
+
+        self.centerOn(self.m_item)
+        # return
 
     def reindexModel(self, idx):
 

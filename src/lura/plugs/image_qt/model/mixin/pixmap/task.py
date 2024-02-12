@@ -39,8 +39,10 @@ class Task(QtCore.QObject):
         d=img_data.get('img')
         s=img_data.get('size')
         if d:
-            w=int(s.width()*x)
-            h=int(s.height()*y)
+            # w=int(s.width()*x)
+            # h=int(s.height()*y)
+            w=int(s.width())
+            h=int(s.height())
             img=d.scaled(
                     w, h, QtCore.Qt.KeepAspectRatio)
             if grayScale: img.invertPixels()

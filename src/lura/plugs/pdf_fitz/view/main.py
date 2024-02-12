@@ -20,6 +20,7 @@ class FitzView(
         mixin.WordVisual,
         mixin.TrimMargins,
         mixin.AnnotationHint,
+        mixin.RubberbandVisual,
         gizmo.mixin.view.Scale, 
         gizmo.mixin.view.State, 
         gizmo.mixin.view.ZXYPos, 

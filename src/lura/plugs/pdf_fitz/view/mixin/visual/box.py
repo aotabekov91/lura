@@ -16,7 +16,10 @@ class BoxVisual:
         self.m_visual_boxes=None
         self.m_hint_capturing=True
         self.setupHint(
-                'visualbox', rstart=rstart, inc=True)
+                inc=True,
+                rstart=rstart, 
+                kind='visualbox', 
+                )
 
     @tag('<c-o>', modes=['visual[box]|^own'])
     def decrementVisualBoxScale(self, rstart=1):
@@ -24,7 +27,10 @@ class BoxVisual:
         self.m_visual_boxes=None
         self.m_hint_capturing=True
         self.setupHint(
-                'visualbox', rstart=rstart, inc=False)
+                inc=False,
+                rstart=rstart, 
+                kind='visualbox', 
+                )
 
     @tag('<c-b>', modes=['visual[any]|^own'])
     def toggleVisualBoxMode(self):
@@ -40,7 +46,7 @@ class BoxVisual:
 
     @tag('<c-j>', modes=['visual[box]|^own'])
     def visualBoxJumpTo(self):
-        self.setupHint('box')
+        self.setupHint(kind='box')
 
     @tag('o', modes=['visual[box]|^own'])
     def visualBoxGoToFirst(self): 
