@@ -27,11 +27,13 @@ class Search(view.Search):
 
     def clearSearchData(self):
 
-        super().clearSearchData()
+        self.cleanUp()
         self.cleanUpSearch()
+        super().clearSearchData()
 
     def cleanUpSearch(self):
 
+        if not self.m_search_data: return
         for (i, r) in self.m_search_data:
             if self.checkProp('canHighlight', i):
                 i.highlight()
