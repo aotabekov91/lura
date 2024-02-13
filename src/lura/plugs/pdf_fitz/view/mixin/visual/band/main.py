@@ -2,7 +2,12 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from gizmo.utils import tag
 
-class RubberbandVisual:
+from . import mixin
+
+class RubberbandVisual(
+        mixin.Yank,
+        mixin.Resize,
+        ):
 
     rubberbandIncrement=0.05
     canVisualizeRubberband=True
@@ -26,13 +31,12 @@ class RubberbandVisual:
                 self.m_band_start=None
                 self.m_band_corner=None
                 self.m_visual_boxes=None
-                self.setupHint(
-                        kind='visualbox',
-                        )
+                self.setupHint(kind='visualbox')
             else:
                 self.cleanUpHinting()
                 if self.m_band:
-                    self.m_band.selectionPainted.disconnect(
+                    i=self.m_band['item']
+                    i.selectionPainted.disconnect(
                             self.paintVisualBand)
 
     def updateVisualBandHint(self, key):
@@ -73,72 +77,6 @@ class RubberbandVisual:
             i.selectionPainted.connect(
                     self.paintVisualBand)
             self.select(i, band) 
-
-    @tag('G', modes=['visual[band]|^own'])
-    def setBandCorner(self, rstart=None, **kwargs):
-
-        if rstart==1:
-            self.m_band_corner='topLeft'
-        elif rstart==2:
-            self.m_band_corner='topRight'
-        elif rstart==3:
-            self.m_band_corner='bottomRight'
-        else:
-            self.m_band_corner='bottomLeft'
-        i=self.m_band['item']
-        i.refresh()
-
-    @tag('l', modes=['visual[band]|^own'])
-    def bandVisualGoToRight(self, rstart=1, **kwargs):
-
-        i=self.m_band['item']
-        b=self.m_band['box'][0]
-        r=self.rubberbandIncrement*rstart
-        delta=min(b.y(), b.height())*r
-        if self.m_band_corner in ['topLeft', 'bottomLeft']:
-            b.setX(b.x()+delta)
-        else:
-            b.setWidth(b.width()+delta)
-        i.refresh()
-
-    @tag('h', modes=['visual[band]|^own'])
-    def bandVisualGoToLeft(self, rstart=1, **kwargs):
-
-        i=self.m_band['item']
-        b=self.m_band['box'][0]
-        r=-self.rubberbandIncrement*rstart
-        delta=min(b.y(), b.height())*r
-        if self.m_band_corner in ['topLeft', 'bottomLeft']:
-            b.setX(b.x()+delta)
-        else:
-            b.setWidth(b.width()+delta)
-        i.refresh()
-
-    @tag('k', modes=['visual[band]|^own'])
-    def bandVisualGoToUp(self, rstart=1, **kwargs):
-
-        i=self.m_band['item']
-        b=self.m_band['box'][0]
-        r=-self.rubberbandIncrement*rstart
-        delta=min(b.y(), b.height())*r
-        if self.m_band_corner in ['topLeft', 'topRight']:
-            b.setY(b.y()+delta)
-        else:
-            b.setHeight(b.height()+delta)
-        i.refresh()
-
-    @tag('j', modes=['visual[band]|^own'])
-    def bandVisualGoToDown(self, rstart=1, **kwargs):
-
-        i=self.m_band['item']
-        b=self.m_band['box'][0]
-        r=self.rubberbandIncrement*rstart
-        delta=min(b.y(), b.height())*r
-        if self.m_band_corner in ['topLeft', 'topRight']:
-            b.setY(b.y()+delta)
-        else:
-            b.setHeight(b.height()+delta)
-        i.refresh()
 
     def paintBandHints(self, p, o, w, i):
         self.paintBoxHints(p, o, w, i)

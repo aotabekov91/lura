@@ -7,13 +7,8 @@ class Normed:
     def setup(self):
 
         super().setup()
-        self.m_norm=QtGui.QTransform()
-        self.resized.connect(self.updateNorm)
-
-    def updateNorm(self):
-
         s=self.size()
-        self.m_norm.reset()
+        self.m_norm=QtGui.QTransform()
         self.m_norm.scale(s.width(), s.height())
 
     def unify(self, p):

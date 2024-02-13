@@ -1,8 +1,9 @@
-from gizmo import mixin
+from PyQt5 import QtCore
+from gizmo.mixin import view
 
 from .task import SearchTask
 
-class Search(mixin.view.Search):
+class Search(view.Search):
 
     def setupSearchTask(
             self, task=SearchTask):
@@ -16,8 +17,12 @@ class Search(mixin.view.Search):
         if self.checkProp('canHighlight', i):
             i.highlight({'box': [r]})
         d = i.index()
-        x, y = r.x(), r.y()-0.45
+        x, y = r.x(), r.y()
         self.goTo(d, x, y)
+        pos=self.getBarPosition(d, x, y)
+        if pos:
+            c=QtCore.QPointF(*pos)
+            self.centerOn(c)
         super().searchSetCurrentIndex(idx)
 
     def clearSearchData(self):

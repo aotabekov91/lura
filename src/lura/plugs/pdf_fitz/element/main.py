@@ -15,22 +15,20 @@ class FitzElement(
         QtCore.QObject
         ):
 
-    resized=QtCore.pyqtSignal()
     dataUpdated=QtCore.pyqtSignal()
     dataChanged=QtCore.pyqtSignal()
     repaintWanted=QtCore.pyqtSignal()
 
     def setup(self):
 
-        super().setup()
         self.setSize()
+        super().setup()
 
     def setSize(self):
 
         b=self.m_data.bound()
         w, h = b.width, b.height
         self.m_size=QtCore.QSizeF(w, h)
-        self.resized.emit()
 
     def size(self): 
         return self.m_size
