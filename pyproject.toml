@@ -7,7 +7,7 @@ authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pyzmq={version="==25.1.2"}
+pyzmq={version="==25.1.2"} # todo picky should handle this
 pymupdf = {version="==1.23.5"}
 # plug = {git = "https://github.com/aotabekov91/plug.git", extras=["gizmo"], develop = true}
 plug = {path = "/home/adam/code/plug", extras=["gizmo"], develop = true}
