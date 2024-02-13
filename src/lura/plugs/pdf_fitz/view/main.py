@@ -1,4 +1,5 @@
 import gizmo
+from gizmo.utils import tag
 from PyQt5 import QtWidgets
 
 from . import mixin
