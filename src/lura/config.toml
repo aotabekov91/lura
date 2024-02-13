@@ -105,7 +105,7 @@ subdir = [
 [[Picky.Picks]]
 pick = 'aotabekov91/sainan'
 subdir = [
-	'src/sainan/plugs/client/pyzmq/',
+	'src/sainan/plugs/client/czmq',
 	]
 
 [View]
