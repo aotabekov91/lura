@@ -1,8 +1,7 @@
-[Server.Settings]
-canRun=true
-router=22223
-publisher=22224
-host='tcp://192.168.178.25'
+[ZMQClient.Settings]
+router=5554
+publisher=5555
+host='tcp://127.0.0.1'
 
 [Styler.Settings]
 style = 'GreenElf'
@@ -101,6 +100,12 @@ subdir = [
 	'src/janilai/ctrlp',
 	'src/janilai/green_elf',
 	'src/janilai/model_view',
+	]
+
+[[Picky.Picks]]
+pick = 'aotabekov91/sainan'
+subdir = [
+	'src/sainan/plugs/client/pyzmq/',
 	]
 
 [View]
