@@ -7,9 +7,7 @@ class Lura(AppPlug):
     def activate(self):
 
         p=[
-           plugs.image_qt.ImageQt,
            plugs.pdf_fitz.PdfFitz,
-           plugs.files.FileBrowser,
           ]
         self.ui.moder.load(p)
         super().activate()
