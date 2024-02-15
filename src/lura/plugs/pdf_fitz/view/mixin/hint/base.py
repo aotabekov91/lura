@@ -43,15 +43,29 @@ class Hint(mixin.view.Hint):
                 painter(p, o, w, i)
             else:
                 m=self.m_hint_map.get(i, {})
+                p.setRenderHint(QtGui.QPainter.Antialiasing)
                 p.save()
-                pen=QtGui.QPen(QtCore.Qt.red, 0.0)
-                p.setPen(pen)
+                pen=QtGui.QPen(QtCore.Qt.green, 1.0)
+                ppen=QtGui.QPen(QtCore.Qt.NoPen)
                 for j, d in m.items():
                     b=d['box']
                     if type(b)==list: b=b[0]
                     tr=i.mapToItem(b, unified=True)
-                    p.drawText(tr.topLeft(), j)
+                    tl=tr.center()
+                    tl.setX(tr.x())
+
+                    path=QtGui.QPainterPath() 
+                    path.addRect(tr)
+                    p.setPen(ppen)
+                    p.fillPath(path, QtCore.Qt.black)
+                    p.drawPath(path)
+
+                    p.setPen(pen)
+                    p.drawText(tr, QtCore.Qt.AlignLeft, j)
+
                 p.restore()
+
+
 
     def setupHint(self, kind, **kwargs):
 
