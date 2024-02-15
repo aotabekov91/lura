@@ -19,6 +19,7 @@ class FitzView(
         mixin.BoxVisual,
         mixin.GrayScale,
         mixin.WordVisual,
+        mixin.YankToCard,
         mixin.TrimMargins,
         mixin.AnnotationHint,
         mixin.RubberbandVisual,

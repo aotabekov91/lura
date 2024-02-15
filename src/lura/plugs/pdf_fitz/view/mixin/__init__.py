@@ -5,6 +5,7 @@ from .yank import Yank
 from .items import Items 
 from .search import Search
 from .rotate import Rotate
+from .card import YankToCard
 from .annotate import Annotate
 from .grayscale import GrayScale
 from .margins import TrimMargins
