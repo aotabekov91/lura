@@ -1,16 +1,17 @@
 from PyQt5 import QtGui, QtCore
 
-class TrimMargins:
+class Trim:
 
-    def trimMargins(self, img, bg='white'):
+    def trimMargins(self, img):
 
-        rect=self.getTrimRect(img, bg)
+        rect=self.getTrimRect(img)
         return img.copy(rect)
 
-    def getTrimRect(self, img, bg='white'):
+    def getTrimRect(self, img):
 
         w = img.width();
         h = img.height();
+
         bg=QtGui.QColor(bg)
         for l in range(w):
             if not self.columnHasBgColor(l, bg, img):

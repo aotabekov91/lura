@@ -5,12 +5,12 @@ from PyQt5 import QtCore, QtGui
 from . import mixin
 
 class FitzElement(
+        mixin.Trim,
         mixin.Block,
         mixin.Links,
         mixin.Search,
         mixin.Normed,
         mixin.Annotate,
-        mixin.TrimMargins,
         gizmo.vimo.element.Element, 
         QtCore.QObject
         ):
@@ -56,9 +56,10 @@ class FitzElement(
             matrix.prerotate(rotation%360)
         p=self.m_data.get_pixmap(
                 clip=clip,
-                alpha=False,
+                # alpha=False,
                 matrix=matrix,
                 )
+
         img=QtGui.QImage(
             p.samples,
             p.width,
@@ -67,8 +68,5 @@ class FitzElement(
             QtGui.QImage.Format_RGB888,
             )
         img.setDevicePixelRatio(pratio)
-        if trim: 
-            img=self.trimMargins(img) # todo
-            raise
         if grayScale: img.invertPixels()
         return img
