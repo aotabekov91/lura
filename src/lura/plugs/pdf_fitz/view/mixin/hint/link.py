@@ -30,7 +30,7 @@ class LinkHint:
             tl=QPointF(x, y)
             item=self.item(p+1)
             elem=item.element()
-            tl=elem.m_norm_inv.map(tl)
+            tl=elem.unify(tl)
             self.goTo(p+1, tl.x(), tl.y())
         elif d.kind==fitz.LINK_URI:
             cmd=['qutebrowser', d.uri]

@@ -27,7 +27,7 @@ class Links:
         tl = QtCore.QPointF(r.x0, r.y0)
         br = QtCore.QPointF(r.x1, r.y1)
         r=QtCore.QRectF(tl, br)
-        return self.m_norm_inv.mapRect(r)
+        return self.unify(r)
 
     def getLinks(self):
 
