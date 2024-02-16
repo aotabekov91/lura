@@ -1,7 +1,7 @@
 [ZMQClient.Settings]
-router=5554
-publisher=5555
-host='tcp://127.0.0.1'
+router_port=22223
+publisher_port=22224
+host='tcp://192.168.178.25'
 
 [Styler.Settings]
 style = 'GreenElf'

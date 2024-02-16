@@ -56,7 +56,8 @@ class FitzElement(
             matrix.prerotate(rotation%360)
         p=self.m_data.get_pixmap(
                 clip=clip,
-                # alpha=False,
+                alpha=False,
+                # colorspace='rgb',
                 matrix=matrix,
                 )
 
