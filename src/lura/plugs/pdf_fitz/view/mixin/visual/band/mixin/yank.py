@@ -3,7 +3,7 @@ from gizmo.utils import tag
 
 class Yank:
 
-    @tag('yt', modes=['visual[band]|^own'])
+    @tag(['yy', 'yt'], modes=['visual[band]|^own'])
     def yankAsText(self, rstart=1, **kwargs):
 
         if not self.m_band: return
@@ -20,6 +20,7 @@ class Yank:
         if t:
             c=self.app.qapp.clipboard()
             c.setText(t)
+        self.app.ui.moder.toggle()
         self.cleanUp()
 
     @tag('yi', modes=['visual[band]|^own'])
@@ -35,4 +36,5 @@ class Yank:
         if crp:
             c=self.app.qapp.clipboard()
             c.setImage(crp.toImage())
+        self.app.ui.moder.toggle()
         self.cleanUp()

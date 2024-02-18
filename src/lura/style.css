@@ -70,14 +70,15 @@ QStatusBar::item {
 	border-width: 0px;
 }
 
-QWidget#View {
+#FitzView{
 	padding: 0 0 0 0;
-	border-width: 2px; 
+	border-width: 0px; 
 	border-style: solid;
 	border-color: transparent;
 }
 
-QWidget#View:focus {
+#FitzView:focus {
+	border-width: 3px; 
 	border-color: green;
 }
 
@@ -176,3 +177,4 @@ QLabel#HintBoxLabel:focus{
 	padding: 10 10 10 10;
 	background-color: rgba(5, 5, 5, 200);
 }
+
