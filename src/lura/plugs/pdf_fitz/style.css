@@ -1,3 +1,13 @@
+QWidget#FitzView:focus {
+	border-color: green;
+}
+
+QWidget#FitzView {
+	border-width: 3px;
+	border-style: solid;
+	border-color: transparent;
+}
+
 #OverlayInputAnnotationFocus {
 	border-width: 5px;
 	border-radius: 15px;
