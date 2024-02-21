@@ -3,6 +3,11 @@ from gizmo.utils import tag
 
 class Yank:
 
+    def setup(self):
+
+        super().setup()
+        self.m_last_yanked_dir=None
+
     @tag(['yy', 'yt'], modes=['visual[band]|^own'])
     def yankAsText(self, rstart=1, **kwargs):
 
@@ -14,17 +19,60 @@ class Yank:
         r=(r.x(), r.y(), r.x()+r.width(), r.y()+r.height())
         f=e.getBlockText('blocks', clip=r)
         if not f: return
-        t=f[0][4]
-        if rstart==1: 
-            t=t.replace('\n', ' ')
-        if t:
+        text=[]
+        for i in range(len(f)):
+            t=f[i][4]
+            if rstart==1: 
+                t=t.replace('\n', ' ')
+            text+=[t]
+        text='\n'.join(text)
+        if text:
             c=self.app.qapp.clipboard()
-            c.setText(t)
+            c.setText(text)
         self.app.ui.moder.toggle()
         self.cleanUp()
 
-    @tag('yi', modes=['visual[band]|^own'])
-    def yankAsImage(self, *args, **kwargs):
+    @tag('yic', modes=['visual[band]|^own'])
+    def yankAsImageToClipboard(self, *args, **kwargs):
+
+        img=self.yankImage()
+        if not img: return
+        self.app.ui.moder.toggle()
+        self.cleanUp()
+
+    @tag('yis', modes=['visual[band]|^own'])
+    def yankAsImageToSave(self, *args, **kwargs):
+
+        img=self.yankImage()
+        if not img: return
+        self.app.ui.moder.toggle(
+                'save', submode='image')
+        self.app.ui.bar.activateEdit(
+                label='Path', 
+                edit=self.m_last_yanked_dir,
+                )
+
+    @tag(['<c-m>', '<return>'], modes=['save[image]|^own'])
+    def saveYankedImage(self, *args, **kwargs):
+
+        img=self.yankImage()
+        t=self.app.ui.bar.text()
+        try:
+            img.save(t)
+            fldr=t.rsplit('/', 1)[0]
+            self.m_last_yanked_dir=fldr
+        except:
+            pass
+        self.cleanUpYankedImage()
+
+    @tag(['<escape>', '<c-[>'], modes=['save[image]|^own'])
+    def cleanUpYankedImage(self, *args, **kwargs):
+
+        self.app.ui.bar.octivateEdit()
+        self.app.ui.moder.toggle()
+        self.cleanUp()
+
+    def yankImage(self):
 
         if not self.m_band: return
         i=self.m_band['item']
@@ -33,8 +81,5 @@ class Yank:
         pxm=i.takePixmap()
         if not pxm: return
         crp=pxm.copy(mb.toRect())
-        if crp:
-            c=self.app.qapp.clipboard()
-            c.setImage(crp.toImage())
-        self.app.ui.moder.toggle()
-        self.cleanUp()
+        if not crp: return
+        return crp.toImage()
