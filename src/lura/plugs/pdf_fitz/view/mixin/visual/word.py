@@ -25,6 +25,13 @@ class WordVisual:
                     i=sel['item']
                     self.select(i, sel)
 
+    @tag(['<escape>', '<c-[>'], modes=['visual[word]|^own'])
+    def finishVisualWordMode(self):
+
+        self.cleanUpHinting()
+        self.cleanUpSelection()
+        self.app.ui.moder.toggle()
+
     @tag('<c-w>', modes=['visual[any]|^own'])
     def toggleVisualWordMode(self):
 

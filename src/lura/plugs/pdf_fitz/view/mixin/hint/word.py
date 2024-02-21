@@ -10,6 +10,13 @@ class WordHint:
         self.hintSelectWanted.connect(
                 self.selectWordHint)
 
+    @tag(['<escape>', '<c-[>'], modes=['hint[word]|^own'])
+    def finishHintWordMode(self):
+
+        self.cleanUpHinting()
+        self.cleanUpSelection()
+        self.app.ui.moder.toggle()
+
     @tag('<c-w>', modes=['hint[any]|^own'])
     def toggleHintWordMode(self):
 

@@ -4,7 +4,7 @@ class Yank:
 
     canYank=True
 
-    @tag('yy', modes=['normal|^own'])
+    @tag('yy', modes=['normal|^own', 'visual[word]|^own'])
     def yankWord(self, *args, **kwargs):
 
         sel=self.selection()
@@ -15,7 +15,7 @@ class Yank:
                 c.setText(text)
         self.cleanUp()
 
-    @tag('ya', modes=['normal'])
+    @tag('ya', modes=['normal', 'visual[word]|^own'])
     def yankToAyleen(self, rstart=1, **kwargs):
 
         c=self.checkProp('hasServer', self.app)
