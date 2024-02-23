@@ -97,16 +97,16 @@ folder = '~/.config/lura/picky'
 pick = 'aotabekov91/janilai'
 subdir = [
 	'src/janilai/table',
-	'src/janilai/ctrlp',
+	# 'src/janilai/ctrlp',
 	'src/janilai/green_elf',
 	'src/janilai/model_view',
 	]
 
-[[Picky.Picks]]
-pick = 'aotabekov91/sainan'
-subdir = [
-	'src/sainan/plugs/client/czmq',
-	]
+# [[Picky.Picks]]
+# pick = 'aotabekov91/sainan'
+# subdir = [
+# 	'src/sainan/plugs/client/czmq',
+# 	]
 
 [View]
 zoomFactor = 0.1
