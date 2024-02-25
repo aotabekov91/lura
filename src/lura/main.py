@@ -1,6 +1,7 @@
 from lura import plugs
 from gizmo.qt import plug
 
+
 class Lura(plug.app.AppPlug):
     def activate(self):
         p = [
