@@ -1,7 +1,7 @@
 from gizmo import plug
 
-from .view import FitzView
 from .model import FitzModel
+from .view import FitzView
 
 
 class PdfFitz(plug.Plug):

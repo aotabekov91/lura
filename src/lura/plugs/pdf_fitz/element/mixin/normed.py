@@ -1,4 +1,4 @@
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui
 
 
 class Normed:

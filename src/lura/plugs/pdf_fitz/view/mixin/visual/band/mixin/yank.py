@@ -1,5 +1,5 @@
-from PyQt5 import QtCore
 from gizmo.plug.utils import tag
+from PyQt5 import QtCore
 
 
 class Yank:

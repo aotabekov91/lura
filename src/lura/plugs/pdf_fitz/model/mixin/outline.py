@@ -1,9 +1,7 @@
 import fitz
-from PyQt5 import QtGui
-from PyQt5 import QtCore
+from gizmo.core.vimo import Element, Model
 from gizmo.plug import Factory
-from gizmo.core.vimo import Model
-from gizmo.core.vimo import Element
+from PyQt5 import QtCore, QtGui
 
 
 class Outline:

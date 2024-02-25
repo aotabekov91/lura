@@ -1,8 +1,8 @@
 from gizmo import qt
 from PyQt5 import QtWidgets
 
-from . import mixin
 from ..item import FitzItem
+from . import mixin
 
 
 class FitzView(

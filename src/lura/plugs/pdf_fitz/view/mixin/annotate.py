@@ -1,5 +1,6 @@
-from gizmo.plug.utils import tag
 from functools import partial
+
+from gizmo.plug.utils import tag
 
 
 class Annotate:

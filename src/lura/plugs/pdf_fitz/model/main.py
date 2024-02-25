@@ -1,12 +1,13 @@
-import re
+import hashlib
 import os
+import re
+
 import fitz
 import gizmo
-import hashlib
 from PyQt5 import QtCore
 
-from . import mixin
 from ..element import FitzElement
+from . import mixin
 
 
 class FitzModel(

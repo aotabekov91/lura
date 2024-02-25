@@ -1,5 +1,5 @@
 from gizmo.plug.utils import tag
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtCore, QtWidgets
 
 
 class AnnotationHint:
