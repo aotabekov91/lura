@@ -2,7 +2,7 @@ from .hint import *
 from .visual import *
 from .copy import Copy
 from .yank import Yank
-from .items import Items 
+from .items import Items
 from .search import Search
 from .rotate import Rotate
 from .card import YankToCard

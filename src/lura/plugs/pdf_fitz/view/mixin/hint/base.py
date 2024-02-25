@@ -1,11 +1,12 @@
 from gizmo.qt import mixin
 from PyQt5 import QtCore, QtGui
 
+
 class Hint(mixin.view.Hint):
 
     def setup(self):
 
-        self.m_hinting_items=[]
+        self.m_hinting_items = []
         super().setup()
 
     def connectHint(self):
@@ -26,7 +27,7 @@ class Hint(mixin.view.Hint):
     def cleanUpHinting(self):
 
         self.updateHintItems()
-        self.m_hinting_items=[]
+        self.m_hinting_items = []
         super().cleanUpHinting()
 
     def createRect(self, d):
@@ -38,23 +39,24 @@ class Hint(mixin.view.Hint):
     def paintHints(self, p, o, w, i):
 
         if self.m_hinting:
-            painter=self.getHintPainter()
+            painter = self.getHintPainter()
             if painter:
                 painter(p, o, w, i)
             else:
-                m=self.m_hint_map.get(i, {})
+                m = self.m_hint_map.get(i, {})
                 p.setRenderHint(QtGui.QPainter.Antialiasing)
                 p.save()
-                pen=QtGui.QPen(QtCore.Qt.green, 1.0)
-                ppen=QtGui.QPen(QtCore.Qt.NoPen)
+                pen = QtGui.QPen(QtCore.Qt.green, 1.0)
+                ppen = QtGui.QPen(QtCore.Qt.NoPen)
                 for j, d in m.items():
-                    b=d['box']
-                    if type(b)==list: b=b[0]
-                    tr=i.mapToItem(b, unified=True)
-                    tl=tr.center()
+                    b = d["box"]
+                    if type(b) == list:
+                        b = b[0]
+                    tr = i.mapToItem(b, unified=True)
+                    tl = tr.center()
                     tl.setX(tr.x())
 
-                    path=QtGui.QPainterPath() 
+                    path = QtGui.QPainterPath()
                     path.addRect(tr)
                     p.setPen(ppen)
                     p.fillPath(path, QtCore.Qt.black)
@@ -65,10 +67,8 @@ class Hint(mixin.view.Hint):
 
                 p.restore()
 
-
-
     def setupHint(self, kind, **kwargs):
 
-        vis=self.visibleItems()
-        self.m_hinting_items=vis
+        vis = self.visibleItems()
+        self.m_hinting_items = vis
         super().setupHint(kind, **kwargs)

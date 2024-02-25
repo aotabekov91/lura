@@ -1,6 +1,7 @@
 from gizmo.plug.utils import tag
 from functools import partial
 
+
 class Annotate:
 
     def setup(self):
@@ -8,63 +9,64 @@ class Annotate:
         super().setup()
         self.setAnnotationKeys()
 
-    @tag('<c-a>', 
-         modes=[
-             'normal|^own', 
-             'visual[any]|^own',
-             'annotate[any]|^own',
-             ]
-         )
+    @tag(
+        "<c-a>",
+        modes=[
+            "normal|^own",
+            "visual[any]|^own",
+            "annotate[any]|^own",
+        ],
+    )
     def toggleAnnotationMode(self):
 
-        m=self.app.moder.toggle('annotate')
-        if m=='annotate':
+        m = self.app.moder.toggle("annotate")
+        if m == "annotate":
             self.toggleAnnotateHighlightMode()
         else:
             self.updateAnnotationList()
 
-    @tag('<escape>', modes=['annotate[any]|^own'])
+    @tag("<escape>", modes=["annotate[any]|^own"])
     def octivate(self):
         self.app.moder.toggle()
 
-    @tag('<c-h>', modes=['annotate[any]|^own'])
+    @tag("<c-h>", modes=["annotate[any]|^own"])
     def toggleAnnotateHighlightMode(self):
 
-        m=self.app.moder.toggleSubmode('highlight')
+        m = self.app.moder.toggleSubmode("highlight")
         self.updateAnnotationList(m)
 
-    @tag('<c-u>', modes=['annotate[any]|^own'])
+    @tag("<c-u>", modes=["annotate[any]|^own"])
     def toggleAnnotateUnderlineMode(self):
 
-        m=self.app.moder.toggleSubmode('underline')
+        m = self.app.moder.toggleSubmode("underline")
         self.updateAnnotationList(m)
 
-    @tag('<c-s>', modes=['annotate[any]|^own'])
+    @tag("<c-s>", modes=["annotate[any]|^own"])
     def toggleAnnotateStrikeOutMode(self):
 
-        m=self.app.moder.toggleSubmode('strike-out')
+        m = self.app.moder.toggleSubmode("strike-out")
         self.updateAnnotationList(m)
 
-    @tag('<c-r>', modes=['annotate[any]|^own'])
+    @tag("<c-r>", modes=["annotate[any]|^own"])
     def toggleAnnotateCaretMode(self):
 
-        m=self.app.moder.toggleSubmode('caret')
+        m = self.app.moder.toggleSubmode("caret")
         self.updateAnnotationList(m)
 
-    @tag('<c-t>', modes=['annotate[any]|^own'])
+    @tag("<c-t>", modes=["annotate[any]|^own"])
     def toggleAnnotateTextMode(self):
 
-        m=self.app.moder.toggleSubmode('text')
+        m = self.app.moder.toggleSubmode("text")
         self.updateAnnotationList(m)
 
     def updateAnnotationList(self, mode=None):
 
-        alist=[]
+        alist = []
         if self.fitz:
-            cs=self.fitz.m_annotation_colors.get(mode, {})
+            cs = self.fitz.m_annotation_colors.get(mode, {})
             for n, d in cs.items():
-                key=d.get('key')
-                alist+=[f'[{key}] {n.title()}']
+                key = d.get("key")
+                alist += [f"[{key}] {n.title()}"]
         self.app.ui.overlay.list.updateData(alist)
         self.app.ui.overlay.list.show()
 
@@ -72,53 +74,48 @@ class Annotate:
 
         s = self.selection()
         if s:
-            s['akind']=submode
-            s['function']=func
-            s=self.getLocator(s, 'annotation')
+            s["akind"] = submode
+            s["function"] = func
+            s = self.getLocator(s, "annotation")
             self.m_model.addAnnotation(s)
             self.cleanUpSelection()
         self.toggleAnnotationMode()
 
     def setAnnotationKeys(self):
 
-        fitz=self.app.moder.plugs.pdffitz
-        self.fitz=fitz
-        if self.checkProp('hasAnnotationColors', fitz):
-            cs=self.fitz.m_annotation_colors
+        fitz = self.app.moder.plugs.pdffitz
+        self.fitz = fitz
+        if self.checkProp("hasAnnotationColors", fitz):
+            cs = self.fitz.m_annotation_colors
             for sn, sm in cs.items():
                 for name, v in sm.items():
-                    n, k=v['name'], v['key']
-                    submode=f'annotate[{sn}]'
-                    f=partial(
-                            self.annotate, 
-                            func=n,
-                            submode=sn,
-                            )
-                    f.key=k
-                    f.isTagged=True
-                    f.hasTaggedKey=True
-                    f.canDigitalize=False
-                    f.modes=[f'{submode}|^own']
-                    fn=f'annotate{sn.title()}{k.title()}'
-                    f.name=fn
-                    f.__name__=fn
-                    setattr(f, '__name__', fn)
+                    n, k = v["name"], v["key"]
+                    submode = f"annotate[{sn}]"
+                    f = partial(
+                        self.annotate,
+                        func=n,
+                        submode=sn,
+                    )
+                    f.key = k
+                    f.isTagged = True
+                    f.hasTaggedKey = True
+                    f.canDigitalize = False
+                    f.modes = [f"{submode}|^own"]
+                    fn = f"annotate{sn.title()}{k.title()}"
+                    f.name = fn
+                    f.__name__ = fn
+                    setattr(f, "__name__", fn)
                     setattr(self, fn, f)
         self.app.earman.add(self, view=True)
 
-    def openAnnotationLocator(
-            self, 
-            data={}, 
-            center=True,
-            **kwargs
-            ):
+    def openAnnotationLocator(self, data={}, center=True, **kwargs):
 
-        b=data.get('box', None)
-        p=data.get('page', None)
-        v=self.app.uiman.type()
+        b = data.get("box", None)
+        p = data.get("page", None)
+        v = self.app.uiman.type()
         if all([v, p, b]):
-            i=v.item(p)
-            tl=b[0].topLeft()
-            kwargs['center']=center
+            i = v.item(p)
+            tl = b[0].topLeft()
+            kwargs["center"] = center
             v.goTo(p, tl.x(), tl.y(), **kwargs)
             v.select(i, data)

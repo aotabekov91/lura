@@ -1,13 +1,13 @@
 class Links:
 
-    hasLinks=True
+    hasLinks = True
 
     def setup(self):
 
         super().setup()
-        self.m_links={}
-        self.m_named_links={}
-        self.m_links_cached=False
+        self.m_links = {}
+        self.m_named_links = {}
+        self.m_links_cached = False
 
     def getLinks(self):
 
@@ -23,9 +23,9 @@ class Links:
 
     def setLinks(self):
 
-        self.m_links=self.element().getLinks()
+        self.m_links = self.element().getLinks()
         for l in self.m_links:
-            l['item']=self
+            l["item"] = self
 
     def setLinkProp(self, data):
         self.element().setLinkProp(data)

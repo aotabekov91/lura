@@ -1,11 +1,11 @@
 class Words:
 
-    hasWords=True
+    hasWords = True
 
     def setup(self):
 
         super().setup()
-        self.m_words_cache={}
+        self.m_words_cache = {}
 
     def getWords(self):
         pass

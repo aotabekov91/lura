@@ -1,8 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
 
+
 class Viewport(QtWidgets.QWidget):
 
-    updated=QtCore.pyqtSignal()
+    updated = QtCore.pyqtSignal()
 
     def update(self, *args, **kwargs):
 
@@ -11,8 +12,7 @@ class Viewport(QtWidgets.QWidget):
 
     def event(self, e):
 
-        res=super().event(e)
-        if e.type()==QtCore.QEvent.Move:
+        res = super().event(e)
+        if e.type() == QtCore.QEvent.Move:
             self.update()
         return res
-

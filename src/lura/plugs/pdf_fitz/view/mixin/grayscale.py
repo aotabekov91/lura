@@ -1,10 +1,11 @@
 from gizmo.plug.utils import tag
 
+
 class GrayScale:
 
-    convertToGrayScale=False
+    convertToGrayScale = False
 
-    @tag('c', modes=['normal|^own'])
+    @tag("c", modes=["normal|^own"])
     def toggleGrayScale(self):
 
         for i in self.m_items.values():
