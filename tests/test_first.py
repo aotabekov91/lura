@@ -1,2 +1,2 @@
 def test_first():
-    asssert 0==0
+    assert 0 == 0
