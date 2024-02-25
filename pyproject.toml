@@ -13,6 +13,28 @@ gizmo = {path = "/home/adam/code/gizmo", extras=["qt"]}
 [tool.poetry.scripts]
 lura = "lura.main:run"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^6"
+pytest-qt = '*'
+pytest-bdd = '*'
+pytest-mock = '*'
+pytest-benchmark = '*'
+pytest-instafail = '*'
+
+[tool.pytest.ini_options]
+pythonpath="src"
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+filterwarnings = "ignore"
+
+[tool.mypy]
+follow_imports= "skip"
+strict_optional = false
+files = ["src", "tests"]
+show_column_numbers = true
+ignore_missing_imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

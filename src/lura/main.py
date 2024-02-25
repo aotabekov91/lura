@@ -1,5 +1,6 @@
-from lura import plugs
 from gizmo.qt import plug
+
+from lura import plugs
 
 
 class Lura(plug.app.AppPlug):
