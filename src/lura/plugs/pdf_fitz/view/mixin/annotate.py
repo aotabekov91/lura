@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 from functools import partial
 
 class Annotate:
@@ -17,7 +17,7 @@ class Annotate:
          )
     def toggleAnnotationMode(self):
 
-        m=self.app.ui.moder.toggle('annotate')
+        m=self.app.moder.toggle('annotate')
         if m=='annotate':
             self.toggleAnnotateHighlightMode()
         else:
@@ -25,36 +25,36 @@ class Annotate:
 
     @tag('<escape>', modes=['annotate[any]|^own'])
     def octivate(self):
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
 
     @tag('<c-h>', modes=['annotate[any]|^own'])
     def toggleAnnotateHighlightMode(self):
 
-        m=self.app.ui.moder.toggleSubmode('highlight')
+        m=self.app.moder.toggleSubmode('highlight')
         self.updateAnnotationList(m)
 
     @tag('<c-u>', modes=['annotate[any]|^own'])
     def toggleAnnotateUnderlineMode(self):
 
-        m=self.app.ui.moder.toggleSubmode('underline')
+        m=self.app.moder.toggleSubmode('underline')
         self.updateAnnotationList(m)
 
     @tag('<c-s>', modes=['annotate[any]|^own'])
     def toggleAnnotateStrikeOutMode(self):
 
-        m=self.app.ui.moder.toggleSubmode('strike-out')
+        m=self.app.moder.toggleSubmode('strike-out')
         self.updateAnnotationList(m)
 
     @tag('<c-r>', modes=['annotate[any]|^own'])
     def toggleAnnotateCaretMode(self):
 
-        m=self.app.ui.moder.toggleSubmode('caret')
+        m=self.app.moder.toggleSubmode('caret')
         self.updateAnnotationList(m)
 
     @tag('<c-t>', modes=['annotate[any]|^own'])
     def toggleAnnotateTextMode(self):
 
-        m=self.app.ui.moder.toggleSubmode('text')
+        m=self.app.moder.toggleSubmode('text')
         self.updateAnnotationList(m)
 
     def updateAnnotationList(self, mode=None):
@@ -81,7 +81,7 @@ class Annotate:
 
     def setAnnotationKeys(self):
 
-        fitz=self.app.ui.moder.plugs.pdffitz
+        fitz=self.app.moder.plugs.pdffitz
         self.fitz=fitz
         if self.checkProp('hasAnnotationColors', fitz):
             cs=self.fitz.m_annotation_colors
@@ -104,7 +104,7 @@ class Annotate:
                     f.__name__=fn
                     setattr(f, '__name__', fn)
                     setattr(self, fn, f)
-        self.app.ui.earman.add(self, view=True)
+        self.app.earman.add(self, view=True)
 
     def openAnnotationLocator(
             self, 
@@ -115,7 +115,7 @@ class Annotate:
 
         b=data.get('box', None)
         p=data.get('page', None)
-        v=self.app.ui.uiman.type()
+        v=self.app.uiman.type()
         if all([v, p, b]):
             i=v.item(p)
             tl=b[0].topLeft()

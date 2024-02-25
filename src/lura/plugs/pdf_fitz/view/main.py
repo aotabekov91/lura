@@ -1,4 +1,4 @@
-import gizmo
+from gizmo import qt
 from PyQt5 import QtWidgets
 
 from . import mixin
@@ -22,20 +22,20 @@ class FitzView(
         mixin.TrimMargins,
         mixin.AnnotationHint,
         mixin.RubberbandVisual,
-        gizmo.mixin.view.Scale, 
-        gizmo.mixin.view.State, 
-        gizmo.mixin.view.ZXYPos, 
-        gizmo.mixin.view.Pixmap, 
-        gizmo.mixin.view.Select,
-        gizmo.mixin.view.Leaper,
-        gizmo.mixin.view.Locate,
-        gizmo.mixin.view.SceneGo,
-        gizmo.mixin.view.Bookmark,
-        gizmo.mixin.view.Metadata,
-        gizmo.mixin.view.Quickmark,
-        gizmo.mixin.view.Fullscreen,
-        gizmo.mixin.view.ItemsHighlight,
-        gizmo.vimo.view.View,
+        qt.mixin.view.Scale, 
+        qt.mixin.view.State, 
+        qt.mixin.view.ZXYPos, 
+        qt.mixin.view.Pixmap, 
+        qt.mixin.view.Select,
+        qt.mixin.view.Leaper,
+        qt.mixin.view.Locate,
+        qt.mixin.view.SceneGo,
+        qt.mixin.view.Bookmark,
+        qt.mixin.view.Metadata,
+        qt.mixin.view.Quickmark,
+        qt.mixin.view.Fullscreen,
+        qt.mixin.view.ItemsHighlight,
+        qt.vimo.view.View,
         QtWidgets.QGraphicsView,
         ):
 

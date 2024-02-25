@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class Rotate:
 

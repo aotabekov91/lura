@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class Yank:
 
@@ -25,7 +25,7 @@ class Yank:
         if text:
             c=self.app.qapp.clipboard()
             c.setText(text)
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
         self.cleanUp()
         return text
 
@@ -42,7 +42,7 @@ class Yank:
         if rstart==2: lan='de'
         req={
             'target': 'Ayleen',
-            'object': 'app.ui.moder.plugs.deflookup',
+            'object': 'app.moder.plugs.deflookup',
             'data'  : {'term':text,'lan':lan},
             'action': 'lookup',
             }

@@ -96,10 +96,10 @@ folder = '~/.config/lura/picky'
 [[Picky.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
-	'src/janilai/table',
+	# 'src/janilai/table',
 	# 'src/janilai/ctrlp',
 	'src/janilai/green_elf',
-	'src/janilai/model_view',
+	# 'src/janilai/model_view',
 	]
 
 # [[Picky.Picks]]

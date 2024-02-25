@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class BoxVisual:
 
@@ -36,7 +36,7 @@ class BoxVisual:
     def toggleVisualBoxMode(self):
 
         if self.checkProp('canHintBoxes'):
-            self.app.ui.moder.toggleSubmode('box')
+            self.app.moder.toggleSubmode('box')
 
     @tag('<c-f>', modes=['visual[box]|^own'])
     def hintVisualBoxMode(self):
@@ -108,7 +108,7 @@ class BoxVisual:
         i=sel.get('item')
         self.m_visual_boxes=[]
         self.cleanUpHinting()
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
         self.select(i, sel)
 
     def getVisualboxHints(self, rstart=1, inc=None):
@@ -129,16 +129,16 @@ class BoxVisual:
 
     def visualBoxSelect(self, kind, sel):
 
-        m=self.app.ui.moder.mode()
-        sm=self.app.ui.moder.submode()
+        m=self.app.moder.mode()
+        sm=self.app.moder.submode()
         if m=='visual' and sm=='box':
             c=sel['isSelected']
             sel['isSelected']=not c
 
     def updateVisualHint(self, key):
 
-        m=self.app.ui.moder.mode()
-        sm=self.app.ui.moder.submode()
+        m=self.app.moder.mode()
+        sm=self.app.moder.submode()
         if not (m=='visual' and sm=='box'):
             self.updateHint(key)
         else:

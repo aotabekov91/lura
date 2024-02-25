@@ -1,6 +1,6 @@
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 from . import mixin
 
@@ -24,7 +24,7 @@ class RubberbandVisual(
     def toggleVisualBandMode(self):
 
         if self.checkProp('canHintBoxes'):
-            sm=self.app.ui.moder.toggleSubmode('band')
+            sm=self.app.moder.toggleSubmode('band')
             if sm=='band':
                 self.m_band=None
                 self.m_band_end=None

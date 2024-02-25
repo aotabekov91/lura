@@ -1,14 +1,14 @@
-from plug import Plug
+from gizmo import plug
 
 from .view import FitzView
 from .model import FitzModel
 
-class PdfFitz(Plug):
+class PdfFitz(plug.Plug):
 
     def setup(self):
 
         super().setup()
-        self.app.ui.handler.addViewer(
+        self.app.handler.addViewer(
                 FitzView)
-        self.app.ui.handler.addModeller(
+        self.app.handler.addModeller(
                 FitzModel)

@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 from PyQt5 import QtWidgets, QtCore
 
 class AnnotationHint:
@@ -6,7 +6,7 @@ class AnnotationHint:
     @tag('<c-a>', modes=['hint[any]|^own'])
     def toggleHintAnnotationMode(self):
 
-        self.app.ui.moder.toggleSubmode(
+        self.app.moder.toggleSubmode(
                 'annotation')
         self.setupHint(
                 functor=False,

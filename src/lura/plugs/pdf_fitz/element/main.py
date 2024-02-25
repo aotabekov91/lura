@@ -11,7 +11,7 @@ class FitzElement(
         mixin.Search,
         mixin.Normed,
         mixin.Annotate,
-        gizmo.vimo.element.Element, 
+        gizmo.core.element.Element, 
         QtCore.QObject
         ):
 

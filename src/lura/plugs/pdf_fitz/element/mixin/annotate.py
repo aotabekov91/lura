@@ -1,6 +1,6 @@
-from gizmo import mixin
+from fitz import Quad
 from PyQt5 import QtCore
-from fitz import Quad, Point
+from gizmo.qt import mixin
 
 class Annotate(mixin.element.Annotate):
 

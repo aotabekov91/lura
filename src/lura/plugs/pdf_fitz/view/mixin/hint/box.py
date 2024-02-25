@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 from PyQt5 import QtCore, QtGui
 
 class BoxHint:
@@ -15,7 +15,7 @@ class BoxHint:
     @tag('<c-b>', modes=['hint[any]|^own'])
     def toggleBoxMode(self, rstart=1):
 
-        sm=self.app.ui.moder.toggleSubmode('box')
+        sm=self.app.moder.toggleSubmode('box')
         if sm=='box':
             self.m_hint_scale=None
             self.setupHint('box', rstart=rstart)
@@ -96,7 +96,7 @@ class BoxHint:
 
     def hintSelectBox(self, kind, sel):
 
-        sm=self.app.ui.moder.submode()
+        sm=self.app.moder.submode()
         if kind=='box' and sm=='box':
             i=sel['item']
             self.select(i, sel)

@@ -15,7 +15,7 @@ class Annotate:
 
     def setAnnotationColors(self):
 
-        f=self.app.ui.moder.plugs.pdffitz
+        f=self.app.moder.plugs.pdffitz
         self.fitz=f
         if self.checkProp('hasAnnotationColors', f):
             return

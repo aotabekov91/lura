@@ -1,6 +1,6 @@
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class Resize:
 

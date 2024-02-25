@@ -1,4 +1,4 @@
-from gizmo import mixin
+from gizmo.qt import mixin
 from PyQt5 import QtCore, QtGui
 
 class Hint(mixin.view.Hint):

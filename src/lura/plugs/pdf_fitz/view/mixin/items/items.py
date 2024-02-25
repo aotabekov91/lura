@@ -1,6 +1,5 @@
-from gizmo import mixin
 from PyQt5 import QtCore 
-from gizmo.vimo import view
+from gizmo.qt import mixin
 
 from .utils import Viewport
 

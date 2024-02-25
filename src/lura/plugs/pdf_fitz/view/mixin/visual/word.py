@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class WordVisual:
 
@@ -13,8 +13,8 @@ class WordVisual:
     def jumpToWord(self, kind, sel):
 
         if kind=='word':
-            m=self.app.ui.moder.mode()
-            sm=self.app.ui.moder.submode()
+            m=self.app.moder.mode()
+            sm=self.app.moder.submode()
             if m=='visual' and sm=='word':
                 i=sel['item']
                 e=i.element()
@@ -30,13 +30,13 @@ class WordVisual:
 
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
 
     @tag('<c-w>', modes=['visual[any]|^own'])
     def toggleVisualWordMode(self):
 
         if self.checkProp('canHintWords'):
-            sm=self.app.ui.moder.toggleSubmode('word')
+            sm=self.app.moder.toggleSubmode('word')
             if sm=='word' and not self.selection():
                 self.setupHint('word')
 

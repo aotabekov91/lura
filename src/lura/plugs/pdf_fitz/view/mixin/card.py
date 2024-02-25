@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class YankToCard:
 
@@ -11,7 +11,7 @@ class YankToCard:
         req={
             'target': 'Anna',
             'action': 'submit',
-            'object': 'app.ui.moder.plugs.card',
+            'object': 'app.moder.plugs.card',
             }
         return self.app.server.request(**req)
 
@@ -70,6 +70,6 @@ class YankToCard:
             'data': data,
             'target': 'Anna',
             'action': 'fetch',
-            'object': 'app.ui.moder.plugs.card',
+            'object': 'app.moder.plugs.card',
             }
         return self.app.server.request(**req)

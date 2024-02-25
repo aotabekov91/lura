@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class WordHint:
 
@@ -15,12 +15,12 @@ class WordHint:
 
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
 
     @tag('<c-w>', modes=['hint[any]|^own'])
     def toggleHintWordMode(self):
 
-        sm=self.app.ui.moder.toggleSubmode('word')
+        sm=self.app.moder.toggleSubmode('word')
         if sm=='word':
             self.setupHint('word')
 
@@ -41,8 +41,8 @@ class WordHint:
     def selectWordHint(self, kind, sel):
 
         if kind=='word':
-            m=self.app.ui.moder.mode()
-            sm=self.app.ui.moder.submode()
+            m=self.app.moder.mode()
+            sm=self.app.moder.submode()
             if m=='hint' and sm=='word':
                 i=sel['item']
                 self.select(i, sel)

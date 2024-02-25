@@ -1,5 +1,5 @@
-from gizmo import mixin
 from PyQt5 import QtCore
+from gizmo.qt import mixin
 
 class SearchTask(mixin.view.SearchTask):
 

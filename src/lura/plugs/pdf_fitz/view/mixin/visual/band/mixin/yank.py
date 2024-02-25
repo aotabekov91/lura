@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 
 class Yank:
 
@@ -29,7 +29,7 @@ class Yank:
         if text:
             c=self.app.qapp.clipboard()
             c.setText(text)
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
         self.cleanUp()
 
     @tag('yic', modes=['visual[band]|^own'])
@@ -37,7 +37,7 @@ class Yank:
 
         img=self.yankImage()
         if not img: return
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
         self.cleanUp()
 
     @tag('yis', modes=['visual[band]|^own'])
@@ -45,7 +45,7 @@ class Yank:
 
         img=self.yankImage()
         if not img: return
-        self.app.ui.moder.toggle(
+        self.app.moder.toggle(
                 'save', submode='image')
         self.app.ui.bar.activateEdit(
                 label='Path', 
@@ -69,7 +69,7 @@ class Yank:
     def cleanUpYankedImage(self, *args, **kwargs):
 
         self.app.ui.bar.octivateEdit()
-        self.app.ui.moder.toggle()
+        self.app.moder.toggle()
         self.cleanUp()
 
     def yankImage(self):

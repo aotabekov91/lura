@@ -1,6 +1,6 @@
 import fitz
 import subprocess
-from gizmo.utils import tag
+from gizmo.plug.utils import tag
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import QPointF
 
@@ -39,7 +39,7 @@ class LinkHint:
     @tag('<c-l>', modes=['hint[any]|^own'])
     def toggleLinkMode(self):
 
-        sm=self.app.ui.moder.toggleSubmode('link')
+        sm=self.app.moder.toggleSubmode('link')
         if sm=='link': 
             self.setupHint('link')
 

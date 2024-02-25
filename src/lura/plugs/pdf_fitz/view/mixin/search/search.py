@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from gizmo.mixin import view
+from gizmo.qt.mixin import view
 
 from .task import SearchTask
 

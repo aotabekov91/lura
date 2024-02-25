@@ -1,6 +1,9 @@
 import fitz
-from PyQt5 import QtCore, QtGui
-from gizmo.vimo.model import SModel 
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from gizmo.plug import Factory
+from gizmo.core.vimo import Model 
+from gizmo.core.vimo import Element
 
 class Outline:
 
@@ -9,8 +12,14 @@ class Outline:
     def setup(self):
 
         super().setup()
-        self.m_outline=SModel(
-                name='outline')
+        eklass=Factory(
+                QtGui.QStandardItem, Element)
+        mklass=Factory(
+                QtGui.QStandardItemModel, Model)
+        self.m_outline=mklass(
+                name='outline',
+                element_class=eklass,
+                )
         self.m_outline.wantUniqView=True
         self.m_outline.wantView=['OutlineView']
         self.loaded.connect(self.setOutline)
