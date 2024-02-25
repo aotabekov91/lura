@@ -4,12 +4,10 @@ from gizmo.plug.utils import tag
 
 
 class Resize:
-
     rubberbandIncrement = 0.05
 
     @tag("G", modes=["visual[band]|^own"])
     def setBandCorner(self, rstart=None, **kwargs):
-
         if rstart == 1:
             self.m_band_corner = "topLeft"
         elif rstart == 2:
@@ -23,7 +21,6 @@ class Resize:
 
     @tag("l", modes=["visual[band]|^own"])
     def bandVisualGoToRight(self, rstart=1, **kwargs):
-
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = self.rubberbandIncrement * rstart
@@ -36,7 +33,6 @@ class Resize:
 
     @tag("h", modes=["visual[band]|^own"])
     def bandVisualGoToLeft(self, rstart=1, **kwargs):
-
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = -self.rubberbandIncrement * rstart
@@ -49,7 +45,6 @@ class Resize:
 
     @tag("k", modes=["visual[band]|^own"])
     def bandVisualGoToUp(self, rstart=1, **kwargs):
-
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = -self.rubberbandIncrement * rstart
@@ -62,7 +57,6 @@ class Resize:
 
     @tag("j", modes=["visual[band]|^own"])
     def bandVisualGoToDown(self, rstart=1, **kwargs):
-
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = self.rubberbandIncrement * rstart

@@ -3,9 +3,7 @@ from gizmo.qt import plug
 
 
 class Lura(plug.app.AppPlug):
-
     def activate(self):
-
         p = [
             plugs.pdf_fitz.PdfFitz,
         ]
@@ -14,7 +12,6 @@ class Lura(plug.app.AppPlug):
 
 
 def run():
-
     app = Lura()
     app.activate()
     app.run()

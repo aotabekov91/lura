@@ -3,41 +3,33 @@ from PyQt5 import QtCore, QtGui
 
 
 class Hint(mixin.view.Hint):
-
     def setup(self):
-
         self.m_hinting_items = []
         super().setup()
 
     def connectHint(self):
-
         for i in self.m_hinting_items:
             i.painted.connect(self.paintHints)
 
     def disconnectHint(self):
-
         for i in self.m_hinting_items:
             i.painted.disconnect(self.paintHints)
 
     def updateHintItems(self):
-
         for i in self.m_hinting_items:
             i.refresh()
 
     def cleanUpHinting(self):
-
         self.updateHintItems()
         self.m_hinting_items = []
         super().cleanUpHinting()
 
     def createRect(self, d):
-
         tl = QtCore.QPointF(d[0], d[1])
         br = QtCore.QPointF(d[2], d[3])
         return QtCore.QRectF(tl, br)
 
     def paintHints(self, p, o, w, i):
-
         if self.m_hinting:
             painter = self.getHintPainter()
             if painter:
@@ -68,7 +60,6 @@ class Hint(mixin.view.Hint):
                 p.restore()
 
     def setupHint(self, kind, **kwargs):
-
         vis = self.visibleItems()
         self.m_hinting_items = vis
         super().setupHint(kind, **kwargs)

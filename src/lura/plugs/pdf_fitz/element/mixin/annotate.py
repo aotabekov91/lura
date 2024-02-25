@@ -4,9 +4,7 @@ from gizmo.qt import mixin
 
 
 class Annotate(mixin.element.Annotate):
-
     def deannotate(self, d):
-
         b = d["box"][0]
         b = self.m_norm.mapRect(b)
         for a in self.m_data.annots():
@@ -21,7 +19,6 @@ class Annotate(mixin.element.Annotate):
             return a
 
     def annotate(self, d):
-
         a = None
         p = self.m_data
         akind = d.get("akind", None)
@@ -52,7 +49,6 @@ class Annotate(mixin.element.Annotate):
         self.dataChanged.emit()
 
     def getAnnQuads(self, d):
-
         q = []
         b = d.get("box")
         if type(b) != list:

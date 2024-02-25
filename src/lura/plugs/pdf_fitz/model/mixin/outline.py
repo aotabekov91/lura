@@ -7,11 +7,9 @@ from gizmo.core.vimo import Element
 
 
 class Outline:
-
     hasOutline = True
 
     def setup(self):
-
         super().setup()
         eklass = Factory(QtGui.QStandardItem, Element)
         mklass = Factory(QtGui.QStandardItemModel, Model)
@@ -28,14 +26,12 @@ class Outline:
         return self.m_outline
 
     def setOutline(self):
-
         o = self.m_data.outline
         r = self.m_outline.invisibleRootItem()
         self.loaded.disconnect(self.setOutline)
         self.loadOutline(o, r)
 
     def loadOutline(self, o, p):
-
         if not o:
             return
         t = o.title

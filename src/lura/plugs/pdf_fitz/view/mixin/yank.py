@@ -2,12 +2,10 @@ from gizmo.plug.utils import tag
 
 
 class Yank:
-
     canYank = True
 
     @tag("yy", modes=["normal|^own", "visual[word]|^own"])
     def yankWord(self, *args, **kwargs):
-
         sel = self.selection()
         if not sel:
             return
@@ -33,7 +31,6 @@ class Yank:
 
     @tag("ya", modes=["normal", "visual[word]|^own"])
     def yankToAyleen(self, rstart=1, **kwargs):
-
         c = self.checkProp("hasServer", self.app)
         if not c:
             return

@@ -2,9 +2,7 @@ from PyQt5 import QtCore
 
 
 class Trim:
-
     def findTrimRect(self, img):
-
         w = img.width
         h = img.height
         scol = img.pixel(0, 0)

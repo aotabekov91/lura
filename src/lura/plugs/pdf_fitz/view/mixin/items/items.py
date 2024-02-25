@@ -5,13 +5,11 @@ from .utils import Viewport
 
 
 class Items(mixin.view.Scene):
-
     hasItems = True
     canUpdateItems = True
     indexChanged = QtCore.pyqtSignal(object)
 
     def setup(self):
-
         self.m_curr = 1
         self.m_items = {}
         self.m_prev = None
@@ -22,7 +20,6 @@ class Items(mixin.view.Scene):
         super().setup()
 
     def setModel(self, model):
-
         self.clearScene()
         if id(self.m_model) != id(model):
             self.m_items = {}
@@ -35,7 +32,6 @@ class Items(mixin.view.Scene):
             self.modelChanged.emit(self.m_model)
 
     def updateItems(self):
-
         if self.m_fetched >= self.count():
             self.m_viewport.updated.disconnect(self.updateItems)
         else:
@@ -44,7 +40,6 @@ class Items(mixin.view.Scene):
             self.addItemsNear(r.boundingRect())
 
     def setItems(self, model):
-
         x = self.logicalDpiX()
         y = self.logicalDpiY()
         elems = model.elements().values()
@@ -56,14 +51,12 @@ class Items(mixin.view.Scene):
         self.redraw()
 
     def redraw(self):
-
         self.viewIsToBeRedrawn.emit()
         self.updateLayout()
         self.viewport().update()
         super().redraw()
 
     def createItem(self, idx, e):
-
         return self.item_class(
             view=self,
             element=e,
@@ -74,35 +67,29 @@ class Items(mixin.view.Scene):
         )
 
     def setCurrentIndex(self, idx):
-
         if self.m_curr != idx:
             c, p = idx, self.m_curr
             self.m_curr, self.m_prev = c, p
         self.indexChanged.emit(self.m_curr)
 
     def refresh(self):
-
         for j, i in self.getItems():
             i.refresh(dropCache=True)
 
     def updateCurrent(self, refresh=False):
-
         i = self.currentItem()
         i.refresh(dropCache=refresh)
 
     def updateVisibile(self, refresh=False):
-
         for i in self.m_items.values():
             if i.isVisible():
                 i.refresh(refresh)
 
     def visibleItems(self):
-
         r = self.viewport().rect()
         return self.items(r)
 
     def setVisibleItem(self):
-
         v = self.viewport()
         v.update()
         r = self.viewport().rect()
@@ -116,7 +103,6 @@ class Items(mixin.view.Scene):
         self.setCurrentIndex(idx)
 
     def item(self, idx=None, element=None):
-
         if element:
             for i in self.m_items.values():
                 if i.element() == element:
@@ -128,7 +114,6 @@ class Items(mixin.view.Scene):
         return self.m_items.items()
 
     def count(self):
-
         if self.m_model:
             return self.m_model.count()
         return len(self.m_items)
@@ -140,7 +125,6 @@ class Items(mixin.view.Scene):
         return self.m_curr
 
     def addItemsNear(self, rect):
-
         for idx, i in self.m_items.items():
             c1 = i.scene()
             c2 = i.isVisible()

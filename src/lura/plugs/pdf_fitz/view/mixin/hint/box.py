@@ -3,18 +3,15 @@ from PyQt5 import QtCore, QtGui
 
 
 class BoxHint:
-
     canHintBoxes = True
     hint_box_increment = 0.05
 
     def setup(self):
-
         super().setup()
         self.hintSelectWanted.connect(self.hintSelectBox)
 
     @tag("<c-b>", modes=["hint[any]|^own"])
     def toggleBoxMode(self, rstart=1):
-
         sm = self.app.moder.toggleSubmode("box")
         if sm == "box":
             self.m_hint_scale = None
@@ -22,17 +19,14 @@ class BoxHint:
 
     @tag("<c-i>", modes=["hint[box]|^own"])
     def incrementBoxScale(self, rstart=1):
-
         self.setupHint("box", rstart=rstart, inc=True)
 
     @tag("<c-o>", modes=["hint[box]|^own"])
     def decrementBoxScale(self, rstart=1):
-
         self.cleanUpHinting()
         self.setupHint("box", rstart=rstart, inc=False)
 
     def getBoxHints(self, rstart=1, inc=None):
-
         alist = []
         if inc is None:
             inc = self.hint_box_increment / rstart
@@ -49,7 +43,6 @@ class BoxHint:
         return alist
 
     def getBoxTiles(self, i, r, inc):
-
         row, col = 0, 0
         e = i.element()
         r = e.unify(r)
@@ -73,7 +66,6 @@ class BoxHint:
             hinc = h - y
 
     def paintBoxHints(self, p, o, w, i):
-
         if self.m_hinting:
             p.save()
             f = p.font()
@@ -93,7 +85,6 @@ class BoxHint:
             p.restore()
 
     def hintSelectBox(self, kind, sel):
-
         sm = self.app.moder.submode()
         if kind == "box" and sm == "box":
             i = sel["item"]

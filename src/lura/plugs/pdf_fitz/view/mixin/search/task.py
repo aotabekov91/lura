@@ -3,10 +3,8 @@ from gizmo.qt import mixin
 
 
 class SearchTask(mixin.view.SearchTask):
-
     @QtCore.pyqtSlot()
     def run(self):
-
         if self.m_text:
             items = self.m_view.getItems()
             for j, i in items:
@@ -20,7 +18,6 @@ class SearchTask(mixin.view.SearchTask):
             self.m_running = False
 
     def reportFound(self, i, found):
-
         data = []
         e = i.element()
         for f in found:

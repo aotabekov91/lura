@@ -9,12 +9,10 @@ class RubberbandVisual(
     mixin.Yank,
     mixin.Resize,
 ):
-
     rubberbandIncrement = 0.05
     canVisualizeRubberband = True
 
     def setup(self):
-
         self.m_band = None
         self.m_band_end = None
         self.m_band_start = None
@@ -23,7 +21,6 @@ class RubberbandVisual(
 
     @tag("<c-r>", modes=["visual[any]|^own"])
     def toggleVisualBandMode(self):
-
         if self.checkProp("canHintBoxes"):
             sm = self.app.moder.toggleSubmode("band")
             if sm == "band":
@@ -40,7 +37,6 @@ class RubberbandVisual(
                     i.selectionPainted.disconnect(self.paintVisualBand)
 
     def updateVisualBandHint(self, key):
-
         m = self.getHintMatches(key)
         if len(m) == 1:
             d = m[list(m.keys())[0]]
@@ -57,7 +53,6 @@ class RubberbandVisual(
                 self.selectVisualBand()
 
     def selectVisualBand(self):
-
         self.cleanUpHinting()
         e = self.m_band_end["box"][0]
         s = self.m_band_start["box"][0]
@@ -65,7 +60,6 @@ class RubberbandVisual(
         self.setVisualBand(self.m_band_start)
 
     def setVisualBand(self, band):
-
         if self.m_band:
             i = self.m_band["item"]
             i.selectionPainteddisconnect(self.paintVisualBand)
@@ -80,7 +74,6 @@ class RubberbandVisual(
         self.paintBoxHints(p, o, w, i)
 
     def paintVisualBand(self, p, o, w, s):
-
         box = self.m_band["box"][0]
         cf = getattr(box, self.m_band_corner, None)
         if not cf:

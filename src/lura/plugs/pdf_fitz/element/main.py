@@ -15,18 +15,15 @@ class FitzElement(
     gizmo.core.element.Element,
     QtCore.QObject,
 ):
-
     dataUpdated = QtCore.pyqtSignal()
     dataChanged = QtCore.pyqtSignal()
     repaintWanted = QtCore.pyqtSignal()
 
     def setup(self):
-
         self.setSize()
         super().setup()
 
     def setSize(self):
-
         b = self.m_data.bound()
         w, h = b.width, b.height
         self.m_size = QtCore.QSizeF(w, h)
@@ -35,7 +32,6 @@ class FitzElement(
         return self.m_size
 
     def render(self, data, **kwargs):
-
         return self.m_model.getPixmapCache(self.index(), data)
 
     def renderImage(
@@ -50,7 +46,6 @@ class FitzElement(
         clip,
         trim,
     ):
-
         matrix = fitz.Matrix(x, y)
         if rotation:
             matrix.prerotate(rotation % 360)

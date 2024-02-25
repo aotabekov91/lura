@@ -39,7 +39,6 @@ class FitzView(
     qt.vimo.view.View,
     QtWidgets.QGraphicsView,
 ):
-
     canFollow = True
     item_class = FitzItem
     position = {"FitzView": "C|D|x"}

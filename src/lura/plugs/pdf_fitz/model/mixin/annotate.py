@@ -2,19 +2,16 @@ from PyQt5 import QtCore, QtGui
 
 
 class Annotate:
-
     isAnnotated = False
     hasAnnotationColors = False
 
     def setup(self):
-
         super().setup()
         self.m_annotation_colors = {}
         self.loaded.connect(self.annotateModel)
         self.setAnnotationColors()
 
     def setAnnotationColors(self):
-
         f = self.app.moder.plugs.pdffitz
         self.fitz = f
         if self.checkProp("hasAnnotationColors", f):
@@ -33,7 +30,6 @@ class Annotate:
             f.hasAnnotationColors = True
 
     def annotateModel(self):
-
         m = self.submodel("annotation")
         if not m:
             return
@@ -54,7 +50,6 @@ class Annotate:
         self.delAnnotationLocator(elem=e)
 
     def setAnnColor(self, data):
-
         k = data.get("akind")
         f = data.get("function").lower()
         cs = self.fitz.m_annotation_colors.get(k)
@@ -70,7 +65,6 @@ class Annotate:
         elem=None,
         annotate=True,
     ):
-
         if elem:
             data = elem.data()
         if data:
@@ -86,7 +80,6 @@ class Annotate:
         data={},
         elem=None,
     ):
-
         if elem:
             data = elem.data()
         if data:
@@ -102,7 +95,6 @@ class Annotate:
         data={},
         elem=None,
     ):
-
         if elem:
             data = elem.data()
         if data:
@@ -114,13 +106,11 @@ class Annotate:
         return self.createLocator(data)
 
     def setElementAnn(self, data):
-
         b = data["element"]
         b.annotate(data)
         b.dataChanged.emit()
 
     def setAnnBox(self, data={}):
-
         b = data.get("box", None)
         p = data.get("page", None)
         if p:
@@ -138,7 +128,6 @@ class Annotate:
         return p, t
 
     def setAnnElement(self, data={}):
-
         e = data.get("element")
         if e:
             return e
@@ -148,7 +137,6 @@ class Annotate:
         return e
 
     def getAnnPage(self, data={}):
-
         i = data.get("item", None)
         e = data.get("element", None)
         if i and not e:
@@ -157,7 +145,6 @@ class Annotate:
             return e.index()
 
     def getAnnContent(self, data={}):
-
         i = data.get("item", None)
         e = data.get("element", None)
         if i and not e:
@@ -172,7 +159,6 @@ class Annotate:
         return " ".join(t)
 
     def getAnnLocation(self, data={}):
-
         t = []
         p = self.getAnnPage(data)
         data["page"] = p

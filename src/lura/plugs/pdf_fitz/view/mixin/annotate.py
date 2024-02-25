@@ -3,9 +3,7 @@ from functools import partial
 
 
 class Annotate:
-
     def setup(self):
-
         super().setup()
         self.setAnnotationKeys()
 
@@ -18,7 +16,6 @@ class Annotate:
         ],
     )
     def toggleAnnotationMode(self):
-
         m = self.app.moder.toggle("annotate")
         if m == "annotate":
             self.toggleAnnotateHighlightMode()
@@ -31,36 +28,30 @@ class Annotate:
 
     @tag("<c-h>", modes=["annotate[any]|^own"])
     def toggleAnnotateHighlightMode(self):
-
         m = self.app.moder.toggleSubmode("highlight")
         self.updateAnnotationList(m)
 
     @tag("<c-u>", modes=["annotate[any]|^own"])
     def toggleAnnotateUnderlineMode(self):
-
         m = self.app.moder.toggleSubmode("underline")
         self.updateAnnotationList(m)
 
     @tag("<c-s>", modes=["annotate[any]|^own"])
     def toggleAnnotateStrikeOutMode(self):
-
         m = self.app.moder.toggleSubmode("strike-out")
         self.updateAnnotationList(m)
 
     @tag("<c-r>", modes=["annotate[any]|^own"])
     def toggleAnnotateCaretMode(self):
-
         m = self.app.moder.toggleSubmode("caret")
         self.updateAnnotationList(m)
 
     @tag("<c-t>", modes=["annotate[any]|^own"])
     def toggleAnnotateTextMode(self):
-
         m = self.app.moder.toggleSubmode("text")
         self.updateAnnotationList(m)
 
     def updateAnnotationList(self, mode=None):
-
         alist = []
         if self.fitz:
             cs = self.fitz.m_annotation_colors.get(mode, {})
@@ -71,7 +62,6 @@ class Annotate:
         self.app.ui.overlay.list.show()
 
     def annotate(self, func, submode):
-
         s = self.selection()
         if s:
             s["akind"] = submode
@@ -82,7 +72,6 @@ class Annotate:
         self.toggleAnnotationMode()
 
     def setAnnotationKeys(self):
-
         fitz = self.app.moder.plugs.pdffitz
         self.fitz = fitz
         if self.checkProp("hasAnnotationColors", fitz):
@@ -109,7 +98,6 @@ class Annotate:
         self.app.earman.add(self, view=True)
 
     def openAnnotationLocator(self, data={}, center=True, **kwargs):
-
         b = data.get("box", None)
         p = data.get("page", None)
         v = self.app.uiman.type()

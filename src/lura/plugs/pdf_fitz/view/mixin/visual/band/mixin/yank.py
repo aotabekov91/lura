@@ -3,15 +3,12 @@ from gizmo.plug.utils import tag
 
 
 class Yank:
-
     def setup(self):
-
         super().setup()
         self.m_last_yanked_dir = None
 
     @tag(["yy", "yt"], modes=["visual[band]|^own"])
     def yankAsText(self, rstart=1, **kwargs):
-
         if not self.m_band:
             return
         i = self.m_band["item"]
@@ -37,7 +34,6 @@ class Yank:
 
     @tag("yic", modes=["visual[band]|^own"])
     def yankAsImageToClipboard(self, *args, **kwargs):
-
         img = self.yankImage()
         if not img:
             return
@@ -46,7 +42,6 @@ class Yank:
 
     @tag("yis", modes=["visual[band]|^own"])
     def yankAsImageToSave(self, *args, **kwargs):
-
         img = self.yankImage()
         if not img:
             return
@@ -58,7 +53,6 @@ class Yank:
 
     @tag(["<c-m>", "<return>"], modes=["save[image]|^own"])
     def saveYankedImage(self, *args, **kwargs):
-
         img = self.yankImage()
         t = self.app.ui.bar.text()
         try:
@@ -71,13 +65,11 @@ class Yank:
 
     @tag(["<escape>", "<c-[>"], modes=["save[image]|^own"])
     def cleanUpYankedImage(self, *args, **kwargs):
-
         self.app.ui.bar.octivateEdit()
         self.app.moder.toggle()
         self.cleanUp()
 
     def yankImage(self):
-
         if not self.m_band:
             return
         i = self.m_band["item"]

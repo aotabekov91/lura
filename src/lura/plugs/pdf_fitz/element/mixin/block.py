@@ -2,12 +2,10 @@ from PyQt5 import QtCore, QtGui
 
 
 class Block:
-
     canBlock = True
     direction = [None, None]
 
     def toggleDirection(self, idx):
-
         x, y = tuple(self.direction)
         if idx == 0:
             x = "left" if x == "right" else "right"
@@ -16,14 +14,12 @@ class Block:
         self.direction = [x, y]
 
     def changeDirection(self):
-
         x, y = tuple(self.direction)
         y = "up" if y == "down" else "down"
         x = "left" if x == "right" else "right"
         self.direction = [x, y]
 
     def getBlockData(self, sel):
-
         if sel:
             b = sel["box"]
             if len(b) > 0:
@@ -37,7 +33,6 @@ class Block:
         return self.m_data.get_text(*args, **kwargs)
 
     def updateBlock(self, kind, sel):
-
         k = ""
         if kind:
             k = kind[0].title() + kind[1:]
@@ -47,7 +42,6 @@ class Block:
             f(sel)
 
     def blockLast(self, sel):
-
         self.direction[0] = "right"
         b, s, e, size = self.getBlockData(sel)
         x, y = e.x(), e.y()
@@ -61,7 +55,6 @@ class Block:
             b[-1] = self.unify(r)
 
     def blockFirst(self, sel):
-
         self.direction[0] = "left"
         b, s, e, size = self.getBlockData(sel)
         x, y = 0, s.y()
@@ -75,7 +68,6 @@ class Block:
             b[0] = self.unify(r)
 
     def blockDown(self, sel):
-
         if sel and self.direction[1] == "up":
             self.cancelBlockUp(sel)
         else:
@@ -93,7 +85,6 @@ class Block:
                 b += [self.unify(r)]
 
     def blockUp(self, sel):
-
         if sel and self.direction[1] == "down":
             self.cancelBlockDown(sel)
         else:
@@ -111,7 +102,6 @@ class Block:
                 b.insert(0, self.unify(r))
 
     def blockRight(self, sel):
-
         if sel and self.direction[0] == "left":
             self.cancelBlockLeft(sel)
         else:
@@ -135,7 +125,6 @@ class Block:
                     b += [self.unify(r)]
 
     def blockLeft(self, sel):
-
         if sel and self.direction[0] == "right":
             self.cancelBlockRight(sel)
         else:
@@ -161,7 +150,6 @@ class Block:
                     b.insert(0, self.unify(r))
 
     def cancelBlockDown(self, sel):
-
         b, s, e, size = self.getBlockData(sel)
         if len(b) > 1:
             sel["box"] = b[:-1]
@@ -170,7 +158,6 @@ class Block:
             self.blockUp(sel)
 
     def cancelBlockUp(self, sel):
-
         b, s, e, size = self.getBlockData(sel)
         if len(b) > 1:
             sel["box"] = b[1:]
@@ -179,7 +166,6 @@ class Block:
             self.blockDown(sel)
 
     def cancelBlockRight(self, sel):
-
         b, s, e, size = self.getBlockData(sel)
         x, y = e.x(), e.y()
         w, h = e.width(), e.height()
@@ -194,7 +180,6 @@ class Block:
             b[-1] = self.unify(e)
 
     def cancelBlockLeft(self, sel):
-
         b, s, e, size = self.getBlockData(sel)
         x, y = s.x(), s.y()
         w, h = s.width(), s.height()
@@ -209,7 +194,6 @@ class Block:
             b[0] = self.unify(s)
 
     def jumpToBlock(self, csel, jsel):
-
         cb = csel["box"]
         jb = jsel["box"]
         ctl = cb[0].topLeft()

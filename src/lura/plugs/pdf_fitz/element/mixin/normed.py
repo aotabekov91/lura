@@ -2,18 +2,15 @@ from PyQt5 import QtGui, QtCore
 
 
 class Normed:
-
     canNormalize = True
 
     def setup(self):
-
         super().setup()
         s = self.size()
         self.m_norm = QtGui.QTransform()
         self.m_norm.scale(s.width(), s.height())
 
     def unify(self, p):
-
         norm = self.m_norm.inverted()[0]
         if type(p) == tuple:
             if len(p) == 2:
@@ -28,7 +25,6 @@ class Normed:
         return u
 
     def unity(self, p):
-
         norm = self.m_norm
         if type(p) == tuple:
             if len(p) == 2:

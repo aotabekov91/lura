@@ -25,7 +25,6 @@ class FitzModel(
     gizmo.qt.vimo.model.Model,
     QtCore.QObject,
 ):
-
     isType = True
     kind = "document"
     pattern = ".*pdf$"
@@ -33,12 +32,10 @@ class FitzModel(
     element_class = FitzElement
 
     def setup(self):
-
         super().setup()
         self.assignId(self.m_source)
 
     def assignId(self, source):
-
         if os.path.isfile(source):
             source = os.path.expanduser(source)
             shash = hashlib.md5()
@@ -51,7 +48,6 @@ class FitzModel(
             self.setId(idx)
 
     def load(self):
-
         if not self.isLoaded:
             s = self.m_source
             self.m_data = fitz.open(s)
@@ -60,7 +56,6 @@ class FitzModel(
 
     @classmethod
     def isCompatible(cls, s, **kwargs):
-
         if type(s) != str:
             return
         if not cls.pattern:

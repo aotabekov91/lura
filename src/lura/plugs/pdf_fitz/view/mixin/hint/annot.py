@@ -3,22 +3,18 @@ from PyQt5 import QtWidgets, QtCore
 
 
 class AnnotationHint:
-
     @tag("<c-a>", modes=["hint[any]|^own"])
     def toggleHintAnnotationMode(self):
-
         self.app.moder.toggleSubmode("annotation")
         self.setupHint(functor=False, kind="annotation", hint_kind="rstart")
 
     @tag("<c-s>", modes=["hint[annotation]|^own"])
     def selectHintedAnnotation(self, rstart, **kwargs):
-
         sel, match = self.getMatchedHint(rstart)
         self.selectAnnotationHint(sel)
 
     @tag("?", modes=["hint[annotation]|^own"])
     def detailHintedAnnotation(self, rstart, **kwargs):
-
         sel, match = self.getMatchedHint(rstart)
         if not sel:
             return
@@ -34,7 +30,6 @@ class AnnotationHint:
 
     @tag("<c-d>", modes=["hint[annotation]|^own"])
     def removeSelectedAnnotation(self, rstart, **kwargs):
-
         sel, match = self.getMatchedHint(rstart)
         if not sel:
             return
@@ -46,7 +41,6 @@ class AnnotationHint:
 
     @tag("<c-e>", modes=["hint[annotation]|^own"])
     def editSelectedAnnotation(self, rstart, **kwargs):
-
         sel, match = self.getMatchedHint(rstart)
         if not sel:
             return
@@ -61,7 +55,6 @@ class AnnotationHint:
         i.textModified.connect(self.updateAnnotationData)
 
     def updateAnnotationData(self, text):
-
         sel = self.selection()
         if not sel:
             return
@@ -73,7 +66,6 @@ class AnnotationHint:
         i.textModified.disconnect(self.updateAnnotationData)
 
     def selectAnnotationHint(self, sel):
-
         if sel:
             item = sel["item"]
             self.select(item, sel)
@@ -82,7 +74,6 @@ class AnnotationHint:
             m.elementWanted.emit(e)
 
     def getAnnotationHints(self, *args, **kwargs):
-
         def sort(d):
             ann = d["annotation"]
             d = ann.data()

@@ -2,16 +2,13 @@ from gizmo.plug.utils import tag
 
 
 class WordVisual:
-
     canVisualizeWords = True
 
     def setup(self):
-
         super().setup()
         self.hintSelectWanted.connect(self.jumpToWord)
 
     def jumpToWord(self, kind, sel):
-
         if kind == "word":
             m = self.app.moder.mode()
             sm = self.app.moder.submode()
@@ -27,14 +24,12 @@ class WordVisual:
 
     @tag(["<escape>", "<c-[>"], modes=["visual[word]|^own"])
     def finishVisualWordMode(self):
-
         self.cleanUpHinting()
         self.cleanUpSelection()
         self.app.moder.toggle()
 
     @tag("<c-w>", modes=["visual[any]|^own"])
     def toggleVisualWordMode(self):
-
         if self.checkProp("canHintWords"):
             sm = self.app.moder.toggleSubmode("word")
             if sm == "word" and not self.selection():
@@ -70,7 +65,6 @@ class WordVisual:
 
     @tag("t", modes=["visual[word]|^own"])
     def toggleWordDirection(self):
-
         s = self.selection()
         if not s:
             return
@@ -79,7 +73,6 @@ class WordVisual:
         e.toggleDirection(0)
 
     def visualWordGoTo(self, kind, rstart=1):
-
         for i in range(rstart):
             s = self.selection()
             if not s:

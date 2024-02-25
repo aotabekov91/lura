@@ -6,18 +6,15 @@ from PyQt5.QtCore import QPointF
 
 
 class LinkHint:
-
     hasLinks = True
     canOpenLink = True
     canHintLinks = True
 
     def setup(self):
-
         super().setup()
         self.hintSelectWanted.connect(self.selectLinkHint)
 
     def openLink(self, l):
-
         k1 = fitz.LINK_GOTO
         k2 = fitz.LINK_GOTOR
         d = l["link"].dest
@@ -37,13 +34,11 @@ class LinkHint:
 
     @tag("<c-l>", modes=["hint[any]|^own"])
     def toggleLinkMode(self):
-
         sm = self.app.moder.toggleSubmode("link")
         if sm == "link":
             self.setupHint("link")
 
     def selectLinkHint(self, kind, sel):
-
         if kind == "link":
             i = sel["link"]
             self.select(i, sel)
@@ -51,14 +46,12 @@ class LinkHint:
             self.toggleHintMode()
 
     def getLinkHints(self):
-
         alist = []
         for i in self.visibleItems():
             alist += i.getLinks()
         return alist
 
     def paintLinkHints(self, p, o, w, i):
-
         if self.m_hinting:
             p.save()
             pen = QtGui.QPen(QtCore.Qt.red, 0.0)

@@ -2,17 +2,14 @@ from gizmo.plug.utils import tag
 
 
 class BoxVisual:
-
     canVisualizeBoxes = True
 
     def setup(self):
-
         super().setup()
         self.hintSelectWanted.connect(self.visualBoxSelect)
 
     @tag("<c-i>", modes=["visual[box]|^own"])
     def incrementVisualBoxScale(self, rstart=1):
-
         self.m_visual_boxes = None
         self.m_hint_capturing = True
         self.setupHint(
@@ -23,7 +20,6 @@ class BoxVisual:
 
     @tag("<c-o>", modes=["visual[box]|^own"])
     def decrementVisualBoxScale(self, rstart=1):
-
         self.m_visual_boxes = None
         self.m_hint_capturing = True
         self.setupHint(
@@ -34,13 +30,11 @@ class BoxVisual:
 
     @tag("<c-b>", modes=["visual[any]|^own"])
     def toggleVisualBoxMode(self):
-
         if self.checkProp("canHintBoxes"):
             self.app.moder.toggleSubmode("box")
 
     @tag("<c-f>", modes=["visual[box]|^own"])
     def hintVisualBoxMode(self):
-
         self.m_visual_boxes = None
         self.setupHint(kind="visualbox")
 
@@ -73,7 +67,6 @@ class BoxVisual:
         self.visualBoxGoTo("left", rstart=rstart)
 
     def visualBoxGoTo(self, kind, rstart=1):
-
         for i in range(rstart):
             s = self.m_visual_box
             if not s:
@@ -99,7 +92,6 @@ class BoxVisual:
 
     @tag("<c-s>", modes=["visual[box]|^own"])
     def selectVisualboxHints(self):
-
         box = []
         sel = {"box": box}
         for b in self.m_visual_boxes:
@@ -113,7 +105,6 @@ class BoxVisual:
         self.select(i, sel)
 
     def getVisualboxHints(self, rstart=1, inc=None):
-
         alist = self.getBoxHints(rstart, inc)
         if self.m_visual_boxes != alist:
             self.m_visual_poses = {}
@@ -129,7 +120,6 @@ class BoxVisual:
         return self.m_visual_boxes
 
     def visualBoxSelect(self, kind, sel):
-
         m = self.app.moder.mode()
         sm = self.app.moder.submode()
         if m == "visual" and sm == "box":
@@ -137,7 +127,6 @@ class BoxVisual:
             sel["isSelected"] = not c
 
     def updateVisualHint(self, key):
-
         m = self.app.moder.mode()
         sm = self.app.moder.submode()
         if not (m == "visual" and sm == "box"):
