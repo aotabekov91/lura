@@ -2,7 +2,7 @@ from gizmo.utils import tag
 
 
 class YankToCard:
-    @tag("Cs", modes=["normal|^own"])
+    @tag("Cs", modes=["normal|^"])
     def submitToCard(self, **kwargs):
         if not self.checkProp("hasServer", self.app):
             return
@@ -13,15 +13,15 @@ class YankToCard:
         }
         return self.app.server.request(**req)
 
-    @tag("yCa", modes=["normal|^own"])
+    @tag("yCa", modes=["normal|^"])
     def yankAppendToCard(self, rstart=None, **kwargs):
         self.yankToCard(kind="append", rstart=rstart, **kwargs)
 
-    @tag("yCi", modes=["normal|^own"])
+    @tag("yCi", modes=["normal|^"])
     def yankInsertToCard(self, rstart=None, **kwargs):
         self.yankToCard(kind="insert", rstart=rstart, **kwargs)
 
-    @tag("yCs", modes=["normal|^own"])
+    @tag("yCs", modes=["normal|^"])
     def yankSetToCard(self, rstart=None, **kwargs):
         self.yankToCard(kind="set", rstart=rstart, **kwargs)
 

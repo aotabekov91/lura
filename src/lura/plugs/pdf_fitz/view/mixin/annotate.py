@@ -3,6 +3,12 @@ from functools import partial
 from gizmo.utils import tag
 
 
+# ! for any 
+# ^ for own
+# n is a shortcut for normal
+
+# <c-a>(n/v[!]/a[!]|^)
+
 class Annotate:
     def setup(self):
         super().setup()
@@ -11,9 +17,9 @@ class Annotate:
     @tag(
         "<c-a>",
         modes=[
-            "normal|^own",
-            "visual[any]|^own",
-            "annotate[any]|^own",
+            "normal|^",
+            "visual[any]|^",
+            "annotate[any]|^",
         ],
     )
     def toggleAnnotationMode(self):
@@ -23,31 +29,31 @@ class Annotate:
         else:
             self.updateAnnotationList()
 
-    @tag("<escape>", modes=["annotate[any]|^own"])
+    @tag("<escape>", modes=["annotate[any]|^"])
     def octivate(self):
         self.app.moder.toggle()
 
-    @tag("<c-h>", modes=["annotate[any]|^own"])
+    @tag("<c-h>", modes=["annotate[any]|^"])
     def toggleAnnotateHighlightMode(self):
         m = self.app.moder.toggleSubmode("highlight")
         self.updateAnnotationList(m)
 
-    @tag("<c-u>", modes=["annotate[any]|^own"])
+    @tag("<c-u>", modes=["annotate[any]|^"])
     def toggleAnnotateUnderlineMode(self):
         m = self.app.moder.toggleSubmode("underline")
         self.updateAnnotationList(m)
 
-    @tag("<c-s>", modes=["annotate[any]|^own"])
+    @tag("<c-s>", modes=["annotate[any]|^"])
     def toggleAnnotateStrikeOutMode(self):
         m = self.app.moder.toggleSubmode("strike-out")
         self.updateAnnotationList(m)
 
-    @tag("<c-r>", modes=["annotate[any]|^own"])
+    @tag("<c-r>", modes=["annotate[any]|^"])
     def toggleAnnotateCaretMode(self):
         m = self.app.moder.toggleSubmode("caret")
         self.updateAnnotationList(m)
 
-    @tag("<c-t>", modes=["annotate[any]|^own"])
+    @tag("<c-t>", modes=["annotate[any]|^"])
     def toggleAnnotateTextMode(self):
         m = self.app.moder.toggleSubmode("text")
         self.updateAnnotationList(m)
@@ -90,7 +96,7 @@ class Annotate:
                     f.isTagged = True
                     f.hasTaggedKey = True
                     f.canDigitalize = False
-                    f.modes = [f"{submode}|^own"]
+                    f.modes = [f"{submode}|^"]
                     fn = f"annotate{sn.title()}{k.title()}"
                     f.name = fn
                     f.__name__ = fn

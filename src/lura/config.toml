@@ -10,7 +10,7 @@ style = 'GreenElf'
 want='attach'
 model_name='quickmark'
 tab_prefix={command = 'q'}
-view_prefix={'|^own' = '<c-.>'}
+view_prefix={'|^' = '<c-.>'}
 position={QuickmarkTab= 'D|R'}
 widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
@@ -20,13 +20,13 @@ model_name='outline'
 view_kind='TreeView'
 tab_prefix={command = 'o'}
 position={OutlineTab= 'D|L'}
-view_prefix={'|^own' = '<c-.>'}
+view_prefix={'|^' = '<c-.>'}
 
 [ModelView.Bookmark]
 want='attach'
 model_name='bookmark'
 tab_prefix={command = 'b'}
-view_prefix={'|^own' = '<c-.>'}
+view_prefix={'|^' = '<c-.>'}
 position={BookmarkTab= 'D|R'}
 
 [ModelView.Bookmark.widget_map]
@@ -38,7 +38,7 @@ want='attach'
 locator='annotation'
 model_name='annotation'
 tab_prefix={command = 'a'}
-view_prefix={'|^own' = '<c-.>'}
+view_prefix={'|^' = '<c-.>'}
 position={AnnotationTab= 'D|R'}
 
 [ModelView.Annotation.widget_map]
@@ -50,7 +50,7 @@ want='attach'
 model_name='metadata'
 tab_prefix={command = 'm'}
 position={MetadataTab= 'D|R'}
-view_prefix={'|^own' = '<c-.>'}
+view_prefix={'|^' = '<c-.>'}
 include={field = ['title', 'author', 'year', 'bibkey']}
 
 [ModelView.Metadata.widget_map]

@@ -10,18 +10,18 @@ class BoxHint:
         super().setup()
         self.hintSelectWanted.connect(self.hintSelectBox)
 
-    @tag("<c-b>", modes=["hint[any]|^own"])
+    @tag("<c-b>", modes=["hint[any]|^"])
     def toggleBoxMode(self, rstart=1):
         sm = self.app.moder.toggleSubmode("box")
         if sm == "box":
             self.m_hint_scale = None
             self.setupHint("box", rstart=rstart)
 
-    @tag("<c-i>", modes=["hint[box]|^own"])
+    @tag("<c-i>", modes=["hint[box]|^"])
     def incrementBoxScale(self, rstart=1):
         self.setupHint("box", rstart=rstart, inc=True)
 
-    @tag("<c-o>", modes=["hint[box]|^own"])
+    @tag("<c-o>", modes=["hint[box]|^"])
     def decrementBoxScale(self, rstart=1):
         self.cleanUpHinting()
         self.setupHint("box", rstart=rstart, inc=False)

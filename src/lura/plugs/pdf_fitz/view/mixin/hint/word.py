@@ -8,13 +8,13 @@ class WordHint:
         super().setup()
         self.hintSelectWanted.connect(self.selectWordHint)
 
-    @tag(["<escape>", "<c-[>"], modes=["hint[word]|^own"])
+    @tag(["<escape>", "<c-[>"], modes=["hint[word]|^"])
     def finishHintWordMode(self):
         self.cleanUpHinting()
         self.cleanUpSelection()
         self.app.moder.toggle()
 
-    @tag("<c-w>", modes=["hint[any]|^own"])
+    @tag("<c-w>", modes=["hint[any]|^"])
     def toggleHintWordMode(self):
         sm = self.app.moder.toggleSubmode("word")
         if sm == "word":

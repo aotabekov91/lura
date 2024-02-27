@@ -3,17 +3,17 @@ from PyQt5 import QtCore, QtWidgets
 
 
 class AnnotationHint:
-    @tag("<c-a>", modes=["hint[any]|^own"])
+    @tag("<c-a>", modes=["hint[any]|^"])
     def toggleHintAnnotationMode(self):
         self.app.moder.toggleSubmode("annotation")
         self.setupHint(functor=False, kind="annotation", hint_kind="rstart")
 
-    @tag("<c-s>", modes=["hint[annotation]|^own"])
+    @tag("<c-s>", modes=["hint[annotation]|^"])
     def selectHintedAnnotation(self, rstart, **kwargs):
         sel, match = self.getMatchedHint(rstart)
         self.selectAnnotationHint(sel)
 
-    @tag("?", modes=["hint[annotation]|^own"])
+    @tag("?", modes=["hint[annotation]|^"])
     def detailHintedAnnotation(self, rstart, **kwargs):
         sel, match = self.getMatchedHint(rstart)
         if not sel:
@@ -28,7 +28,7 @@ class AnnotationHint:
         item.setToolTip(dtl)  # todo
         item.setToolTipDuration(1500)
 
-    @tag("<c-d>", modes=["hint[annotation]|^own"])
+    @tag("<c-d>", modes=["hint[annotation]|^"])
     def removeSelectedAnnotation(self, rstart, **kwargs):
         sel, match = self.getMatchedHint(rstart)
         if not sel:
@@ -39,7 +39,7 @@ class AnnotationHint:
         m = ann.model()
         m.delElement(ann)
 
-    @tag("<c-e>", modes=["hint[annotation]|^own"])
+    @tag("<c-e>", modes=["hint[annotation]|^"])
     def editSelectedAnnotation(self, rstart, **kwargs):
         sel, match = self.getMatchedHint(rstart)
         if not sel:

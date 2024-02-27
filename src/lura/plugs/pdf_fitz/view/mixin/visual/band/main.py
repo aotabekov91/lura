@@ -18,7 +18,7 @@ class RubberbandVisual(
         self.m_band_corner = None
         super().setup()
 
-    @tag("<c-r>", modes=["visual[any]|^own"])
+    @tag("<c-r>", modes=["visual[any]|^"])
     def toggleVisualBandMode(self):
         if self.checkProp("canHintBoxes"):
             sm = self.app.moder.toggleSubmode("band")

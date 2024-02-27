@@ -8,7 +8,7 @@ class BoxVisual:
         super().setup()
         self.hintSelectWanted.connect(self.visualBoxSelect)
 
-    @tag("<c-i>", modes=["visual[box]|^own"])
+    @tag("<c-i>", modes=["visual[box]|^"])
     def incrementVisualBoxScale(self, rstart=1):
         self.m_visual_boxes = None
         self.m_hint_capturing = True
@@ -18,7 +18,7 @@ class BoxVisual:
             kind="visualbox",
         )
 
-    @tag("<c-o>", modes=["visual[box]|^own"])
+    @tag("<c-o>", modes=["visual[box]|^"])
     def decrementVisualBoxScale(self, rstart=1):
         self.m_visual_boxes = None
         self.m_hint_capturing = True
@@ -28,41 +28,41 @@ class BoxVisual:
             kind="visualbox",
         )
 
-    @tag("<c-b>", modes=["visual[any]|^own"])
+    @tag("<c-b>", modes=["visual[any]|^"])
     def toggleVisualBoxMode(self):
         if self.checkProp("canHintBoxes"):
             self.app.moder.toggleSubmode("box")
 
-    @tag("<c-f>", modes=["visual[box]|^own"])
+    @tag("<c-f>", modes=["visual[box]|^"])
     def hintVisualBoxMode(self):
         self.m_visual_boxes = None
         self.setupHint(kind="visualbox")
 
-    @tag("<c-j>", modes=["visual[box]|^own"])
+    @tag("<c-j>", modes=["visual[box]|^"])
     def visualBoxJumpTo(self):
         self.setupHint(kind="box")
 
-    @tag("o", modes=["visual[box]|^own"])
+    @tag("o", modes=["visual[box]|^"])
     def visualBoxGoToFirst(self):
         self.visualBoxGoTo(kind="first")
 
-    @tag("$", modes=["visual[box]|^own"])
+    @tag("$", modes=["visual[box]|^"])
     def visualBoxGoToEnd(self):
         self.visualBoxGoTo(kind="last")
 
-    @tag("k", modes=["visual[box]|^own"])
+    @tag("k", modes=["visual[box]|^"])
     def visualBoxGoToUp(self, rstart=1):
         self.visualBoxGoTo("up", rstart=rstart)
 
-    @tag("j", modes=["visual[box]|^own"])
+    @tag("j", modes=["visual[box]|^"])
     def visualBoxGoToDown(self, rstart=1):
         self.visualBoxGoTo("down", rstart=rstart)
 
-    @tag("l", modes=["visual[box]|^own"])
+    @tag("l", modes=["visual[box]|^"])
     def visualBoxGoToLeft(self, rstart=1):
         self.visualBoxGoTo("right", rstart=rstart)
 
-    @tag("h", modes=["visual[box]|^own"])
+    @tag("h", modes=["visual[box]|^"])
     def visualBoxGoToRight(self, rstart=1):
         self.visualBoxGoTo("left", rstart=rstart)
 
@@ -90,7 +90,7 @@ class BoxVisual:
                 n["isSelected"] = not c
                 self.updateHintItems()
 
-    @tag("<c-s>", modes=["visual[box]|^own"])
+    @tag("<c-s>", modes=["visual[box]|^"])
     def selectVisualboxHints(self):
         box = []
         sel = {"box": box}

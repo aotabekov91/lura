@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtGui
 class Resize:
     rubberbandIncrement = 0.05
 
-    @tag("G", modes=["visual[band]|^own"])
+    @tag("G", modes=["visual[band]|^"])
     def setBandCorner(self, rstart=None, **kwargs):
         if rstart == 1:
             self.m_band_corner = "topLeft"
@@ -18,7 +18,7 @@ class Resize:
         i = self.m_band["item"]
         i.refresh()
 
-    @tag("l", modes=["visual[band]|^own"])
+    @tag("l", modes=["visual[band]|^"])
     def bandVisualGoToRight(self, rstart=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
@@ -30,7 +30,7 @@ class Resize:
             b.setWidth(b.width() + delta)
         i.refresh()
 
-    @tag("h", modes=["visual[band]|^own"])
+    @tag("h", modes=["visual[band]|^"])
     def bandVisualGoToLeft(self, rstart=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
@@ -42,7 +42,7 @@ class Resize:
             b.setWidth(b.width() + delta)
         i.refresh()
 
-    @tag("k", modes=["visual[band]|^own"])
+    @tag("k", modes=["visual[band]|^"])
     def bandVisualGoToUp(self, rstart=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
@@ -54,7 +54,7 @@ class Resize:
             b.setHeight(b.height() + delta)
         i.refresh()
 
-    @tag("j", modes=["visual[band]|^own"])
+    @tag("j", modes=["visual[band]|^"])
     def bandVisualGoToDown(self, rstart=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]

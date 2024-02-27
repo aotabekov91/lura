@@ -7,7 +7,7 @@ class Yank:
         super().setup()
         self.m_last_yanked_dir = None
 
-    @tag(["yy", "yt"], modes=["visual[band]|^own"])
+    @tag(["yy", "yt"], modes=["visual[band]|^"])
     def yankAsText(self, rstart=1, **kwargs):
         if not self.m_band:
             return
@@ -32,7 +32,7 @@ class Yank:
         self.app.moder.toggle()
         self.cleanUp()
 
-    @tag("yic", modes=["visual[band]|^own"])
+    @tag("yic", modes=["visual[band]|^"])
     def yankAsImageToClipboard(self, *args, **kwargs):
         img = self.yankImage()
         if not img:
@@ -40,7 +40,7 @@ class Yank:
         self.app.moder.toggle()
         self.cleanUp()
 
-    @tag("yis", modes=["visual[band]|^own"])
+    @tag("yis", modes=["visual[band]|^"])
     def yankAsImageToSave(self, *args, **kwargs):
         img = self.yankImage()
         if not img:
@@ -51,7 +51,7 @@ class Yank:
             edit=self.m_last_yanked_dir,
         )
 
-    @tag(["<c-m>", "<return>"], modes=["save[image]|^own"])
+    @tag(["<c-m>", "<return>"], modes=["save[image]|^"])
     def saveYankedImage(self, *args, **kwargs):
         img = self.yankImage()
         t = self.app.ui.bar.text()
@@ -63,7 +63,7 @@ class Yank:
             pass
         self.cleanUpYankedImage()
 
-    @tag(["<escape>", "<c-[>"], modes=["save[image]|^own"])
+    @tag(["<escape>", "<c-[>"], modes=["save[image]|^"])
     def cleanUpYankedImage(self, *args, **kwargs):
         self.app.ui.bar.octivateEdit()
         self.app.moder.toggle()

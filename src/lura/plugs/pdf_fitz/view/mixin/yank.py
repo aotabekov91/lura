@@ -4,7 +4,7 @@ from gizmo.utils import tag
 class Yank:
     canYank = True
 
-    @tag("yy", modes=["normal|^own", "visual[word]|^own"])
+    @tag("yy", modes=["normal|^", "visual[word]|^"])
     def yankWord(self, *args, **kwargs):
         sel = self.selection()
         if not sel:
@@ -29,7 +29,7 @@ class Yank:
         self.cleanUp()
         return text
 
-    @tag("ya", modes=["normal", "visual[word]|^own"])
+    @tag("ya", modes=["normal", "visual[word]|^"])
     def yankToAyleen(self, rstart=1, **kwargs):
         c = self.checkProp("hasServer", self.app)
         if not c:
