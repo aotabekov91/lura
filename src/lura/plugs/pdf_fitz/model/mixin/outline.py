@@ -9,10 +9,8 @@ class Outline:
 
     def setup(self):
         super().setup()
-        eklass = Factory(
-                QtGui.QStandardItem, vimo.Element)
-        mklass = Factory(
-                QtGui.QStandardItemModel, vimo.Model)
+        eklass = Factory(QtGui.QStandardItem, vimo.Element)
+        mklass = Factory(QtGui.QStandardItemModel, vimo.Model)
         self.m_outline = mklass(
             name="outline",
             element_class=eklass,
