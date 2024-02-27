@@ -6,13 +6,13 @@ from . import mixin
 
 class FitzItem(
     mixin.Links,
-    gizmo.qt.mixin.item.Scale,
-    gizmo.qt.mixin.item.Select,
-    gizmo.qt.mixin.item.Overlay,
-    gizmo.qt.mixin.item.Annotate,
-    gizmo.qt.mixin.item.Highlight,
-    gizmo.qt.mixin.item.Render,
-    gizmo.qt.vimo.item.Item,
+    gizmo.ui.qt.mixin.item.Scale,
+    gizmo.ui.qt.mixin.item.Select,
+    gizmo.ui.qt.mixin.item.Overlay,
+    gizmo.ui.qt.mixin.item.Annotate,
+    gizmo.ui.qt.mixin.item.Highlight,
+    gizmo.ui.qt.mixin.item.Render,
+    gizmo.ui.qt.vimo.item.Item,
     QtWidgets.QGraphicsObject,
 ):
     pass

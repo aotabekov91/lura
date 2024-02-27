@@ -1,6 +1,6 @@
 import fitz
-from gizmo.core.vimo import Element, Model
-from gizmo.plug import Factory
+from gizmo.ui.core import vimo
+from gizmo.utils import Factory
 from PyQt5 import QtCore, QtGui
 
 
@@ -9,8 +9,10 @@ class Outline:
 
     def setup(self):
         super().setup()
-        eklass = Factory(QtGui.QStandardItem, Element)
-        mklass = Factory(QtGui.QStandardItemModel, Model)
+        eklass = Factory(
+                QtGui.QStandardItem, vimo.Element)
+        mklass = Factory(
+                QtGui.QStandardItemModel, vimo.Model)
         self.m_outline = mklass(
             name="outline",
             element_class=eklass,

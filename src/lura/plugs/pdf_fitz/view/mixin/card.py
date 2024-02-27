@@ -1,4 +1,4 @@
-from gizmo.plug.utils import tag
+from gizmo.utils import tag
 
 
 class YankToCard:

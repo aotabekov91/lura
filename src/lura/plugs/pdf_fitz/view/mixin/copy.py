@@ -1,4 +1,4 @@
-from gizmo.qt.mixin import view
+from gizmo.ui.qt.mixin import view
 
 
 class Copy(view.Copy):

@@ -1,4 +1,4 @@
-from gizmo.qt import plug
+from gizmo.ui.qt import plug
 
 from lura import plugs
 

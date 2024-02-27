@@ -12,7 +12,7 @@ class FitzElement(
     mixin.Search,
     mixin.Normed,
     mixin.Annotate,
-    gizmo.core.element.Element,
+    gizmo.ui.core.element.Element,
     QtCore.QObject,
 ):
     dataUpdated = QtCore.pyqtSignal()

@@ -1,5 +1,5 @@
 from fitz import Quad
-from gizmo.qt import mixin
+from gizmo.ui.qt import mixin
 from PyQt5 import QtCore
 
 
