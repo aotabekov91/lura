@@ -9,7 +9,7 @@ class YankToCard:
         req = {
             "target": "Anna",
             "action": "submit",
-            "object": "app.moder.plugs.card",
+            "object": "app.modeman.plugs.card",
         }
         return self.app.server.request(**req)
 
@@ -39,6 +39,6 @@ class YankToCard:
             "data": data,
             "target": "Anna",
             "action": "fetch",
-            "object": "app.moder.plugs.card",
+            "object": "app.modeman.plugs.card",
         }
         return self.app.server.request(**req)

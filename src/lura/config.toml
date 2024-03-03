@@ -3,8 +3,28 @@ router_port=22223
 publisher_port=22224
 host='tcp://192.168.178.25'
 
-[Styler.Settings]
+[Styleman.Settings]
 style = 'GreenElf'
+
+[Modeman.Settings]
+base = 'https://github.com'
+folder = '~/.config/lura/picky'
+
+[[Modeman.Picks]]
+pick = 'aotabekov91/janilai'
+subdir = [
+	# 'src/janilai/table',
+	# 'src/janilai/ctrlp',
+	'src/janilai/green_elf',
+	# 'src/janilai/model_view',
+	]
+
+# [[Modeman.Picks]]
+# pick = 'aotabekov91/sainan'
+# subdir = [
+# 	'src/sainan/plugs/client/czmq',
+# 	]
+
 
 [ModelView.Quickmark]
 want='attach'
@@ -88,25 +108,6 @@ name='metadata'
 row_model=true
 autocreate=true
 props=['hasMetadata']
-
-[Picky.Settings]
-base = 'https://github.com'
-folder = '~/.config/lura/picky'
-
-[[Picky.Picks]]
-pick = 'aotabekov91/janilai'
-subdir = [
-	# 'src/janilai/table',
-	# 'src/janilai/ctrlp',
-	'src/janilai/green_elf',
-	# 'src/janilai/model_view',
-	]
-
-# [[Picky.Picks]]
-# pick = 'aotabekov91/sainan'
-# subdir = [
-# 	'src/sainan/plugs/client/czmq',
-# 	]
 
 [View]
 zoomFactor = 0.1

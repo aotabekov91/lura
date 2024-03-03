@@ -10,8 +10,8 @@ class WordVisual:
 
     def jumpToWord(self, kind, sel):
         if kind == "word":
-            m = self.app.moder.mode()
-            sm = self.app.moder.submode()
+            m = self.app.earman.mode()
+            sm = self.app.earman.submode()
             if m == "visual" and sm == "word":
                 i = sel["item"]
                 e = i.element()
@@ -26,12 +26,12 @@ class WordVisual:
     def finishVisualWordMode(self):
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.moder.toggle()
+        self.app.earman.toggle()
 
     @tag("<c-w>", modes=["visual[any]|^"])
     def toggleVisualWordMode(self):
         if self.checkProp("canHintWords"):
-            sm = self.app.moder.toggleSubmode("word")
+            sm = self.app.earman.toggleSubmode("word")
             if sm == "word" and not self.selection():
                 self.setupHint("word")
 

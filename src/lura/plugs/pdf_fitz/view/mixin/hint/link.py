@@ -35,7 +35,7 @@ class LinkHint:
 
     @tag("<c-l>", modes=["hint[any]|^"])
     def toggleLinkMode(self):
-        sm = self.app.moder.toggleSubmode("link")
+        sm = self.app.earman.toggleSubmode("link")
         if sm == "link":
             self.setupHint("link")
 

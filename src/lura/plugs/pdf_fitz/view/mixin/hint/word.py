@@ -12,11 +12,11 @@ class WordHint:
     def finishHintWordMode(self):
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.moder.toggle()
+        self.app.earman.toggle()
 
     @tag("<c-w>", modes=["hint[any]|^"])
     def toggleHintWordMode(self):
-        sm = self.app.moder.toggleSubmode("word")
+        sm = self.app.earman.toggleSubmode("word")
         if sm == "word":
             self.setupHint("word")
 
@@ -35,8 +35,8 @@ class WordHint:
 
     def selectWordHint(self, kind, sel):
         if kind == "word":
-            m = self.app.moder.mode()
-            sm = self.app.moder.submode()
+            m = self.app.earman.mode()
+            sm = self.app.earman.submode()
             if m == "hint" and sm == "word":
                 i = sel["item"]
                 self.select(i, sel)

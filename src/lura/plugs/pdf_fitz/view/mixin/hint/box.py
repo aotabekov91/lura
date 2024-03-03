@@ -12,7 +12,7 @@ class BoxHint:
 
     @tag("<c-b>", modes=["hint[any]|^"])
     def toggleBoxMode(self, rstart=1):
-        sm = self.app.moder.toggleSubmode("box")
+        sm = self.app.earman.toggleSubmode("box")
         if sm == "box":
             self.m_hint_scale = None
             self.setupHint("box", rstart=rstart)
@@ -85,7 +85,7 @@ class BoxHint:
             p.restore()
 
     def hintSelectBox(self, kind, sel):
-        sm = self.app.moder.submode()
+        sm = self.app.earman.submode()
         if kind == "box" and sm == "box":
             i = sel["item"]
             self.select(i, sel)

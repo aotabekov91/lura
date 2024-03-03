@@ -31,7 +31,7 @@ class BoxVisual:
     @tag("<c-b>", modes=["visual[any]|^"])
     def toggleVisualBoxMode(self):
         if self.checkProp("canHintBoxes"):
-            self.app.moder.toggleSubmode("box")
+            self.app.earman.toggleSubmode("box")
 
     @tag("<c-f>", modes=["visual[box]|^"])
     def hintVisualBoxMode(self):
@@ -101,7 +101,7 @@ class BoxVisual:
         i = sel.get("item")
         self.m_visual_boxes = []
         self.cleanUpHinting()
-        self.app.moder.toggle()
+        self.app.earman.toggle()
         self.select(i, sel)
 
     def getVisualboxHints(self, rstart=1, inc=None):
@@ -120,15 +120,15 @@ class BoxVisual:
         return self.m_visual_boxes
 
     def visualBoxSelect(self, kind, sel):
-        m = self.app.moder.mode()
-        sm = self.app.moder.submode()
+        m = self.app.earman.mode()
+        sm = self.app.earman.submode()
         if m == "visual" and sm == "box":
             c = sel["isSelected"]
             sel["isSelected"] = not c
 
     def updateVisualHint(self, key):
-        m = self.app.moder.mode()
-        sm = self.app.moder.submode()
+        m = self.app.earman.mode()
+        sm = self.app.earman.submode()
         if not (m == "visual" and sm == "box"):
             self.updateHint(key)
         else:

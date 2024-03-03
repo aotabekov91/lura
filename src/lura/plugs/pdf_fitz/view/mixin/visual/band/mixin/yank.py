@@ -29,7 +29,7 @@ class Yank:
         if text:
             c = self.app.qapp.clipboard()
             c.setText(text)
-        self.app.moder.toggle()
+        self.app.earman.toggle()
         self.cleanUp()
 
     @tag("yic", modes=["visual[band]|^"])
@@ -37,7 +37,7 @@ class Yank:
         img = self.yankImage()
         if not img:
             return
-        self.app.moder.toggle()
+        self.app.earman.toggle()
         self.cleanUp()
 
     @tag("yis", modes=["visual[band]|^"])
@@ -45,7 +45,7 @@ class Yank:
         img = self.yankImage()
         if not img:
             return
-        self.app.moder.toggle("save", submode="image")
+        self.app.earman.toggle("save", submode="image")
         self.app.ui.bar.activateEdit(
             label="Path",
             edit=self.m_last_yanked_dir,
@@ -66,7 +66,7 @@ class Yank:
     @tag(["<escape>", "<c-[>"], modes=["save[image]|^"])
     def cleanUpYankedImage(self, *args, **kwargs):
         self.app.ui.bar.octivateEdit()
-        self.app.moder.toggle()
+        self.app.earman.toggle()
         self.cleanUp()
 
     def yankImage(self):

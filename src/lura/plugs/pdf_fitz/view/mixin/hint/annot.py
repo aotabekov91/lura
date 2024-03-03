@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtWidgets
 class AnnotationHint:
     @tag("<c-a>", modes=["hint[any]|^"])
     def toggleHintAnnotationMode(self):
-        self.app.moder.toggleSubmode("annotation")
+        self.app.earman.toggleSubmode("annotation")
         self.setupHint(functor=False, kind="annotation", hint_kind="rstart")
 
     @tag("<c-s>", modes=["hint[annotation]|^"])

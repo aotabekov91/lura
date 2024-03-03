@@ -25,7 +25,7 @@ class Yank:
         if text:
             c = self.app.qapp.clipboard()
             c.setText(text)
-        self.app.moder.toggle()
+        self.app.earman.toggle()
         self.cleanUp()
         return text
 
@@ -45,7 +45,7 @@ class Yank:
             lan = "de"
         req = {
             "target": "Ayleen",
-            "object": "app.moder.plugs.deflookup",
+            "object": "app.modeman.plugs.deflookup",
             "data": {"term": text, "lan": lan},
             "action": "lookup",
         }
