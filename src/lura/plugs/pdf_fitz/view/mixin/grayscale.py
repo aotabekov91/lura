@@ -6,6 +6,5 @@ class GrayScale:
 
     @tag("c", modes=["normal|^"])
     def toggleGrayScale(self):
-
         for i in self.m_items.values():
             i.toggleGrayScale()
