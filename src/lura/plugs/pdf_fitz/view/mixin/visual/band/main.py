@@ -18,10 +18,10 @@ class RubberbandVisual(
         self.m_band_corner = None
         super().setup()
 
-    @tag("<c-r>", modes=["visual[any]|^"])
+    @tag("<c-r>(visual[any])[^]")
     def toggleVisualBandMode(self):
         if self.checkProp("canHintBoxes"):
-            sm = self.app.earman.toggleSubmode("band")
+            sm = self.app.stateman.toggleSubmode("band")
             if sm == "band":
                 self.m_band = None
                 self.m_band_end = None

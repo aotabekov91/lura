@@ -22,48 +22,48 @@ class WordVisual:
                     i = sel["item"]
                     self.select(i, sel)
 
-    @tag(["<escape>", "<c-[>"], modes=["visual[word]|^"])
+    @tag("<escape>/<c-[>(visual[word])[^]")
     def finishVisualWordMode(self):
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
 
-    @tag("<c-w>", modes=["visual[any]|^"])
+    @tag("<c-w>(visual[any])[^]")
     def toggleVisualWordMode(self):
         if self.checkProp("canHintWords"):
-            sm = self.app.earman.toggleSubmode("word")
+            sm = self.app.stateman.toggleSubmode("word")
             if sm == "word" and not self.selection():
                 self.setupHint("word")
 
-    @tag("<c-j>", modes=["visual[word]|^"])
+    @tag("<c-j>(visual[word])[^]")
     def visualWordJumpTo(self):
         self.setupHint("word")
 
-    @tag("o", modes=["visual[word]|^"])
+    @tag("o(visual[word])[^]")
     def visualWordGoToFirst(self):
         self.visualWordGoTo(kind="first")
 
-    @tag("$", modes=["visual[word]|^"])
+    @tag("$(visual[word])[^]")
     def visualWordGoToEnd(self):
         self.visualWordGoTo(kind="last")
 
-    @tag("k", modes=["visual[word]|^"])
-    def visualWordGoToUp(self, rstart=1):
-        self.visualWordGoTo("up", rstart=rstart)
+    @tag("k(visual[word])[^]")
+    def visualWordGoToUp(self, xrange=1):
+        self.visualWordGoTo("up", xrange=xrange)
 
-    @tag("j", modes=["visual[word]|^"])
-    def visualWordGoToDown(self, rstart=1):
-        self.visualWordGoTo("down", rstart=rstart)
+    @tag("j(visual[word])[^]")
+    def visualWordGoToDown(self, xrange=1):
+        self.visualWordGoTo("down", xrange=xrange)
 
-    @tag("l", modes=["visual[word]|^"])
-    def visualWordGoToLeft(self, rstart=1):
-        self.visualWordGoTo("right", rstart=rstart)
+    @tag("l(visual[word])[^]")
+    def visualWordGoToLeft(self, xrange=1):
+        self.visualWordGoTo("right", xrange=xrange)
 
-    @tag("h", modes=["visual[word]|^"])
-    def visualWordGoToRight(self, rstart=1):
-        self.visualWordGoTo("left", rstart=rstart)
+    @tag("h(visual[word])[^]")
+    def visualWordGoToRight(self, xrange=1):
+        self.visualWordGoTo("left", xrange=xrange)
 
-    @tag("t", modes=["visual[word]|^"])
+    @tag("t(visual[word])[^]")
     def toggleWordDirection(self):
         s = self.selection()
         if not s:
@@ -72,8 +72,8 @@ class WordVisual:
         e = i.element()
         e.toggleDirection(0)
 
-    def visualWordGoTo(self, kind, rstart=1):
-        for i in range(rstart):
+    def visualWordGoTo(self, kind, xrange=1):
+        for i in range(xrange):
             s = self.selection()
             if not s:
                 return

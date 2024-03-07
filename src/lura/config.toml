@@ -6,11 +6,11 @@ host='tcp://192.168.178.25'
 [Styleman.Settings]
 style = 'GreenElf'
 
-[Modeman.Settings]
+[Plugman.Settings]
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
-[[Modeman.Picks]]
+[[Plugman.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
 	# 'src/janilai/table',
@@ -19,7 +19,7 @@ subdir = [
 	# 'src/janilai/model_view',
 	]
 
-# [[Modeman.Picks]]
+# [[Plugman.Picks]]
 # pick = 'aotabekov91/sainan'
 # subdir = [
 # 	'src/sainan/plugs/client/czmq',

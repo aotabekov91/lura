@@ -8,15 +8,15 @@ class WordHint:
         super().setup()
         self.hintSelectWanted.connect(self.selectWordHint)
 
-    @tag(["<escape>", "<c-[>"], modes=["hint[word]|^"])
+    @tag("<escape>/<c-[>(hint[word])[^]")
     def finishHintWordMode(self):
         self.cleanUpHinting()
         self.cleanUpSelection()
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
 
-    @tag("<c-w>", modes=["hint[any]|^"])
+    @tag("<c-w>(hint[any])[^]")
     def toggleHintWordMode(self):
-        sm = self.app.earman.toggleSubmode("word")
+        sm = self.app.stateman.toggleSubmode("word")
         if sm == "word":
             self.setupHint("word")
 

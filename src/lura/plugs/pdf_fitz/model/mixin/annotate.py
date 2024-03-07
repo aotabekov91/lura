@@ -12,7 +12,7 @@ class Annotate:
         self.setAnnotationColors()
 
     def setAnnotationColors(self):
-        f = self.app.modeman.plugs.pdffitz
+        f = self.app.plugman.plugs.pdffitz
         self.fitz = f
         if self.checkProp("hasAnnotationColors", f):
             return

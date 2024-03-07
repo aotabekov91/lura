@@ -5,24 +5,24 @@ from PyQt5 import QtCore, QtGui
 class Resize:
     rubberbandIncrement = 0.05
 
-    @tag("G", modes=["visual[band]|^"])
-    def setBandCorner(self, rstart=None, **kwargs):
-        if rstart == 1:
+    @tag("G(visual[band])[^]")
+    def setBandCorner(self, xrange=None, **kwargs):
+        if xrange == 1:
             self.m_band_corner = "topLeft"
-        elif rstart == 2:
+        elif xrange == 2:
             self.m_band_corner = "topRight"
-        elif rstart == 3:
+        elif xrange == 3:
             self.m_band_corner = "bottomRight"
         else:
             self.m_band_corner = "bottomLeft"
         i = self.m_band["item"]
         i.refresh()
 
-    @tag("l", modes=["visual[band]|^"])
-    def bandVisualGoToRight(self, rstart=1, **kwargs):
+    @tag("l(visual[band])[^]")
+    def bandVisualGoToRight(self, xrange=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
-        r = self.rubberbandIncrement * rstart
+        r = self.rubberbandIncrement * xrange
         delta = min(b.y(), b.height()) * r
         if self.m_band_corner in ["topLeft", "bottomLeft"]:
             b.setX(b.x() + delta)
@@ -30,11 +30,11 @@ class Resize:
             b.setWidth(b.width() + delta)
         i.refresh()
 
-    @tag("h", modes=["visual[band]|^"])
-    def bandVisualGoToLeft(self, rstart=1, **kwargs):
+    @tag("h(visual[band])[^]")
+    def bandVisualGoToLeft(self, xrange=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
-        r = -self.rubberbandIncrement * rstart
+        r = -self.rubberbandIncrement * xrange
         delta = min(b.y(), b.height()) * r
         if self.m_band_corner in ["topLeft", "bottomLeft"]:
             b.setX(b.x() + delta)
@@ -42,11 +42,11 @@ class Resize:
             b.setWidth(b.width() + delta)
         i.refresh()
 
-    @tag("k", modes=["visual[band]|^"])
-    def bandVisualGoToUp(self, rstart=1, **kwargs):
+    @tag("k(visual[band])[^]")
+    def bandVisualGoToUp(self, xrange=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
-        r = -self.rubberbandIncrement * rstart
+        r = -self.rubberbandIncrement * xrange
         delta = min(b.y(), b.height()) * r
         if self.m_band_corner in ["topLeft", "topRight"]:
             b.setY(b.y() + delta)
@@ -54,11 +54,11 @@ class Resize:
             b.setHeight(b.height() + delta)
         i.refresh()
 
-    @tag("j", modes=["visual[band]|^"])
-    def bandVisualGoToDown(self, rstart=1, **kwargs):
+    @tag("j(visual[band])[^]")
+    def bandVisualGoToDown(self, xrange=1, **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
-        r = self.rubberbandIncrement * rstart
+        r = self.rubberbandIncrement * xrange
         delta = min(b.y(), b.height()) * r
         if self.m_band_corner in ["topLeft", "topRight"]:
             b.setY(b.y() + delta)

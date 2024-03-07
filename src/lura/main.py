@@ -8,7 +8,7 @@ class Lura(plug.app.AppPlug):
         p = [
             plugs.pdf_fitz.PdfFitz,
         ]
-        self.modeman.load(p)
+        self.plugman.load(p)
         super().activate()
 
 

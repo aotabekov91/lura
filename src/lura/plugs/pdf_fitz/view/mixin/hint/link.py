@@ -33,9 +33,9 @@ class LinkHint:
             cmd = ["qutebrowser", d.uri]
             subprocess.Popen(cmd)
 
-    @tag("<c-l>", modes=["hint[any]|^"])
+    @tag("<c-l>(hint[any])[^]")
     def toggleLinkMode(self):
-        sm = self.app.earman.toggleSubmode("link")
+        sm = self.app.stateman.toggleSubmode("link")
         if sm == "link":
             self.setupHint("link")
 

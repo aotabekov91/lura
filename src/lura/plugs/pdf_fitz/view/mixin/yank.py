@@ -4,7 +4,7 @@ from gizmo.utils import tag
 class Yank:
     canYank = True
 
-    @tag("yy", modes=["normal|^", "visual[word]|^"])
+    @tag("yy", modes=["(normal)[^", "visual[word]|^]"])
     def yankWord(self, *args, **kwargs):
         sel = self.selection()
         if not sel:
@@ -25,12 +25,12 @@ class Yank:
         if text:
             c = self.app.qapp.clipboard()
             c.setText(text)
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
         self.cleanUp()
         return text
 
-    @tag("ya", modes=["normal", "visual[word]|^"])
-    def yankToAyleen(self, rstart=1, **kwargs):
+    @tag("ya", modes=["(normal", "visual[word])[^]"])
+    def yankToAyleen(self, xrange=1, **kwargs):
         c = self.checkProp("hasServer", self.app)
         if not c:
             return
@@ -41,11 +41,11 @@ class Yank:
         if not text:
             return
         lan = "en"
-        if rstart == 2:
+        if xrange == 2:
             lan = "de"
         req = {
             "target": "Ayleen",
-            "object": "app.modeman.plugs.deflookup",
+            "object": "app.plugman.plugs.deflookup",
             "data": {"term": text, "lan": lan},
             "action": "lookup",
         }

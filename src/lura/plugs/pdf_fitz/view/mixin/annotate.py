@@ -8,48 +8,41 @@ class Annotate:
         super().setup()
         self.setAnnotationKeys()
 
-    @tag(
-        "<c-a>",
-        modes=[
-            "normal|^",
-            "visual[any]|^",
-            "annotate[any]|^",
-        ],
-    )
+    @tag("<c-a>(normal/visual/annotate)[^]")
     def toggleAnnotationMode(self):
-        m = self.app.earman.toggle("annotate")
+        m = self.app.stateman.toggle("annotate")
         if m == "annotate":
             self.toggleAnnotateHighlightMode()
         else:
             self.updateAnnotationList()
 
-    @tag("<escape>", modes=["annotate[any]|^"])
+    @tag("<escape>(annotate[any])[^]")
     def octivate(self):
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
 
-    @tag("<c-h>", modes=["annotate[any]|^"])
+    @tag("<c-h>(annotate[any])[^]")
     def toggleAnnotateHighlightMode(self):
-        m = self.app.earman.toggleSubmode("highlight")
+        m = self.app.stateman.toggleSubmode("highlight")
         self.updateAnnotationList(m)
 
-    @tag("<c-u>", modes=["annotate[any]|^"])
+    @tag("<c-u>(annotate[any])[^]")
     def toggleAnnotateUnderlineMode(self):
-        m = self.app.earman.toggleSubmode("underline")
+        m = self.app.stateman.toggleSubmode("underline")
         self.updateAnnotationList(m)
 
-    @tag("<c-s>", modes=["annotate[any]|^"])
+    @tag("<c-s>(annotate[any])[^]")
     def toggleAnnotateStrikeOutMode(self):
-        m = self.app.earman.toggleSubmode("strike-out")
+        m = self.app.stateman.toggleSubmode("strike-out")
         self.updateAnnotationList(m)
 
-    @tag("<c-r>", modes=["annotate[any]|^"])
+    @tag("<c-r>(annotate[any])[^]")
     def toggleAnnotateCaretMode(self):
-        m = self.app.earman.toggleSubmode("caret")
+        m = self.app.stateman.toggleSubmode("caret")
         self.updateAnnotationList(m)
 
-    @tag("<c-t>", modes=["annotate[any]|^"])
+    @tag("<c-t>(annotate[any])[^]")
     def toggleAnnotateTextMode(self):
-        m = self.app.earman.toggleSubmode("text")
+        m = self.app.stateman.toggleSubmode("text")
         self.updateAnnotationList(m)
 
     def updateAnnotationList(self, mode=None):
@@ -73,7 +66,7 @@ class Annotate:
         self.toggleAnnotationMode()
 
     def setAnnotationKeys(self):
-        fitz = self.app.modeman.plugs.pdffitz
+        fitz = self.app.plugman.plugs.pdffitz
         self.fitz = fitz
         if self.checkProp("hasAnnotationColors", fitz):
             cs = self.fitz.m_annotation_colors
@@ -96,7 +89,7 @@ class Annotate:
                     f.__name__ = fn
                     setattr(f, "__name__", fn)
                     setattr(self, fn, f)
-        self.app.earman.add(self, view=True)
+        self.app.earman.add(self)
 
     def openAnnotationLocator(self, data={}, center=True, **kwargs):
         b = data.get("box", None)

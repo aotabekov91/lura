@@ -7,8 +7,8 @@ class Yank:
         super().setup()
         self.m_last_yanked_dir = None
 
-    @tag(["yy", "yt"], modes=["visual[band]|^"])
-    def yankAsText(self, rstart=1, **kwargs):
+    @tag("yy/yt(visual[band])[^]")
+    def yankAsText(self, xrange=1, **kwargs):
         if not self.m_band:
             return
         i = self.m_band["item"]
@@ -22,36 +22,36 @@ class Yank:
         text = []
         for i in range(len(f)):
             t = f[i][4]
-            if rstart == 1:
+            if xrange == 1:
                 t = t.replace("\n", " ")
             text += [t]
         text = "\n".join(text)
         if text:
             c = self.app.qapp.clipboard()
             c.setText(text)
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
         self.cleanUp()
 
-    @tag("yic", modes=["visual[band]|^"])
+    @tag("yic(visual[band])[^]")
     def yankAsImageToClipboard(self, *args, **kwargs):
         img = self.yankImage()
         if not img:
             return
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
         self.cleanUp()
 
-    @tag("yis", modes=["visual[band]|^"])
+    @tag("yis(visual[band])[^]")
     def yankAsImageToSave(self, *args, **kwargs):
         img = self.yankImage()
         if not img:
             return
-        self.app.earman.toggle("save", submode="image")
+        self.app.stateman.toggle("save", submode="image")
         self.app.ui.bar.activateEdit(
             label="Path",
             edit=self.m_last_yanked_dir,
         )
 
-    @tag(["<c-m>", "<return>"], modes=["save[image]|^"])
+    @tag("<c-m>/<return>(save[image])[^]")
     def saveYankedImage(self, *args, **kwargs):
         img = self.yankImage()
         t = self.app.ui.bar.text()
@@ -63,10 +63,10 @@ class Yank:
             pass
         self.cleanUpYankedImage()
 
-    @tag(["<escape>", "<c-[>"], modes=["save[image]|^"])
+    @tag("<escape>/<c-[>(save[image])[^]")
     def cleanUpYankedImage(self, *args, **kwargs):
         self.app.ui.bar.octivateEdit()
-        self.app.earman.toggle()
+        self.app.stateman.toggle()
         self.cleanUp()
 
     def yankImage(self):

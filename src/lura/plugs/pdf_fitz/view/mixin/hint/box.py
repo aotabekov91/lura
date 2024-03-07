@@ -10,26 +10,26 @@ class BoxHint:
         super().setup()
         self.hintSelectWanted.connect(self.hintSelectBox)
 
-    @tag("<c-b>", modes=["hint[any]|^"])
-    def toggleBoxMode(self, rstart=1):
-        sm = self.app.earman.toggleSubmode("box")
+    @tag("<c-b>(hint[any])[^]")
+    def toggleBoxMode(self, xrange=1):
+        sm = self.app.stateman.toggleSubmode("box")
         if sm == "box":
             self.m_hint_scale = None
-            self.setupHint("box", rstart=rstart)
+            self.setupHint("box", xrange=xrange)
 
-    @tag("<c-i>", modes=["hint[box]|^"])
-    def incrementBoxScale(self, rstart=1):
-        self.setupHint("box", rstart=rstart, inc=True)
+    @tag("<c-i>(hint[box])[^]")
+    def incrementBoxScale(self, xrange=1):
+        self.setupHint("box", xrange=xrange, inc=True)
 
-    @tag("<c-o>", modes=["hint[box]|^"])
-    def decrementBoxScale(self, rstart=1):
+    @tag("<c-o>(hint[box])[^]")
+    def decrementBoxScale(self, xrange=1):
         self.cleanUpHinting()
-        self.setupHint("box", rstart=rstart, inc=False)
+        self.setupHint("box", xrange=xrange, inc=False)
 
-    def getBoxHints(self, rstart=1, inc=None):
+    def getBoxHints(self, xrange=1, inc=None):
         alist = []
         if inc is None:
-            inc = self.hint_box_increment / rstart
+            inc = self.hint_box_increment / xrange
         elif inc and self.m_hint_scale:
             inc = self.m_hint_scale / 2
         elif not inc and self.m_hint_scale:

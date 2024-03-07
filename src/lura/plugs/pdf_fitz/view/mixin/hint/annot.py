@@ -3,19 +3,19 @@ from PyQt5 import QtCore, QtWidgets
 
 
 class AnnotationHint:
-    @tag("<c-a>", modes=["hint[any]|^"])
+    @tag("<c-a>(hint[any])[^]")
     def toggleHintAnnotationMode(self):
-        self.app.earman.toggleSubmode("annotation")
-        self.setupHint(functor=False, kind="annotation", hint_kind="rstart")
+        self.app.stateman.toggleSubmode("annotation")
+        self.setupHint(functor=False, kind="annotation", hint_kind="xrange")
 
-    @tag("<c-s>", modes=["hint[annotation]|^"])
-    def selectHintedAnnotation(self, rstart, **kwargs):
-        sel, match = self.getMatchedHint(rstart)
+    @tag("<c-s>(hint[annotation])[^]")
+    def selectHintedAnnotation(self, xrange, **kwargs):
+        sel, match = self.getMatchedHint(xrange)
         self.selectAnnotationHint(sel)
 
-    @tag("?", modes=["hint[annotation]|^"])
-    def detailHintedAnnotation(self, rstart, **kwargs):
-        sel, match = self.getMatchedHint(rstart)
+    @tag("?(hint[annotation])[^]")
+    def detailHintedAnnotation(self, xrange, **kwargs):
+        sel, match = self.getMatchedHint(xrange)
         if not sel:
             return
         self.selectAnnotationHint(sel)
@@ -28,9 +28,9 @@ class AnnotationHint:
         item.setToolTip(dtl)  # todo
         item.setToolTipDuration(1500)
 
-    @tag("<c-d>", modes=["hint[annotation]|^"])
-    def removeSelectedAnnotation(self, rstart, **kwargs):
-        sel, match = self.getMatchedHint(rstart)
+    @tag("<c-d>(hint[annotation])[^]")
+    def removeSelectedAnnotation(self, xrange, **kwargs):
+        sel, match = self.getMatchedHint(xrange)
         if not sel:
             return
         ann = sel.get("annotation")
@@ -39,9 +39,9 @@ class AnnotationHint:
         m = ann.model()
         m.delElement(ann)
 
-    @tag("<c-e>", modes=["hint[annotation]|^"])
-    def editSelectedAnnotation(self, rstart, **kwargs):
-        sel, match = self.getMatchedHint(rstart)
+    @tag("<c-e>(hint[annotation])[^]")
+    def editSelectedAnnotation(self, xrange, **kwargs):
+        sel, match = self.getMatchedHint(xrange)
         if not sel:
             return
         ann = sel.get("annotation")
