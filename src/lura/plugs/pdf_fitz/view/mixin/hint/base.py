@@ -1,8 +1,10 @@
+from gizmo.utils import tag
 from gizmo.ui.qt import mixin
 from PyQt5 import QtCore, QtGui
 
 
 class Hint(mixin.view.Hint):
+
     def setup(self):
         self.m_hinting_items = []
         super().setup()
