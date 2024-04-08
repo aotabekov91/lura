@@ -1,6 +1,6 @@
 from queue import Queue
 
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 from .task import Task
 

@@ -1,5 +1,5 @@
 from gizmo.ui.qt import mixin
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 from .utils import Viewport
 

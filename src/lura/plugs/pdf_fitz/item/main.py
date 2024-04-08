@@ -1,5 +1,5 @@
 import gizmo
-from PyQt5 import QtWidgets
+from PyQt6 import QtWidgets
 
 from . import mixin
 

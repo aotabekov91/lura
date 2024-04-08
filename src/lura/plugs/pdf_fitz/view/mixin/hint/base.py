@@ -1,6 +1,6 @@
 from gizmo.utils import tag
 from gizmo.ui.qt import mixin
-from PyQt5 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui
 
 
 class Hint(mixin.view.Hint):

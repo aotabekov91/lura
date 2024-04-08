@@ -10,13 +10,24 @@ style = 'GreenElf'
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
+[ModelView.Bookmark]
+want='attach'
+model_name='bookmark'
+view_prefix=['<c-.>[^]']
+tab_prefix=['b(command)']
+position={BookmarkTab= 'D|R'}
+
+[ModelView.Bookmark.widget_map]
+id = {w =  'Label', p = '0x0x1x1'}
+text = {w = 'TextEdit', p = '1x0x1x1'}
+
 [[Plugman.Picks]]
 pick = 'aotabekov91/janilai'
 subdir = [
+	'src/janilai/green_elf',
+	'src/janilai/model_view',
 	# 'src/janilai/table',
 	# 'src/janilai/ctrlp',
-	'src/janilai/green_elf',
-	# 'src/janilai/model_view',
 	]
 
 # [[Plugman.Picks]]
@@ -26,88 +37,79 @@ subdir = [
 # 	]
 
 
-[ModelView.Quickmark]
-want='attach'
-model_name='quickmark'
-tab_prefix={command = 'q'}
-view_prefix={'|^' = '<c-.>'}
-position={QuickmarkTab= 'D|R'}
-widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
+# [ModelView.Quickmark]
+# want='attach'
+# model_name='quickmark'
+# tab_prefix={command = 'q'}
+# view_prefix={'|^' = '<c-.>'}
+# position={QuickmarkTab= 'D|R'}
+# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
 
-[ModelView.Outline]
-want='attach'
-model_name='outline'
-view_kind='TreeView'
-tab_prefix={command = 'o'}
-position={OutlineTab= 'D|L'}
-view_prefix={'|^' = '<c-.>'}
+# [ModelView.Outline]
+# want='attach'
+# model_name='outline'
+# view_kind='TreeView'
+# tab_prefix={command = 'o'}
+# position={OutlineTab= 'D|L'}
+# view_prefix={'|^' = '<c-.>'}
 
-[ModelView.Bookmark]
-want='attach'
-model_name='bookmark'
-tab_prefix={command = 'b'}
-view_prefix={'|^' = '<c-.>'}
-position={BookmarkTab= 'D|R'}
 
-[ModelView.Bookmark.widget_map]
-id = {w =  'Label', p = '0x0x1x1'}
-text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[ModelView.Annotation]
-want='attach'
-locator='annotation'
-model_name='annotation'
-tab_prefix={command = 'a'}
-view_prefix={'|^' = '<c-.>'}
-position={AnnotationTab= 'D|R'}
+# [ModelView.Annotation]
+# want='attach'
+# locator='annotation'
+# model_name='annotation'
+# tab_prefix={command = 'a'}
+# view_prefix={'|^' = '<c-.>'}
+# position={AnnotationTab= 'D|R'}
 
-[ModelView.Annotation.widget_map]
-id = {w =  'Label', p = '0x0x1x1', n = 'function'}
-text = {w = 'TextEdit', p = '1x0x1x1'}
+# [ModelView.Annotation.widget_map]
+# id = {w =  'Label', p = '0x0x1x1', n = 'function'}
+# text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[ModelView.Metadata]
-want='attach'
-model_name='metadata'
-tab_prefix={command = 'm'}
-position={MetadataTab= 'D|R'}
-view_prefix={'|^' = '<c-.>'}
-include={field = ['title', 'author', 'year', 'bibkey']}
+# [ModelView.Metadata]
+# want='attach'
+# model_name='metadata'
+# tab_prefix={command = 'm'}
+# position={MetadataTab= 'D|R'}
+# view_prefix={'|^' = '<c-.>'}
+# include={field = ['title', 'author', 'year', 'bibkey']}
 
-[ModelView.Metadata.widget_map]
-field = {w = 'Label', p = '0x0x1x1', title=true}
-value = {w = 'TextEdit', p = '1x0x1x1'}
+# [ModelView.Metadata.widget_map]
+# field = {w = 'Label', p = '0x0x1x1', title=true}
+# value = {w = 'TextEdit', p = '1x0x1x1'}
 
-[Table.State]
-uid='id'
-name='state'
-want='attach'
-props=['hasStates']
+# [Table.State]
+# uid='id'
+# name='state'
+# want='attach'
+# props=['hasStates']
 
-[Table.Quickmark]
-uid='id'
-want='attach'
-name='quickmark'
-props=['canQuickmark']
+# [Table.Quickmark]
+# uid='id'
+# want='attach'
+# name='quickmark'
+# props=['canQuickmark']
 
-[Table.Bookmark]
-uid='id'
-want='attach'
-name='bookmark'
-props=['canBookmark']
+# [Table.Bookmark]
+# uid='id'
+# want='attach'
+# name='bookmark'
+# props=['canBookmark']
 
-[Table.Annotation]
-uid='id'
-want='attach'
-name='annotation'
-props=['canAnnotate']
+# [Table.Annotation]
+# uid='id'
+# want='attach'
+# name='annotation'
+# props=['canAnnotate']
 
-[Table.Metadata]
-uid='id'
-want='attach'
-name='metadata'
-row_model=true
-autocreate=true
-props=['hasMetadata']
+# [Table.Metadata]
+# uid='id'
+# want='attach'
+# name='metadata'
+# row_model=true
+# autocreate=true
+# props=['hasMetadata']
 
 [View]
 zoomFactor = 0.1
@@ -126,6 +128,8 @@ viewportPadding = 0
 pageSpacing = 0 
 
 [FitzView]
+convertToGrayScale = false
+
 tileSize =  1024 #todo
 paperColor = 'gray' #todo
 useTiling =  false #todo
@@ -136,7 +140,6 @@ decoratePages = false
 devicePixelRatio = 1.0
 drawMode = 'DefaultMode'
 annotationOverlay = true
-convertToGrayScale = true
 keepObsoletePixmaps = true
 copyToClipboardModifiers = 1 #todo
 
