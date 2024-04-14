@@ -29,35 +29,32 @@ class Hint(mixin.view.BaseHint):
         br = QtCore.QPointF(d[2], d[3])
         return QtCore.QRectF(tl, br)
 
-    def paintHints(self, p, o, w, i):
+    def paintHints(self, painter, opts, widget, item):
         if self.m_hinting:
-            painter = self.getHintPainter()
-            if painter:
-                painter(p, o, w, i)
+            hint_painter = self.getHintPainter()
+            if hint_painter:
+                hint_painter(painter, opts, widget, item)
             else:
-                m = self.m_hint_map.get(i, {})
-                p.setRenderHint(QtGui.QPainter.Antialiasing)
-                p.save()
-                pen = QtGui.QPen(QtCore.Qt.green, 1.0)
-                ppen = QtGui.QPen(QtCore.Qt.NoPen)
-                for j, d in m.items():
-                    b = d["box"]
-                    if type(b) == list:
-                        b = b[0]
-                    tr = i.mapToItem(b, unified=True)
-                    tl = tr.center()
-                    tl.setX(tr.x())
-
-                    path = QtGui.QPainterPath()
-                    path.addRect(tr)
-                    p.setPen(ppen)
-                    p.fillPath(path, QtCore.Qt.black)
-                    p.drawPath(path)
-
-                    p.setPen(pen)
-                    p.drawText(tr, QtCore.Qt.AlignLeft, j)
-
-                p.restore()
+                painter.save()
+                m = self.m_hint_map.get(item, {})
+                painter.setRenderHint(
+                        QtGui.QPainter.RenderHint.Antialiasing)
+                pen = QtGui.QPen(
+                        QtCore.Qt.GlobalColor.black, 0)
+                background=QtGui.QColor(128, 128, 255, 128)
+                brush=QtGui.QBrush(background)
+                for text, data in m.items():
+                    box = data["box"]
+                    if type(box) == list:
+                        box = box[0]
+                    rect = item.mapToItem(box, unified=True)
+                    top_left = rect.topLeft()
+                    painter.fillRect(rect, brush)
+                    painter.setPen(pen)
+                    painter.drawText(
+                            top_left,
+                            text)
+                painter.restore()
 
     def setupHint(self, kind, **kwargs):
         vis = self.visibleItems()
