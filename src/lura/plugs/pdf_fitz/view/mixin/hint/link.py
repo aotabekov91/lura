@@ -18,9 +18,10 @@ class LinkHint:
                 self.selectLinkHint)
 
     def openLink(self, link):
+        if not link: return
         d = link["link"].dest
         if d.kind in [fitz.LINK_GOTO, fitz.LINK_GOTOR]:
-            raise
+            print('Not implemented') #todo
         elif d.kind in [fitz.LINK_URI]:
             cmd = ["qutebrowser", d.uri]
             subprocess.Popen(cmd)
@@ -43,7 +44,10 @@ class LinkHint:
 
     def selectLinkHint(self, kind, sel):
         if kind == "link":
-            self.openLink(sel)
+            try:
+                self.openLink(sel)
+            except:
+                pass
             self.app.stateman.toggle()
 
     def getLinkHints(self):
