@@ -4,6 +4,10 @@ from gizmo.utils import tag
 class WordHint:
     canHintWords = True
 
+    # @tag('<c-f>')
+    # def test(self):
+    #     raise
+
     def setup(self):
         super().setup()
         self.hintSelectWanted.connect(self.selectWordHint)
@@ -14,7 +18,7 @@ class WordHint:
         self.cleanUpSelection()
         self.app.stateman.toggle()
 
-    @tag("<c-w>(hint[any])[^]")
+    @tag("<c-w>(hint)[^]")
     def toggleHintWordMode(self):
         sm = self.app.stateman.toggleSubmode("word")
         if sm == "word":

@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets
 
 
 class Viewport(QtWidgets.QWidget):
@@ -10,6 +10,6 @@ class Viewport(QtWidgets.QWidget):
 
     def event(self, e):
         res = super().event(e)
-        if e.type() == QtCore.QEvent.Move:
+        if e.type() == QtCore.QEvent.Type.Move:
             self.update()
         return res

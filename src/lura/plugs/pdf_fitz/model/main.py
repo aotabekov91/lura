@@ -4,7 +4,7 @@ import re
 
 import fitz
 import gizmo
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 from ..element import FitzElement
 from . import mixin
@@ -12,7 +12,7 @@ from . import mixin
 
 class FitzModel(
     mixin.Pixmap,
-    mixin.Outline,
+#    mixin.Outline,
     mixin.Annotate,
     mixin.UniqLocate,
     gizmo.ui.core.utils.Cache,

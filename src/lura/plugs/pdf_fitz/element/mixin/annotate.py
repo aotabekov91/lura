@@ -1,6 +1,6 @@
 from fitz import Quad
 from gizmo.ui.qt import mixin
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 
 class Annotate(mixin.element.Annotate):

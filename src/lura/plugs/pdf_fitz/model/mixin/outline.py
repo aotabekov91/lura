@@ -1,7 +1,7 @@
 import fitz
 from gizmo.ui.core import vimo
 from gizmo.utils import Factory
-from PyQt5 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui
 
 
 class Outline:

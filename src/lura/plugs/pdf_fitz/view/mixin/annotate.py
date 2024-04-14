@@ -73,17 +73,15 @@ class Annotate:
             for sn, sm in cs.items():
                 for name, v in sm.items():
                     n, k = v["name"], v["key"]
-                    submode = f"annotate[{sn}]"
                     f = partial(
                         self.annotate,
                         func=n,
                         submode=sn,
                     )
-                    f.key = k
+                    f.key = f"{k}(annotate[{sn}])[^]"
                     f.isTagged = True
                     f.hasTaggedKey = True
                     f.canDigitalize = False
-                    f.modes = [f"{submode}|^"]
                     fn = f"annotate{sn.title()}{k.title()}"
                     f.name = fn
                     f.__name__ = fn

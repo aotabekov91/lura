@@ -1,6 +1,6 @@
 import fitz
 import gizmo
-from PyQt5 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui
 
 from . import mixin
 
@@ -61,7 +61,7 @@ class FitzElement(
             p.width,
             p.height,
             p.stride,
-            QtGui.QImage.Format_RGB888,
+            QtGui.QImage.Format.Format_RGB888,
         )
         img.setDevicePixelRatio(pratio)
         if grayScale:
