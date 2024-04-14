@@ -85,7 +85,7 @@ class BoxHint:
             p.restore()
 
     def hintSelectBox(self, kind, sel):
-        sm = self.app.earman.submode()
+        sm = self.app.stateman.submode()
         if kind == "box" and sm == "box":
             i = sel["item"]
             self.select(i, sel)

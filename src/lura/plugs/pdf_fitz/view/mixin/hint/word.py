@@ -39,8 +39,8 @@ class WordHint:
 
     def selectWordHint(self, kind, sel):
         if kind == "word":
-            m = self.app.earman.mode()
-            sm = self.app.earman.submode()
+            m = self.app.stateman.mode()
+            sm = self.app.stateman.submode()
             if m == "hint" and sm == "word":
                 i = sel["item"]
                 self.select(i, sel)

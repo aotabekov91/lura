@@ -120,15 +120,15 @@ class BoxVisual:
         return self.m_visual_boxes
 
     def visualBoxSelect(self, kind, sel):
-        m = self.app.earman.mode()
-        sm = self.app.earman.submode()
+        m = self.app.stateman.mode()
+        sm = self.app.stateman.submode()
         if m == "visual" and sm == "box":
             c = sel["isSelected"]
             sel["isSelected"] = not c
 
     def updateVisualHint(self, key):
-        m = self.app.earman.mode()
-        sm = self.app.earman.submode()
+        m = self.app.stateman.mode()
+        sm = self.app.stateman.submode()
         if not (m == "visual" and sm == "box"):
             self.updateHint(key)
         else:

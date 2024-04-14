@@ -52,19 +52,20 @@ class LinkHint:
             alist += i.getLinks()
         return alist
 
-    def paintLinkHints(self, p, o, w, i):
+    def paintLinkHints(self, painter, ops, widget, item):
         if self.m_hinting:
-            p.save()
-            pen = QtGui.QPen(QtCore.Qt.red, 0.0)
-            p.setPen(pen)
-            m = self.m_hint_map.get(i, {})
-            for j, d in m.items():
-                b = d["box"]
-                tr = []
-                if type(b) != list:
-                    b = [b]
-                for l in b:
-                    tr += [i.mapToItem(l, unified=True)]
-                p.drawRects(tr)
-                p.drawText(tr[0].topLeft(), j)
-            p.restore()
+            painter.save()
+            m = self.m_hint_map.get(item, {})
+            pen = QtGui.QPen(
+                    QtCore.Qt.GlobalColor.red, 0.0)
+            painter.setPen(pen)
+            for text, data in m.items():
+                box = data["box"]
+                rect = []
+                if type(box) != list:
+                    box = [box]
+                for l in box:
+                    rect += [item.mapToItem(l, unified=True)]
+                painter.drawRects(rect)
+                painter.drawText(rect[0].topLeft(), text)
+            painter.restore()
