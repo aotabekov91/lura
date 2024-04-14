@@ -1,6 +1,7 @@
+import math
+import fitz
 import subprocess
 
-import fitz
 from gizmo.utils import tag
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtCore import QPointF
@@ -13,25 +14,26 @@ class LinkHint:
 
     def setup(self):
         super().setup()
-        self.hintSelectWanted.connect(self.selectLinkHint)
+        self.hintSelectWanted.connect(
+                self.selectLinkHint)
 
-    def openLink(self, l):
-        k1 = fitz.LINK_GOTO
-        k2 = fitz.LINK_GOTOR
-        d = l["link"].dest
-        if d.kind in [k1, k2]:
+    def openLink(self, link):
+        d = link["link"].dest
+        if d.kind in [fitz.LINK_GOTO, fitz.LINK_GOTOR]:
             raise
-        elif d.kind == fitz.LINK_NAMED:
+        elif d.kind in [fitz.LINK_URI]:
+            cmd = ["qutebrowser", d.uri]
+            subprocess.Popen(cmd)
+        elif d.kind in [fitz.LINK_NAMED, fitz.LINK_LAUNCH]:
             r = self.m_model.m_data.resolve_link(d.uri)
             p, x, y = r
+            if math.isnan(x): x=0.
+            if math.isnan(y): y=0.
             tl = QPointF(x, y)
             item = self.item(p + 1)
             elem = item.element()
             tl = elem.unify(tl)
             self.goTo(p + 1, tl.x(), tl.y())
-        elif d.kind == fitz.LINK_URI:
-            cmd = ["qutebrowser", d.uri]
-            subprocess.Popen(cmd)
 
     @tag("<c-l>(hint[any])[^]")
     def toggleLinkMode(self):
@@ -41,10 +43,8 @@ class LinkHint:
 
     def selectLinkHint(self, kind, sel):
         if kind == "link":
-            i = sel["link"]
-            self.select(i, sel)
             self.openLink(sel)
-            self.toggleHintMode()
+            self.app.stateman.toggle()
 
     def getLinkHints(self):
         alist = []
@@ -66,6 +66,5 @@ class LinkHint:
                     box = [box]
                 for l in box:
                     rect += [item.mapToItem(l, unified=True)]
-                painter.drawRects(rect)
                 painter.drawText(rect[0].topLeft(), text)
             painter.restore()

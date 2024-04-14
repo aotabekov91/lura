@@ -4,13 +4,10 @@ from gizmo.utils import tag
 class WordHint:
     canHintWords = True
 
-    # @tag('<c-f>')
-    # def test(self):
-    #     raise
-
     def setup(self):
         super().setup()
-        self.hintSelectWanted.connect(self.selectWordHint)
+        self.hintSelectWanted.connect(
+                self.selectWordHint)
 
     @tag("<escape>/<c-[>(hint[word])[^]")
     def finishHintWordMode(self):

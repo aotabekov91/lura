@@ -7,7 +7,7 @@ authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pymupdf = {version="==1.23.5"}
+pymupdf = {version="==1.24.1"}
 gizmo = {path = "/home/adam/code/gizmo", extras=["qt"]}
 
 [tool.poetry.scripts]

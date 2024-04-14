@@ -3,9 +3,15 @@ from PyQt6 import QtCore, QtGui
 
 
 class Hint(mixin.view.BaseHint):
+
     def setup(self):
         self.m_hinting_items = []
         super().setup()
+
+    def setupHint(self, kind, **kwargs):
+        vis = self.visibleItems()
+        self.m_hinting_items = vis
+        super().setupHint(kind, **kwargs)
 
     def connectHint(self):
         for i in self.m_hinting_items:
@@ -55,8 +61,3 @@ class Hint(mixin.view.BaseHint):
                             top_left,
                             text)
                 painter.restore()
-
-    def setupHint(self, kind, **kwargs):
-        vis = self.visibleItems()
-        self.m_hinting_items = vis
-        super().setupHint(kind, **kwargs)
