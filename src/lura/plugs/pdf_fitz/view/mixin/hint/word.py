@@ -41,4 +41,4 @@ class WordHint:
             if m == "hint" and sm == "word":
                 i = sel["item"]
                 self.select(i, sel)
-                self.toggleHintMode()
+                self.app.stateman.toggle()
