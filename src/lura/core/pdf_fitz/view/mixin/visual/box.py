@@ -9,7 +9,7 @@ class BoxVisual:
         self.hintSelectWanted.connect(self.visualBoxSelect)
 
     @tag("<c-i>(visual[box])[^]")
-    def incrementVisualBoxScale(self, xrange=1):
+    def incrementVisualBoxScale(self, xrange=[1]):
         self.m_visual_boxes = None
         self.m_hint_capturing = True
         self.setupHint(
@@ -19,7 +19,7 @@ class BoxVisual:
         )
 
     @tag("<c-o>(visual[box])[^]")
-    def decrementVisualBoxScale(self, xrange=1):
+    def decrementVisualBoxScale(self, xrange=[1]):
         self.m_visual_boxes = None
         self.m_hint_capturing = True
         self.setupHint(
@@ -51,22 +51,22 @@ class BoxVisual:
         self.visualBoxGoTo(kind="last")
 
     @tag("k(visual[box])[^]")
-    def visualBoxGoToUp(self, xrange=1):
+    def visualBoxGoToUp(self, xrange=[1]):
         self.visualBoxGoTo("up", xrange=xrange)
 
     @tag("j(visual[box])[^]")
-    def visualBoxGoToDown(self, xrange=1):
+    def visualBoxGoToDown(self, xrange=[1]):
         self.visualBoxGoTo("down", xrange=xrange)
 
     @tag("l(visual[box])[^]")
-    def visualBoxGoToLeft(self, xrange=1):
+    def visualBoxGoToLeft(self, xrange=[1]):
         self.visualBoxGoTo("right", xrange=xrange)
 
     @tag("h(visual[box])[^]")
-    def visualBoxGoToRight(self, xrange=1):
+    def visualBoxGoToRight(self, xrange=[1]):
         self.visualBoxGoTo("left", xrange=xrange)
 
-    def visualBoxGoTo(self, kind, xrange=1):
+    def visualBoxGoTo(self, kind, xrange=[1]):
         for i in range(xrange):
             s = self.m_visual_box
             if not s:
@@ -104,7 +104,7 @@ class BoxVisual:
         self.app.stateman.toggle()
         self.select(i, sel)
 
-    def getVisualboxHints(self, xrange=1, inc=None):
+    def getVisualboxHints(self, xrange=[1], inc=None):
         alist = self.getBoxHints(xrange, inc)
         if self.m_visual_boxes != alist:
             self.m_visual_poses = {}

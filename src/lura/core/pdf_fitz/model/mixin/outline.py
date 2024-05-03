@@ -34,17 +34,21 @@ class Outline:
             return
         t = o.title
         i = QtGui.QStandardItem(t)
-        i.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
-        if o.dest.kind != fitz.LINK_NONE:
-            # page = o.dest.ld.goTor.page + 1
-            page = o.dest.page + 1
-            i.setData(page)  # , QtCore.Qt.UserRole + 1)
-            pi = i.clone()
-            pi.setText(str(page))
-            pi.setTextAlignment(QtCore.Qt.AlignRight)
-            p.appendRow([i, pi])
-        else:
-            p.appendRow(i)
+        i.setFlags(
+                QtCore.Qt.ItemFlag.ItemIsEnabled | QtCore.Qt.ItemFlag.ItemIsSelectable)
+
+        # if o.dest.kind != fitz.LINK_NONE:
+        #     # page = o.dest.ld.goTor.page + 1
+        #     page = o.dest.page + 1
+        #     i.setData(page)  # , QtCore.Qt.UserRole + 1)
+        #     pi = i.clone()
+        #     pi.setText(str(page))
+        #     pi.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        #     p.appendRow([i, pi])
+        # else:
+        #     p.appendRow(i)
+        p.appendRow(i)
+
         if o.next != 0:
             self.loadOutline(o.next, p)
         if o.down != 0:

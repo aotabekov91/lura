@@ -8,7 +8,7 @@ class Yank:
         self.m_last_yanked_dir = None
 
     @tag("yy/yt(visual[band])[^]")
-    def yankAsText(self, xrange=1, **kwargs):
+    def yankAsText(self, xrange=[1], **kwargs):
         if not self.m_band:
             return
         i = self.m_band["item"]

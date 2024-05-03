@@ -19,7 +19,7 @@ class Resize:
         i.refresh()
 
     @tag("l(visual[band])[^]")
-    def bandVisualGoToRight(self, xrange=1, **kwargs):
+    def bandVisualGoToRight(self, xrange=[1], **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = self.rubberbandIncrement * xrange
@@ -31,7 +31,7 @@ class Resize:
         i.refresh()
 
     @tag("h(visual[band])[^]")
-    def bandVisualGoToLeft(self, xrange=1, **kwargs):
+    def bandVisualGoToLeft(self, xrange=[1], **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = -self.rubberbandIncrement * xrange
@@ -43,7 +43,7 @@ class Resize:
         i.refresh()
 
     @tag("k(visual[band])[^]")
-    def bandVisualGoToUp(self, xrange=1, **kwargs):
+    def bandVisualGoToUp(self, xrange=[1], **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = -self.rubberbandIncrement * xrange
@@ -55,7 +55,7 @@ class Resize:
         i.refresh()
 
     @tag("j(visual[band])[^]")
-    def bandVisualGoToDown(self, xrange=1, **kwargs):
+    def bandVisualGoToDown(self, xrange=[1], **kwargs):
         i = self.m_band["item"]
         b = self.m_band["box"][0]
         r = self.rubberbandIncrement * xrange

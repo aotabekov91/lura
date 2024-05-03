@@ -21,7 +21,7 @@ class LinkHint:
         if not link: return
         d = link["link"].dest
         if d.kind in [fitz.LINK_GOTO, fitz.LINK_GOTOR]:
-            print('Not implemented') #todo
+            raise
         elif d.kind in [fitz.LINK_URI]:
             cmd = ["qutebrowser", d.uri]
             subprocess.Popen(cmd)

@@ -1,12 +1,10 @@
+from lura import core
 from gizmo.ui.qt import plug
-
-from lura import plugs
-
 
 class Lura(plug.app.AppPlug):
     def activate(self):
         p = [
-            plugs.pdf_fitz.PdfFitz,
+            core.pdf_fitz.PdfFitz,
         ]
         self.plugman.load(p)
         super().activate()

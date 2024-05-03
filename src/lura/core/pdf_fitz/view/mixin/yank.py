@@ -30,7 +30,7 @@ class Yank:
         return text
 
     @tag("ya", modes=["(normal", "visual[word])[^]"])
-    def yankToAyleen(self, xrange=1, **kwargs):
+    def yankToAyleen(self, xrange=[1], **kwargs):
         c = self.checkProp("hasServer", self.app)
         if not c:
             return

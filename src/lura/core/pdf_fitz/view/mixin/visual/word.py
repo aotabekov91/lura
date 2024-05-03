@@ -48,19 +48,19 @@ class WordVisual:
         self.visualWordGoTo(kind="last")
 
     @tag("k(visual[word])[^]")
-    def visualWordGoToUp(self, xrange=1):
+    def visualWordGoToUp(self, xrange=[1]):
         self.visualWordGoTo("up", xrange=xrange)
 
     @tag("j(visual[word])[^]")
-    def visualWordGoToDown(self, xrange=1):
+    def visualWordGoToDown(self, xrange=[1]):
         self.visualWordGoTo("down", xrange=xrange)
 
     @tag("l(visual[word])[^]")
-    def visualWordGoToLeft(self, xrange=1):
+    def visualWordGoToLeft(self, xrange=[1]):
         self.visualWordGoTo("right", xrange=xrange)
 
     @tag("h(visual[word])[^]")
-    def visualWordGoToRight(self, xrange=1):
+    def visualWordGoToRight(self, xrange=[1]):
         self.visualWordGoTo("left", xrange=xrange)
 
     @tag("t(visual[word])[^]")
@@ -72,7 +72,7 @@ class WordVisual:
         e = i.element()
         e.toggleDirection(0)
 
-    def visualWordGoTo(self, kind, xrange=1):
+    def visualWordGoTo(self, kind, xrange=[1]):
         for i in range(xrange):
             s = self.selection()
             if not s:

@@ -12,7 +12,7 @@ from . import mixin
 
 class FitzModel(
     mixin.Pixmap,
-#    mixin.Outline,
+    mixin.Outline,
     mixin.Annotate,
     mixin.UniqLocate,
     gizmo.ui.core.utils.Cache,

@@ -10,24 +10,24 @@ style = 'GreenElf'
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
-[ModelView.Bookmark]
-want='attach'
-model_name='bookmark'
-view_prefix=['<c-.>[^]']
-tab_prefix=['b(command)']
-position={BookmarkTab= 'D|R'}
+# [ModelView.Bookmark]
+# want='attach'
+# model_name='bookmark'
+# view_prefix=['<c-.>[^]']
+# tab_prefix=['b(command)']
+# position={BookmarkTab= 'D|R'}
 
-[ModelView.Bookmark.widget_map]
-id = {w =  'Label', p = '0x0x1x1'}
-text = {w = 'TextEdit', p = '1x0x1x1'}
+# [ModelView.Bookmark.widget_map]
+# id = {w =  'Label', p = '0x0x1x1'}
+# text = {w = 'TextEdit', p = '1x0x1x1'}
 
 [[Plugman.Picks]]
-pick = 'aotabekov91/janilai'
+pick = 'aotabekov91/lura_plugs'
 subdir = [
-	'src/janilai/green_elf',
-	'src/janilai/model_view',
-	# 'src/janilai/table',
-	# 'src/janilai/ctrlp',
+	'src/lura_plugs/outline',
+	'src/lura_plugs/green_elf',
+	# 'src/lura_plugs/table',
+	# 'src/lura_plugs/ctrlp',
 	]
 
 # [[Plugman.Picks]]
@@ -44,16 +44,6 @@ subdir = [
 # view_prefix={'|^' = '<c-.>'}
 # position={QuickmarkTab= 'D|R'}
 # widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
-
-# [ModelView.Outline]
-# want='attach'
-# model_name='outline'
-# view_kind='TreeView'
-# tab_prefix={command = 'o'}
-# position={OutlineTab= 'D|L'}
-# view_prefix={'|^' = '<c-.>'}
-
-
 
 # [ModelView.Annotation]
 # want='attach'

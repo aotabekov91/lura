@@ -11,22 +11,22 @@ class BoxHint:
         self.hintSelectWanted.connect(self.hintSelectBox)
 
     @tag("<c-b>(hint[any])[^]")
-    def toggleBoxMode(self, xrange=1):
+    def toggleBoxMode(self, xrange=[1]):
         sm = self.app.stateman.toggleSubmode("box")
         if sm == "box":
             self.m_hint_scale = None
             self.setupHint("box", xrange=xrange)
 
     @tag("<c-i>(hint[box])[^]")
-    def incrementBoxScale(self, xrange=1):
+    def incrementBoxScale(self, xrange=[1]):
         self.setupHint("box", xrange=xrange, inc=True)
 
     @tag("<c-o>(hint[box])[^]")
-    def decrementBoxScale(self, xrange=1):
+    def decrementBoxScale(self, xrange=[1]):
         self.cleanUpHinting()
         self.setupHint("box", xrange=xrange, inc=False)
 
-    def getBoxHints(self, xrange=1, inc=None):
+    def getBoxHints(self, xrange=[1], inc=None):
         alist = []
         if inc is None:
             inc = self.hint_box_increment / xrange
