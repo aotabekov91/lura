@@ -21,22 +21,6 @@ folder = '~/.config/lura/picky'
 # id = {w =  'Label', p = '0x0x1x1'}
 # text = {w = 'TextEdit', p = '1x0x1x1'}
 
-[[Plugman.Picks]]
-pick = 'aotabekov91/lura_plugs'
-subdir = [
-	'src/lura_plugs/outline',
-	'src/lura_plugs/green_elf',
-	# 'src/lura_plugs/table',
-	# 'src/lura_plugs/ctrlp',
-	]
-
-# [[Plugman.Picks]]
-# pick = 'aotabekov91/sainan'
-# subdir = [
-# 	'src/sainan/plugs/client/czmq',
-# 	]
-
-
 # [ModelView.Quickmark]
 # want='attach'
 # model_name='quickmark'
@@ -68,6 +52,21 @@ subdir = [
 # [ModelView.Metadata.widget_map]
 # field = {w = 'Label', p = '0x0x1x1', title=true}
 # value = {w = 'TextEdit', p = '1x0x1x1'}
+
+[[Plugman.Picks]]
+pick = 'aotabekov91/lura_plugs'
+subdir = [
+	'src/lura_plugs/outline',
+	# 'src/lura_plugs/table',
+	# 'src/lura_plugs/ctrlp',
+	'src/lura_plugs/green_elf',
+	]
+
+# [[Plugman.Picks]]
+# pick = 'aotabekov91/sainan'
+# subdir = [
+# 	'src/sainan/plugs/client/czmq',
+# 	]
 
 # [Table.State]
 # uid='id'
