@@ -1,6 +1,6 @@
 import fitz
-import gizmo
 from PyQt6 import QtCore, QtGui
+from lura import gizmo
 
 from . import mixin
 

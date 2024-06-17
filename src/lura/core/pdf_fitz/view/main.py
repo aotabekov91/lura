@@ -1,4 +1,4 @@
-from gizmo.ui import qt
+from lura import qt
 from PyQt6 import QtWidgets
 
 from ..item import FitzItem

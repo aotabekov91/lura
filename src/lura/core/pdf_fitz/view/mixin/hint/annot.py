@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from lura.gizmo.utils import tag
 from PyQt6 import QtCore, QtWidgets
 
 

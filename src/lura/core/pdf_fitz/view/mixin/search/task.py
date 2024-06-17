@@ -1,4 +1,4 @@
-from gizmo.ui.qt import mixin
+from lura.qt import mixin
 from PyQt6 import QtCore
 
 

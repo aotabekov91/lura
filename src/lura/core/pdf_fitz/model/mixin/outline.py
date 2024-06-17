@@ -1,6 +1,6 @@
 import fitz
-from gizmo.ui.core import vimo
-from gizmo.utils import Factory
+from lura.gizmo.ui.core import vimo
+from lura.gizmo.utils import Factory
 from PyQt6 import QtCore, QtGui
 
 
@@ -25,7 +25,10 @@ class Outline:
         o = self.m_data.outline
         r = self.m_outline.invisibleRootItem()
         self.loaded.disconnect(self.setOutline)
-        self.loadOutline(o, r)
+        try:
+            self.loadOutline(o, r)
+        except:
+            pass
 
     def loadOutline(self, o, p):
         if not o:

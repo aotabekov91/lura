@@ -1,4 +1,4 @@
-from gizmo import plug
+import plug
 
 from .model import FitzModel
 from .view import FitzView
