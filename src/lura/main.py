@@ -1,8 +1,8 @@
 import faulthandler
-from lura import core
-from lura.qt import plug
+#from lura import core
+from app_qt import App
 
-class Lura(plug.app.AppPlug):
+class Lura(App):
     pass
 
     # def activate(self):
