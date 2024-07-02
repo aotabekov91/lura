@@ -1,4 +1,4 @@
-from lura.qt.mixin import view
+from gizmo_qt.mixin import view
 
 
 class Copy(view.Copy):

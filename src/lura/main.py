@@ -1,16 +1,15 @@
 import faulthandler
-#from lura import core
+from lura import core
 from app_qt import App
 
 class Lura(App):
-    pass
 
-    # def activate(self):
-    #     p = [
-    #         core.pdf_fitz.PdfFitz,
-    #     ]
-    #     self.plugman.load(p)
-    #     super().activate()
+    def activate(self):
+        p = [
+            core.pdf_fitz.PdfFitz,
+        ]
+        self.plugman.load(p)
+        super().activate()
 
 
 def run():

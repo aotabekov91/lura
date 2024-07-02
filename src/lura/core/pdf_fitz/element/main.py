@@ -1,6 +1,7 @@
 import fitz
 from PyQt6 import QtCore, QtGui
-from lura import gizmo
+
+import gizmo
 
 from . import mixin
 
@@ -12,7 +13,7 @@ class FitzElement(
     mixin.Search,
     mixin.Normed,
     mixin.Annotate,
-    gizmo.ui.core.element.Element,
+    gizmo.element.Element,
     QtCore.QObject,
 ):
     dataUpdated = QtCore.pyqtSignal()

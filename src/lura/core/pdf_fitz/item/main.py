@@ -1,4 +1,4 @@
-from lura import qt
+import gizmo_qt
 from PyQt6 import QtWidgets
 
 from . import mixin
@@ -6,13 +6,13 @@ from . import mixin
 
 class FitzItem(
     mixin.Links,
-    qt.mixin.item.Scale,
-    qt.mixin.item.Select,
-    qt.mixin.item.Overlay,
-    qt.mixin.item.Annotate,
-    qt.mixin.item.Highlight,
-    qt.mixin.item.Render,
-    qt.vimo.item.Item,
+    gizmo_qt.mixin.item.Scale,
+    gizmo_qt.mixin.item.Select,
+    gizmo_qt.mixin.item.Overlay,
+    gizmo_qt.mixin.item.Annotate,
+    gizmo_qt.mixin.item.Highlight,
+    gizmo_qt.mixin.item.Render,
+    gizmo_qt.vimo.item.Item,
     QtWidgets.QGraphicsObject,
 ):
     pass

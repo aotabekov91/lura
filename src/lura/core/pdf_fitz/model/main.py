@@ -3,8 +3,8 @@ import os
 import re
 
 import fitz
-from lura import qt
-from lura import gizmo
+import gizmo
+import gizmo_qt
 from PyQt6 import QtCore
 
 from ..element import FitzElement
@@ -16,15 +16,15 @@ class FitzModel(
     mixin.Outline,
     mixin.Annotate,
     mixin.UniqLocate,
-    gizmo.ui.core.utils.Cache,
-    qt.mixin.model.State,
-    qt.mixin.model.Locate,
-    qt.mixin.model.Elements,
-    qt.mixin.model.Bookmark,
-    qt.mixin.model.Metadata,
-    qt.mixin.model.Annotate,
-    qt.mixin.model.Quickmark,
-    qt.vimo.model.Model,
+    gizmo.utils.Cache,
+    gizmo_qt.mixin.model.State,
+    gizmo_qt.mixin.model.Locate,
+    gizmo_qt.mixin.model.Elements,
+    gizmo_qt.mixin.model.Bookmark,
+    gizmo_qt.mixin.model.Metadata,
+    gizmo_qt.mixin.model.Annotate,
+    gizmo_qt.mixin.model.Quickmark,
+    gizmo_qt.vimo.model.Model,
     QtCore.QObject,
 ):
     isType = True

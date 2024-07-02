@@ -1,6 +1,6 @@
 from functools import partial
 
-from lura.gizmo.utils import tag
+from gizmo.utils import tag
 
 
 class Annotate:

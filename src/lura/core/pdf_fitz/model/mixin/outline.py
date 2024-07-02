@@ -1,6 +1,6 @@
 import fitz
-from lura.gizmo.ui.core import vimo
-from lura.gizmo.utils import Factory
+from gizmo import vimo
+from gizmo.utils import Factory
 from PyQt6 import QtCore, QtGui
 
 
