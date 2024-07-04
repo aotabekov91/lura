@@ -20,7 +20,7 @@ class TabView(
 
     def updateKlass(self):
         super().updateKlass()
-        pos = self.m_kwargs.get("tab_classes")
+        pos = self.m_kwargs.get("tab_classes", {}).copy()
         if pos:
             self.tab_classes.update(pos)
 
@@ -131,14 +131,14 @@ class TabView(
         self.setView(w)
 
     def initiate(self):
-        if self.initial_create:
-            t = self.addNewTab()
-            if t:
-                self.setView(t, focus=False)
+        view = self.addNewTab()
+        if view:
+            self.setView(view=view, focus=False)
 
     def setup(self):
         super().setup()
-        self.initiate()
+        if self.initial_create:
+            self.initiate()
 
     def getCopyTab(self, tab=None, **kwargs):
         c = tab or self.current
@@ -169,7 +169,7 @@ class TabView(
         recursive_activate=False,
         **kwargs,
     ):
-        if not view is None:
+        if view:
             current, previous = view, self.current
             self.current, self.previous = current, previous
             self.setCurrentIndex(view.posIndex() - 1)
