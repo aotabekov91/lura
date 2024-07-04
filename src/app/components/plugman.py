@@ -74,7 +74,7 @@ class Plugman(Plug):
 
     def loadPlug(
         self,
-        klass: tp.Callable[[...], ...],
+        klass: tp.Callable[[...], tp.Any],
         params: tp.Dict[str, str] = {},
     ) -> bool:
         def isLoaded(plug_class):

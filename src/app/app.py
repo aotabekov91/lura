@@ -30,17 +30,17 @@ class App(Plug):
     def setParts(
         self,
         plugman: tp.Callable[
-            [...], ...
+            [...], tp.Any 
         ] = components.Plugman,
-        earman: tp.Callable[[...], ...] = components.Earman,
+        earman: tp.Callable[[...], tp.Any] = components.Earman,
         buffman: tp.Callable[
-            [...], ...
+            [...], tp.Any 
         ] = components.Buffman,
         styleman: tp.Callable[
-            [...], ...
+            [...], tp.Any 
         ] = components.Styleman,
         stateman: tp.Callable[
-            [...], ...
+            [...], tp.Any 
         ] = components.Stateman,
     ) -> None:
         self.buffman: components.Buffman = buffman(self)

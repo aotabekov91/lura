@@ -21,7 +21,7 @@ class Buffman(Plug):
     def setFiller(
         self,
         name: str,
-        func: tp.Callable[[...], ...],
+        func: tp.Callable[[...], tp.Any],
     ) -> None:
         self.m_fillers[name] = func
 
@@ -33,7 +33,7 @@ class Buffman(Plug):
             self.m_models[idx] = model
 
     def create(
-        self, klass: tp.Callable[[...], ...], **kwargs
+        self, klass: tp.Callable[[...], tp.Any], **kwargs
     ) -> tp.Any:
         return klass(**kwargs)
 
@@ -79,7 +79,7 @@ class Buffman(Plug):
 
     def createModel(
         self,
-        klass: tp.Callable[[...], ...],
+        klass: tp.Callable[[...], tp.Any],
         name: tp.Any,
         source: tp.Any,
         **kwargs,

@@ -34,8 +34,8 @@ class Stateman(Plug):
 
     def setFunctor(
         self,
-        functor: tp.Callable[[...], ...] = None,
-    ) -> tp.Callable[[...], ...]:
+        functor: tp.Callable[[...], tp.Any] = None,
+    ) -> tp.Callable[[...], tp.Any]:
         self.app.earman.clearKeys(True)
         self.m_functor = functor
         return functor
@@ -155,7 +155,7 @@ class Stateman(Plug):
         mode: str = None,
         passive: tp.List[str] = [],
         submode: str = None,
-        functor: tp.Callable[[...], ...] = None,
+        functor: tp.Callable[[...], tp.Any] = None,
         **kwargs,
     ) -> str:
         self.setMode(mode)

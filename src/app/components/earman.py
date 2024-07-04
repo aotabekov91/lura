@@ -239,7 +239,7 @@ class Earman(Plug):
     @classmethod
     def getFuncTags(
         cls,
-        func: tp.Callable[[...], ...],
+        func,
         obj_name: str,
         pref: tp.Dict[tp.Tuple[str], str] = {},
         view: bool = False,
