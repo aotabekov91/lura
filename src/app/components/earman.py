@@ -118,17 +118,23 @@ class Earman(Plug):
         xrange = self.digits(convert=True)
         if not key and xrange:
             return True
-        match, partial = self.match(
-            key,
-            xrange,
-            state,
-            self.m_keys,
-            self.m_objects,
-            self.app.stateman.view(),
-        )
-        if match or partial:
-            self.run(match, partial, xrange)
-            return True
+        view=self.app.stateman.view()
+        while view:
+            match, partial = self.match(
+                key,
+                xrange,
+                state,
+                self.m_keys,
+                self.m_objects,
+                view,
+            )
+            print(view, match)
+            #todo
+            if match or partial:
+                self.run(match, partial, xrange)
+                return True
+            else:
+                view=view.manager()
         return False
 
     def run(self, match, partial, xrange):
@@ -282,22 +288,22 @@ class Earman(Plug):
         return funcs
 
     @classmethod
-    def getObjParentNames(cls, obj: tp.Any) -> tp.List[str]:
-        pnames = []
-        for i in obj.__class__.__mro__[::-1]:
-            if hasattr(i, "name") and i.name:
-                pnames += [i.name]
-        return pnames
+    def getParentManagers(cls, obj: tp.Any, parent_managers=[]) -> tp.List[str]:
+        manager=obj.manager()
+        if not manager:
+            return parent_managers
+        parent_managers+=[manager.name]
+        return cls.getParentManagers(manager, parent_managers)
 
     @classmethod
     def getStateKeys(cls, state, keys):
         state_keys = {}
-        mode = ["any", state[0]]
-        view = ["any", state[2]]
-        submode = ["any", state[1]]
-        subview = ["any", state[3]]
+        modes = ["any", state[0]]
+        submodes = ["any", state[1]]
+        views = ["any", state[2]]
+        subviews = ["any", state[3]]
         for superstate in itertools.product(
-            mode, submode, view, subview
+            modes, submodes, views, subviews
         ):
             super_keys = keys.get(superstate, {})
             state_keys.update(super_keys)

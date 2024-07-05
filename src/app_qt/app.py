@@ -121,7 +121,7 @@ class App(
          self.timer.start(self.app_wait)
          sys.exit(self.qapp.exec())
     
-    @utils.tag(["<c-q>(any)", "q(normal)"])
+    @utils.tag("<c-q>(any)")
     def quit(self) -> None:
          self.appSoonQuits.emit()
          time.sleep(0.1)

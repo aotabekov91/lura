@@ -14,7 +14,7 @@ class TabView(
     tab_classes = {}
     canSetView = True
     initial_create = True
-    prefix_keys = ["<c-t>(normal)[^]"]
+    # prefix_keys = ["<c-t>(normal)[^]"]
     viewAdded = QtCore.pyqtSignal(object)
     viewCreated = QtCore.pyqtSignal(object)
 
