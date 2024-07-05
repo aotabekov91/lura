@@ -119,22 +119,18 @@ class Earman(Plug):
         if not key and xrange:
             return True
         view=self.app.stateman.view()
-        while view:
-            match, partial = self.match(
-                key,
-                xrange,
-                state,
-                self.m_keys,
-                self.m_objects,
-                view,
-            )
-            print(view, match)
-            #todo
-            if match or partial:
-                self.run(match, partial, xrange)
-                return True
-            else:
-                view=view.manager()
+        match, partial = self.match(
+            key,
+            xrange,
+            state,
+            self.m_keys,
+            self.m_objects,
+            view,
+        )
+        print(match, partial)
+        if match or partial:
+            self.run(match, partial, xrange)
+            return True
         return False
 
     def run(self, match, partial, xrange):
@@ -342,6 +338,8 @@ class Earman(Plug):
                         while not tmp_view is None:# and not current:
                             if tmp_view==obj:
                                 current.add(func)
+                                break
+                            elif current:
                                 break
                             tmp_view=tmp_view.manager()
 

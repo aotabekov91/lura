@@ -14,7 +14,7 @@ class TabView(
     tab_classes = {}
     canSetView = True
     initial_create = True
-    # prefix_keys = ["<c-t>(normal)[^]"]
+    prefix_keys = ["<c-t>(normal)"]
     viewAdded = QtCore.pyqtSignal(object)
     viewCreated = QtCore.pyqtSignal(object)
 
@@ -33,15 +33,11 @@ class TabView(
             pos = pos.replace("-1", str(i), 1)
         return super().child(pos, recursive)
 
-    @tag('E(normal)')
-    def est(self):
-        raise
-
-    @tag("t(normal)[^]")
+    @tag("n(normal)")
     def addAndGoToNewTab(self, focus=False, **kwargs):
         return self.addNewTab(focus=True, **kwargs)
 
-    @tag("T(normal)[^]")
+    @tag("N(normal)")
     def addNewTab(self, focus=False, **kwargs):
         t = self.getNewTab(**kwargs)
         if focus and t:
@@ -49,16 +45,18 @@ class TabView(
             t.activate()
         return t
 
-    @tag("N(normal)[^]")
+    @tag("T(normal)")
     def addCopyTab(self, tab=None, **kwargs):
         c = self.getCopyTab(tab, **kwargs)
         if c:
             self.addView(c)
         return c
 
-    @tag("n(normal)[^]")
+    @tag("t(normal)")
     def addAndGoToCopyTab(self, tab=None, **kwargs):
         c = self.addCopyTab(tab, **kwargs)
+        print(c)
+        #todo
         if c:
             self.addView(c)
             c.activate()
