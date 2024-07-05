@@ -86,27 +86,27 @@ class TabView(
     def tabMoveToRight(self):
         self.tabMoveTo(kind="next")
 
-    @tag("~gt(normal)[^]")
-    def tabGoTo(self, xrange=None, kind=None):
+    @tag("~gt(normal)")
+    def tabGoTo(self, xrange=[], kind=None):
         idx = self.currentIndex()
         if kind == "prev":
-            xrange = max(0, idx - 1)
+            xrange[-1] = max(0, idx - 1)
         elif kind == "next":
-            xrange = idx + 1
-            if xrange >= self.count():
-                xrange = 0
+            xrange[-1] = idx + 1
+            if xrange[-1] >= self.count():
+                xrange[-1] = 0
             # xrange=min(self.count()-1, idx+1)
         elif kind == "first":
-            xrange = 0
+            xrange[-1] = 0
         elif kind == "last":
-            xrange = self.count() - 1
-        elif type(xrange) == int:
-            xrange[-1] -= 1
+            xrange[-1] = self.count() - 1
         elif xrange is None:
-            xrange = self.count() - 1
-        if xrange is None:
+            xrange[-1] = self.count() - 1
+        elif not xrange:
             return
-        ntab = self.widget(xrange)
+        else:
+            xrange[-1] -= 1
+        ntab = self.widget(xrange[-1])
         if ntab:
             ntab.activate()
 

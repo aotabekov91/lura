@@ -41,4 +41,5 @@ class FitzView(
 ):
     canFollow = True
     item_class = FitzItem
-    position = {"FitzView": "C|D|x"}
+    position = {"FitzView": "C|x"}
+    # position = {"FitzView": "C|D|x"}

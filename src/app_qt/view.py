@@ -37,13 +37,29 @@ class View(
         self.app.appIsLaunched.connect(self.addToUIMan)
 
     def setupUI(self) -> None:
+
+        tab_klass = utils.Factory(
+            view.TileView, QtWidgets.QWidget
+        )
+
         self.main: view.TabView = view.TabView(
             label="C",
             parent=self,
             app=self.app,
             manager=self,
+            name='Center',
             identifier="C",
+            tab_classes={"default": tab_klass},
         )
+
+        # self.display: view.TabView = view.TabView(
+        #     label="D",
+        #     app=self.app,
+        #     identifier="D",
+        #     name='Display',
+        #     tab_classes={"default": tab_klass},
+        # )
+
         self.docks: view.Docks = view.Docks(
             label="D",
             parent=self,
@@ -69,20 +85,10 @@ class View(
         #     identifier="O",
         # )
 
-        tab_klass = utils.Factory(
-            view.TileView, QtWidgets.QWidget
-        )
-        self.display: view.TabView = view.TabView(
-            label="D",
-            app=self.app,
-            identifier="D",
-            name='Display',
-            tab_classes={"default": tab_klass},
-        )
 
         self.setContentsMargins(0, 0, 0, 0)
         self.main.setContentsMargins(0, 0, 0, 0)
-        self.display.setContentsMargins(0, 0, 0, 0)
+        # self.display.setContentsMargins(0, 0, 0, 0)
 
         self.setUtils()
         self.connectUtils()
@@ -91,14 +97,18 @@ class View(
         self.app.buffman.addView(self.bar)
         self.app.buffman.addView(self.main)
         self.app.buffman.addView(self.docks)
-        self.app.buffman.addView(self.display)
+        # self.app.buffman.addView(self.display)
         # self.app.buffman.addView(self.overlay)
-        c = self.display.current
+
+        # c = self.display.current
+        # if c:
+        #     self.app.buffman.addView(c)
+        c = self.main.current
         if c:
             self.app.buffman.addView(c)
 
     def setUtils(self):
-        self.main.addView(self.display)
+        # self.main.addView(self.display)
         self.setCentralWidget(self.main)
         self.setStatusBar(self.bar)
 

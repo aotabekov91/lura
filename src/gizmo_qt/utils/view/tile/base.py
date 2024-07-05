@@ -7,6 +7,7 @@ from .layout import TileLayout
 
 
 class TileView(vimo.View):
+    name='TileView'
     suffix_separator: str = "."
     layout_class: tp.Any = TileLayout
     prefix_keys: tp.List[str] = ["<c-w>(normal)"]

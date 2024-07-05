@@ -85,29 +85,29 @@ class Tabline:
         if hasattr(view, "hasTabs"):
             tab = view
         if not tab:
-            t = getattr(view, "m_tabber", None)
-        self.current = t
-        if not t:
+            tab = getattr(view, "m_tabber", None)
+        self.current = tab
+        if not tab:
             return
         ll = self.tabline.tabs.layout()
         self.clearLayout(ll)
         self.tabline.tabs.hide()
-        tw = self.m_tabs.get(t)
+        tw = self.m_tabs.get(tab)
         if not tw:
-            self.updateTabs(t)
-        tw = self.m_tabs.get(t)
+            self.updateTabs(tab)
+        tw = self.m_tabs.get(tab)
         tl = tw.layout()
-        idx = t.currentIndex()
+        idx = tab.currentIndex()
         self.clearLayout(tl)
-        for i in range(t.count()):
+        for i in range(tab.count()):
             oname = "Tab"
-            w = t.widget(i)
+            w = tab.widget(i)
             widx = w.posIndex()
             idx = w.identifier()
             name = f"[{widx}]"
             if idx:
                 name = f"{idx} {name}"
-            if t.current == w:
+            if tab.current == w:
                 name = f"{name}*"
                 oname = "CurrentTab"
             l = QtWidgets.QLabel(str(name))
