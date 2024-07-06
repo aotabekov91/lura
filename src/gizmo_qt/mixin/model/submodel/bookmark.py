@@ -2,7 +2,7 @@ from PyQt6 import QtCore
 
 from plug import Element
 from gizmo_qt.vimo import Model
-from app.utils import Factory
+from plug.utils import Factory
 
 
 class Bookmark:

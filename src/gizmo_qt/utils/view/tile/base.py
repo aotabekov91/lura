@@ -1,7 +1,7 @@
 import typing as tp
 
 from gizmo_qt import vimo
-from app.utils import tag
+from plug.utils import tag
 
 from .layout import TileLayout
 

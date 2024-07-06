@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from app.utils import tag
+from plug.utils import tag
 from gizmo_qt import vimo, widget
 
 

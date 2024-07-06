@@ -7,7 +7,7 @@ import collections
 import typing as tp
 
 from plug import Plug
-from app.utils import tag, dotdict
+from plug.utils import tag, dotdict
 from pip._internal import main as pipmain
 
 

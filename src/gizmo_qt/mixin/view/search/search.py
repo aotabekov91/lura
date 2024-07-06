@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from app.utils import tag
+from plug.utils import tag
 
 from .task import SearchTask
 

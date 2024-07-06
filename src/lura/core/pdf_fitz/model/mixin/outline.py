@@ -1,6 +1,6 @@
 import fitz
 import plug
-from app.utils import Factory
+from plug.utils import Factory
 from PyQt6 import QtCore, QtGui
 
 

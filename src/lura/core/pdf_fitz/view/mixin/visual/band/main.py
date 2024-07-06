@@ -1,4 +1,4 @@
-from app.utils import tag
+from plug.utils import tag
 from PyQt6 import QtCore, QtGui
 
 from . import mixin

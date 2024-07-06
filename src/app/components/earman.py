@@ -3,7 +3,7 @@ import itertools
 import typing as tp
 
 from plug import Plug
-from app.utils import parse
+from plug.utils import parse
 
 
 class Earman(Plug):

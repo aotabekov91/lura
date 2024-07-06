@@ -1,6 +1,6 @@
 from functools import partial
 
-from app.utils import tag
+from plug.utils import tag
 
 
 class Annotate:

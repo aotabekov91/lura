@@ -7,7 +7,7 @@ import typing as tp
 from PyQt6 import QtCore, QtWidgets
 
 from plug import Plug
-from app import utils
+from plug import utils
 
 from . import components, view
 

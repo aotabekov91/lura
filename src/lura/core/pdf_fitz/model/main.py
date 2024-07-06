@@ -4,7 +4,7 @@ import hashlib
 
 import fitz
 
-import app
+import plug
 import gizmo_qt
 from PyQt6 import QtCore
 
@@ -17,7 +17,7 @@ class FitzModel(
     mixin.Outline,
     mixin.Annotate,
     mixin.UniqLocate,
-    app.utils.Cache,
+    plug.utils.Cache,
     gizmo_qt.mixin.model.State,
     gizmo_qt.mixin.model.Locate,
     gizmo_qt.mixin.model.Elements,

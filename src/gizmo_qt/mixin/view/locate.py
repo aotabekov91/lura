@@ -1,4 +1,4 @@
-from app.utils import hashdict
+from plug.utils import hashdict
 
 
 class Locate:

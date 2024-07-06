@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
 from plug import Element, Model
-from app.utils import Factory
+from plug.utils import Factory
 
 
 class Metadata:

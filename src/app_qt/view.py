@@ -2,7 +2,7 @@ import typing as tp
 
 from PyQt6 import QtCore, QtWidgets
 
-from app import utils
+from plug import utils
 from gizmo_qt import mixin
 from gizmo_qt.utils import view
 

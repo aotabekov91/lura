@@ -2,7 +2,7 @@ import math
 import fitz
 import subprocess
 
-from app.utils import tag
+from plug.utils import tag
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtCore import QPointF
 

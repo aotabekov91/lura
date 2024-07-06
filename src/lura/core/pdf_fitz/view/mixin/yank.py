@@ -1,4 +1,4 @@
-from app.utils import tag
+from plug.utils import tag
 
 
 class Yank:

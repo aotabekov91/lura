@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtWidgets
 
 from gizmo_qt.vimo import View
-from app.utils import tag
+from plug.utils import tag
 
 from .dock import DockView
 
