@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui
 
 from gizmo_qt import vimo, widget
-from gizmo.utils import tag
+from app.utils import tag
 
 
 class OverlayInput(

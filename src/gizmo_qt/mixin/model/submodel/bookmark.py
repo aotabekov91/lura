@@ -1,8 +1,8 @@
 from PyQt6 import QtCore
 
-from gizmo.vimo import Element
+from gizmo import Element
 from gizmo_qt.vimo import Model
-from gizmo.utils import Factory
+from app.utils import Factory
 
 
 class Bookmark:

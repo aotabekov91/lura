@@ -1,9 +1,9 @@
 from PyQt6 import QtCore
 
-from gizmo import vimo
+import gizmo
 
 
-class Item(vimo.Item):
+class Item(gizmo.Item):
     viewIsSet = QtCore.pyqtSignal()
     elementIsSet = QtCore.pyqtSignal()
 

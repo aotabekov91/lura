@@ -2,7 +2,7 @@ from PyQt6 import QtCore
 
 from gizmo_qt import vimo, widget
 from gizmo_qt.mixin import view
-from gizmo.utils import tag
+from app.utils import tag
 
 
 class ListWidgetView(

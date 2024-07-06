@@ -1,9 +1,8 @@
 from PyQt6 import QtCore
 
-from gizmo import vimo
+import gizmo
 
-
-class Model(vimo.Model):
+class Model(gizmo.Model):
     loaded = QtCore.pyqtSignal(object)
     idChanged = QtCore.pyqtSignal(object)
     elementAdded = QtCore.pyqtSignal(object)

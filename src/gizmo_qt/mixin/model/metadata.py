@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
-from gizmo.vimo import Element, Model
-from gizmo.utils import Factory
+from gizmo import Element, Model
+from app.utils import Factory
 
 
 class Metadata:

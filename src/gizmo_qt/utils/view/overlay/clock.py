@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from gizmo_qt import vimo
-from gizmo.utils import tag
+from app.utils import tag
 
 
 class Clock(vimo.View, QtWidgets.QLabel):

@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from gizmo.utils import tag
+from app.utils import tag
 
 
 class Fullscreen:

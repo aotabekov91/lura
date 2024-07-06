@@ -1,9 +1,8 @@
 from PyQt6 import QtCore
 
-from gizmo import vimo
+import gizmo
 
-
-class View(vimo.View):
+class View(gizmo.View):
     cleanUpWanted = QtCore.pyqtSignal()
     viewIsRedrawn = QtCore.pyqtSignal()
     resized = QtCore.pyqtSignal(object)

@@ -5,7 +5,7 @@ import pathlib
 import typing as tp
 
 from plug import Plug
-from gizmo import utils
+from app import utils
 
 from . import components
 

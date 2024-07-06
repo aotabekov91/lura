@@ -1,10 +1,10 @@
 from PyQt6 import QtCore
 
-from gizmo import vimo
+import gizmo
 
 
 class TableElement(
-    vimo.Element,
+    gizmo.Element,
     QtCore.QObject,
 ):
     m_item = None

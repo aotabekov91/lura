@@ -1,4 +1,4 @@
-from gizmo.utils import hashdict
+from app.utils import hashdict
 
 
 class Locate:

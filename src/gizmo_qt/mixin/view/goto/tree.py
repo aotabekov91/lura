@@ -1,4 +1,4 @@
-from gizmo.utils import tag
+from app.utils import tag
 
 from .view import ViewGo
 

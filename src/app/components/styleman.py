@@ -4,7 +4,7 @@ import collections
 import typing as tp
 
 from plug import Plug
-from gizmo.utils import tag
+from app.utils import tag
 
 
 class Styleman(Plug):
