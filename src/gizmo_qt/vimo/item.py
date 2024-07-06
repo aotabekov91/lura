@@ -1,9 +1,9 @@
 from PyQt6 import QtCore
 
-import gizmo
+import plug
 
 
-class Item(gizmo.Item):
+class Item(plug.Item):
     viewIsSet = QtCore.pyqtSignal()
     elementIsSet = QtCore.pyqtSignal()
 

@@ -1,5 +1,5 @@
 import fitz
-import gizmo
+import plug
 from app.utils import Factory
 from PyQt6 import QtCore, QtGui
 
@@ -9,8 +9,8 @@ class Outline:
 
     def setup(self):
         super().setup()
-        eklass = Factory(QtGui.QStandardItem, gizmo.Element)
-        mklass = Factory(QtGui.QStandardItemModel, gizmo.Model)
+        eklass = Factory(QtGui.QStandardItem, plug.Element)
+        mklass = Factory(QtGui.QStandardItemModel, plug.Model)
         self.m_outline = mklass(
             name="outline",
             element_class=eklass,

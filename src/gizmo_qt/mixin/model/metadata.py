@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from gizmo import Element, Model
+from plug import Element, Model
 from app.utils import Factory
 
 

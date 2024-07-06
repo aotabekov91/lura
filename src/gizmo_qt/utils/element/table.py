@@ -1,10 +1,10 @@
 from PyQt6 import QtCore
 
-import gizmo
+import plug
 
 
 class TableElement(
-    gizmo.Element,
+    plug.Element,
     QtCore.QObject,
 ):
     m_item = None

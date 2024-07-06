@@ -1,8 +1,8 @@
 from PyQt6 import QtCore
 
-import gizmo
+import plug
 
-class Model(gizmo.Model):
+class Model(plug.Model):
     loaded = QtCore.pyqtSignal(object)
     idChanged = QtCore.pyqtSignal(object)
     elementAdded = QtCore.pyqtSignal(object)
