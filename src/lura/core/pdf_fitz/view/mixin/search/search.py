@@ -1,4 +1,4 @@
-from gizmo_qt.mixin import view
+from plug_qt.mixin import view
 from PyQt6 import QtCore
 
 from .task import SearchTask

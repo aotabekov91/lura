@@ -5,7 +5,7 @@ import hashlib
 import fitz
 
 import plug
-import gizmo_qt
+import plug_qt
 from PyQt6 import QtCore
 
 from ..element import FitzElement
@@ -18,14 +18,14 @@ class FitzModel(
     mixin.Annotate,
     mixin.UniqLocate,
     plug.utils.Cache,
-    gizmo_qt.mixin.model.State,
-    gizmo_qt.mixin.model.Locate,
-    gizmo_qt.mixin.model.Elements,
-    gizmo_qt.mixin.model.Bookmark,
-    gizmo_qt.mixin.model.Metadata,
-    gizmo_qt.mixin.model.Annotate,
-    gizmo_qt.mixin.model.Quickmark,
-    gizmo_qt.vimo.model.Model,
+    plug_qt.mixin.model.State,
+    plug_qt.mixin.model.Locate,
+    plug_qt.mixin.model.Elements,
+    plug_qt.mixin.model.Bookmark,
+    plug_qt.mixin.model.Metadata,
+    plug_qt.mixin.model.Annotate,
+    plug_qt.mixin.model.Quickmark,
+    plug_qt.vimo.model.Model,
     QtCore.QObject,
 ):
     isType = True

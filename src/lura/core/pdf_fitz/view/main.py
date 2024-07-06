@@ -1,4 +1,4 @@
-import gizmo_qt
+import plug_qt
 from PyQt6 import QtWidgets
 
 from ..item import FitzItem
@@ -23,20 +23,20 @@ class FitzView(
     mixin.TrimMargins,
     mixin.AnnotationHint,
     mixin.RubberbandVisual,
-    gizmo_qt.mixin.view.Scale,
-    gizmo_qt.mixin.view.State,
-    gizmo_qt.mixin.view.ZXYPos,
-    gizmo_qt.mixin.view.Pixmap,
-    gizmo_qt.mixin.view.Select,
-    gizmo_qt.mixin.view.Leaper,
-    gizmo_qt.mixin.view.Locate,
-    gizmo_qt.mixin.view.SceneGo,
-    gizmo_qt.mixin.view.Bookmark,
-    gizmo_qt.mixin.view.Metadata,
-    gizmo_qt.mixin.view.Quickmark,
-    gizmo_qt.mixin.view.Fullscreen,
-    gizmo_qt.mixin.view.ItemsHighlight,
-    gizmo_qt.vimo.view.View,
+    plug_qt.mixin.view.Scale,
+    plug_qt.mixin.view.State,
+    plug_qt.mixin.view.ZXYPos,
+    plug_qt.mixin.view.Pixmap,
+    plug_qt.mixin.view.Select,
+    plug_qt.mixin.view.Leaper,
+    plug_qt.mixin.view.Locate,
+    plug_qt.mixin.view.SceneGo,
+    plug_qt.mixin.view.Bookmark,
+    plug_qt.mixin.view.Metadata,
+    plug_qt.mixin.view.Quickmark,
+    plug_qt.mixin.view.Fullscreen,
+    plug_qt.mixin.view.ItemsHighlight,
+    plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,
 ):
     canFollow = True

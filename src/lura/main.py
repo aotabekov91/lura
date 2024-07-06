@@ -1,6 +1,6 @@
 import faulthandler
 from lura import core
-from app_qt import App
+from plug_qt import App
 
 class Lura(App):
 
