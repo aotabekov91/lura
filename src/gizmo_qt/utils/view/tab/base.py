@@ -55,10 +55,7 @@ class TabView(
     @tag("t(normal)")
     def addAndGoToCopyTab(self, tab=None, **kwargs):
         c = self.addCopyTab(tab, **kwargs)
-        print(c)
-        #todo
         if c:
-            self.addView(c)
             c.activate()
         return c
 

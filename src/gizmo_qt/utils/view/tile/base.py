@@ -11,6 +11,18 @@ class TileView(vimo.View):
     suffix_separator: str = "."
     layout_class: tp.Any = TileLayout
     prefix_keys: tp.List[str] = ["<c-w>(normal)"]
+    canCopy=True
+
+    def copy(self, full=False):
+        new_tile=self.__class__(app=self.app)
+        if not self.current:
+            return new_tile
+        if not self.checkProp('canCopy', self.current):
+            return new_tile
+        current_copy=self.current.copy()
+        new_tile.addView(view=current_copy)
+        current_copy.activate()
+        return new_tile
 
     def child(self, pos, recursive=True):
         if pos.startswith("x") and self.current:
@@ -197,10 +209,10 @@ class TileView(vimo.View):
     def toggleFullscreen(self, v):
         self.m_layout.toggleFullscreen(v)
 
-    def addView(self, v, **kwargs):
-        v.setManager(self)
-        self.m_layout.addView(v, **kwargs)
-        return v
+    def addView(self, view, **kwargs):
+        view.setManager(self)
+        self.m_layout.addView(view, **kwargs)
+        return view
 
     def insertView(self, idx, v, **kwargs):
         v.setManager(self)
