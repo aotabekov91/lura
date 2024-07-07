@@ -1,7 +1,8 @@
 import faulthandler
 from lura import core
 from plug_qt import App
-from .rotate import Rotate
+
+from fitz_plugs import Rotate
 
 class Lura(App):
 
