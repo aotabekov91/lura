@@ -4,7 +4,6 @@ from PyQt6 import QtWidgets
 from ..item import FitzItem
 from . import mixin
 
-
 class FitzView(
     mixin.Copy,
     mixin.Hint,

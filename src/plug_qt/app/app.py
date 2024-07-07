@@ -24,8 +24,9 @@ class App(
 
     app_wait: int = 2
     canHide: bool = False
-    waiting_to_finish: int = 0
+    wants_to_wait: int=0
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
+    appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
 
     def setup(self) -> None:
@@ -116,10 +117,14 @@ class App(
              path.mkdir(parents=parents, exist_ok=exist_ok)
          return path
     
-    def wait(self, delta: int) -> None:
-         self.waiting_to_finish += delta
+    def wait(self, delta: int=1) -> None:
+         self.wants_to_wait += delta
     
     def run(self) -> None:
+         self.appSoonStarts.emit()
+         time.sleep(0.1)
+         while self.wants_to_wait:
+             time.sleep(0.01)
          if self.ui:
              self.ui.activate()
          self.timer.start(self.app_wait)
@@ -129,7 +134,7 @@ class App(
     def quit(self) -> None:
          self.appSoonQuits.emit()
          time.sleep(0.1)
-         while self.waiting_to_finish:
+         while self.wants_to_wait:
              time.sleep(0.01)
          self.pool.clear()
          sys.exit()

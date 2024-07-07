@@ -42,8 +42,7 @@ class FitzElement(
         y,
         scale,
         rotation,
-        pratio,
-        grayScale,
+        pixel,
         clip,
         trim,
     ):
@@ -64,7 +63,5 @@ class FitzElement(
             p.stride,
             QtGui.QImage.Format.Format_RGB888,
         )
-        img.setDevicePixelRatio(pratio)
-        if grayScale:
-            img.invertPixels()
+        img.setDevicePixelRatio(pixel)
         return img

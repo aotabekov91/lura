@@ -14,6 +14,6 @@ class Task(QtCore.QObject):
         while self.running:
             i, d = self.m_queue.get()
             e = self.m_model.element(i)
-            img = e.renderImage(*d)
+            img = e.renderImage(**d)
             p = QtGui.QPixmap.fromImage(img)
             self.pixmapReady.emit(i, d, p)

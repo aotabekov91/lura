@@ -1,7 +1,7 @@
 from math import floor
+from plug.utils import hashdict
 
 from PyQt6 import QtCore, QtGui
-
 
 class Render:
     canRender = True
@@ -18,7 +18,7 @@ class Render:
     def setup(self):
         super().setup()
         v = self.m_kwargs
-        self.m_data = None
+        self.m_cache_key = None
         self.m_clip = None
         self.m_rect = QtCore.QRectF()
         self.m_brect = QtCore.QRectF()
@@ -31,17 +31,9 @@ class Render:
         self.trimMargins = v.get("trimMargins", False)
         self.tileSize = v.get("tileSize", 1024)
         self.devicePixelRatio = v.get("devicePixelRatio", 1)
-        self.convertToGrayScale = v.get(
-            "convertToGrayScale", False
-        )
         self.m_view.pixmapReady.connect(self.setPixmap)
         self.m_view.repaintWanted.connect(self.refresh)
         self.prepareGeometry()
-
-    def toggleGrayScale(self):
-        cond = not self.convertToGrayScale
-        self.convertToGrayScale = cond
-        self.redraw()
 
     def toggleTrimMargins(self):
         cond = not self.trimMargins
@@ -80,13 +72,13 @@ class Render:
             self.painted.emit(p, o, w, self)
 
     def takePixmap(self):
-        if not self.m_data:
-            self.updateData()
-        data = self.m_element.render(self.m_data)
+        if not self.m_cache_key:
+            self.updateCacheKey()
+        data = self.m_element.render(self.m_cache_key)
         if data:
             return data[-1]
 
-    def updateData(self):
+    def updateCacheKey(self):
         rs = self.m_brect.size()
         os = self.m_element.size()
         x = rs.width() / os.width()
@@ -97,24 +89,21 @@ class Render:
         r = self.m_rotation
         idx = self.m_element.index()
         p = self.devicePixelRatio
-        g = self.convertToGrayScale
         c = self.m_clip
         t = self.trimMargins
-        self.m_data = (
-            idx,
-            x,
-            y,
-            s,
-            r,
-            p,
-            g,
-            c,
-            t,
-        )
+        self.m_cache_key=hashdict(
+                idx=idx,
+                x=x,
+                y=y,
+                scale=s,
+                rotation=r,
+                pixel=p,
+                clip=c,
+                trim=t)
 
     def setPixmap(self, idx, data, pixmap):
         c1 = self.index() == idx
-        c2 = data == self.m_data
+        c2 = data == self.m_cache_key
         if c1 and c2:
             self.refresh()
 
@@ -128,7 +117,7 @@ class Render:
         self.prepareGeometryChange()
         self.updateTransformation()
         self.prepareGeometry()
-        self.updateData()
+        self.updateCacheKey()
         self.refresh()
 
     def size(self):
