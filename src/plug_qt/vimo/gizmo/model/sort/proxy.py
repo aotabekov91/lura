@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from ..base import Model
+from ....model import Model
 from .task import SortFilterTask
 
 

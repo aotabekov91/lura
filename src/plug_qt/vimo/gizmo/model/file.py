@@ -2,7 +2,7 @@ from os.path import abspath
 
 from PyQt6.QtGui import QFileSystemModel
 
-from .base import Model
+from ...model import Model
 
 
 class FileSystemModel(Model, QFileSystemModel):

@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
+from ...model import Model
 from ...element import TableElement
-from ..base import Model
 
 
 class TableModel(Model):
