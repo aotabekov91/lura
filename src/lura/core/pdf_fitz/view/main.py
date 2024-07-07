@@ -10,15 +10,12 @@ class FitzView(
     mixin.Hint,
     mixin.Yank,
     mixin.Items,
-    # mixin.Rotate, #todo
-    # Rotate as plug not as mixin
     mixin.Search,
     mixin.BoxHint,
     mixin.WordHint,
     mixin.Annotate,
     mixin.LinkHint,
     mixin.BoxVisual,
-    mixin.GrayScale,
     mixin.WordVisual,
     mixin.YankToCard,
     mixin.TrimMargins,

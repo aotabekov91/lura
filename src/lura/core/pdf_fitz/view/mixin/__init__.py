@@ -1,7 +1,6 @@
 from .annotate import Annotate
 from .card import YankToCard
 from .copy import Copy
-from .grayscale import GrayScale
 from .hint import *
 from .items import Items
 from .margins import TrimMargins
