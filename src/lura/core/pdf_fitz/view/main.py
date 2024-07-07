@@ -10,7 +10,8 @@ class FitzView(
     mixin.Hint,
     mixin.Yank,
     mixin.Items,
-    mixin.Rotate,
+    # mixin.Rotate, #todo
+    # Rotate as plug not as mixin
     mixin.Search,
     mixin.BoxHint,
     mixin.WordHint,
@@ -42,4 +43,3 @@ class FitzView(
     canFollow = True
     item_class = FitzItem
     position = {"FitzView": "C|x"}
-    # position = {"FitzView": "C|D|x"}

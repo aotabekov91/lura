@@ -1,5 +1,6 @@
-from plug_qt.vimo.mixin import view
 from PyQt6 import QtCore
+
+from plug_qt.vimo.mixin import view
 
 from .task import SearchTask
 

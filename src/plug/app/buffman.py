@@ -61,6 +61,15 @@ class Buffman(Plug):
         super().setup()
         self.setParser()
 
+    def addClass(self, klass, kind=None):
+        if not klass in self.m_classes:
+            self.m_classes+=[klass]
+        if kind=='viewer':
+            return self.addViewer(klass)
+        elif kind=='modeller':
+            return self.addModeller(klass)
+        return klass
+
     def addViewer(self, view) -> tp.Any:
         if not view in self.m_viewers:
             self.m_viewers += [view]
