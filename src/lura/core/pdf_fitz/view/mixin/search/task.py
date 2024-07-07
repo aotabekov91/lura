@@ -1,4 +1,4 @@
-from plug_qt import mixin
+from plug_qt.vimo import mixin
 from PyQt6 import QtCore
 
 

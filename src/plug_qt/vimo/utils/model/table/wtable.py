@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
-from plug_qt.mixin.item import ListWidgetItem
 from plug_qt.widget import TableWidget
+from plug_qt.vimo.mixin.item import ListWidgetItem
 
 from .stable import STableModel
 

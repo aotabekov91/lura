@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
 from plug_qt import vimo, widget
-from plug_qt.mixin import view
+from plug_qt.vimo.mixin import view
 from plug.utils import tag
 
 

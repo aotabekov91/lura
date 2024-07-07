@@ -1,2 +1,2 @@
 from .app import *
-from . import mixin, utils, vimo, widget
+from . import utils, vimo, widget

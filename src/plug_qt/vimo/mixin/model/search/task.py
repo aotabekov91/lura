@@ -1,7 +1,7 @@
-from plug_qt.utils import miscel
+from plug_qt.utils import Task
 
 
-class SearchTask(miscel.Task):
+class SearchTask(Task):
     def setup(self):
         super().setup()
         self.m_model = self.kwargs.get("model")

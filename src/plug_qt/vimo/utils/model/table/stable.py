@@ -1,6 +1,6 @@
 from PyQt6.QtGui import QStandardItemModel
 
-from plug_qt.mixin.item import StandardItem
+from plug_qt.vimo.mixin.item import StandardItem
 
 from .base import TableModel
 

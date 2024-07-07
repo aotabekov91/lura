@@ -3,8 +3,8 @@ import typing as tp
 from PyQt6 import QtCore, QtWidgets
 
 from plug import utils
-from plug_qt import mixin
-from plug_qt.utils import view
+from plug_qt.vimo import mixin
+from plug_qt.vimo.utils import view
 
 
 class View(

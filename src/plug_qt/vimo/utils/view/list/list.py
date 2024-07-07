@@ -1,5 +1,5 @@
 from plug_qt import vimo
-from plug_qt.mixin import view
+from plug_qt.vimo.mixin import view
 from plug_qt.widget import ListViewWidget
 
 
