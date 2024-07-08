@@ -54,5 +54,5 @@ class GrayScale(Plug):
     @tag("c(normal)[FitzView]")
     def toggleGrayScale(self):
         view=self.app.stateman.view()
-        for i in view.m_items.values():
-            i.toggleGrayScale()
+        for item in view.m_items.values():
+            item.toggleGrayScale()

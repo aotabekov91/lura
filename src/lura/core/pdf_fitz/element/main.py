@@ -7,9 +7,8 @@ from . import mixin
 
 
 class FitzElement(
-    mixin.Trim,
     mixin.Block,
-    mixin.Links,
+    # mixin.Links,
     mixin.Search,
     mixin.Normed,
     mixin.Annotate,
@@ -42,13 +41,17 @@ class FitzElement(
         ypos,
         rotation,
         pixel,
+        clip=None,
+        alpha=False,
+        image_format=QtGui.QImage.Format.Format_RGB888,
     ):
         matrix = fitz.Matrix(xpos, ypos)
         if rotation:
             matrix.prerotate(rotation % 360)
         pixmap = self.m_data.get_pixmap(
-            alpha=False,
-            matrix=matrix,
+                clip=clip, 
+                alpha=alpha, 
+                matrix=matrix,
         )
 
         img = QtGui.QImage(
@@ -56,7 +59,7 @@ class FitzElement(
             pixmap.width,
             pixmap.height,
             pixmap.stride,
-            QtGui.QImage.Format.Format_RGB888,
+            image_format,
         )
         img.setDevicePixelRatio(pixel)
         return img

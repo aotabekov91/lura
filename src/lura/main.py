@@ -11,6 +11,7 @@ class Lura(App):
             fitz_plugs.Rotate,
             fitz_plugs.GrayScale,
             fitz_plugs.TrimFitzView,
+            fitz_plugs.FitzLinks,
         ]
         self.plugman.load(p)
         super().activate()

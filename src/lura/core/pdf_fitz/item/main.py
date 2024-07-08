@@ -5,7 +5,7 @@ from . import mixin
 
 
 class FitzItem(
-    mixin.Links,
+    # mixin.Links,
     plug_qt.vimo.mixin.item.Scale,
     plug_qt.vimo.mixin.item.Select,
     plug_qt.vimo.mixin.item.Overlay,
