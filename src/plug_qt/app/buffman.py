@@ -57,16 +57,16 @@ class Buffman(
             man.addView(view, **kwargs)
         return man
 
-    def addViewer(self, klass: tp.Any) -> tp.Any:
+    def addViewer(self, name: str, klass: tp.Any) -> tp.Any:
         cond = not klass in self.m_viewers
-        super().addViewer(klass)
+        super().addViewer(name, klass)
         if cond:
             self.viewerAdded.emit(klass)
         return klass
 
-    def addModeller(self, klass: tp.Any) -> tp.Any:
+    def addModeller(self, name: str, klass: tp.Any) -> tp.Any:
         cond = not klass in self.m_modellers
-        super().addModeller(klass)
+        super().addModeller(name, klass)
         if cond:
             self.modellerAdded.emit(klass)
         return klass

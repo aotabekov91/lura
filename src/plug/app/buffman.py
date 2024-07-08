@@ -7,8 +7,8 @@ class Buffman(Plug):
     def __init__(self, app: tp.Any) -> None:
         super().__init__(app)
         self.m_views: tp.Set[tp.Any] = set()
-        self.m_viewers: tp.List[tp.Any] = []
-        self.m_modellers: tp.List[tp.Any] = []
+        self.m_viewers: tp.Dict[str, tp.Any] = {} 
+        self.m_modellers: tp.Dict[str, tp.Any] = {} 
         self.m_models: tp.Dict[tp.Any, tp.Any] = {}
         self.m_fillers: tp.Dict[tp.Any, tp.Any] = {}
 
@@ -70,15 +70,19 @@ class Buffman(Plug):
             return self.addModeller(klass)
         return klass
 
-    def addViewer(self, view) -> tp.Any:
-        if not view in self.m_viewers:
-            self.m_viewers += [view]
-        return view
+    def addViewer(self, name, klass) -> tp.Any:
+        self.m_viewers[name]=klass
+        return klass
 
-    def addModeller(self, model) -> tp.Any:
-        if not model in self.m_modellers:
-            self.m_modellers += [model]
-        return model
+    def addModeller(self, name, klass) -> tp.Any:
+        self.m_modellers[name]=klass
+        return klass
+
+    def delViewer(self, name):
+        return self.m_viewers.pop(name)
+
+    def delModeller(self, name):
+        return self.m_modellers.pop(name)
 
     def viewers(self) -> tp.List[tp.Any]:
         return self.m_viewers
@@ -127,7 +131,7 @@ class Buffman(Plug):
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:
-        for klass in self.m_modellers:
+        for name, klass in self.m_modellers.items():
             if not klass.isCompatible(source, **kwargs):
                 continue
             name = klass.getSourceName(source, **kwargs)
@@ -146,7 +150,7 @@ class Buffman(Plug):
                     continue
                 view.resetConfigure(model=model, **kwargs)
                 return view
-        for klass in self.m_viewers:
+        for name, klass in self.m_viewers.items():
             if klass.isCompatible(model, **kwargs):
                 return self.createView(
                     klass, model, **kwargs

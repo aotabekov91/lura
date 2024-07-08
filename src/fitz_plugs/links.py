@@ -1,5 +1,77 @@
-from PyQt6 import QtCore
+import math
+import fitz
+import subprocess
+
+from PyQt6 import QtCore, QtGui
+from PyQt6.QtCore import QPointF
+
 from plug import Plug, tag
+
+
+class FitzLinkView:
+
+    canHandleLinks=True
+
+    def setup(self):
+        super().setup()
+        self.hintSelectWanted.connect(
+                self.selectLinkHint)
+
+    def openLink(self, link):
+        if not link: return
+        d = link["link"].dest
+        if d.kind in [fitz.LINK_GOTO, fitz.LINK_GOTOR]:
+            raise
+        elif d.kind in [fitz.LINK_URI]:
+            cmd = ["qutebrowser", d.uri]
+            subprocess.Popen(cmd)
+        elif d.kind in [fitz.LINK_NAMED, fitz.LINK_LAUNCH]:
+            r = self.m_model.m_data.resolve_link(d.uri)
+            p, x, y = r
+            if math.isnan(x): x=0.
+            if math.isnan(y): y=0.
+            tl = QPointF(x, y)
+            item = self.item(p + 1)
+            elem = item.element()
+            tl = elem.unify(tl)
+            self.goTo(p + 1, tl.x(), tl.y())
+
+    @tag("<c-l>(hint[any])[^]")
+    def toggleLinkMode(self):
+        sm = self.app.stateman.toggleSubmode("link")
+        if sm == "link":
+            self.setupHint("link")
+
+    def selectLinkHint(self, kind, sel):
+        if kind == "link":
+            try:
+                self.openLink(sel)
+            except:
+                pass
+            self.app.stateman.toggle()
+
+    def getLinkHints(self):
+        alist = []
+        for i in self.visibleItems():
+            alist += i.getLinks()
+        return alist
+
+    def paintLinkHints(self, painter, ops, widget, item):
+        if self.m_hinting:
+            painter.save()
+            m = self.m_hint_map.get(item, {})
+            pen = QtGui.QPen(
+                    QtCore.Qt.GlobalColor.red, 0.0)
+            painter.setPen(pen)
+            for text, data in m.items():
+                box = data["box"]
+                rect = []
+                if type(box) != list:
+                    box = [box]
+                for l in box:
+                    rect += [item.mapToItem(l, unified=True)]
+                painter.drawText(rect[0].topLeft(), text)
+            painter.restore()
 
 class FitzLinkItem:
 
@@ -42,13 +114,15 @@ class FitzLinks(Plug):
 
     def updateFitz(self):
         self.app.wait()
-        for viewer in self.app.buffman.viewers():
-            if viewer.__name__=='FitzView':
-                self.updateFitzViewer(viewer)
+        viewers=self.app.buffman.viewers()
+        modellers=self.app.buffman.modellers()
+        for name, klass in viewers.items():
+            if name=='FitzView':
+                self.updateFitzViewer(klass)
                 break
-        for modeller in self.app.buffman.modellers():
-            if modeller.__name__=='FitzModel':
-                self.updateFitzModeller(modeller)
+        for name, klass in modellers.items():
+            if klass.__name__=='FitzModel':
+                self.updateFitzModeller(klass)
                 break
         self.app.wait(-1)
 
@@ -63,7 +137,15 @@ class FitzLinks(Plug):
         name=klass.__name__
         mro=(FitzLinkItem, klass)
         viewer.item_class=type(name, mro, {})
+        self.app.buffman.delViewer('FitzView')
+        name=viewer.__name__
+        mro=(FitzLinkView, viewer)
+        viewer=type(name, mro, {})
+        self.app.buffman.addViewer('FitzView', viewer)
 
     @tag("l(hint)[FitzView]")
     def toggleLinks(self):
-        raise
+        view=self.app.stateman.view()
+        #todo
+        print(view.__class__)
+        print(self.app.buffman.viewers())

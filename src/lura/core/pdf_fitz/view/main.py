@@ -13,7 +13,7 @@ class FitzView(
     mixin.BoxHint,
     mixin.WordHint,
     mixin.Annotate,
-    mixin.LinkHint,
+    # mixin.LinkHint,
     mixin.BoxVisual,
     mixin.WordVisual,
     mixin.YankToCard,

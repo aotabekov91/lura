@@ -29,13 +29,15 @@ class GrayScale(Plug):
 
     def updateFitz(self):
         self.app.wait()
-        for viewer in self.app.buffman.viewers():
-            if viewer.__name__=='FitzView':
-                self.updateFitzViewer(viewer)
+        viewers=self.app.buffman.viewers()
+        modellers=self.app.buffman.modellers()
+        for name, klass in viewers.items(): 
+            if name=='FitzView':
+                self.updateFitzViewer(klass)
                 break
-        for modeller in self.app.buffman.modellers():
-            if modeller.__name__=='FitzModel':
-                self.updateFitzModeller(modeller)
+        for name, klass in modellers.items(): 
+            if name=='FitzModel':
+                self.updateFitzModeller(klass)
                 break
         self.app.wait(-1)
 
