@@ -19,7 +19,6 @@ class Render:
         super().setup()
         v = self.m_kwargs
         self.m_cache_key = None
-        self.m_clip = None
         self.m_rect = QtCore.QRectF()
         self.m_brect = QtCore.QRectF()
         self.m_size = self.m_rect.size()
@@ -28,24 +27,11 @@ class Render:
         self.xresol = v.get("xresol", 72.0)
         self.yresol = v.get("yresol", 72.0)
         self.m_rotation = v.get("rotation", None)
-        self.trimMargins = v.get("trimMargins", False)
         self.tileSize = v.get("tileSize", 1024)
         self.devicePixelRatio = v.get("devicePixelRatio", 1)
         self.m_view.pixmapReady.connect(self.setPixmap)
         self.m_view.repaintWanted.connect(self.refresh)
         self.prepareGeometry()
-
-    def toggleTrimMargins(self):
-        cond = not self.trimMargins
-        self.trimMargins = cond
-        self.redraw()
-
-    def setClip(self, clip=None):
-        self.m_clip = clip
-        self.redraw()
-
-    def clip(self):
-        return self.m_clip
 
     def setRotation(self, rotation=None):
         self.m_rotation = rotation
@@ -81,25 +67,19 @@ class Render:
     def updateCacheKey(self):
         rs = self.m_brect.size()
         os = self.m_element.size()
-        x = rs.width() / os.width()
-        y = rs.height() / os.height()
-        x = round(x, 3)
-        y = round(y, 3)
-        s = self.scale
-        r = self.m_rotation
+        xpos = rs.width() / os.width()
+        ypos = rs.height() / os.height()
+        xpos = round(xpos, 3)
+        ypos = round(ypos, 3)
+        rotation = self.m_rotation
         idx = self.m_element.index()
-        p = self.devicePixelRatio
-        c = self.m_clip
-        t = self.trimMargins
+        pixel = self.devicePixelRatio
         self.m_cache_key=hashdict(
                 idx=idx,
-                x=x,
-                y=y,
-                scale=s,
-                rotation=r,
-                pixel=p,
-                clip=c,
-                trim=t)
+                xpos=xpos,
+                ypos=ypos,
+                rotation=rotation,
+                pixel=pixel)
 
     def setPixmap(self, idx, data, pixmap):
         c1 = self.index() == idx
@@ -122,14 +102,6 @@ class Render:
 
     def size(self):
         return self.m_size
-
-    # def scaledResol(self):
-
-    #     s=self.scale
-    #     r=self.devicePixelRatio
-    #     x=self.xresol*s*r
-    #     y=self.yresol*s*r
-    #     return x, y
 
     def setResol(self, x, y):
         if y > 0 and x > 0:

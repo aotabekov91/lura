@@ -10,6 +10,7 @@ class Lura(App):
             core.pdf_fitz.PdfFitz,
             fitz_plugs.Rotate,
             fitz_plugs.GrayScale,
+            fitz_plugs.TrimFitzView,
         ]
         self.plugman.load(p)
         super().activate()

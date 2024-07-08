@@ -17,7 +17,6 @@ class FitzView(
     mixin.BoxVisual,
     mixin.WordVisual,
     mixin.YankToCard,
-    mixin.TrimMargins,
     mixin.AnnotationHint,
     mixin.RubberbandVisual,
     plug_qt.vimo.mixin.view.Scale,

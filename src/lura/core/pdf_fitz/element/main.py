@@ -38,29 +38,24 @@ class FitzElement(
     def renderImage(
         self,
         idx,
-        x,
-        y,
-        scale,
+        xpos,
+        ypos,
         rotation,
         pixel,
-        clip,
-        trim,
     ):
-        matrix = fitz.Matrix(x, y)
+        matrix = fitz.Matrix(xpos, ypos)
         if rotation:
             matrix.prerotate(rotation % 360)
-        p = self.m_data.get_pixmap(
-            clip=clip,
+        pixmap = self.m_data.get_pixmap(
             alpha=False,
-            # colorspace='rgb',
             matrix=matrix,
         )
 
         img = QtGui.QImage(
-            p.samples,
-            p.width,
-            p.height,
-            p.stride,
+            pixmap.samples,
+            pixmap.width,
+            pixmap.height,
+            pixmap.stride,
             QtGui.QImage.Format.Format_RGB888,
         )
         img.setDevicePixelRatio(pixel)
