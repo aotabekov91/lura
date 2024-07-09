@@ -6,12 +6,10 @@ from ..item import FitzItem
 
 class FitzView(
     mixin.Copy,
-    # mixin.Hint,
     mixin.Yank,
     mixin.Items,
     mixin.Search,
     # mixin.BoxHint,
-    # mixin.WordHint,
     mixin.Annotate,
     # mixin.BoxVisual,
     # mixin.WordVisual,

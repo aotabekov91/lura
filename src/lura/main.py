@@ -13,6 +13,7 @@ class Lura(App):
             plugs_fitz.TrimFitzView,
             plugs_fitz.FitzLinks,
             plugs_fitz.FitzHints,
+            plugs_fitz.FitzWords,
         ]
         self.plugman.load(plugs)
         super().activate()

@@ -7,10 +7,19 @@ from PyQt6.QtCore import QPointF
 
 from plug import Plug, tag
 
-
 class FitzLinkView:
 
     canHandleLinks=True
+
+    @tag("<c-l>(hint/hint[link])[^]")
+    def toggleLinks(self):
+        if self.app.check('canHint', self):
+            self.toggleLinkMode()
+
+    def toggleLinkMode(self):
+        sm = self.app.stateman.toggleSubmode("link")
+        if sm == "link":
+            self.setupHint("link")
 
     def setup(self):
         super().setup()
@@ -37,10 +46,6 @@ class FitzLinkView:
             tl = elem.unify(tl)
             self.goTo(p + 1, tl.x(), tl.y())
 
-    def toggleLinkMode(self):
-        sm = self.app.stateman.toggleSubmode("link")
-        if sm == "link":
-            self.setupHint("link")
 
     def selectLinkHint(self, kind, sel):
         if kind == "link":
@@ -142,9 +147,3 @@ class FitzLinks(Plug):
         mro=(FitzLinkView, viewer)
         viewer=type(name, mro, {})
         self.app.buffman.addViewer('FitzView', viewer)
-
-    @tag("<c-l>(hint/hint[link])[FitzView]")
-    def toggleLinks(self):
-        view=self.app.stateman.view()
-        if self.check('canHint', view):
-            view.toggleLinkMode()

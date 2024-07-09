@@ -158,6 +158,7 @@ class BaseHint:
     def saveHintPointers(
         self, j, d, l, hmap, hints, hint_kind
     ):
+        print(d)
         item = d["item"]
         if not item in hints:
             hints[item] = {}
