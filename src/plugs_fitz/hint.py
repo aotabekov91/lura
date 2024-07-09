@@ -1,8 +1,9 @@
-from plug_qt.vimo import mixin
 from PyQt6 import QtCore, QtGui
 
+from plug import Plug
+from plug_qt.vimo import mixin
 
-class Hint(mixin.view.BaseHint):
+class FitzHintView(mixin.view.BaseHint):
 
     def setup(self):
         self.m_hinting_items = []
@@ -14,16 +15,16 @@ class Hint(mixin.view.BaseHint):
         super().setupHint(kind, **kwargs)
 
     def connectHint(self):
-        for i in self.m_hinting_items:
-            i.painted.connect(self.paintHints)
+        for item in self.m_hinting_items:
+            item.painted.connect(self.paintHints)
 
     def disconnectHint(self):
-        for i in self.m_hinting_items:
-            i.painted.disconnect(self.paintHints)
+        for item in self.m_hinting_items:
+            item.painted.disconnect(self.paintHints)
 
     def updateHintItems(self):
-        for i in self.m_hinting_items:
-            i.refresh()
+        for item in self.m_hinting_items:
+            item.refresh()
 
     def cleanUpHinting(self):
         self.updateHintItems()
@@ -61,3 +62,25 @@ class Hint(mixin.view.BaseHint):
                             top_left,
                             text)
                 painter.restore()
+
+class FitzHints(Plug):
+
+    def setup(self):
+        super().setup()
+        self.app.appSoonStarts.connect(
+                self.updateFitz)
+
+    def updateFitz(self):
+        self.app.wait()
+        viewers=self.app.buffman.viewers()
+        for name, klass in viewers.items():
+            if name=='FitzView':
+                self.updateFitzViewer(klass)
+                break
+        self.app.wait(-1)
+
+    def updateFitzViewer(self, viewer):
+        name=viewer.__name__
+        mro=(FitzHintView, viewer)
+        viewer=type(name, mro, {})
+        self.app.buffman.addViewer('FitzView', viewer)

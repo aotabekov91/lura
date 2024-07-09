@@ -14,8 +14,9 @@ class FitzLinkView:
 
     def setup(self):
         super().setup()
-        self.hintSelectWanted.connect(
-                self.selectLinkHint)
+        if self.app.check('canHint', self):
+            self.hintSelectWanted.connect(
+                    self.selectLinkHint)
 
     def openLink(self, link):
         if not link: return

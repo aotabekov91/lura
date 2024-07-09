@@ -1,24 +1,24 @@
-import faulthandler
-import fitz_plugs
+import plugs_fitz
+
 from lura import core
 from plug_qt import App
 
 class Lura(App):
 
     def activate(self):
-        p = [
+        plugs = [
             core.pdf_fitz.PdfFitz,
-            fitz_plugs.Rotate,
-            fitz_plugs.GrayScale,
-            fitz_plugs.TrimFitzView,
-            fitz_plugs.FitzLinks,
+            plugs_fitz.Rotate,
+            plugs_fitz.GrayScale,
+            plugs_fitz.TrimFitzView,
+            plugs_fitz.FitzLinks,
+            plugs_fitz.FitzHints,
         ]
-        self.plugman.load(p)
+        self.plugman.load(plugs)
         super().activate()
 
 
 def run():
-    faulthandler.enable(all_threads=True)
     app = Lura()
     app.activate()
     app.run()

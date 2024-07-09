@@ -2,7 +2,6 @@ from PyQt6 import QtCore
 
 from plug.utils import tag
 
-
 class BaseHint:
     canHint: bool = True
     alpha: str = "abcdefghijklmnopqrstuvwxyz"

@@ -1,22 +1,22 @@
 import plug_qt
 from PyQt6 import QtWidgets
 
-from ..item import FitzItem
 from . import mixin
+from ..item import FitzItem
 
 class FitzView(
     mixin.Copy,
-    mixin.Hint,
+    # mixin.Hint,
     mixin.Yank,
     mixin.Items,
     mixin.Search,
-    mixin.BoxHint,
-    mixin.WordHint,
+    # mixin.BoxHint,
+    # mixin.WordHint,
     mixin.Annotate,
     # mixin.BoxVisual,
     # mixin.WordVisual,
     mixin.YankToCard,
-    mixin.AnnotationHint,
+    # mixin.AnnotationHint,
     mixin.RubberbandVisual,
     plug_qt.vimo.mixin.view.Scale,
     plug_qt.vimo.mixin.view.State,

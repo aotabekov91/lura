@@ -9,13 +9,13 @@ from plug_qt.vimo.gizmo import view
 
 class View(
     mixin.view.Exec,
-    mixin.view.Hint,
+    # mixin.view.Hint,
     mixin.view.AppGo,
     mixin.view.Visual,
     mixin.view.Command,
     mixin.view.AppKeyer,
     mixin.view.AppClose,
-    mixin.view.ViewHint,
+    # mixin.view.ViewHint,
     view.WindowView,
 ):
     activated: bool = True
