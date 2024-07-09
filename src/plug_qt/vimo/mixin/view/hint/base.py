@@ -39,19 +39,19 @@ class BaseHint:
         mu = getattr(self, f"update{mn}Hint", None)
         return getattr(self, f"update{mn}{sn}Hint", mu)
 
-    # @tag("<escape>(hint[any])[^]")
-    # def finishHintMode(self):
-    #     self.app.stateman.toggle()
+    @tag("<escape>(hint[any])[^]")
+    def finishHintMode(self):
+        self.app.stateman.toggle()
 
-    # @tag("<c-f>(normal/hint)")
-    # def toggleHintMode(self):
-    #     m = self.app.stateman.toggle(
-    #         mode="hint",
-    #         delisten=True,
-    #         passive=["hint"],
-    #     )
-    #     if m != "hint":
-    #         self.cleanUpHinting()
+    @tag("<c-f>(normal/hint)")
+    def toggleHintMode(self):
+        m = self.app.stateman.toggle(
+            mode="hint",
+            delisten=True,
+            passive=["hint"],
+        )
+        if m != "hint":
+            self.cleanUpHinting()
 
     def getHints(self, kind=None, **kwargs):
         if kind:
