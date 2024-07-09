@@ -36,7 +36,6 @@ class FitzLinkView:
             tl = elem.unify(tl)
             self.goTo(p + 1, tl.x(), tl.y())
 
-    @tag("<c-l>(hint[any])[^]")
     def toggleLinkMode(self):
         sm = self.app.stateman.toggleSubmode("link")
         if sm == "link":
@@ -143,9 +142,8 @@ class FitzLinks(Plug):
         viewer=type(name, mro, {})
         self.app.buffman.addViewer('FitzView', viewer)
 
-    @tag("l(hint)[FitzView]")
+    @tag("<c-l>(hint/hint[link])[FitzView]")
     def toggleLinks(self):
         view=self.app.stateman.view()
-        #todo
-        print(view.__class__)
-        print(self.app.buffman.viewers())
+        if self.check('canHint', view):
+            view.toggleLinkMode()

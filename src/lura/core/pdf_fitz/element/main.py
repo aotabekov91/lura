@@ -8,7 +8,6 @@ from . import mixin
 
 class FitzElement(
     mixin.Block,
-    # mixin.Links,
     mixin.Search,
     mixin.Normed,
     mixin.Annotate,
