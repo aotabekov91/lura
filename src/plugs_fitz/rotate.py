@@ -1,7 +1,7 @@
 from plug import Plug
 from plug.utils import tag
 
-class Rotate(Plug):
+class FitzRotate(Plug):
 
     @tag("r(normal)[FitzView]")
     def rotateView(self, xrange=None):

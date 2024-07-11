@@ -162,10 +162,10 @@ class Buffman(Plug):
             return self.getView(m, **kwargs)
 
     def open(self, source: str, **kwargs) -> tp.Any:
-        v = self.initiate(source, **kwargs)
-        if v:
-            v.activate(**kwargs)
-        return v
+        view = self.initiate(source, **kwargs)
+        if view:
+            view.activate(**kwargs)
+        return view
 
     def setParser(self) -> tp.Any:
         self.app.parser.addArgument(

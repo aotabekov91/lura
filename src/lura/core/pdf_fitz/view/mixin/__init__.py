@@ -3,7 +3,6 @@ from .card import YankToCard
 from .copy import Copy
 from .items import Items
 from .margins import TrimMargins
-from .rotate import Rotate
 from .search import Search
 from .visual import *
 from .yank import Yank

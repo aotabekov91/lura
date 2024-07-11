@@ -5,7 +5,8 @@ from PyQt6 import QtCore, QtGui
 
 
 class Outline:
-    hasOutline = True
+
+    canHandleOutline = True
 
     def setup(self):
         super().setup()

@@ -10,6 +10,21 @@ style = 'GreenElf'
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
+# [[Plugman.Picks]]
+# pick = 'aotabekov91/lura_plugs'
+# subdir = [
+# 	'src/lura_plugs/outline',
+# 	# 'src/lura_plugs/table',
+# 	# 'src/lura_plugs/ctrlp',
+# 	'src/lura_plugs/green_elf',
+# 	]
+#
+# [[Plugman.Picks]]
+# pick = 'aotabekov91/sainan'
+# subdir = [
+# 	'src/sainan/plugs/client/czmq',
+# 	]
+
 # [ModelView.Bookmark]
 # want='attach'
 # model_name='bookmark'
@@ -53,20 +68,6 @@ folder = '~/.config/lura/picky'
 # field = {w = 'Label', p = '0x0x1x1', title=true}
 # value = {w = 'TextEdit', p = '1x0x1x1'}
 
-# [[Plugman.Picks]]
-# pick = 'aotabekov91/lura_plugs'
-# subdir = [
-# 	'src/lura_plugs/outline',
-# 	# 'src/lura_plugs/table',
-# 	# 'src/lura_plugs/ctrlp',
-# 	'src/lura_plugs/green_elf',
-# 	]
-#
-# [[Plugman.Picks]]
-# pick = 'aotabekov91/sainan'
-# subdir = [
-# 	'src/sainan/plugs/client/czmq',
-# 	]
 
 # [Table.State]
 # uid='id'

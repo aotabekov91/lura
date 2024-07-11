@@ -20,7 +20,7 @@ class GrayScaleFitzElement:
             img.invertPixels()
         return img
 
-class GrayScale(Plug):
+class FitzGrayScale(Plug):
 
     def setup(self):
         super().setup()

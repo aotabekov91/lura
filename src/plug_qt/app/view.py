@@ -52,14 +52,6 @@ class View(
             tab_classes={"default": tab_klass},
         )
 
-        # self.display: view.TabView = view.TabView(
-        #     label="D",
-        #     app=self.app,
-        #     identifier="D",
-        #     name='Display',
-        #     tab_classes={"default": tab_klass},
-        # )
-
         self.docks: view.Docks = view.Docks(
             label="D",
             parent=self,

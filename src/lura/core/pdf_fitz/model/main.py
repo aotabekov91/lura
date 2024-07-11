@@ -14,7 +14,6 @@ from . import mixin
 
 class FitzModel(
     mixin.Pixmap,
-    mixin.Outline,
     mixin.Annotate,
     mixin.UniqLocate,
     plug.utils.Cache,
