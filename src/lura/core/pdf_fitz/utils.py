@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui
 
-
 class Task(QtCore.QObject):
+
     pixmapReady = QtCore.pyqtSignal(object, object, object)
 
     def __init__(self, model, queue):
@@ -17,3 +17,4 @@ class Task(QtCore.QObject):
             img = e.renderImage(**d)
             p = QtGui.QPixmap.fromImage(img)
             self.pixmapReady.emit(i, d, p)
+

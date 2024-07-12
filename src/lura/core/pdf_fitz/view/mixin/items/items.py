@@ -1,5 +1,7 @@
-from plug_qt.vimo import mixin
 from PyQt6 import QtCore
+
+from plug_qt.vimo import mixin
+
 
 from .utils import Viewport
 
