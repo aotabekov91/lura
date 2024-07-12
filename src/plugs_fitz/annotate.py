@@ -1,9 +1,11 @@
-from fitz import Quad
-from plug_qt.vimo import mixin
+import fitz
 from PyQt6 import QtCore
 
+from plug import Plug
+from plug_qt.vimo import mixin
 
-class Annotate(mixin.element.Annotate):
+class FitzAnnotateElement(mixin.element.Annotate):
+
     def deannotate(self, d):
         b = d["box"][0]
         b = self.m_norm.mapRect(b)
@@ -59,5 +61,44 @@ class Annotate(mixin.element.Annotate):
             w, h = i.width(), i.height()
             ul, ur = (x, y), (x + w, y)
             ll, lr = (x, y + h), (x + w, y + h)
-            q += [Quad(ul, ur, ll, lr)]
+            q += [fitz.Quad(ul, ur, ll, lr)]
         return q, b
+
+class FitzAnnotate(Plug):
+
+    def setup(self):
+        super().setup()
+        self.app.appSoonStarts.connect(
+                self.updateFitz)
+
+    def updateFitz(self):
+        self.app.wait()
+        viewers=self.app.buffman.viewers()
+        modellers=self.app.buffman.modellers()
+        for name, klass in viewers.items():
+            if name=='FitzView':
+                self.updateFitzViewer(klass)
+                break
+        for name, klass in modellers.items():
+            if klass.__name__=='FitzModel':
+                self.updateFitzModeller(klass)
+                break
+        self.app.wait(-1)
+
+    def updateFitzModeller(self, modeller):
+        klass=modeller.element_class
+        name=klass.__name__
+        mro=(FitzAnnotateElement, klass)
+        modeller.element_class=type(name, mro, {})
+
+    def updateFitzViewer(self, viewer):
+        pass
+        # klass=viewer.item_class
+        # name=klass.__name__
+        # mro=(FitzLinkItem, klass)
+        # viewer.item_class=type(name, mro, {})
+        # self.app.buffman.delViewer('FitzView')
+        # name=viewer.__name__
+        # mro=(FitzLinkView, viewer)
+        # viewer=type(name, mro, {})
+        # self.app.buffman.addViewer('FitzView', viewer)

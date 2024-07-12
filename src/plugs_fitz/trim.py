@@ -84,7 +84,7 @@ class TrimFitzElement:
     #         self.m_trim_trans=QtGui.QTransform()
     #         self.m_size=trect.size()
 
-class TrimFitzView(Plug):
+class FitzTrim(Plug):
 
     def setup(self):
         super().setup()

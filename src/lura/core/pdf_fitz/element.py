@@ -3,14 +3,7 @@ from PyQt6 import QtCore, QtGui
 
 import plug
 
-from . import mixin
-
-
 class FitzElement(
-    mixin.Block,
-    mixin.Search,
-    mixin.Normed,
-    mixin.Annotate,
     plug.element.Element,
     QtCore.QObject,
 ):
@@ -21,6 +14,37 @@ class FitzElement(
     def setup(self):
         self.setSize()
         super().setup()
+        size = self.size()
+        self.m_norm = QtGui.QTransform()
+        self.m_norm.scale(size.width(), size.height())
+
+    def unify(self, p):
+        norm = self.m_norm.inverted()[0]
+        if type(p) == tuple:
+            if len(p) == 2:
+                p = QtCore.QPointF(*p)
+            elif len(p) == 4:
+                p = QtCore.QRectF(*p)
+        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
+            u = norm.map(p)
+        else:
+            p = p.normalized()
+            u = norm.mapRect(p)
+        return u
+
+    def unity(self, p):
+        norm = self.m_norm
+        if type(p) == tuple:
+            if len(p) == 2:
+                p = QtCore.QPointF(*p)
+            elif len(p) == 4:
+                p = QtCore.QRectF(*p)
+        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
+            u = norm.map(p)
+        else:
+            p = p.normalized()
+            u = norm.mapRect(p)
+        return u
 
     def setSize(self):
         b = self.m_data.bound()

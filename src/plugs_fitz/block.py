@@ -1,7 +1,10 @@
 from PyQt6 import QtCore
 
+from plug import Plug
 
-class Block:
+
+class FitzBlockElement:
+
     canBlock = True
     direction = [None, None]
 
@@ -251,3 +254,42 @@ class Block:
                 i = self.unify(r)
                 cb.append(i)
         csel["box"] = sorted(cb, key=lambda r: (r.y(), r.x()))
+
+class FitzBlocks(Plug):
+
+    def setup(self):
+        super().setup()
+        self.app.appSoonStarts.connect(
+                self.updateFitz)
+
+    def updateFitz(self):
+        self.app.wait()
+        viewers=self.app.buffman.viewers()
+        modellers=self.app.buffman.modellers()
+        for name, klass in viewers.items():
+            if name=='FitzView':
+                self.updateFitzViewer(klass)
+                break
+        for name, klass in modellers.items():
+            if klass.__name__=='FitzModel':
+                self.updateFitzModeller(klass)
+                break
+        self.app.wait(-1)
+
+    def updateFitzModeller(self, modeller):
+        klass=modeller.element_class
+        name=klass.__name__
+        mro=(FitzBlockElement, klass)
+        modeller.element_class=type(name, mro, {})
+
+    def updateFitzViewer(self, viewer):
+        pass
+        # klass=viewer.item_class
+        # name=klass.__name__
+        # mro=(FitzLinkItem, klass)
+        # viewer.item_class=type(name, mro, {})
+        # self.app.buffman.delViewer('FitzView')
+        # name=viewer.__name__
+        # mro=(FitzLinkView, viewer)
+        # viewer=type(name, mro, {})
+        # self.app.buffman.addViewer('FitzView', viewer)
