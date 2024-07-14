@@ -19,6 +19,7 @@ class Lura(App):
             plugs_fitz.FitzSearch,
             plugs_fitz.FitzAnnotate,
             plugs_fitz.FitzBlocks,
+            plugs_fitz.FitzYankWord,
             plugs_qt.Outline,
         ]
         self.plugman.load(plugs)

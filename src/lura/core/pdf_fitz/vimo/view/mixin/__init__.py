@@ -5,4 +5,3 @@ from .items import Items
 from .margins import TrimMargins
 from .search import Search
 from .visual import *
-from .yank import Yank

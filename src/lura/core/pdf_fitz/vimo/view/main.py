@@ -6,7 +6,6 @@ from ..item import FitzItem
 
 class FitzView(
     mixin.Copy,
-    mixin.Yank,
     mixin.Items,
     mixin.Search,
     # mixin.BoxHint,

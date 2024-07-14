@@ -6,5 +6,6 @@ from .rotate import FitzRotate
 from .search import FitzSearch
 from .hint_word import FitzWords
 from .outline import FitzOutline
-from .grayscale import FitzGrayScale
 from .annotate import FitzAnnotate
+from .yank_word import FitzYankWord 
+from .grayscale import FitzGrayScale
