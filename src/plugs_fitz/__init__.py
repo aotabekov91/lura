@@ -1,3 +1,4 @@
+from .copy import FitzCopy
 from .trim import FitzTrim
 from .hint import FitzHints
 from .links import FitzLinks

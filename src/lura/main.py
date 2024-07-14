@@ -9,8 +9,10 @@ class Lura(App):
     def activate(self):
         plugs = [
             core.pdf_fitz.PdfFitz,
+
             plugs_fitz.FitzRotate,
             plugs_fitz.FitzGrayScale,
+            plugs_fitz.FitzCopy,
             plugs_fitz.FitzTrim,
             plugs_fitz.FitzLinks,
             plugs_fitz.FitzHints,
@@ -20,6 +22,7 @@ class Lura(App):
             plugs_fitz.FitzAnnotate,
             plugs_fitz.FitzBlocks,
             plugs_fitz.FitzYankWord,
+
             plugs_qt.Outline,
         ]
         self.plugman.load(plugs)

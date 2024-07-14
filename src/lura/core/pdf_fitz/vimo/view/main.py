@@ -5,15 +5,7 @@ from . import mixin
 from ..item import FitzItem
 
 class FitzView(
-    mixin.Copy,
     mixin.Items,
-    mixin.Search,
-    # mixin.BoxHint,
-    mixin.Annotate,
-    # mixin.BoxVisual,
-    # mixin.WordVisual,
-    mixin.YankToCard,
-    # mixin.AnnotationHint,
     mixin.RubberbandVisual,
     plug_qt.vimo.mixin.view.Scale,
     plug_qt.vimo.mixin.view.State,
