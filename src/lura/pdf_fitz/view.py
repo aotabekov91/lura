@@ -3,20 +3,7 @@ from PyQt6 import QtCore, QtWidgets
 import plug_qt
 
 from .item import FitzItem
-
-class Viewport(QtWidgets.QWidget):
-    updated = QtCore.pyqtSignal()
-
-    def update(self, *args, **kwargs):
-        super().update(*args, **kwargs)
-        self.updated.emit()
-
-    def event(self, event):
-        res = super().event(event)
-        if event.type() == QtCore.QEvent.Type.Move:
-            self.update()
-        return res
-
+from .utils import Viewport
 
 class FitzView(
     plug_qt.vimo.mixin.view.Scale,

@@ -1,4 +1,4 @@
-from PyQt6 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 class Task(QtCore.QObject):
 
@@ -17,4 +17,18 @@ class Task(QtCore.QObject):
             img = e.renderImage(**d)
             p = QtGui.QPixmap.fromImage(img)
             self.pixmapReady.emit(i, d, p)
+
+class Viewport(QtWidgets.QWidget):
+
+    updated = QtCore.pyqtSignal()
+
+    def update(self, *args, **kwargs):
+        super().update(*args, **kwargs)
+        self.updated.emit()
+
+    def event(self, event):
+        result = super().event(event)
+        if event.type() == QtCore.QEvent.Type.Move:
+            self.update()
+        return result
 

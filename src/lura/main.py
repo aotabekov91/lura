@@ -1,14 +1,14 @@
 import plugs_qt
 import plugs_fitz
 
-from lura import core
 from plug_qt import App
+from lura import pdf_fitz
 
 class Lura(App):
 
     def activate(self):
         plugs = [
-            core.pdf_fitz.PdfFitz,
+            pdf_fitz.PdfFitz,
 
             plugs_fitz.FitzRotate,
             plugs_fitz.FitzGrayScale,
