@@ -1,15 +1,44 @@
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtWidgets
 
-from plug_qt.vimo import mixin
+import plug_qt
+
+from .item import FitzItem
+
+class Viewport(QtWidgets.QWidget):
+    updated = QtCore.pyqtSignal()
+
+    def update(self, *args, **kwargs):
+        super().update(*args, **kwargs)
+        self.updated.emit()
+
+    def event(self, event):
+        res = super().event(event)
+        if event.type() == QtCore.QEvent.Type.Move:
+            self.update()
+        return res
 
 
-from .utils import Viewport
-
-
-class Items(mixin.view.Scene):
+class FitzView(
+    plug_qt.vimo.mixin.view.Scale,
+    plug_qt.vimo.mixin.view.Scene,
+    plug_qt.vimo.mixin.view.State,
+    plug_qt.vimo.mixin.view.ZXYPos,
+    plug_qt.vimo.mixin.view.Pixmap,
+    plug_qt.vimo.mixin.view.Select,
+    plug_qt.vimo.mixin.view.Leaper,
+    plug_qt.vimo.mixin.view.Locate,
+    plug_qt.vimo.mixin.view.SceneGo,
+    plug_qt.vimo.mixin.view.ItemsHighlight,
+    plug_qt.vimo.view.View,
+    QtWidgets.QGraphicsView,
+):
     hasItems = True
+    canFollow = True
     canUpdateItems = True
     indexChanged = QtCore.pyqtSignal(object)
+
+    item_class = FitzItem
+    position = {"FitzView": "C|x"}
 
     def setup(self):
         self.m_curr = 1
