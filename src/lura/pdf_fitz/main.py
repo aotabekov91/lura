@@ -1,7 +1,7 @@
 import plug
 
-from .view import FitzView
-from .model import FitzModel
+from .vimo.view import FitzView
+from .vimo.model import FitzModel
 
 class PdfFitz(plug.Plug):
     def setup(self):
