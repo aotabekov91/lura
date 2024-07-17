@@ -18,9 +18,8 @@ class App(Plug):
     """The main application construct"""
 
     ui: tp.Any = None
-    app_wait: int = 2
+    wants_to_wait: int=0
     canHide: bool = False
-    waiting_to_finish: int = 0
 
     def setup(self) -> None:
         """Setting up the components of the application"""
@@ -28,7 +27,7 @@ class App(Plug):
         self.setupApp()
 
     def setupApp(self):
-        self.setParser()
+        self.setupParser()
         self.setParts()
 
     def setParts(
@@ -57,7 +56,7 @@ class App(Plug):
         self.earman.add(self.ui)
         self.earman.add(self)
 
-    def setParser(self, parser=Parser):
+    def setupParser(self, parser=Parser):
         if parser:
             self.parser: tp.Any = parser()
 
@@ -79,20 +78,28 @@ class App(Plug):
             path.mkdir(parents=parents, exist_ok=exist_ok)
         return path
 
-    def wait(self, delta: int) -> None:
-        self.waiting_to_finish += delta
+    def wait(self, delta: int=1) -> None:
+         self.wants_to_wait += delta
+
+    def startUI(self):
+         time.sleep(0.1)
+         while self.wants_to_wait:
+             time.sleep(0.01)
+         if self.ui:
+             self.ui.activate()
 
     def run(self) -> None:
-        if self.ui:
-            self.ui.activate()
-        self.timer.start(self.app_wait)
-        sys.exit(self.qapp.exec_())
+         self.startUI()
+         sys.exit(self.qapp.exec())
+
+    def standardEvent(self, event):
+         return event
 
     @tag("<c-q>(any)")
     def quit(self) -> None:
         self.appSoonQuits.emit()
         time.sleep(0.1)
-        while self.waiting_to_finish:
+        while self.wants_to_wait:
             time.sleep(0.01)
         self.pool.clear()
         sys.exit()

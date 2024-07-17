@@ -1,12 +1,9 @@
-import os
 import sys
-import time
-import pathlib
 import typing as tp
 
 from PyQt6 import QtCore, QtWidgets
 
-from plug import Plug, utils
+import plug
 
 from . import view
 from .earman import Earman
@@ -17,14 +14,13 @@ from .stateman import Stateman
 
 
 class App(
-    Plug,
+    plug.App,
     QtCore.QObject,
 ):
     """The main application construct"""
 
-    app_wait: int = 2
-    canHide: bool = False
-    wants_to_wait: int=0
+    app_wait: int = 1
+
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
@@ -33,8 +29,6 @@ class App(
          """Setting up the components of the application"""
          super().setup()
          self.setupParser()
-         self.setupTools()
-         self.setupTimer()
          self.setupPool()
          self.setupQApp()
          self.setupParts()
@@ -86,63 +80,8 @@ class App(
     def setupPool(self) -> None:
          self.pool: QtCore.QThreadPool = QtCore.QThreadPool()
     
-    def setupTimer(self):
-         self.timer: QtCore.QTimer = QtCore.QTimer()
-         self.timer.timeout.connect(self.appIsLaunched.emit)
-         self.timer.setSingleShot(True)
-    
-    def setupParser(self, parser=utils.Parser):
-         if parser:
-             self.parser: tp.Any = parser()
-    
-    def setupTools(self, tools=utils.dotdict):
-         if tools:
-             self.tools: tp.Any = tools()
-    
-    def activate(self):
-         self.plugman.loadPlugs()
-         if self.ui:
-             self.ui.show()
-    
-    def createFolder(
-         self,
-         path: str = None,
-         parents: bool = True,
-         exist_ok: bool = True,
-     ) -> pathlib.Path:
-         path = path or f"~/{self.name.lower()}"
-         f = os.path.expanduser(path)
-         path = pathlib.Path(f)
-         if not os.path.exists(f):
-             path.mkdir(parents=parents, exist_ok=exist_ok)
-         return path
-    
-    def wait(self, delta: int=1) -> None:
-         self.wants_to_wait += delta
-    
     def run(self) -> None:
          self.appSoonStarts.emit()
-         time.sleep(0.1)
-         while self.wants_to_wait:
-             time.sleep(0.01)
-         if self.ui:
-             self.ui.activate()
-         self.timer.start(self.app_wait)
+         self.startUI()
+         self.appIsLaunched.emit()
          sys.exit(self.qapp.exec())
-    
-    @utils.tag("<c-q>(any)")
-    def quit(self) -> None:
-         self.appSoonQuits.emit()
-         time.sleep(0.1)
-         while self.wants_to_wait:
-             time.sleep(0.01)
-         self.pool.clear()
-         sys.exit()
-    
-    @utils.tag("<c-[>(normal)")
-    def hide(self) -> None:
-         if self.ui and self.canHide:
-             self.ui.hide()
-    
-    def standardEvent(self, event):
-         return event

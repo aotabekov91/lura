@@ -158,6 +158,3 @@ class Plug:
             self.ui.activate()
         self.timer.start(self.app_wait)
         sys.exit(self.qapp.exec())
-
-    def standardEvent(self, event):
-        return event
