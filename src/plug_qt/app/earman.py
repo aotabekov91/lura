@@ -81,8 +81,6 @@ class Earman(
         self.connectEarman()
 
     def connectEarman(self):
-        # self.app.buffman.viewAdded.connect(self.add)
-        # self.app.plugman.plugAdded.connect(self.add)
         self.app.qapp.installEventFilter(self)
 
     def setTimer(self):

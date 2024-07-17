@@ -100,7 +100,7 @@ class App(
              self.tools: tp.Any = tools()
     
     def activate(self):
-         self.plugman.load()
+         self.plugman.loadPlugs()
          if self.ui:
              self.ui.show()
     

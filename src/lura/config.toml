@@ -2,18 +2,19 @@
 base = 'https://github.com'
 folder = '~/.config/lura/picky'
 
-[Styleman.Settings]
-style = 'GreenElf'
+# [Styleman.Settings]
+# style = 'GreenElf'
 
-# [[Plugman.Picks]]
-# pick = 'aotabekov91/lura_plugs'
-# subdir = [
-# 	'src/lura_plugs/outline',
-# 	# 'src/lura_plugs/table',
-# 	# 'src/lura_plugs/ctrlp',
-# 	'src/lura_plugs/green_elf',
-# 	]
-#
+# [[Plugman]]
+# Picky = [
+# 	'plugs_fitz/search',
+# ]
+
+	# 'src/lura_plugs/table',
+	# 'src/lura_plugs/ctrlp',
+	# 'lura_plugs/green_elf',
+	# ]
+
 # [[Plugman.Picks]]
 # pick = 'aotabekov91/sainan'
 # subdir = [
