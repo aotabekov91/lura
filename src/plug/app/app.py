@@ -28,9 +28,9 @@ class App(Plug):
 
     def setupApp(self):
         self.setupParser()
-        self.setParts()
+        self.setupParts()
 
-    def setParts(
+    def setupParts(
         self,
         plugman: tp.Callable[
             [...], tp.Any 
@@ -46,15 +46,14 @@ class App(Plug):
             [...], tp.Any 
         ] = Stateman,
     ) -> None:
-        self.buffman: Buffman = buffman(self)
-        self.stateman: Stateman = stateman(self)
-        self.earman: Earman = earman(self)
-        self.plugman: Plugman = plugman(self)
-        self.styleman: Styleman = styleman(self)
-        self.earman.add(self.stateman)
-        self.earman.add(self.styleman)
-        self.earman.add(self.ui)
-        self.earman.add(self)
+
+         self.earman: Earman = earman(self)
+         self.stateman: Stateman = stateman(self)
+         self.buffman: Buffman = buffman(self)
+         self.plugman: Plugman = plugman(self)
+         self.styleman: Styleman = styleman(self)
+         self.earman.add(self.earman)
+         self.earman.add(self)
 
     def setupParser(self, parser=Parser):
         if parser:

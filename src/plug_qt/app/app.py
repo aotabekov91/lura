@@ -17,17 +17,14 @@ class App(
     plug.App,
     QtCore.QObject,
 ):
-    """The main application construct"""
 
     app_wait: int = 1
 
+    appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
-    appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
 
-    def setup(self) -> None:
-         """Setting up the components of the application"""
-         super().setup()
+    def setupApp(self):
          self.setupParser()
          self.setupPool()
          self.setupQApp()
@@ -41,6 +38,9 @@ class App(
          self.qapp.setApplicationName(self.name)
          self.setParent(self.qapp)
     
+    def setupPool(self) -> None:
+         self.pool: QtCore.QThreadPool = QtCore.QThreadPool()
+    
     def setupView(
          self, 
          view: tp.Any = view.View
@@ -50,36 +50,19 @@ class App(
     
     def setupParts(
          self,
-         plugman: tp.Callable[
-             [...], tp.Any 
-         ] = Plugman,
-         earman: tp.Callable[[...], tp.Any] = Earman,
-         buffman: tp.Callable[
-             [...], tp.Any 
-         ] = Buffman,
-         styleman: tp.Callable[
-             [...], tp.Any 
-         ] = Styleman,
-         stateman: tp.Callable[
-             [...], tp.Any 
-         ] = Stateman,
+         plugman = Plugman,
+         earman = Earman,
+         buffman = Buffman,
+         styleman = Styleman,
+         stateman = Stateman,
      ) -> None:
-         self.earman: Earman = earman(self)
-         self.stateman: Stateman = stateman(self)
-         self.buffman: Buffman = buffman(self)
-         self.plugman: Plugman = plugman(self)
-         self.styleman: Styleman = styleman(self)
-         # self.earman.add(self.stateman)
-         # self.earman.add(self.styleman)
-         # self.earman.add(self.buffman)
-         # self.earman.add(self.plugman)
-         # self.earman.add(self.ui)
-         self.earman.add(self.earman)
-         self.earman.add(self)
-    
-    def setupPool(self) -> None:
-         self.pool: QtCore.QThreadPool = QtCore.QThreadPool()
-    
+         super().setupParts(
+                 plugman=plugman,
+                 earman=earman,
+                 buffman=buffman,
+                 styleman=styleman,
+                 stateman=stateman)
+
     def run(self) -> None:
          self.appSoonStarts.emit()
          self.startUI()
