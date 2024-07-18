@@ -9,7 +9,8 @@ from ..utils import dotdict
 class Plugman(Plug):
 
     folder: str = "~"
-    added: tp.List[tp.Any]=[]
+    added: tp.Set[tp.Any]=set()
+    autorun: tp.Set[tp.Any]=set()
     plugs: tp.Dict[tp.Any, tp.Any] = dotdict()
 
     def setup(self):
@@ -18,15 +19,21 @@ class Plugman(Plug):
 
     def setFolder(self):
         self.folder = os.path.expanduser(self.folder)
-        self.plug_folder = self.app.createFolder(
-            self.folder)
+        path=os.path.join(self.folder, 'autorun')
+        autorun=self.app.createFolder(path)
+        self.addAutorun(autorun)
+
+    def addAutorun(self, folder):
+        self.autorun.add(folder)
 
     def addPlugs(self, plugs=[]):
-        self.added+=plugs
+        self.added.update(plugs)
 
     def loadPlugs(self, params={}):
-        plugs=self.getAutoPlugs(set())
-        plugs=plugs.union(set(self.added))
+        plugs=self.added
+        for folder in self.autorun:
+            autorun_plugs=self.getAutoPlugs(folder)
+            plugs.update(autorun_plugs)
         for plug in plugs: 
             self.loadPlug(plug, params)
 
@@ -57,10 +64,11 @@ class Plugman(Plug):
                 print("Error in plug loading: ", name, e)
                 raise
 
-    def getAutoPlugs(self, plugs=set()) -> tp.Set[tp.Any]:
-
-        sys.path.insert(0, self.folder)
-        for name in os.listdir(self.folder):
+    def getAutoPlugs(self, folder):
+        plugs=set()
+        folder=str(folder)
+        sys.path.insert(0, folder)
+        for name in os.listdir(folder):
             try:
                 module = importlib.import_module(name)
                 klasser = getattr(module, "get_plug_class", None)

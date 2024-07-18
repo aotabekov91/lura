@@ -11,6 +11,8 @@ from ..utils import tag
 
 class Picky(Plug):
 
+    base='https://github.com/'
+
     def load(
         self,
         plugs: tp.List[tp.Any] = [],

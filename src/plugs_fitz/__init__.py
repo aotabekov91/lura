@@ -4,7 +4,6 @@ from .hint import FitzHints
 from .links import FitzLinks
 from .block import FitzBlocks
 from .rotate import FitzRotate
-from .search import FitzSearch
 from .hint_word import FitzWords
 from .outline import FitzOutline
 from .annotate import FitzAnnotate

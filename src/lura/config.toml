@@ -1,14 +1,14 @@
 [Plugman.Settings]
 base = 'https://github.com'
-folder = '~/.config/lura/picky'
+folder = '~/.config/lura'
 
 # [Styleman.Settings]
 # style = 'GreenElf'
 
-# [[Plugman]]
-# Picky = [
-# 	'plugs_fitz/search',
-# ]
+[Picky]
+Picks = [
+	'plugs_fitz/search',
+]
 
 	# 'src/lura_plugs/table',
 	# 'src/lura_plugs/ctrlp',
