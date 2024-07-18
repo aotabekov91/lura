@@ -6,14 +6,32 @@ from plug import Plug, tag
 
 class Picky(Plug):
 
-    plugs=[]
     base='https://github.com/'
 
     def setup(self):
         super().setup()
-        self.getPicks()
+        self.addPicksFolder()
+        self.loadPicks()
+
+    def addPicksFolder(self):
+        plugman_folder=self.app.plugman.folder
+        path=os.path.join(plugman_folder, 'picky')
+        self.folder=self.app.createFolder(path)
+
+    def loadPicks(self):
+        modules=[]
+        picks=self.getPicks()
+        for pick in picks:
+            repo=pick['repo']
+            path=os.path.join(self.folder, repo)
+            if os.path.exists(path):
+                modules+=[pick['repo']]
+        self.app.plugman.loadPlugs(
+                folder=self.folder,
+                modules=modules)
 
     def getPicks(self):
+        plugs=[]
         picks = self.m_config.get("Picks", [])
         for pick in picks:
             if type(pick)==str:
@@ -23,7 +41,8 @@ class Picky(Plug):
             plug=pick.get('plug')
             _, repo = tuple(plug.split("/"))
             pick['repo']=repo
-            self.plugs.append(pick)
+            plugs.append(pick)
+        return plugs
 
     def installRepo(self, repo, base=None):
         name, path, folder = self.updateInfo(repo)

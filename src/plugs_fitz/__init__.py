@@ -5,7 +5,6 @@ from .links import FitzLinks
 from .block import FitzBlocks
 from .rotate import FitzRotate
 from .hint_word import FitzWords
-from .outline import FitzOutline
 from .annotate import FitzAnnotate
 from .yank_word import FitzYankWord 
 from .grayscale import FitzGrayScale
