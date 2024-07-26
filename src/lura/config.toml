@@ -7,8 +7,8 @@ folder = '~/.config/lura'
 
 [Picky]
 Picks = [
-	'pdffitz/fitz_search',
-	'pdffitz/fitz_outline',
+	'plugs/search',
+	{plug='fitz91/fitz_search', base='http://192.168.178.10'}
 ]
 
 	# 'src/lura_plugs/table',

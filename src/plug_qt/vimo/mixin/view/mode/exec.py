@@ -2,10 +2,13 @@ from plug.utils import tag
 
 
 class Exec:
-    @tag("<escape>/<c-[>(exec)[Execlist]")
+    #todo
+    @tag("<escape>/<c-[>(exec)")
     def octivateExecMode(self):
         self.toggleExecMode()
+        self.app.stateman.toggle('normal')
 
-    @tag(":(normal/exec)[Execlist]")
+    @tag(":(normal)")
     def toggleExecMode(self):
-        self.app.ui.bar.toggleExecline()
+        self.app.ui.bar.toggleEdit()
+        self.app.stateman.toggle('exec')

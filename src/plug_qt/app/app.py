@@ -19,7 +19,6 @@ class App(
 ):
 
     app_wait: int = 1
-
     appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
@@ -66,5 +65,6 @@ class App(
     def run(self) -> None:
          self.appSoonStarts.emit()
          self.startUI()
+         self.running=True
          self.appIsLaunched.emit()
          sys.exit(self.qapp.exec())

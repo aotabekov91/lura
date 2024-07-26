@@ -15,7 +15,7 @@ class FitzView(
     plug_qt.vimo.mixin.view.Leaper,
     plug_qt.vimo.mixin.view.Locate,
     plug_qt.vimo.mixin.view.SceneGo,
-    plug_qt.vimo.mixin.view.ItemsHighlight,
+    # plug_qt.vimo.mixin.view.ItemsHighlight,
     plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,
 ):
