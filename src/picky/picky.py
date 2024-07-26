@@ -6,7 +6,7 @@ from plug import Plug, tag
 
 class Picky(Plug):
 
-    base='https://github.com/'
+    base='https://github.com'
 
     def setup(self):
         super().setup()
@@ -18,17 +18,45 @@ class Picky(Plug):
         path=os.path.join(plugman_folder, 'picky')
         self.folder=self.app.createFolder(path)
 
-    def loadPicks(self):
+    def loadPicks(self, picks=[]):
         modules=[]
-        picks=self.getPicks()
+        picks=picks or self.getPicks()
         for pick in picks:
             repo=pick['repo']
             path=os.path.join(self.folder, repo)
-            if os.path.exists(path):
-                modules+=[pick['repo']]
+            if not os.path.exists(path):
+                continue
+            modules+=[repo]
+            git_repo=git.Repo(path)
+            pick['git_repo']=git_repo
+            if not git_repo.bare:
+                self.loadBranch(pick)
+                self.loadCommit(pick)
         self.app.plugman.loadPlugs(
-                folder=self.folder,
-                modules=modules)
+                folder=self.folder, modules=modules)
+
+    def loadBranch(self, pick):
+        git_repo=pick['git_repo']
+        branch=pick.get('branch', None)
+        if not branch:
+            git_repo.heads[0].checkout()
+            return
+        for head in git_repo.branches:
+            if head.name!=branch:
+                continue
+            head.checkout()
+            return
+
+    def loadCommit(self, pick):
+        git_repo=pick['git_repo']
+        commit=pick.get('commit', None)
+        if not commit:
+            return
+        for head in git_repo.iter_commits():
+            if head.hexsha!=commit:
+                continue
+            git_repo.git.checkout(head)
+            return
 
     def getPicks(self):
         plugs=[]
@@ -44,42 +72,41 @@ class Picky(Plug):
             plugs.append(pick)
         return plugs
 
-    def installRepo(self, repo, base=None):
-        name, path, folder = self.updateInfo(repo)
-        self.plugs[name] = folder
-        base = base or self.base
-        if not name in self.repos:
-            self.repos += [name]
-        if not os.path.exists(path):
-            gpath = os.path.expanduser(repo)
-            if os.path.exists(gpath):
-                shutil.copy(gpath, path)
-            else:
-                url = f"{base}/{repo}"
-                git.Repo.clone_from(url, path)
-        return name, folder
-
-    @tag("(exec)")
+    @tag("I(normal)")
     def installPicks(self):
-        self.getPicks()
-        picks = self.m_config.get("Picks", [])
-        for data in picks:
-            repo = data.get("pick", None)
-            base = data.get("base", None)
-            if not repo:
+        modules=[]
+        picks=self.getPicks()
+        for pick in picks:
+            repo=pick['repo']
+            plug=pick['plug']
+            base = os.path.expanduser(pick["base"])
+            path=os.path.join(self.folder, repo)
+            if os.path.exists(path):
                 continue
-            self.installRepo(repo, base)
+            if os.path.exists(base):
+                repo_path=os.path.join(base, repo)
+                shutil.copy(repo_path, path)
+            else:
+                url = f"{base}/{plug}"
+                git.Repo.clone_from(url, path)
+            modules+=[pick]
+        self.loadPicks(modules)
 
-    @tag("(exec)")
+    @tag("U(normal)")
     def updatePicks(self):
         for name in self.repos:
             p = os.path.join(self.folder, name)
             repo = git.Repo(p)
             repo.remotes.origin.pull()
 
-    @tag("(exec)")
+    @tag("C(normal)")
     def cleanupPicks(self):
-        for d in os.listdir(self.folder):
-            if not d in self.repos:
-                p = os.path.join(self.folder, d)
-                shutil.rmtree(p)
+        picks=self.getPicks()
+        repos=[p['repo'] for p in picks]
+        for repo in os.listdir(self.folder):
+            if repo in repos: continue
+            path = os.path.join(self.folder, repo)
+            if os.path.islink(path):
+                os.unlink(path)
+            else:
+                shutil.rmtree(path)
