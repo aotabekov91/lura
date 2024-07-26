@@ -30,12 +30,12 @@ class Picky(Plug):
             git_repo=git.Repo(path)
             pick['git_repo']=git_repo
             if not git_repo.bare:
-                self.loadBranch(pick)
-                self.loadCommit(pick)
+                self.checkoutToBranch(pick)
+                self.checkoutToCommit(pick)
         self.app.plugman.loadPlugs(
                 folder=self.folder, modules=modules)
 
-    def loadBranch(self, pick):
+    def checkoutToBranch(self, pick):
         git_repo=pick['git_repo']
         branch=pick.get('branch', None)
         if not branch:
@@ -47,7 +47,7 @@ class Picky(Plug):
             head.checkout()
             return
 
-    def loadCommit(self, pick):
+    def checkoutToCommit(self, pick):
         git_repo=pick['git_repo']
         commit=pick.get('commit', None)
         if not commit:
@@ -72,7 +72,7 @@ class Picky(Plug):
             plugs.append(pick)
         return plugs
 
-    @tag("I(normal)")
+    @tag(["(exec)", "<c-P>I(normal)"])
     def installPicks(self):
         modules=[]
         picks=self.getPicks()
@@ -92,14 +92,18 @@ class Picky(Plug):
             modules+=[pick]
         self.loadPicks(modules)
 
-    @tag("U(normal)")
+    @tag(["(exec)", "<c-P>U(normal)"])
     def updatePicks(self):
-        for name in self.repos:
-            p = os.path.join(self.folder, name)
-            repo = git.Repo(p)
-            repo.remotes.origin.pull()
+        for repo in os.listdir(self.folder):
+            path = os.path.join(self.folder, repo)
+            git_repo = git.Repo(path)
+            if git_repo.bare:
+                continue
+            for remote in git_repo.remotes:
+                remote.pull()
+        self.loadPicks()
 
-    @tag("C(normal)")
+    @tag(["(exec)", "<c-P>C(normal)"])
     def cleanupPicks(self):
         picks=self.getPicks()
         repos=[p['repo'] for p in picks]
