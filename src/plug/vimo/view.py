@@ -209,7 +209,6 @@ class View:
             self.kind = model.kind
 
     def setProp(self, what, view=None):
-
         view = view or self
         if type(what) != list:
             what = [what]

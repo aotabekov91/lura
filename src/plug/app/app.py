@@ -102,7 +102,6 @@ class App(Plug):
         time.sleep(0.1)
         while self.wants_to_wait:
             time.sleep(0.01)
-        self.pool.clear()
         sys.exit()
 
     @tag("<c-[>(normal)")

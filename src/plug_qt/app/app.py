@@ -5,7 +5,7 @@ from PyQt6 import QtCore, QtWidgets
 
 import plug
 
-from . import view
+from .view import View
 from .earman import Earman
 from .buffman import Buffman
 from .plugman import Plugman
@@ -25,7 +25,6 @@ class App(
 
     def setupApp(self):
          self.setupParser()
-         self.setupPool()
          self.setupQApp()
          self.setupParts()
          self.setupView()
@@ -37,12 +36,9 @@ class App(
          self.qapp.setApplicationName(self.name)
          self.setParent(self.qapp)
     
-    def setupPool(self) -> None:
-         self.pool: QtCore.QThreadPool = QtCore.QThreadPool()
-    
     def setupView(
          self, 
-         view: tp.Any = view.View
+         view: tp.Any = View
      ) -> None:
          if view:
              self.ui = view(app=self)

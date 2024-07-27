@@ -18,7 +18,7 @@ class Render:
     def setup(self):
         super().setup()
         v = self.m_kwargs
-        self.m_cache_key = None
+        self.m_key = hashdict()
         self.m_rect = QtCore.QRectF()
         self.m_brect = QtCore.QRectF()
         self.m_size = self.m_rect.size()
@@ -58,32 +58,33 @@ class Render:
             self.painted.emit(p, o, w, self)
 
     def takePixmap(self):
-        if not self.m_cache_key:
-            self.updateCacheKey()
-        data = self.m_element.render(self.m_cache_key)
+        if not self.m_key:
+            self.updateKey()
+        model=self.m_element.model()
+        data = model.getPixmap(self.m_element, self.m_key)
         if data:
             return data[-1]
 
-    def updateCacheKey(self):
+    def updateKey(self):
         rs = self.m_brect.size()
         os = self.m_element.size()
         xpos = rs.width() / os.width()
         ypos = rs.height() / os.height()
-        xpos = round(xpos, 3)
-        ypos = round(ypos, 3)
-        rotation = self.m_rotation
-        idx = self.m_element.index()
-        pixel = self.devicePixelRatio
-        self.m_cache_key=hashdict(
-                idx=idx,
-                xpos=xpos,
-                ypos=ypos,
-                rotation=rotation,
-                pixel=pixel)
+        self.m_key['xpos']=round(xpos, 3)
+        self.m_key['ypos']=round(ypos, 3)
+        self.m_key['rotation']=self.m_rotation
+        self.m_key['idx']=self.m_element.index()
+        self.m_key['pixel']=self.devicePixelRatio
+
+    def setKey(self, name, value):
+        self.m_key[name]=value
+
+    def key(self, name):
+        return self.m_key.get(name, None)
 
     def setPixmap(self, idx, data, pixmap):
         c1 = self.index() == idx
-        c2 = data == self.m_cache_key
+        c2 = data == self.m_key
         if c1 and c2:
             self.refresh()
 
@@ -97,7 +98,7 @@ class Render:
         self.prepareGeometryChange()
         self.updateTransformation()
         self.prepareGeometry()
-        self.updateCacheKey()
+        self.updateKey()
         self.refresh()
 
     def size(self):

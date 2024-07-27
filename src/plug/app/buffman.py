@@ -70,9 +70,15 @@ class Buffman(Plug):
             return self.addModeller(klass)
         return klass
 
+    def viewer(self, name):
+        return self.m_viewers.get(name, None)
+
     def addViewer(self, name, klass) -> tp.Any:
         self.m_viewers[name]=klass
         return klass
+
+    def modeller(self, name):
+        return self.m_modellers.get(name, None)
 
     def addModeller(self, name, klass) -> tp.Any:
         self.m_modellers[name]=klass

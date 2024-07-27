@@ -7,6 +7,7 @@ class FitzElement(
     plug.element.Element,
     QtCore.QObject,
 ):
+    functors=[]
     dataUpdated = QtCore.pyqtSignal()
     dataChanged = QtCore.pyqtSignal()
     repaintWanted = QtCore.pyqtSignal()
@@ -17,6 +18,10 @@ class FitzElement(
         size = self.size()
         self.m_norm = QtGui.QTransform()
         self.m_norm.scale(size.width(), size.height())
+
+    @classmethod
+    def addFunctor(cls, functor):
+        cls.functors+=[functor]
 
     def unify(self, point):
         norm = self.m_norm.inverted()[0]
@@ -54,35 +59,30 @@ class FitzElement(
     def size(self):
         return self.m_size
 
-    def render(self, data, **kwargs):
-        return self.m_model.getPixmapCache(self.index(), data)
-
-    def renderImage(
-        self,
-        idx,
-        xpos,
-        ypos,
-        rotation,
-        pixel,
-        clip=None,
-        alpha=False,
-        image_format=QtGui.QImage.Format.Format_RGB888,
-    ):
+    def renderImage(self, data):
+        pixel=data.get('pixel')
+        xpos=data.get('xpos', None)
+        ypos=data.get('xpos', None)
+        clip=data.get('clip', False)
+        alpha=data.get('alpha', False)
+        rotation=data.get('rotation', 0)
+        image_format=data.get(
+                'image_format', 
+                QtGui.QImage.Format.Format_RGB888)
         matrix = fitz.Matrix(xpos, ypos)
         if rotation:
             matrix.prerotate(rotation % 360)
         pixmap = self.m_data.get_pixmap(
                 clip=clip, 
                 alpha=alpha, 
-                matrix=matrix,
-        )
-
+                matrix=matrix)
         img = QtGui.QImage(
             pixmap.samples,
             pixmap.width,
             pixmap.height,
             pixmap.stride,
-            image_format,
-        )
+            image_format)
         img.setDevicePixelRatio(pixel)
+        for functor in self.functors:
+            img=functor(data, img)
         return img

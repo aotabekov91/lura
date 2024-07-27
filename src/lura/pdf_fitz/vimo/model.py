@@ -31,25 +31,24 @@ class FitzModel(
 
     def setup(self):
         super().setup()
-        self.addCache("pixmap_cache")
+        self.addCache("pixmap")
         self.m_pixmap_queue = Queue()
         self.m_pixmap_thread = QtCore.QThread()
-        self.m_pixmap_task = Task(self, self.m_pixmap_queue)
-        self.m_pixmap_task.pixmapReady.connect(self.setPixmapCache)
+        self.m_pixmap_task = Task(self.m_pixmap_queue)
+        self.m_pixmap_task.pixmapReady.connect(self.setPixmap)
         self.m_pixmap_task.moveToThread(self.m_pixmap_thread)
         self.m_pixmap_thread.started.connect(self.m_pixmap_task.run)
         self.m_pixmap_thread.start()
         self.assignId(self.m_source)
 
     def getUniqLocator(
-        self,
-        data={},
-        kind=None,
-        **kwargs,
-    ):
-        f = self.findLocator("getUniq", kind)
-        if f:
-            return f(data)
+            self, 
+            data={}, 
+            kind=None, 
+            **kwargs):
+        functor = self.findLocator("getUniq", kind)
+        if functor:
+            return functor(data)
         data["hash"] = self.id()
         data["kind"] = self.kind
         return self.createLocator(data)
@@ -83,27 +82,25 @@ class FitzModel(
             return
         return re.match(cls.pattern, s, re.I)
 
-
-
     def clearPixmapCache(self, idx=None):
         if idx is None:
-            self.clearCache("pixmap_cache")
+            self.clearCache('pixmap')
         else:
-            m = []
-            name = "pixmap_cache"
-            c = self.getCache(name=name)
-            alist = list(c.keys())
-            for i in alist:
-                if idx in i:
-                    self.dropCache(i, name)
+            cache = self.getCache(name='pixmap')
+            keys = list(cache.keys())
+            for key in keys:
+                if idx in key:
+                    self.dropCache(key, 'pixmap')
         self.repaintWanted.emit()
 
-    def getPixmapCache(self, idx, d):
-        c = self.getCache((idx, d), "pixmap_cache")
-        if c:
-            return idx, d, c
-        self.m_pixmap_queue.put((idx, d))
+    def getPixmap(self, element, key):
+        idx=element.index()
+        pixmap = self.getCache(key, "pixmap")
+        if pixmap:
+            return idx, key, pixmap
+        self.m_pixmap_queue.put((element, key))
 
-    def setPixmapCache(self, idx, d, p):
-        self.setCache((idx, d), p, "pixmap_cache")
-        self.pixmapReady.emit(idx, d, p)
+    def setPixmap(self, element, key, pixmap):
+        idx=element.index()
+        self.setCache(key, pixmap, "pixmap")
+        self.pixmapReady.emit(idx, key, pixmap)

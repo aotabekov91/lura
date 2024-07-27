@@ -8,6 +8,7 @@ folder = '~/.config/lura'
 [Picky]
 Picks = [
 	'plugs/search',
+	'plugs/grayscale',
 	{plug='fitz91/fitz_search', base='http://192.168.178.10'}
 ]
 
