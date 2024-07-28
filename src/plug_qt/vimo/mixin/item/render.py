@@ -26,19 +26,11 @@ class Render:
         self.scale = v.get("scale", 1.0)
         self.xresol = v.get("xresol", 72.0)
         self.yresol = v.get("yresol", 72.0)
-        self.m_rotation = v.get("rotation", None)
         self.tileSize = v.get("tileSize", 1024)
         self.devicePixelRatio = v.get("devicePixelRatio", 1)
         self.m_view.pixmapReady.connect(self.setPixmap)
         self.m_view.repaintWanted.connect(self.refresh)
         self.prepareGeometry()
-
-    def setRotation(self, rotation=None):
-        self.m_rotation = rotation
-        self.redraw()
-
-    def rotation(self):
-        return self.m_rotation
 
     def paint(self, p, o, w):
         pixmap = self.takePixmap()
@@ -72,7 +64,6 @@ class Render:
         ypos = rs.height() / os.height()
         self.m_key['xpos']=round(xpos, 3)
         self.m_key['ypos']=round(ypos, 3)
-        self.m_key['rotation']=self.m_rotation
         self.m_key['idx']=self.m_element.index()
         self.m_key['pixel']=self.devicePixelRatio
 

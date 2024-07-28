@@ -3,7 +3,6 @@ from .trim import FitzTrim
 from .hint import FitzHints
 from .links import FitzLinks
 from .block import FitzBlocks
-from .rotate import FitzRotate
 from .hint_word import FitzWords
 from .annotate import FitzAnnotate
 from .yank_word import FitzYankWord 

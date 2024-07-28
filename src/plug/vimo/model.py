@@ -135,8 +135,9 @@ class Model:
     def getSourceName(cls, s, **kwargs):
         return s
 
-    def setProp(self, what):
-        setattr(self, what, True)
+    def setProp(self, what, value=True, view=None):
+        view=view or self
+        setattr(self, what, value)
 
     def delProp(self, what):
         delattr(self, what)

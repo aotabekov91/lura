@@ -208,12 +208,13 @@ class View:
             self.m_model = model
             self.kind = model.kind
 
-    def setProp(self, what, view=None):
+    def setProp(self, name, value=True, view=None):
         view = view or self
-        if type(what) != list:
-            what = [what]
-        for (name, prop) in what:
-            setattr(view, name, prop)
+        setattr(view, name, value)
+
+    def getProp(self, what, view=None):
+        view = view or self
+        return getattr(view, what, None)
 
     def checkProp(self, what, view=None):
         view = view or self
