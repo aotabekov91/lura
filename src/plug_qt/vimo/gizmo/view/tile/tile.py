@@ -228,6 +228,7 @@ class BaseTileView(View):
         kind="vertical",
     ):
         v = view or self.current
+        raise
         if v and v.checkProp("canCopy"):
             h = kind == "horizontal"
             c = v.copy()

@@ -239,12 +239,16 @@ class TileView(vimo.View):
         view = view or self.current
         if not view:
             raise
-        if view and view.checkProp("canCopy"):
-            h = kind == "horizontal"
-            c = view.copy()
-            self.addView(c, horizontal=h)
-            if focus:
-                c.activate()
+        copier=self.app.plugman.plugs.get('Copy')
+        if not copier:
+            return
+        view_copy=copier.copy(view)
+        if not view_copy:
+            return
+        stand = kind == "horizontal"
+        self.addView(view_copy, horizontal=stand)
+        if focus:
+            view_copy.activate()
 
     def update(self):
         self.m_layout.update()

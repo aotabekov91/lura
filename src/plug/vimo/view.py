@@ -119,6 +119,9 @@ class View:
             conf = self.getConfig(aconfig)
             self.m_config.update(conf)
 
+    def config(self):
+        return self.m_config
+
     def child(self, pos, recursive=True):
         if pos.startswith("!"):
             child = self.m_children.get(pos[1:])

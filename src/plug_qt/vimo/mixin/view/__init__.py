@@ -8,7 +8,6 @@ from .scene import *
 from .input import *
 from .close import *
 from .filter import *
-from .copy import Copy
 from .connect import Connect
 from .fullscreen import Fullscreen
 from .highlight import ItemsHighlight
