@@ -91,6 +91,9 @@ class Model:
     def readSuccess(self):
         return self.m_data is not None
 
+    def modelData(self):
+        return self.m_data
+
     def id(self):
         return self.m_id
 
