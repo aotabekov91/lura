@@ -1,15 +1,13 @@
 from PyQt6 import QtCore
 
+from plug import tag
 from plug_qt import vimo, widget
 from plug_qt.vimo.mixin import view
-from plug.utils import tag
 
 
 class ListWidgetView(
-    view.Hint,
     view.Input,
     view.WidgetGo,
-    view.InputHint,
     view.ListWidgetInput,
     view.ListWidgetFilter,
     vimo.View,
@@ -36,15 +34,13 @@ class ListWidgetView(
     def setModel(self, model=None, **kwargs):
         if id(self.m_model) != id(model):
             self.reconnectModel("disconnect")
-            self.cleanUp()
+            # self.cleanUp() #todo
+            # self.clear()
             super().setModel(model)
             elems = model.elements()
             for i, e in elems.items():
                 if self.include:
-                    for (
-                        i,
-                        j,
-                    ) in self.include.items():
+                    for i, j in self.include.items():
                         d = e.data()
                         v = d.get(i)
                         if not v in j:
@@ -56,32 +52,34 @@ class ListWidgetView(
 
     def cleanUp(self):
         super().clear()
-        m = self.m_model
-        if not m:
-            return
-        ci = self.currentItem()
-        for i in range(m.rowCount()):
-            r = m.index(i, 0)
-            e = m.itemFromIndex(r).element()
-            l = e.listItem()
-            l.setHidden(True)
-            l.m_current_idx = ci == l
+        model = self.m_model
+        if model:
+            current_item = self.currentItem()
+            # for i in range(m.rowCount()):
+            for i in range(model.count()):
+                idx = model.index(i, 0)
+                item = model.itemFromIndex(idx)
+                element=item.element()
+                list_item = element.listItem()
+                list_item.setHidden(True)
+                if current_item == list_item:
+                    list_item.m_current_idx = True 
 
     def getWidgetMap(self, element):
         return self.widget_map
 
-    def addElement(self, e):
-        wmap = self.getWidgetMap(e)
-        i = self.list_item_class()
-        i.setElement(e)
-        w = self.widget_class(
-            item=i,
+    def addElement(self, element):
+        wmap = self.getWidgetMap(element)
+        list_item = self.list_item_class()
+        list_item.setElement(element)
+        widget = self.widget_class(
+            item=list_item,
             view=self,
-            element=e,
+            element=element,
             wmap=wmap,
         )
-        self.addItem(i)
-        self.setItemWidget(i, w)
+        self.addItem(list_item)
+        self.setItemWidget(list_item, widget)
         self.resized.emit(self)
 
     def updateElement(self, e):

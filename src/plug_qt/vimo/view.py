@@ -88,12 +88,12 @@ class View(plug.View):
     def resetConfigure(self, **kwargs):
         pass
 
-    def event(self, e):
-        r = super().event(e)
-        if e.type() == QtCore.QEvent.Type.Resize:
+    def event(self, event):
+        r = super().event(event)
+        if event.type() == QtCore.QEvent.Type.Resize:
             self.resized.emit(self)
-        if e.type() == QtCore.QEvent.Type.Paint:
-            self.painted.emit(self, e)
+        if event.type() == QtCore.QEvent.Type.Paint:
+            self.painted.emit(self, event)
         return r
 
     def show(self, *args, **kwargs):

@@ -6,8 +6,7 @@ from PyQt6 import QtCore, QtGui
 class Render:
     canRender = True
     painted = QtCore.pyqtSignal(
-        object, object, object, object
-    )
+        object, object, object, object)
 
     def setElement(self, elem):
         super().setElement(elem)
@@ -32,7 +31,7 @@ class Render:
         self.m_view.repaintWanted.connect(self.refresh)
         self.prepareGeometry()
 
-    def paint(self, p, o, w):
+    def paint(self, painter, options, widget):
         pixmap = self.takePixmap()
         if pixmap:
             opt = QtGui.QPainter.RenderHint.Antialiasing
@@ -44,10 +43,11 @@ class Render:
                 opt
                 | QtGui.QPainter.RenderHint.SmoothPixmapTransform
             )
-            p.setRenderHints(opt)
+            painter.setRenderHints(opt)
             pos = self.m_brect.topLeft()
-            p.drawPixmap(pos, pixmap)
-            self.painted.emit(p, o, w, self)
+            painter.drawPixmap(pos, pixmap)
+            self.painted.emit(
+                    painter, options, widget, self)
 
     def takePixmap(self):
         if not self.m_key:

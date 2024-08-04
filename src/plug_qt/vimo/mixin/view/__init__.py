@@ -3,7 +3,6 @@ from .mode import *
 from .goto import *
 from .hint import *
 from .uniq import *
-from .mark import *
 from .scene import *
 from .input import *
 from .close import *

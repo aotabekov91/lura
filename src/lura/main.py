@@ -9,12 +9,7 @@ def run():
     app.run()
 
         # plugs = [
-        #     plugs_fitz.FitzCopy,
         #     plugs_fitz.FitzTrim,
-        #     plugs_fitz.FitzLinks,
-        #     plugs_fitz.FitzHints,
-        #     plugs_fitz.FitzWords,
-        #     plugs_fitz.FitzAnnotate,
         #     plugs_fitz.FitzBlocks,
-        #     plugs_fitz.FitzYankWord,
+        #     plugs_fitz.FitzAnnotate,
         # ]

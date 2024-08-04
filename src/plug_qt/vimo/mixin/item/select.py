@@ -41,6 +41,8 @@ class Select:
             for i in self.m_selected:
                 box = i.get("box", [])
                 rects = []
+                if type(box)!=list:
+                    box=[box]
                 for s in box:
                     rects += [
                         self.mapToItem(s, unified=True)

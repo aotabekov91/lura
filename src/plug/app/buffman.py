@@ -120,7 +120,7 @@ class Buffman(Plug):
     def createView(
         self,
         klass: tp.Any,
-        model: tp.Any,
+        model: tp.Any=None,
         **kwargs,
     ) -> tp.Any:
         conf = self.app.m_config
