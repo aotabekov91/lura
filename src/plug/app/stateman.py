@@ -91,7 +91,7 @@ class Stateman(Plug):
         else:
             return self.octivate(**kwargs)
 
-    def toggleSubmode(self, submode: str, **kwargs) -> str:
+    def toggleSubmode(self, submode: str=None, **kwargs) -> str:
         if self.m_submode != submode:
             return self.setSubmode(submode, **kwargs)
         else:
