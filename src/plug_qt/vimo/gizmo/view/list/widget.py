@@ -6,10 +6,7 @@ from plug_qt.vimo.mixin import view
 
 
 class ListWidgetView(
-    view.Input,
     view.WidgetGo,
-    view.ListWidgetInput,
-    view.ListWidgetFilter,
     vimo.View,
     widget.ListWidget,
 ):

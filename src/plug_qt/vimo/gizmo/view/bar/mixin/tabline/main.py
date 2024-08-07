@@ -20,7 +20,7 @@ class Tabline:
         v = self.app.stateman.view()
         if v:
             label = v.fullPosIndex()
-            alabel = f"[{self.app.ui.posIndex()}]"
+            alabel = f"[{self.app.view.posIndex()}]"
             self.tabline.index.setText(label)
             self.tabline.andex.setText(alabel)
 
@@ -64,7 +64,7 @@ class Tabline:
     def renameTab(self):
         w = self.rename_widget
         if self.current and w:
-            n = self.app.ui.bar.edit.text()
+            n = self.app.view.bar.edit.text()
             w.m_tab_name = n
             self.updateTabLabels(tab=self.current)
         self.octivateEdit()

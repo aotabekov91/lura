@@ -61,11 +61,11 @@ class FilterListView(ListView):
         super().octivate(*args, **kwargs)
 
     def resetFilter(self):
-        self.app.ui.bar.clearEdit()
+        self.app.view.bar.clearEdit()
 
     def updateFilter(self):
         if self.m_model:
-            text = self.app.ui.bar.text()
+            text = self.app.view.bar.text()
             self.m_model.setFilter(text)
 
     def updatePosition(self, *args, **kwargs):

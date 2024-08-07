@@ -125,9 +125,7 @@ class Earman(Plug):
             state,
             self.m_keys,
             self.m_objects,
-            view,
-        )
-        print(match, partial)
+            view)
         if match or partial:
             self.run(match, partial, xrange)
             return True

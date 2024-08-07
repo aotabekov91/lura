@@ -362,7 +362,7 @@ class TileLayout(QtCore.QObject):
 
     def toggleFullscreen(self, v):
         if v.isFullscreen:
-            o = v.app.ui.overlay
+            o = v.app.view.overlay
             o.resized.disconnect(v.updateFullscreenPosition)
             v.setManager(v.m_prev_man)
             if self.count() == 0:
@@ -378,9 +378,9 @@ class TileLayout(QtCore.QObject):
             v.m_prev_man = m
             _, pos = m.removeView(v)
             v.m_prev_pos = pos
-            v.app.ui.overlay.addView(v)
-            v.app.ui.overlay.setView(v)
-            v.app.ui.overlay.resized.connect(
+            v.app.view.overlay.addView(v)
+            v.app.view.overlay.setView(v)
+            v.app.view.overlay.resized.connect(
                 v.updateFullscreenPosition
             )
             v.updateFullscreenPosition()

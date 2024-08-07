@@ -87,7 +87,7 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
         view.hide()
         self.m_blur = False
         self.m_dark = False
-        self.app.ui.update()
+        self.app.view.update()
         rec = kwargs.get("recursive")
         if rec:
             self.octivate()
@@ -115,7 +115,7 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
         view.show(**kwargs)
         view.setFocus()
         self.updateViewPosition(view)
-        self.app.ui.update()
+        self.app.view.update()
 
     def updateViewPosition(self, v=None):
         if not v:
@@ -127,8 +127,8 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
     def updateOverlayPosition(self):
         self.resized.disconnect(self.updateOverlayPosition)
         g = self.geometry()
-        if self.checkProp("bar", self.app.ui):
-            bsize = self.app.ui.bar.size()
+        if self.checkProp("bar", self.app.view):
+            bsize = self.app.view.bar.size()
             bheight = bsize.height()
             h = g.height() - bheight
             g.setHeight(h)

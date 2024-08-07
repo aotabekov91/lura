@@ -55,7 +55,7 @@ class Buffman(Plug):
         loc = pos.get(view.name, None)
         if not loc:
             return
-        return self.app.ui.child(loc)
+        return self.app.view.child(loc)
 
     def setup(self) -> None:
         super().setup()

@@ -49,11 +49,11 @@ class OverlayInput(
         self.octivate()
         self.textModified.emit(t)
         self.app.stateman.toggle()
-        self.app.ui.display.activate()
+        self.app.view.display.activate()
 
     def setupUI(self):
         self.modeChanged.connect(self.updateInputMode)
-        self.app.ui.resized.connect(self.updatePosition)
+        self.app.view.resized.connect(self.updatePosition)
 
     def updatePosition(self):
         r = self.parent().rect()

@@ -2,13 +2,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from plug_qt import vimo
 
-from .clock import Clock
-from .input import OverlayInput
-from .list import OverlayList
-from .view import OverlayGraphicsView
+class OverlayView(
+        vimo.View, QtWidgets.QWidget):
 
-
-class OverlayView(vimo.View, QtWidgets.QWidget):
     def __init__(
         self,
         *args,
@@ -33,7 +29,6 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
             QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents
         )
         self.resized.connect(self.updateOverlayPosition)
-        self.setupParts()
         self.setupUI()
         self.hide()
 
@@ -51,32 +46,6 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
         self.blur_color = QtGui.QColor(*blur_color)
         self.dark_color = QtGui.QColor(dark_color)
 
-    def setupParts(self):
-        self.list = OverlayList(
-            parent=self,
-            app=self.app,
-            manager=self,
-            objectName="OverlayList",
-        )
-        self.clock = Clock(
-            parent=self,
-            app=self.app,
-            manager=self,
-            objectName="OverlayClock",
-        )
-        self.input = OverlayInput(
-            parent=self,
-            app=self.app,
-            manager=self,
-            objectName="OverlayInput",
-        )
-        self.view = OverlayGraphicsView(
-            parent=self,
-            app=self.app,
-            manager=self,
-            objectName="OverlayGraphicsView",
-        )
-
     def paintEvent(self, event):
         if self.m_blur or self.m_dark:
             qp = QtGui.QPainter()
@@ -90,33 +59,32 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
         else:
             super().paintEvent(event)
 
-    def addView(self, v, **kwargs):
-        v.setParent(self)
-        v.setManager(self)
-        self.views[id(v)] = v
+    def addView(self, view, **kwargs):
+        view.setParent(self)
+        view.setManager(self)
+        self.views[id(view)] = view
 
-    def removeView(self, v, **kwargs):
+    def removeView(self, view, **kwargs):
         self.hide()
-        v.setManager()
-        v.setParent(None)
+        view.setManager()
+        view.setParent(None)
         self.m_blur = self.blur
-        self.views.pop(id(v))
+        self.views.pop(id(view))
 
-    def insertView(self, idx, v, **kwargs):
+    def insertView(self, idx, view, **kwargs):
         pass
 
-    def betView(self, v, **kwargs):
-        v.hide()
+    def betView(self, view, **kwargs):
+        view.hide()
         self.m_blur = False
         self.m_dark = False
-        self.app.ui.update()
+        self.app.view.update()
         rec = kwargs.get("recursive")
         if rec:
             self.octivate()
 
     def setView(
         self,
-        *args,
         view=None,
         blur=False,
         dark=True,
@@ -136,23 +104,16 @@ class OverlayView(vimo.View, QtWidgets.QWidget):
         self.show()
         view.show(**kwargs)
         view.setFocus()
-        self.updateViewPosition(view)
-        self.app.ui.update()
-
-    def updateViewPosition(self, v=None):
-        if not v:
-            return
-        uf = getattr(v, "updatePosition", None)
-        if uf:
-            uf()
+        self.app.view.update()
 
     def updateOverlayPosition(self):
-        self.resized.disconnect(self.updateOverlayPosition)
-        g = self.geometry()
-        if self.checkProp("bar", self.app.ui):
-            bsize = self.app.ui.bar.size()
+        self.resized.disconnect(
+                self.updateOverlayPosition)
+        geometry = self.geometry()
+        if self.checkProp("bar", self.app.view):
+            bsize = self.app.view.bar.size()
             bheight = bsize.height()
-            h = g.height() - bheight
-            g.setHeight(h)
-        self.setGeometry(g)
+            h = geometry.height() - bheight
+            geometry.setHeight(h)
+        self.setGeometry(geometry)
         self.resized.connect(self.updateOverlayPosition)

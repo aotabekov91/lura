@@ -146,7 +146,7 @@ class Stateman(Plug):
         view: tp.Any,
     ) -> None:
         if self.m_view != view:
-            v = self.app.ui.main.current
+            v = self.app.view.main.current
             if v:
                 v.activate()
 

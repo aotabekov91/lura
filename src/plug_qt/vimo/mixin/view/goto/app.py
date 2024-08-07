@@ -10,7 +10,7 @@ class AppGo:
             return
         req = {
             "target": xrange,
-            "object": "app.ui",
+            "object": "app.view",
             "action": "activateWindow",
         }
         return self.app.server.request(**req)

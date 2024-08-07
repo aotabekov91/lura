@@ -196,7 +196,7 @@ class View:
             suffix = fidx
         if recursive:
             m = self.m_manager
-            if m and m != self.app.ui:
+            if m and m != self.app.view:
                 return m.fullPosIndex(suffix, recursive)
         return suffix
 

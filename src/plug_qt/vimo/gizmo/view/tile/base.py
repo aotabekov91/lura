@@ -214,9 +214,9 @@ class TileView(vimo.View):
         self.m_layout.addView(view, **kwargs)
         return view
 
-    def insertView(self, idx, v, **kwargs):
-        v.setManager(self)
-        return self.m_layout.insertView(idx, v, **kwargs)
+    def insertView(self, idx, view, **kwargs):
+        view.setManager(self)
+        return self.m_layout.insertView(idx, view, **kwargs)
 
     def setView(self, *args, **kwargs):
         self.m_layout.setView(*args, **kwargs)
