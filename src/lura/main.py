@@ -8,7 +8,7 @@ class Lura(App):
 
     def activate(self):
         plugs = [
-            # pdf_fitz.PdfFitz,
+            pdf_fitz.PdfFitz,
 
             plugs_fitz.FitzRotate,
             plugs_fitz.FitzGrayScale,
