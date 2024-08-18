@@ -22,14 +22,12 @@ class Model:
         index=None,
         source=None,
         render=None,
-        parent=None,
         elements=OrderedDict(),
         **kwargs,
     ):
         self.app = app
         self.m_id = index
         self.m_data = None
-        self.m_models = {}
         self.m_name = name
         self.m_loaded = False
         self.m_source = source
@@ -53,37 +51,20 @@ class Model:
             self.element_class = ek
 
     def setConf(self):
-        c = self.m_config
-        for k, v in c.items():
+        for k, v in self.m_config.items():
             setattr(self, k, v)
 
     def setName(self):
-        c = self.__class__.__name__
-        c = self.m_name or c
-        self.name = self.name or c
+        name = self.__class__.__name__
+        name = self.m_name or name
+        self.name = self.name or name
 
     def setKind(self):
-        c = self.__class__.__name__
-        self.kind = self.kind or c
-
-    def addModel(self, name, model):
-        self.m_models[name] = model
-        self.modelAdded.emit(name, model)
-
-    def submodel(self, name):
-        return self.m_models.get(name)
+        name = self.__class__.__name__
+        self.kind = self.kind or name
 
     def config(self):
         return self.m_config
-
-    def setBasemodel(self, model):
-        self.m_base_model = model
-
-    def basemodel(self):
-        return self.m_base_model
-
-    def render(self):
-        return self.m_render
 
     def count(self):
         return len(self.m_elements)
@@ -91,12 +72,14 @@ class Model:
     def readSuccess(self):
         return self.m_data is not None
 
+    def modelData(self):
+        return self.m_data
+
     def id(self):
         return self.m_id
 
     def setId(self, idx):
         self.m_id = idx
-        self.idChanged.emit(idx)
 
     def element(self, idx):
         return self.m_elements.get(idx, None)
@@ -121,7 +104,6 @@ class Model:
 
     def load(self):
         self.isLoaded = True
-        self.loaded.emit(self)
 
     @classmethod
     def isCompatible(cls, s, **kwargs):
@@ -132,11 +114,12 @@ class Model:
         return re.match(cls.pattern, s, re.I)
 
     @classmethod
-    def getSourceName(cls, s, **kwargs):
-        return s
+    def getSourceName(cls, source, **kwargs):
+        return source
 
-    def setProp(self, what):
-        setattr(self, what, True)
+    def setProp(self, what, value=True, view=None):
+        view=view or self
+        setattr(self, what, value)
 
     def delProp(self, what):
         delattr(self, what)
@@ -153,12 +136,11 @@ class Model:
     def createElement(self, data={}, idx=None):
         if not idx:
             idx = id(data)
-        e = self.element_class(
+        element = self.element_class(
             data=data, index=idx, model=self
         )
-        self.elementCreated.emit(e)
-        self.addElement(e)
-        return e
+        self.addElement(element)
+        return element
 
     def findElement(self, value=None, by=None):
         for idx, e in self.m_elements.items():
@@ -166,30 +148,28 @@ class Model:
             if d.get(by) == value:
                 return idx, e
 
-    def addElement(self, e):
-        idx = e.index()
-        self.m_elements[idx] = e
-        self.elementAdded.emit(e)
-        return e
+    def addElement(self, element):
+        idx = element.index()
+        self.m_elements[idx] = element
+        return element
 
-    def delElement(self, e):
-        self.m_elements.pop(e.index(), None)
-        self.elementRemoved.emit(e)
-        return e
+    def delElement(self, element):
+        self.m_elements.pop(element.index(), None)
+        return element
+
+    def updateElement(self, element, data):
+        element.updateData(data)
+        return element
 
     def getElement(self, value, by="id"):
-        for e in self.m_elements.values():
-            d = e.data()
-            if not by in d:
+        elements=self.m_elements.values()
+        for element in elements: 
+            data = element.data()
+            if not by in data:
                 continue
-            if value != d.get(by, None):
+            if value != data.get(by, None):
                 continue
-            return e
-
-    def updateElement(self, e, data):
-        e.updateData(data)
-        self.elementUpdated.emit(e)
-        return e
+            return element
 
     def clearAll(self):
         elems = self.m_elements

@@ -214,9 +214,9 @@ class TileView(vimo.View):
         self.m_layout.addView(view, **kwargs)
         return view
 
-    def insertView(self, idx, v, **kwargs):
-        v.setManager(self)
-        return self.m_layout.insertView(idx, v, **kwargs)
+    def insertView(self, idx, view, **kwargs):
+        view.setManager(self)
+        return self.m_layout.insertView(idx, view, **kwargs)
 
     def setView(self, *args, **kwargs):
         self.m_layout.setView(*args, **kwargs)
@@ -239,12 +239,16 @@ class TileView(vimo.View):
         view = view or self.current
         if not view:
             raise
-        if view and view.checkProp("canCopy"):
-            h = kind == "horizontal"
-            c = view.copy()
-            self.addView(c, horizontal=h)
-            if focus:
-                c.activate()
+        copier=self.app.plugman.plugs.get('Copy')
+        if not copier:
+            return
+        view_copy=copier.copy(view)
+        if not view_copy:
+            return
+        stand = kind == "horizontal"
+        self.addView(view_copy, horizontal=stand)
+        if focus:
+            view_copy.activate()
 
     def update(self):
         self.m_layout.update()

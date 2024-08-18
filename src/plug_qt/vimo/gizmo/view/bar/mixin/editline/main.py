@@ -9,6 +9,7 @@ class Editline:
 
     def setupUI(self):
         super().setupUI()
+        self.m_emit_activated=False
         self.setupEditline()
 
     def setupEditline(self):
@@ -20,11 +21,19 @@ class Editline:
     def clearEdit(self):
         self.edit.clearEdit()
 
+    def toggleEdit(self):
+        if self.m_emit_activated:
+            self.octivateEdit()
+        else:
+            self.activateEdit()
+
     def octivateEdit(self, *args, **kwargs):
+        self.m_emit_activated=False
         self.stack.setCurrentIndex(self.tabline.m_idx)
         return self.edit.octivateEdit(*args, **kwargs)
 
     def activateEdit(self, *args, **kwargs):
+        self.m_emit_activated=True
         self.stack.setCurrentIndex(self.edit.m_idx)
         return self.edit.activateEdit(*args, **kwargs)
 

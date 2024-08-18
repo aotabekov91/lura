@@ -4,8 +4,11 @@ from PyQt6 import QtCore
 class ZXYPos:
     canJump = True
     canPosition = True
-    positionJumped = QtCore.pyqtSignal()
     positionChanged = QtCore.pyqtSignal()
+    positionJumped = QtCore.pyqtSignal(
+            object, object)
+    positionToBeJumped = QtCore.pyqtSignal(
+            object, object)
 
     def setup(self):
         super().setup()
@@ -33,6 +36,8 @@ class ZXYPos:
         center=False,
         **kwargs,
     ):
+        position=self.getPositionLocator()
+        self.positionToBeJumped.emit(self, position)
         if not xrange:
             self.goToLast()
         if type(xrange) == list:
@@ -41,7 +46,8 @@ class ZXYPos:
             center=center,
             pos=(xrange, x, y),
         )
-        self.positionJumped.emit()
+        position=self.getPositionLocator()
+        self.positionJumped.emit(self, position)
         self.positionChanged.emit()
 
     def jumpToPosition(

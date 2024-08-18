@@ -17,6 +17,7 @@ from ..utils import Parser, tag
 class App(Plug):
     """The main application construct"""
 
+    running=False
     ui: tp.Any = None
     wants_to_wait: int=0
     canHide: bool = False
@@ -89,6 +90,7 @@ class App(Plug):
 
     def run(self) -> None:
          self.startUI()
+         self.running=True
          sys.exit(self.qapp.exec())
 
     def standardEvent(self, event):
@@ -100,7 +102,6 @@ class App(Plug):
         time.sleep(0.1)
         while self.wants_to_wait:
             time.sleep(0.01)
-        self.pool.clear()
         sys.exit()
 
     @tag("<c-[>(normal)")

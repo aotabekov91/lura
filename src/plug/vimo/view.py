@@ -119,6 +119,9 @@ class View:
             conf = self.getConfig(aconfig)
             self.m_config.update(conf)
 
+    def config(self):
+        return self.m_config
+
     def child(self, pos, recursive=True):
         if pos.startswith("!"):
             child = self.m_children.get(pos[1:])
@@ -193,7 +196,7 @@ class View:
             suffix = fidx
         if recursive:
             m = self.m_manager
-            if m and m != self.app.ui:
+            if m and m != self.app.view:
                 return m.fullPosIndex(suffix, recursive)
         return suffix
 
@@ -208,13 +211,13 @@ class View:
             self.m_model = model
             self.kind = model.kind
 
-    def setProp(self, what, view=None):
-
+    def setProp(self, name, value=True, view=None):
         view = view or self
-        if type(what) != list:
-            what = [what]
-        for (name, prop) in what:
-            setattr(view, name, prop)
+        setattr(view, name, value)
+
+    def getProp(self, what, view=None):
+        view = view or self
+        return getattr(view, what, None)
 
     def checkProp(self, what, view=None):
         view = view or self

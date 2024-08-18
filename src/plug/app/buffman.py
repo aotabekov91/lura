@@ -55,7 +55,7 @@ class Buffman(Plug):
         loc = pos.get(view.name, None)
         if not loc:
             return
-        return self.app.ui.child(loc)
+        return self.app.view.child(loc)
 
     def setup(self) -> None:
         super().setup()
@@ -70,9 +70,15 @@ class Buffman(Plug):
             return self.addModeller(klass)
         return klass
 
+    def viewer(self, name):
+        return self.m_viewers.get(name, None)
+
     def addViewer(self, name, klass) -> tp.Any:
         self.m_viewers[name]=klass
         return klass
+
+    def modeller(self, name):
+        return self.m_modellers.get(name, None)
 
     def addModeller(self, name, klass) -> tp.Any:
         self.m_modellers[name]=klass
@@ -114,7 +120,7 @@ class Buffman(Plug):
     def createView(
         self,
         klass: tp.Any,
-        model: tp.Any,
+        model: tp.Any=None,
         **kwargs,
     ) -> tp.Any:
         conf = self.app.m_config

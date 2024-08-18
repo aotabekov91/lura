@@ -18,14 +18,20 @@ class Plugman(Plug):
 
     def setFolder(self):
         self.folder = os.path.expanduser(self.folder)
-        self.plug_folder = self.app.createFolder(
-            self.folder)
+        autorun=os.path.join(self.folder, 'autorun')
+        self.autorun = self.app.createFolder(autorun)
 
     def addPlugs(self, plugs=[]):
         self.added+=plugs
 
-    def loadPlugs(self, params={}):
-        plugs=self.getAutoPlugs(set())
+    def loadPlugs(
+            self, 
+            params={}, 
+            folder=None, 
+            modules=[]
+            ):
+        folder=folder or self.autorun
+        plugs=self.getAutoPlugs(folder, modules)
         plugs=plugs.union(set(self.added))
         for plug in plugs: 
             self.loadPlug(plug, params)
@@ -57,10 +63,12 @@ class Plugman(Plug):
                 print("Error in plug loading: ", name, e)
                 raise
 
-    def getAutoPlugs(self, plugs=set()) -> tp.Set[tp.Any]:
-
-        sys.path.insert(0, self.folder)
-        for name in os.listdir(self.folder):
+    def getAutoPlugs(self, folder, modules=None):
+        plugs=set()
+        folder=str(folder)
+        sys.path.insert(0, folder)
+        modules=modules or os.listdir(folder)
+        for name in modules:
             try:
                 module = importlib.import_module(name)
                 klasser = getattr(module, "get_plug_class", None)
