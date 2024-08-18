@@ -7,6 +7,5 @@ from .locate import Locate
 from .pixmap import Pixmap
 from .scale import Scale
 from .select import Select
-from .state import State
 from .layout import BaseLayout, Layout
 from .highlight import ItemsHighlight

@@ -71,9 +71,6 @@ class OverlayView(
         self.m_blur = self.blur
         self.views.pop(id(view))
 
-    def insertView(self, idx, view, **kwargs):
-        pass
-
     def betView(self, view, **kwargs):
         view.hide()
         self.m_blur = False
@@ -117,3 +114,9 @@ class OverlayView(
             geometry.setHeight(h)
         self.setGeometry(geometry)
         self.resized.connect(self.updateOverlayPosition)
+
+    def activate(self, *args, **kwargs):
+        pass
+
+    def insertView(self, idx, view, **kwargs):
+        pass

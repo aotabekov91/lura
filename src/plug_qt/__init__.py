@@ -1,2 +1,2 @@
 from .app import *
-from . import utils, vimo, widget
+from . import vimo, widget
