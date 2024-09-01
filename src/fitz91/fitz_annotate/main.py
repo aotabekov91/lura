@@ -95,11 +95,12 @@ class FitzAnnotate(Plug):
             text=data.get("text", "")
             annotation = element_data.add_text_annot(quad.ul, text)
         if annotation:
+            print(color)
             # stroke = (color.redF(), color.greenF(), color.blueF()) #todo
             stroke = (0.400, 0.400, 0.500)
             annotation.set_colors(stroke=stroke)
             annotation.update()
-            # model.clearPixmapCache(idx=element.index())
+            model.clearPixmapCache(idx=element.index())
             # element.dataChanged.emit()
             view.cleanUpSelection()
             view.redraw()

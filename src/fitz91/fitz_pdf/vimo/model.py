@@ -72,24 +72,25 @@ class FitzModel(
         super().load()
 
     @classmethod
-    def isCompatible(cls, s, **kwargs):
-        if type(s) != str:
+    def isCompatible(cls, source, **kwargs):
+        if type(source) != str:
             return
         if not cls.pattern:
             return
-        if not os.path.exists(s):
+        if not os.path.exists(source):
             return
-        return re.match(cls.pattern, s, re.I)
+        return re.match(cls.pattern, source, re.I)
 
     def clearPixmapCache(self, idx=None):
         if idx is None:
             self.clearCache('pixmap')
         else:
             cache = self.getCache(name='pixmap')
-            keys = list(cache.keys())
-            for key in keys:
-                if idx in key:
+            print(idx)
+            for key in cache.keys():
+                if idx == key.get('idx', None):
                     self.dropCache(key, 'pixmap')
+                    break
         self.repaintWanted.emit()
 
     def getPixmap(self, element, key):
