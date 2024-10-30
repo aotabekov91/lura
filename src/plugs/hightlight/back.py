@@ -9,7 +9,7 @@ class Annotate(Plug):
         self.m_annotators={}
         self.setAnnotationKeys()
 
-    def addAnnotator(self, name, annotator):
+    def addAgent(self, name, annotator):
         self.m_annotators[name]=annotator
 
     def annotator(self, name):

@@ -12,15 +12,20 @@ class FitzHighlight(Plug):
 
     def addToHighlight(self):
         highlighter=self.app.plugman.plugs.get('Highlight')
-        annotator=self.app.plugman.plugs.get('FitzAnnotate')
-        if highlighter and annotator:
-            highlighter.addHighlighter('FitzView', self)
+        if highlighter:
+            highlighter.addAgent('FitzView', self)
 
-    def activate(self, view, xrange=[1]):
-        selection=view.selection()
-        annotator=self.app.plugman.plugs.get('FitzAnnotate')
-        if selection:
-            annotator.annotate(view, selection)
+    def highlight(self, view, data=None, **kwargs):
+        if not data:
+            data=view.selection()
+        if data:
+            data['annotation_kind']='highlight'
+            annotator=self.app.plugman.plugs.get('Annotate')
+            annotator.annotate(view=view, data=data)
+        return data
 
-    def octivate(self, view, **kwargs):
+    def dehighlight(self, annotator, view, *args, **kwargs):
+        raise
+
+    def rehighlight(self):
         raise

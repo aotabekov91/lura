@@ -6,7 +6,7 @@ from plug_qt import vimo
 class BookmarkElement(Element, QtCore.QObject):
     pass
 
-class Model(vimo.Model, QtCore.QObject):
+class BookmarkModel(vimo.Model, QtCore.QObject):
 
     element_class=BookmarkElement
 

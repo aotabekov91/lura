@@ -9,7 +9,9 @@ class WordVisual(Plug):
     def addVisualizer(self, name, visualizer):
         self.m_visualizers[name]=visualizer
 
-    def visualizer(self, name):
+    def visualizer(self, name=None, view=None):
+        if view:
+            name=view.__class__.__name__
         return self.m_visualizers.get(name, None)
 
     @tag(["<c-w>(visual)", "<c-w>/<c-[>(visual[word])"])
@@ -30,16 +32,14 @@ class WordVisual(Plug):
     @tag("<c-j>(visual[word])")
     def jump(self):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(view, kind='jump')
 
     @tag("o(visual[word])]")
     def goFirst(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='first')
@@ -47,8 +47,7 @@ class WordVisual(Plug):
     @tag("$(visual[word])")
     def goLast(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='last')
@@ -56,8 +55,7 @@ class WordVisual(Plug):
     @tag("k(visual[word])")
     def goUp(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='up')
@@ -65,8 +63,7 @@ class WordVisual(Plug):
     @tag("j(visual[word])")
     def goDown(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='down')
@@ -74,8 +71,7 @@ class WordVisual(Plug):
     @tag("l(visual[word])")
     def goLeft(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='right')
@@ -83,8 +79,7 @@ class WordVisual(Plug):
     @tag("h(visual[word])")
     def goRight(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='left')
@@ -92,7 +87,6 @@ class WordVisual(Plug):
     @tag("t(visual[word])")
     def toggleDirection(self):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
+        visualizer=self.visualizer(view=view)
         if visualizer:
             visualizer.go(view, kind='toggle')
