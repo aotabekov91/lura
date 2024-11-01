@@ -78,6 +78,7 @@ class Model(vimo.Model, QtCore.QObject):
         return []
 
     def updateMetadata(self, model, data):
+        #todo: data is not yet updated after refactoring it out from fitz annotate
         position=self.getPosition(model, data)
         kind=data.get("annotation_kind")
         color=data.get("annotation_color", '')

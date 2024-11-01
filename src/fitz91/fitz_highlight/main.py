@@ -19,9 +19,11 @@ class FitzHighlight(Plug):
         if not data:
             data=view.selection()
         if data:
+            model=view.model()
             data['annotation_kind']='highlight'
             annotator=self.app.plugman.plugs.get('Annotate')
-            annotator.annotate(view=view, data=data)
+            annotation_model=annotator.getModel(model)
+            annotation_model.addAnnotate(data=data, view=view)
         return data
 
     def dehighlight(self, annotator, view, *args, **kwargs):

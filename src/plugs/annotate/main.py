@@ -21,6 +21,7 @@ class Annotate(Plug, QtCore.QObject):
     def getAgent(self, name=None, model=None):
         if model and not name:
             name=model.__class__.__name__
+        print(model, name, self.m_agents)
         return self.m_agents.get(name, None)
 
     def getModel(self, model):
@@ -36,6 +37,7 @@ class Annotate(Plug, QtCore.QObject):
     @tag(["<c-a>(normal)", "<c-a>/<c-[>/<escape>(annotate)"])
     def toggle(self):
         view=self.app.stateman.view()
-        annotator=self.getAgent(view=view)
+        model=view.model()
+        annotator=self.getAgent(model=model)
         if annotator:
             self.app.stateman.toggle("annotate")

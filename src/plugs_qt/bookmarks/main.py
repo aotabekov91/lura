@@ -3,7 +3,7 @@ from plug_qt.vimo.gizmo.view.list import ListWidgetView
 
 class Bookmarks(Plug):
 
-    #todo
+    #todo: list widget items are drawn not properly
     default_mode='normal'
     position = {"BookmarkView": "D|L"}
     widget_map={
@@ -33,26 +33,26 @@ class Bookmarks(Plug):
 
     def updateView(self, view):
         model=self.m_bookmarker.getModel(view)
-        if model:
+        if model and self.view!=view:
             self.view.setModel(model)
 
     @tag('<c-b>(normal)')
     def toggleOutline(self):
         self.view.toggle()
 
-    @tag('o(normal)[^]')
+    @tag('o(normal)[BookmarkView]')
     def openAndFocus(self):
-        self.open(*args, **kwargs)
+        self.open()
         t=self.app.buffman.type()
         t.activate()
 
     @tag('O(normal)[^]')
     def open(self):
-        i=self.currentItem()
-        t=self.app.buffman.type()
-        if i: 
-            d=i.element().data()
-            t.openLocator(d, kind=self.locator)
+        item=self.view.currentItem()
+        tipe=self.app.buffman.type()
+        if item: 
+            data=item.element().data()
+            tipe.openLocator(data, kind=self.locator)
 
     @tag('d(normal)[^]')
     def delete(self):
