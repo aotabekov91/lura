@@ -3,6 +3,7 @@ from plug_qt.vimo.gizmo.view.list import ListWidgetView
 
 class Bookmarks(Plug):
 
+    #todo
     default_mode='normal'
     position = {"BookmarkView": "D|L"}
     widget_map={

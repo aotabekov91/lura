@@ -15,24 +15,6 @@ class Annotate(Plug, QtCore.QObject):
         self.app.buffman.modelCreated.connect(
                 self.createModel)
 
-    def annotate(self, data={}, model=None, view=None):
-        if not model and view: 
-            model=view.model()
-        annotator=self.getAgent(model=model)
-        annotation_model=self.getModel(model)
-        print(model, annotation_model)
-        if annotator and annotation_model:
-            annotation=annotator.annotate(
-                    model, data, view=view)
-            if annotation:
-                annotation_model.addAnnotate(annotation)
-
-    def denotate(self, view, data):
-        pass
-
-    def renotate(self, view, data):
-        pass
-
     def addAgent(self, name, annotator):
         self.m_agents[name]=annotator
 
@@ -46,7 +28,7 @@ class Annotate(Plug, QtCore.QObject):
 
     def createModel(self, model):
         annotation_model=AnnotateModel(
-                source=model)
+                self, source=model)
         self.modelCreated.emit(annotation_model)
         self.m_models[model]=annotation_model
         return model

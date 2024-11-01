@@ -36,7 +36,7 @@ class Model(vimo.Model, QtCore.QObject):
             source_model=annotation_model.source()
             for row in rows: 
                 self.parseMetadata(source_model, row)
-                annotator.annotate(data=row, model=source_model)
+                annotation_model.addAnnotate(data=row)
 
     def addRow(self, element):
         data=element.data()

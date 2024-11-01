@@ -9,21 +9,43 @@ class AnnotateElement(Element, QtCore.QObject):
 class AnnotateModel(vimo.Model, QtCore.QObject):
 
     element_class=AnnotateElement
+    def __init__(self, agent, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.m_agent=agent
 
-    def addAnnotate(self, data):
-        position = data.get("position")
-        element = self.getAnnotate(position)
-        if not element:
-            element=self.createElement(data)
-        else:
-            self.updateElement(element, data)
-        return element
+    def addAnnotate(self, data={}, **kwargs):
+        model=self.source()
+        annotator=self.m_agent.getAgent(model=model)
+        if annotator:
+            annotation=annotator.annotate(
+                    model, data, **kwargs)
+            if annotation:
+                position = annotation.get("metadata")
+                element = self.getAnnotate(position)
+                if not element:
+                    element=self.createElement(annotation)
+                else:
+                    self.updateElement(element, annotation)
+                return element
 
-    def getAnnotate(self, bmark, by="position"):
-        return self.getElement(bmark, by=by)
+    def updateAnnotate(self, data={}, **kwargs):
+        model=self.source()
+        annotator=self.m_agent.getAgent(model=model)
+        if annotator:
+            annotation=annotator.annotate(
+                    model, data, **kwargs)
+            if annotation:
+                position = annotation.get("metadata")
+                element = self.getAnnotate(position)
+                if element:
+                    self.updateElement(element, annotation)
+                return element
 
     def delAnnotate(self, element=None, data=None):
         if not element and data:
-            position = data.get("position")
+            position = data.get("metadata")
             element = self.getAnnotate(position)
         return self.delElement(element)
+
+    def getAnnotate(self, data, by="metadata"):
+        return self.getElement(data, by=by)

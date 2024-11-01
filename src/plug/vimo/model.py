@@ -94,7 +94,7 @@ class Model:
         return o and id(self) == id(o)
 
     def __hash__(self):
-        return hash(self.m_data)
+        return id(self) 
 
     def source(self):
         return self.m_source
