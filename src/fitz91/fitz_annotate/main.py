@@ -27,18 +27,6 @@ class FitzAnnotate(Plug):
             view.goTo(page, top_left.x(), top_left.y(), center=center)
             view.select(item, data)
 
-    def deannotate(self, view, data):
-        box = data["box"][0]
-        box = self.m_norm.mapRect(box)
-        for annotation in self.m_data.annots():
-            rect=annotation.rect
-            p1 = QtCore.QPointF(rect.x0, rect.y0)
-            p2 = QtCore.QPointF(rect.x1, rect.y1)
-            r = QtCore.QRectF(p1, p2)
-            if r.intersects(box):
-                self.m_data.delete_annot(annotation)
-                self.m_model.clearPixmapCache(idx=self.index())
-                return annotation
 
     def setPage(self, model, data):
         page = data.get("page", None)
@@ -54,6 +42,17 @@ class FitzAnnotate(Plug):
             data["element"] = model.element(page)
         elif page:
             data["element"] = model.element(page)
+
+    def deannotate(self, model, data, view=None):
+        element=data.get('element')
+        annotation=data.get('annotation_object')
+        if element and annotation:
+            page_data=element.data()
+            page_data.delete_annot(annotation)
+            model.clearPixmapCache(idx=element.index())
+            if view:
+                view.redraw()
+            return annotation
 
     def annotate(self, model, data, view=None):
         annotation = None
@@ -82,6 +81,7 @@ class FitzAnnotate(Plug):
             if annotation:
                 if color:
                     annotation.set_colors(stroke=color)
+                data['annotation_object']=annotation
                 annotation.update()
                 model.clearPixmapCache(idx=element.index())
                 # element.dataChanged.emit()

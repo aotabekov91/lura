@@ -81,7 +81,6 @@ class Model(vimo.Model, QtCore.QObject):
         return []
 
     def updateMetadata(self, data):
-        #todo: data is not yet updated after refactoring it out from fitz annotate
         position=self.getPosition(data)
         kind=data.get("annotation_kind")
         color=data.get("annotation_color", '')
@@ -123,8 +122,6 @@ class Model(vimo.Model, QtCore.QObject):
     def getPosition(self, data):
         text = []
         page = self.getPage(data)
-        # data["page"] = page
-        # data["element"] = model.element(page)
         boxes = data.get("box", [])
         for box in boxes:
             x = str(box.x())[:6]

@@ -34,4 +34,4 @@ class Locate:
         f = self.findLocator("open", kind)
         if f:
             return f(data, **kwargs)
-        return self.createLocator(data**kwargs)
+        return self.createLocator(data, **kwargs)

@@ -31,33 +31,44 @@ class Annotations(Plug):
                     self.updateView)
 
     def updateView(self, view):
-        model=self.m_annotate.getModel(view)
-        print(view, model)
-        if model and self.view!=view:
-            self.view.setModel(model)
+        model=view.model()
+        annotation_model=self.m_annotate.getModel(model)
+        if annotation_model and self.view!=view:
+            self.view.setModel(annotation_model)
 
     @tag('<c-A>(normal)')
     def toggleAnnotations(self):
         self.view.toggle()
 
-    @tag('o(normal)[AnnotationView]')
+    @tag('O(normal)[AnnotationView]')
     def openAndFocus(self):
         self.open()
         t=self.app.buffman.type()
         t.activate()
 
-    @tag('O(normal)[^]')
+    @tag('o(normal)[AnnotationView]')
     def open(self):
         item=self.view.currentItem()
-        tipe=self.app.buffman.type()
         if item: 
             data=item.element().data()
-            tipe.openLocator(data, kind=self.locator)
+            view=self.app.stateman.subview()
+            x, y = 0, 0
+            page=data.get('page', 0)
+            boxes=data.get('box')
+            if boxes:
+                box=boxes[0]
+                x=box.x()
+                y=box.y()
+            view.goTo(page, x, y)
 
-    @tag('d(normal)[^]')
+    @tag('d(normal)[AnnotationView]')
     def delete(self):
-        i=self.currentItem()
-        m=self.model()
-        if i and m:
-            e=i.element()
-            m.delElement(e)
+        item=self.view.currentItem()
+        if item:
+            element=item.element()
+            view=self.app.stateman.subview()
+            model=view.model()
+            annotator=self.app.plugman.plugs.get('Annotate')
+            annotation_model=annotator.getModel(model)
+            annotation_model.delAnnotate(element, view=view)
+            #todo model.modelChanged -> view.redraw

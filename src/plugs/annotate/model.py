@@ -41,11 +41,17 @@ class AnnotateModel(vimo.Model, QtCore.QObject):
                     self.updateElement(element, annotation)
                 return element
 
-    def delAnnotate(self, element=None, data=None):
-        if not element and data:
-            position = data.get("metadata")
-            element = self.getAnnotate(position)
-        return self.delElement(element)
+    def delAnnotate(self, element=None, data=None, **kwargs):
+        model=self.source()
+        annotator=self.m_agent.getAgent(model=model)
+        if annotator:
+            if not element and data:
+                position = data.get("metadata")
+                element = self.getAnnotate(position)
+            if element:
+                data=element.data()
+                annotator.deannotate(model, data, **kwargs)
+                return self.delElement(element)
 
     def getAnnotate(self, data, by="metadata"):
         return self.getElement(data, by=by)

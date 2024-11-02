@@ -116,10 +116,11 @@ class ListWidgetView(
         super().octivate(recursive_octivate=True)
 
     def sizeHint(self):
-        h = 0
+        height = 0
         hint = super().sizeHint()
-        n = self.m_model.count()
-        for i in range(n):
-            h += self.sizeHintForRow(i)
-        hint.setHeight(h)
+        if self.m_model:
+            count = self.m_model.count()
+            for row in range(count):
+                height += self.sizeHintForRow(row)
+            hint.setHeight(height)
         return hint
