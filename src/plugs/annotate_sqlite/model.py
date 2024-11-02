@@ -19,11 +19,11 @@ class Model(vimo.Model, QtCore.QObject):
         self.attachSource()
 
     def attachSource(self):
-        source=self.source()
-        self.populateModel(source)
-        add=getattr(source, 'elementAdded', None)
-        rem=getattr(source, 'elementRemoved', None)
-        upd=getattr(source, 'elementUpdated', None)
+        annotation_model=self.source()
+        self.populateModel(annotation_model)
+        add=getattr(annotation_model, 'elementAdded', None)
+        rem=getattr(annotation_model, 'elementRemoved', None)
+        upd=getattr(annotation_model, 'elementUpdated', None)
         if add: add.connect(self.addRow)
         if rem: rem.connect(self.removeRow)
         if upd: upd.connect(self.updateRow)
@@ -40,6 +40,7 @@ class Model(vimo.Model, QtCore.QObject):
 
     def addRow(self, element):
         data=element.data()
+        self.updateMetadata(data)
         idx=self.table.writeRow(data)
         data={self.uniq_field: idx}
         element.updateData(data)
@@ -50,11 +51,13 @@ class Model(vimo.Model, QtCore.QObject):
         self.table.removeRow(data)
 
     def updateRow(self, element, field=None):
-        data=element.data().copy()
-        criteria={self.uniq_field: data[self.uniq_field]}
+        data=element.data()
+        self.updateMetadata(data)
+        data_copy=data.copy()
+        criteria={self.uniq_field: data_copy[self.uniq_field]}
         if field: 
-            data={field: data.get(field)}
-        self.table.updateRow(criteria, data) 
+            data_copy={field: data_copy.get(field)}
+        self.table.updateRow(criteria, data_copy) 
 
     def getAllRows(self):
         return self.table.getRows()
@@ -77,9 +80,9 @@ class Model(vimo.Model, QtCore.QObject):
             return self.table.getRow(data)
         return []
 
-    def updateMetadata(self, model, data):
+    def updateMetadata(self, data):
         #todo: data is not yet updated after refactoring it out from fitz annotate
-        position=self.getPosition(model, data)
+        position=self.getPosition(data)
         kind=data.get("annotation_kind")
         color=data.get("annotation_color", '')
         color=':'.join([str(f) for f in color])
@@ -117,11 +120,11 @@ class Model(vimo.Model, QtCore.QObject):
             element = item.element()
             return element.index()
 
-    def getPosition(self, model, data):
+    def getPosition(self, data):
         text = []
         page = self.getPage(data)
-        data["page"] = page
-        data["element"] = model.element(page)
+        # data["page"] = page
+        # data["element"] = model.element(page)
         boxes = data.get("box", [])
         for box in boxes:
             x = str(box.x())[:6]

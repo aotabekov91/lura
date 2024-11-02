@@ -21,7 +21,6 @@ class Annotate(Plug, QtCore.QObject):
     def getAgent(self, name=None, model=None):
         if model and not name:
             name=model.__class__.__name__
-        print(model, name, self.m_agents)
         return self.m_agents.get(name, None)
 
     def getModel(self, model):
