@@ -21,7 +21,7 @@ QMainWindow::separator {
 
 QDockWidget QWidget#View {
 	padding: 0 0 0 0;
-	border-width: 0px; 
+	border-width: 20px; 
 	border-style: solid;
 	border-color: transparent;
 }

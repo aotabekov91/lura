@@ -52,21 +52,21 @@ class Docks(
             "down": QtCore.Qt.DockWidgetArea.BottomDockWidgetArea,
         }
         for i, (loc, r) in enumerate(locs.items()):
-            l = loc[0].upper()
-            d = DockView(
+            loc = loc[0].upper()
+            dock = DockView(
                 loc=loc,
-                label=l,
+                label=loc,
                 pindex=i + 1,
                 app=self.app,
                 manager=self,
-                identifier=l,
+                identifier=loc,
             )
-            d.setContentsMargins(0, 0, 0, 0)
-            d.title = QtWidgets.QWidget()
-            d.setTitleBarWidget(d.title)
-            self.m_parent.addDockWidget(r, d)
-            setattr(self, f"{loc}", d)
-            self.m_docks += [d]
+            dock.setContentsMargins(0, 0, 0, 0)
+            dock.title = QtWidgets.QWidget()
+            dock.setTitleBarWidget(dock.title)
+            self.m_parent.addDockWidget(r, dock)
+            setattr(self, f"{loc}", dock)
+            self.m_docks += [dock]
         self.hideAll()
 
     def addView(self, w, loc):

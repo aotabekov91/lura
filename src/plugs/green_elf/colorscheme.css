@@ -13,9 +13,10 @@ QLineEdit {
 
 QDockWidget {
 	padding: 0 0 0 0;
-	border-width: 0px; 
+	border-width: 30px; 
 	border-style: solid;
 	border-color: transparent;
+	background-color: yellow;
 }
 
 QListView::item{
@@ -26,8 +27,8 @@ QListView::item{
 }
 
 QListView::item:selected {
-	border-color: green;
-	background-color: green;
+	border-color: red;
+	background-color: yellow;
 }
 
 QListWidget::item:selected {
