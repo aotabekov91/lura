@@ -10,22 +10,22 @@ class Select:
         )
 
     def normalCleanUpSelection(self):
-        m = self.app.stateman.mode()
-        if m == "normal":
+        mode = self.app.stateman.mode()
+        if mode == "normal":
             self.cleanUpSelection()
 
-    def select(self, i, s, **kwargs):
-        if self.checkProp("canSelect", i):
-            i.select(s, **kwargs)
-            self.m_selection = s
+    def select(self, item, data, **kwargs):
+        if self.checkProp("canSelect", item):
+            item.select(data, **kwargs)
+            self.m_selection = data
 
     def selection(self):
         return self.m_selection
 
     def clearSelection(self):
-        for i in self.m_items.values():
-            if self.checkProp("canSelect", i):
-                i.select()
+        for item in self.m_items.values():
+            if self.checkProp("canSelect", item):
+                item.select()
 
     def cleanUpSelection(self):
         self.clearSelection()

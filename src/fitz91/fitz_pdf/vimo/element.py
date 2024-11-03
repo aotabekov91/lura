@@ -9,8 +9,6 @@ class FitzElement(
 ):
     functors={}
     dataUpdated = QtCore.pyqtSignal()
-    dataChanged = QtCore.pyqtSignal()
-    repaintWanted = QtCore.pyqtSignal()
 
     def setup(self):
         self.setSize()

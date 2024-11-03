@@ -25,7 +25,7 @@ class FitzModel(
     wantView = ["FitzView"]
     element_class = FitzElement
 
-    repaintWanted = QtCore.pyqtSignal()
+    modelUpdated = QtCore.pyqtSignal()
     pixmapReady = QtCore.pyqtSignal(object, object, object)
 
     def setup(self):
@@ -86,12 +86,11 @@ class FitzModel(
             self.clearCache('pixmap')
         else:
             cache = self.getCache(name='pixmap')
-            print(idx)
             for key in cache.keys():
                 if idx == key.get('idx', None):
                     self.dropCache(key, 'pixmap')
                     break
-        self.repaintWanted.emit()
+        # self.modelUpdated.emit()
 
     def getPixmap(self, element, key):
         idx=element.index()

@@ -28,7 +28,6 @@ class Render:
         self.tileSize = v.get("tileSize", 1024)
         self.devicePixelRatio = v.get("devicePixelRatio", 1)
         self.m_view.pixmapReady.connect(self.setPixmap)
-        self.m_view.repaintWanted.connect(self.refresh)
         self.prepareGeometry()
 
     def paint(self, painter, options, widget):

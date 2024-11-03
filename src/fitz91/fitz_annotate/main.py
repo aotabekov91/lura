@@ -27,7 +27,6 @@ class FitzAnnotate(Plug):
             view.goTo(page, top_left.x(), top_left.y(), center=center)
             view.select(item, data)
 
-
     def setPage(self, model, data):
         page = data.get("page", None)
         item = data.get("item", None)
@@ -49,9 +48,10 @@ class FitzAnnotate(Plug):
         if element and annotation:
             page_data=element.data()
             page_data.delete_annot(annotation)
-            model.clearPixmapCache(idx=element.index())
             if view:
-                view.redraw()
+                view.cleanUpSelection()
+            model.clearPixmapCache(idx=element.index())
+            model.modelUpdated.emit()
             return annotation
 
     def annotate(self, model, data, view=None):
@@ -83,11 +83,10 @@ class FitzAnnotate(Plug):
                     annotation.set_colors(stroke=color)
                 data['annotation_object']=annotation
                 annotation.update()
+                if view:
+                    view.cleanUpSelection()
                 model.clearPixmapCache(idx=element.index())
-                # element.dataChanged.emit()
-            if view:
-                view.cleanUpSelection()
-                view.redraw()
+                model.modelUpdated.emit()
             return data
 
     def getQuads(self, data):

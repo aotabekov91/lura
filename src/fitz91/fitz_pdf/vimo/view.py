@@ -45,6 +45,7 @@ class FitzView(
             self.m_model = model
             self.kind = model.kind
             self.setItems(model)
+            model.modelUpdated.connect(self.redraw)
             self.modelLoaded.emit(self, self.m_model)
             self.modelChanged.emit(self.m_model)
 
@@ -68,6 +69,7 @@ class FitzView(
         self.redraw()
 
     def redraw(self):
+        print('here')
         self.viewIsToBeRedrawn.emit()
         self.updateLayout()
         self.viewport().update()
