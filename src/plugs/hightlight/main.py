@@ -25,14 +25,14 @@ class Highlight(Plug):
             name=view.__class__.__name__
         return self.m_highlighters.get(name, None)
 
-    @tag(["<c-h>(annotate)", "<c-h>/<c-[>/<escape>(annotate|highlight)"])
+    @tag(["<c-h>(annotate)", "<c-h>/<c-[>/<escape>(annotate[highlight])"])
     def toggle(self):
         view=self.app.stateman.view()
         highlighter=self.getAgent(view=view)
         if highlighter:
             self.app.stateman.toggleSubmode("highlight")
 
-    @tag("h(annotate)") #todo BUG: should be annotate|highlight not working
+    @tag("h(annotate[highlight])")
     def highlight(self, xrange=[1]):
         view=self.app.stateman.view()
         data=view.selection()
@@ -43,10 +43,10 @@ class Highlight(Plug):
             data['annotation_color']=color
             return highlighter.highlight(view=view, data=data)
 
-    @tag("d(annotate)") #todo BUG: should be annotate|highlight not working
+    @tag("d(annotate[highlight])")
     def dehighlight(self, xrange=[1]):
-        pass
+        raise # todo
 
-    @tag("H(annotate)") #todo BUG: should be annotate|highlight not working
+    @tag("H(annotate[highlight])")
     def rehighlight(self, xrange=[1]):
-        pass
+        raise # todo
