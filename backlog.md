@@ -8,9 +8,11 @@
 
 ## Sprint.Annotations backlog: Should support annotations
 
-* [.] Engineer Sqlite annotation database
+* [ ] Engineer Sqlite annotation database
 	* [ ] As simple as possible with extensions in mind
+		* [ ] Metadata field parsing format :current:
 * [ ] Support different types of annotation
+* [ ] Adjust bookmarks/quickmarks to the annotation model version
 
 ## Sprint.VisualMode backlog: Should support visual mode
 
