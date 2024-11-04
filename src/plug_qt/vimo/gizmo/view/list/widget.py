@@ -38,14 +38,15 @@ class ListWidgetView(
             for i, e in elems.items():
                 if self.include:
                     for i, j in self.include.items():
-                        d = e.data()
-                        v = d.get(i)
+                        data = e.data()
+                        v = data.get(i)
                         if not v in j:
                             break
                         self.addElement(e)
                 else:
                     self.addElement(e)
             self.reconnectModel()
+            self.goToFirst()
 
     def cleanUp(self):
         super().clear()
@@ -53,8 +54,8 @@ class ListWidgetView(
         if model:
             current_item = self.currentItem()
             # for i in range(m.rowCount()):
-            for i in range(model.count()):
-                idx = model.index(i, 0)
+            for row in range(model.count()):
+                idx = model.index(row, 0)
                 item = model.itemFromIndex(idx)
                 element=item.element()
                 list_item = element.listItem()
