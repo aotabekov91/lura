@@ -92,11 +92,11 @@ class ListWidgetView(
             if item.element() == e:
                 return self.takeItem(i)
 
-    def selectElement(self, e):
-        for j in range(self.count()):
-            i = self.item(j)
-            if i.element() == e:
-                return self.setCurrentItem(i)
+    def selectElement(self, element):
+        for row in range(self.count()):
+            item = self.item(row)
+            if item.element() == element:
+                return self.setCurrentItem(item)
 
     def reconnectModel(self, kind="connect"):
         m = self.m_model

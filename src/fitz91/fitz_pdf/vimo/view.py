@@ -69,7 +69,6 @@ class FitzView(
         self.redraw()
 
     def redraw(self):
-        print('here')
         self.viewIsToBeRedrawn.emit()
         self.updateLayout()
         self.viewport().update()

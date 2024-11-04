@@ -68,10 +68,9 @@ class DockView(
             view=None, 
             **kwargs
             )->None:
-        self.show()
         self.activate()
+        self.tab.setView(*args, view=view, **kwargs)
         view.resize(self.tab.sizeHint())
-        self.tab.setView(view, **kwargs)
 
     def insertView(
             self, 

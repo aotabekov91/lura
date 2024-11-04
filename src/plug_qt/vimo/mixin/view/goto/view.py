@@ -25,11 +25,11 @@ class ViewGo(Go):
         self.goTo(xrange)
 
     def goToUp(self, xrange=[1], **kwargs):
-        for i in range(xrange[-1]):
+        for row in range(xrange[-1]):
             self.move("MoveUp")
 
     def goToDown(self, xrange=[1], **kwargs):
-        for i in range(xrange[-1]):
+        for row in range(xrange[-1]):
             self.move("MoveDown")
 
     def move(self, arg):
@@ -38,11 +38,12 @@ class ViewGo(Go):
                 arg, 
                 None)
         if not action is None:
-            i = self.moveCursor(
+            item = self.moveCursor(
                 action,
                 QtCore.Qt.KeyboardModifier.NoModifier,
             )
-            self.setCurrentIndex(i)
+            self.setCurrentIndex(item)
+            self.scrollTo(item, QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
         else:
             self.goToFirst()
 

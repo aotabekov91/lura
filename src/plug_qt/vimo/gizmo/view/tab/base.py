@@ -165,14 +165,15 @@ class TabView(
         **kwargs,
     ):
         if view:
-            current, previous = view, self.current
-            self.current, self.previous = current, previous
+            self.previous=self.current
+            self.current=view
             self.setCurrentIndex(view.posIndex() - 1)
             if not self.activated and recursive_activate:
                 self.activate(
                     recursive_activate=True,
                     **kwargs,
                 )
+
 
     def tabGet(self, kind="default"):
         k = self.tab_classes.get(kind)
