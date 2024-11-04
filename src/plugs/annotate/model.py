@@ -53,5 +53,5 @@ class AnnotateModel(vimo.Model, QtCore.QObject):
                 annotator.deannotate(model, data, **kwargs)
                 return self.delElement(element)
 
-    def getAnnotate(self, data, by="metadata"):
-        return self.getElement(data, by=by)
+    def getAnnotate(self, value, by="metadata", **kwargs):
+        return self.getElement(value, by=by, **kwargs)

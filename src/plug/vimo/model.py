@@ -161,7 +161,8 @@ class Model:
         element.updateData(data)
         return element
 
-    def getElement(self, value, by="id"):
+    def getElement(self, value, by="id", only_one=True):
+        found=[]
         elements=self.m_elements.values()
         for element in elements: 
             data = element.data()
@@ -169,7 +170,11 @@ class Model:
                 continue
             if value != data.get(by, None):
                 continue
-            return element
+            if only_one: 
+                return element
+            else:
+                found+=[element]
+        return found
 
     def clearAll(self):
         elems = self.m_elements

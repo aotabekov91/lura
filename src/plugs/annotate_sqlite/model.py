@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 from plug_qt import vimo
 
-class Model(vimo.Model, QtCore.QObject):
+class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
 
     def __init__(
             self,

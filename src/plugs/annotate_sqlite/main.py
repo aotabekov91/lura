@@ -2,7 +2,7 @@ from PyQt6 import QtCore
 
 from plug import Plug
 
-from .model import Model
+from .model import AnnotateSqliteModel
 
 class AnnotateSqliteTable(Plug, QtCore.QObject):
 
@@ -48,7 +48,7 @@ class AnnotateSqliteTable(Plug, QtCore.QObject):
         if not model in self.m_models:
             source=model.source()
             source_id=source.id()
-            table_model=Model(
+            table_model=AnnotateSqliteModel(
                     source=model,
                     app=self.app,
                     table=self.m_table, 
