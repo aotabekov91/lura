@@ -68,7 +68,7 @@ class FitzWordHint(Plug):
         self.cacheModel(model)
         self.assignHints(view)
         self.app.stateman.setFunctor(
-                self.wordFunctor)
+                self.functor)
         view.itemPainted.connect(
                 self.paint)
         view.redraw()
@@ -99,7 +99,7 @@ class FitzWordHint(Plug):
         partial=hint[:len(self.m_hint)]
         return self.m_hint==partial
 
-    def wordFunctor(self, key, earman):
+    def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
         hints=self.m_hints
@@ -117,7 +117,7 @@ class FitzWordHint(Plug):
                 return True
         self.m_hint=''
         view.redraw()
-        return True
+        return False
 
     def select(self, word, view):
         item = word["item"]

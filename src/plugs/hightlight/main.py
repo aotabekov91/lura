@@ -43,10 +43,6 @@ class Highlight(Plug):
             data['annotation_color']=color
             return highlighter.highlight(view=view, data=data)
 
-    @tag("d(annotate[highlight])")
-    def dehighlight(self, xrange=[1]):
-        raise # todo
-
     @tag("H(annotate[highlight])")
     def rehighlight(self, xrange=[1]):
         raise # todo

@@ -1,5 +1,3 @@
-from math import ceil
-
 from PyQt6 import QtCore, QtGui
 
 
@@ -35,22 +33,21 @@ class Select:
             self.m_selected = s
         self.refresh()
 
-    def paintSelection(self, p, o, w, i):
+    def paintSelection(self, painter, ops, widget, item):
         if self.m_selected:
-            p.save()
-            for i in self.m_selected:
-                box = i.get("box", [])
+            painter.save()
+            for item in self.m_selected:
+                boxes = item.get("box", [])
                 rects = []
-                if type(box)!=list:
-                    box=[box]
-                for s in box:
+                if type(boxes)!=list:
+                    boxes=[boxes]
+                for box in boxes:
                     rects += [
-                        self.mapToItem(s, unified=True)
+                        self.mapToItem(box, unified=True)
                     ]
-                p.setBrush(self.m_select_brush)
-                p.drawRects(rects)
-                p.setPen(self.m_select_pen)
-                p.drawRects(rects)
-
-            p.restore()
-            self.selectionPainted.emit(p, o, w, i)
+                painter.setBrush(self.m_select_brush)
+                painter.drawRects(rects)
+                painter.setPen(self.m_select_pen)
+                painter.drawRects(rects)
+            painter.restore()
+            self.selectionPainted.emit(painter, ops, widget, item)

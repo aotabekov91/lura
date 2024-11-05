@@ -13,6 +13,7 @@
 		* [ ] Metadata field parsing format :current:
 * [ ] Support different types of annotation
 * [ ] Adjust bookmarks/quickmarks to the annotation model version
+* [ ] Annotation hinting :current:
 
 ## Sprint.VisualMode backlog: Should support visual mode
 
@@ -21,5 +22,13 @@
 
 ## Sprint.Miscellenous
 
-* [ ] Save last opened page
-* [ ] Save last view/window layout
+* [ ] Support saving states
+	* [ ] Save last opened page
+	* [ ] Save last view/window layout
+* [ ] Separate selection into a its own class
+
+## Quickfixes
+
+* [ ] Search index is not changing when jumping to the first/end
+* [ ] Visual word exiting without choosing a hint
+* [ ] Some pages do not act on widewise fit zw

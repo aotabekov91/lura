@@ -40,3 +40,11 @@ class Annotate(Plug, QtCore.QObject):
         annotator=self.getAgent(model=model)
         if annotator:
             self.app.stateman.toggle("annotate")
+
+    @tag("d(annotate)")
+    def deannotate(self):
+        view=self.app.stateman.view()
+        data=view.selection()
+        if data:
+            print(data)
+            #todo 

@@ -58,6 +58,7 @@ class FitzAnnotationHint(Plug):
 
     def octivate(self, view):
         self.m_hint=''
+        self.m_element_hints={}
         self.app.stateman.setFunctor()
         view.itemPainted.disconnect(
                 self.paint)
@@ -100,9 +101,8 @@ class FitzAnnotationHint(Plug):
                 view.redraw()
                 return True
         self.m_hint=''
-        self.m_element_hints={}
         view.redraw()
-        return True
+        return False
 
     def select(self, annotation, view):
         data=annotation.data()
