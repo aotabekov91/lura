@@ -26,8 +26,5 @@ class FitzHighlight(Plug):
             annotation_model.addAnnotate(data=data, view=view)
         return data
 
-    def dehighlight(self, annotator, view, *args, **kwargs):
-        raise
-
     def rehighlight(self):
         raise
