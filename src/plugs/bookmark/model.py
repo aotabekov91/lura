@@ -10,7 +10,14 @@ class BookmarkModel(vimo.Model, QtCore.QObject):
 
     element_class=BookmarkElement
 
-    def addBookmark(self, data):
+    def __init__(self, *args, agent=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.m_agent=agent
+
+    def addBookmark(self, model, view, data):
+        name=model.__class__.__name__
+        bookmarker=self.m_agent.getAgent(name)
+        data=bookmarker.activate(view, data)
         position = data.get("position")
         element = self.getBookmark(position)
         if not element:

@@ -3,7 +3,7 @@ from plug_qt.vimo.gizmo.view.list import ListWidgetView
 
 class Bookmarks(Plug):
 
-    #todo: list widget items are drawn not properly
+    locator='position'
     default_mode='normal'
     position = {"BookmarkView": "D|L"}
     widget_map={
@@ -32,32 +32,32 @@ class Bookmarks(Plug):
                     self.updateView)
 
     def updateView(self, view):
-        model=self.m_bookmarker.getModel(view)
-        if model and self.view!=view:
-            self.view.setModel(model)
+        model=view.model()
+        bookmark_model=self.m_bookmarker.getModel(model)
+        if bookmark_model and self.view!=view:
+            self.view.setModel(bookmark_model)
 
     @tag('<c-b>(normal)')
-    def toggleOutline(self):
+    def toggle(self):
         self.view.toggle()
 
-    @tag('o(normal)[BookmarkView]')
+    @tag('O(normal)[BookmarkView]')
     def openAndFocus(self):
         self.open()
-        t=self.app.buffman.type()
-        t.activate()
+        view=self.app.stateman.subview()
+        view.activate()
 
-    @tag('O(normal)[^]')
+    @tag('o(normal)[BookmarkView]')
     def open(self):
         item=self.view.currentItem()
-        tipe=self.app.buffman.type()
         if item: 
             data=item.element().data()
-            tipe.openLocator(data, kind=self.locator)
+            view=self.app.stateman.subview()
+            view.openLocator(data, kind=self.locator)
 
-    @tag('d(normal)[^]')
+    @tag('d(normal)[BookmarkView]')
     def delete(self):
-        i=self.currentItem()
-        m=self.model()
-        if i and m:
-            e=i.element()
-            m.delElement(e)
+        item=self.view.currentItem()
+        element=item.element()
+        model=element.model()
+        model.delBookmark(element)

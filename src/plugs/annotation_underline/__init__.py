@@ -1,4 +1,4 @@
-from .main import Highlight
+from .main import Underline
 
 def get_plug_class():
-    return Highlight
+    return Underline

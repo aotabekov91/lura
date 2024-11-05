@@ -69,7 +69,7 @@ class FitzAnnotate(Plug):
                 annotation = element_data.add_highlight_annot(quads)
             elif kind == "underline":
                 annotation = element_data.add_underline_annot(quads)
-            elif kind == "strike-out":
+            elif kind == "strikeout":
                 annotation = element_data.add_strikeout_annot(quads)
             elif kind == "caret" and boxes:
                 quad = quads[0]

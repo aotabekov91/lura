@@ -1,4 +1,4 @@
-from .main import Highlight
+from .main import Textize
 
 def get_plug_class():
-    return Highlight
+    return Textize

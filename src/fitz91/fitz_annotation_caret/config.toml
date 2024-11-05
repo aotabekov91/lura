@@ -1,0 +1,9 @@
+[Highlight.Mappings]
+
+1 = {color = '#A4DE02', name = 'focus'}
+2 = {color = 'red', name = 'error'}  
+3 = {color = '#EEFC5E', name = 'term'}  
+4 = {color = '#0FF0FC', name = 'data'}
+5 = {color = '#1AA7EC', name = 'question'}
+6 = {color = '#D3D3D3', name = 'literature'}
+7 = {color = '#DE73FF', name = 'methodology'}
