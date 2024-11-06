@@ -9,10 +9,17 @@ class Scene(Layout):
     scene_color = "black"
     scene_class = BaseScene
 
+    pixmapReady = QtCore.pyqtSignal(object, object, object)
+
+    def connectPixmap(self, model):
+        if model:
+            model.pixmapReady.connect(self.pixmapReady)
+
     def setup(self):
         self.m_scene = None
         self.setupScene()
         super().setup()
+        self.modelChanged.connect(self.connectPixmap)
 
     def setupScene(self):
         if self.scene_class:

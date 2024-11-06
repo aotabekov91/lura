@@ -6,13 +6,12 @@ from .item import FitzItem
 from .utils import Viewport
 
 class FitzView(
-    plug_qt.vimo.mixin.view.Scale,
     plug_qt.vimo.mixin.view.Scene,
-    plug_qt.vimo.mixin.view.ZXYPos,
-    plug_qt.vimo.mixin.view.Pixmap,
-    plug_qt.vimo.mixin.view.Select,
-    plug_qt.vimo.mixin.view.Locate,
-    plug_qt.vimo.mixin.view.SceneGo,
+    plug_qt.vimo.mixin.view.Scale,   #todo: should be factored out
+    plug_qt.vimo.mixin.view.ZXYPos,  #todo: should be factored out
+    plug_qt.vimo.mixin.view.Select,  #todo: should be factored out
+    plug_qt.vimo.mixin.view.Locate,  #todo: should be factored out
+    plug_qt.vimo.mixin.view.SceneGo, #todo: should be factored out
     plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,
 ):

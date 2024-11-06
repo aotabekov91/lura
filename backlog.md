@@ -35,3 +35,4 @@
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Pane fullscreening changes position/on second try throws an error
 * [ ] Normal mode <c-[> clean up selection
+* [ ] View.Locate/Scale/Pos/Go should be factored out to its own class

@@ -1,5 +1,4 @@
 import fitz
-from PyQt6 import QtCore
 
 from plug import Plug
 
