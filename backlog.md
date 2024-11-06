@@ -14,6 +14,8 @@
 * [ ] Support different types of annotation
 * [ ] Adjust bookmarks/quickmarks to the annotation model version
 * [ ] Annotation hinting :current:
+* [ ] Finish picky
+* [ ] Separate selection into a its own class
 
 ## Sprint.VisualMode backlog: Should support visual mode
 
@@ -25,10 +27,11 @@
 * [ ] Support saving states
 	* [ ] Save last opened page
 	* [ ] Save last view/window layout
-* [ ] Separate selection into a its own class
 
 ## Quickfixes
 
 * [ ] Search index is not changing when jumping to the first/end
 * [ ] Visual word exiting without choosing a hint
 * [ ] Some pages do not act on widewise fit zw
+* [ ] Pane fullscreening changes position/on second try throws an error
+* [ ] Normal mode <c-[> clean up selection

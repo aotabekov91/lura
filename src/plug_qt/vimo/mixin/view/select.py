@@ -1,3 +1,5 @@
+from plug import tag
+
 class Select:
     canSelect = True
 
@@ -5,14 +7,6 @@ class Select:
         super().setup()
         self.m_selection = None
         self.cleanUpWanted.connect(self.cleanUpSelection)
-        self.app.earman.delistenWanted.connect(
-            self.normalCleanUpSelection
-        )
-
-    def normalCleanUpSelection(self):
-        mode = self.app.stateman.mode()
-        if mode == "normal":
-            self.cleanUpSelection()
 
     def select(self, item, data, **kwargs):
         if self.checkProp("canSelect", item):
@@ -27,6 +21,8 @@ class Select:
             if self.checkProp("canSelect", item):
                 item.select()
 
+    #todo refactor this tag to a generic class
+    @tag('<c-[>(normal/visual)[FitzView]')
     def cleanUpSelection(self):
         self.clearSelection()
         self.m_selection = None
