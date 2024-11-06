@@ -1,34 +1,33 @@
-from plug import Plug, tag
+from plug import Plug
 
-class FitzYankWord(Plug):
+class FitzYankSelection(Plug):
 
     def setup(self):
         if self.app.running:
-            self.addToYanker()
+            self.addAGent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToYanker)
+                    self.addAGent)
 
-    def addToYanker(self):
-        yanker=self.app.plugman.plugs.get(
-                'YankWord')
-        if yanker:
-            yanker.addYanker('FitzView', self)
+    def addAGent(self):
+        holder=self.app.plugman.plugs.get(
+                'YankSelection')
+        if holder:
+            holder.addAgent('FitzView', self)
 
     def yank(self, view):
-        text=self.yankSelectionText(view)
+        text=self.yankSelection(view)
         if text:
             clipboard = view.app.qapp.clipboard()
             clipboard.setText(text)
         view.app.stateman.toggle()
         view.cleanUp()
+        return text
 
-    def yankSelectionText(self, view):
+    def yankSelection(self, view):
         selection = view.selection()
         if not selection:
             return
-        if 'text' in selection:
-            return selection['text']
         text = []
         item = selection.get("item")
         element = item.element()
@@ -39,7 +38,7 @@ class FitzYankWord(Plug):
 
     def getBlockText(self, box, element):
         blocker=self.app.plugman.plugs.get(
-                'FitzBlock')
+                'FitzBlockWord')
         if not blocker:
             return ""
         text=[]
@@ -48,7 +47,7 @@ class FitzYankWord(Plug):
         width = xpos + rect.width()
         hight =  ypos + rect.height()
         rect = (xpos, ypos, width, hight)
-        block_text = element.getBlockText("words", clip=rect)
+        block_text = blocker.getBlockText(element, "words", clip=rect)
         for box in range(len(block_text)):
             text += [block_text[box][4]]
         return " ".join(text)
