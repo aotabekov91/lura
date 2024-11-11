@@ -23,27 +23,24 @@ class Selection(Plug, QtCore.QObject):
 
     def select(self, view, data, **kwargs):
         selection_model=self.getModel(view)
-        print(selection_model)
         if selection_model:
             selection_model.addSelection(data)
 
-    def deselect(self, *args, **kwargs):
-        raise
+    def deselect(self, view, **kwargs):
+        selection_model=self.getModel(view)
+        if selection_model:
+            selection_model.addSelection(data)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.deselect(view)
 
     def selection(self, view, index=None):
         return self.m_selection
 
-    def clearSelection(self, view):
-        items=view.items()
-        for item in items.values():
-            if self.checkProp("canSelect", item):
-                item.select()
-
     @tag('<c-[>(normal/visual)')
     def cleanUpSelection(self):
-        view=self.appstateman.view()
-        self.clearSelection(view)
-        self.m_selection = None
+        view=self.app.stateman.view()
+        self.deselect(view)
 
     def addAgent(self, name, agent):
         self.m_agents[name]=agent

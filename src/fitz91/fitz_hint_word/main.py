@@ -104,8 +104,9 @@ class FitzWordHint(Plug):
         view=self.app.stateman.view()
         hints=self.m_hints
         if self.m_hint in hints:
-            word=hints.get(self.m_hint)
-            self.select(word, view)
+            data=hints.get(self.m_hint)
+            selector=self.app.plugman.plugs.get('Selection')
+            selector.select(view, data)
             word_hinter=self.app.plugman.plugs.get(
                     'WordHint')
             word_hinter.toggleHint()
@@ -118,7 +119,3 @@ class FitzWordHint(Plug):
         self.m_hint=''
         view.redraw()
         return False
-
-    def select(self, data, view):
-        selector=self.app.plugman.plugs.get('Selection')
-        selector.select(view, data)
