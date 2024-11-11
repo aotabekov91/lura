@@ -19,16 +19,18 @@ class Selection(Plug, QtCore.QObject):
         self.m_agents={}
         self.m_selection = None
         self.cleanUpWanted.connect(self.cleanUpSelection)
+        self.app.buffman.viewCreated.connect(self.createModel)
 
-    def select(self, item, data, **kwargs):
-        if self.checkProp("canSelect", item):
-            item.select(data, **kwargs)
-            self.m_selection = data
+    def select(self, view, data, **kwargs):
+        selection_model=self.getModel(view)
+        print(selection_model)
+        if selection_model:
+            selection_model.addSelection(data)
 
     def deselect(self, *args, **kwargs):
         raise
 
-    def selection(self, view, index=1):
+    def selection(self, view, index=None):
         return self.m_selection
 
     def clearSelection(self, view):
@@ -55,8 +57,10 @@ class Selection(Plug, QtCore.QObject):
         return self.m_models.get(model)
 
     def createModel(self, view):
-        selection_model=SelectionModel(
-                self, source=view)
-        self.modelCreated.emit(selection_model)
-        self.m_models[view]=selection_model
-        return view
+        selector=self.getAgent(view=view)
+        if selector:
+            selection_model=SelectionModel(
+                    self, source=view)
+            self.m_models[view]=selection_model
+            self.modelCreated.emit(selection_model)
+            return view

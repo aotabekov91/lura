@@ -16,13 +16,16 @@ class FitzWordVisual(Plug):
                 'WordVisual')
         blocker=self.app.plugman.plugs.get(
                 'FitzBlockWord')
-        if visualizer and blocker:
+        selector=self.app.plugman.plugs.get(
+                'Selection')
+        if visualizer and blocker and selector:
             self.m_blocker=blocker
             visualizer.addVisualizer(
                     'FitzView', self)
 
     def visualize(self, view):
-        selection=view.selection()
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
         if not selection:
             hinter=self.app.plugman.plugs.get('WordHint')
             if hinter:
@@ -38,7 +41,7 @@ class FitzWordVisual(Plug):
         else:
             if not self.m_blocker:
                 return
-            for item in range(xrange[-1]):
+            for row in range(xrange[-1]):
                 selection = view.selection()
                 if not selection:
                     return
@@ -54,12 +57,12 @@ class FitzWordVisual(Plug):
             element = item.element()
             element.toggleDirection(0)
 
-    def jump(self, kind, sel):
-        item = sel["item"]
+    def jump(self, kind, data):
+        item = data["item"]
         element = item.element()
         s = self.selection()
-        if s and sel:
-            element.jumpToBlock(s, sel)
-        elif sel:
-            item = sel["item"]
-            view.select(item, sel)
+        if s and data:
+            element.jumpToBlock(s, data)
+        elif data:
+            item = data["item"]
+            view.select(item, data)

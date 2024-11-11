@@ -119,6 +119,6 @@ class FitzWordHint(Plug):
         view.redraw()
         return False
 
-    def select(self, word, view):
-        item = word["item"]
-        view.select(item, word)
+    def select(self, data, view):
+        selector=self.app.plugman.plugs.get('Selection')
+        selector.select(view, data)

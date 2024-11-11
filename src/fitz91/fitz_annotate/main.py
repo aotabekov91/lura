@@ -7,12 +7,12 @@ class FitzAnnotate(Plug):
     def setup(self):
         super().setup()
         if self.app.running:
-            self.addToAnnotate()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToAnnotate)
+                    self.addAgent)
 
-    def addToAnnotate(self):
+    def addAgent(self):
         annotate=self.app.plugman.plugs.get('Annotate')
         if annotate:
             annotate.addAgent('FitzModel', self)

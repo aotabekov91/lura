@@ -3,55 +3,55 @@ from PyQt6 import QtCore
 from plug import Element
 from plug_qt import vimo
 
-class AnnotateElement(Element, QtCore.QObject):
+class SelectionElement(Element, QtCore.QObject):
     pass
 
 class SelectionModel(vimo.Model, QtCore.QObject):
 
-    element_class=AnnotateElement
+    element_class=SelectionElement
     def __init__(self, agent, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.m_agent=agent
 
-    def addAnnotate(self, data={}, **kwargs):
-        model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator:
-            annotation=annotator.annotate(
-                    model, data, **kwargs)
-            if annotation:
-                position = annotation.get("metadata")
-                element = self.getAnnotate(position)
+    def addSelection(self, data={}, **kwargs):
+        view=self.source()
+        selector=self.m_agent.getAgent(view=view)
+        if selector:
+            selection=selector.select(
+                    view, data, **kwargs)
+            if selection:
+                position = selection.get("metadata")
+                element = self.getSelection(position)
                 if not element:
-                    element=self.createElement(annotation)
+                    element=self.createElement(selection)
                 else:
-                    self.updateElement(element, annotation)
+                    self.updateElement(element, selection)
                 return element
 
-    def updateAnnotate(self, data={}, **kwargs):
+    def updateSelection(self, data={}, **kwargs):
         model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator:
-            annotation=annotator.annotate(
+        selector=self.m_agent.getAgent(model=model)
+        if selector:
+            annotation=selector.annotate(
                     model, data, **kwargs)
             if annotation:
                 position = annotation.get("metadata")
-                element = self.getAnnotate(position)
+                element = self.getSelection(position)
                 if element:
                     self.updateElement(element, annotation)
                 return element
 
-    def delAnnotate(self, element=None, data=None, **kwargs):
+    def delSelection(self, element=None, data=None, **kwargs):
         model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator:
+        selector=self.m_agent.getAgent(model=model)
+        if selector:
             if not element and data:
                 position = data.get("metadata")
-                element = self.getAnnotate(position)
+                element = self.getSelection(position)
             if element:
                 data=element.data()
-                annotator.deannotate(model, data, **kwargs)
+                selector.deannotate(model, data, **kwargs)
                 return self.delElement(element)
 
-    def getAnnotate(self, value, by="metadata", **kwargs):
+    def getSelection(self, value, by="metadata", **kwargs):
         return self.getElement(value, by=by, **kwargs)
