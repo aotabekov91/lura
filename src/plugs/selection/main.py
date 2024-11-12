@@ -21,23 +21,22 @@ class Selection(Plug, QtCore.QObject):
         self.cleanUpWanted.connect(self.cleanUpSelection)
         self.app.buffman.viewCreated.connect(self.createModel)
 
-    def select(self, view, data, **kwargs):
+    def select(self, view, **kwargs):
         selection_model=self.getModel(view)
         if selection_model:
-            selection_model.addSelection(data)
+            selection_model.updateSelection(**kwargs)
 
     def deselect(self, view, **kwargs):
         selection_model=self.getModel(view)
         if selection_model:
-            selection_model.addSelection(data)
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.deselect(view)
+            selection_model.clearSelection(**kwargs)
 
-    def selection(self, view, index=None):
-        return self.m_selection
+    def selection(self, view, **kwargs):
+        selection_model=self.getModel(view)
+        if selection_model:
+            return selection_model.getSelection(**kwargs)
 
-    @tag('<c-[>(normal/visual)')
+    @tag('<escape>(normal)')
     def cleanUpSelection(self):
         view=self.app.stateman.view()
         self.deselect(view)

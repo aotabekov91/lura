@@ -33,22 +33,20 @@ class FitzSelection(Plug):
         elif item and kind=='disconnect':
             item.painted.disconnect(self.paint)
 
-    def select(self, view, data):
+    def select(self, view, selection):
         self.wire(view, 'disconnect')
-        item=data['item']
-        self.m_views[view]=item
-        self.m_items[item]=data
-        self.wire(view, 'connect')
-
-    def deselect(self, view):
-        self.wire(view, 'disconnect')
+        item=selection.value('item')
+        if item:
+            self.m_views[view]=item
+            self.m_items[item]=selection
+            self.wire(view, 'connect')
         view.redraw()
 
     def paint(self, painter, ops, widget, item):
-        data=self.m_items.get(item, None)
-        if data:
+        selection=self.m_items.get(item, None)
+        if selection:
             painter.save()
-            boxes = data.get("box", [])
+            boxes = selection.value("box", [])
             rects = []
             if type(boxes)!=list:
                 boxes=[boxes]

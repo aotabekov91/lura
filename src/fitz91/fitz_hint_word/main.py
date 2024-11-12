@@ -106,7 +106,7 @@ class FitzWordHint(Plug):
         if self.m_hint in hints:
             data=hints.get(self.m_hint)
             selector=self.app.plugman.plugs.get('Selection')
-            selector.select(view, data)
+            selector.select(view, **data)
             word_hinter=self.app.plugman.plugs.get(
                     'WordHint')
             word_hinter.toggleHint()

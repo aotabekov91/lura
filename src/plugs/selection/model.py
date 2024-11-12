@@ -4,54 +4,49 @@ from plug import Element
 from plug_qt import vimo
 
 class SelectionElement(Element, QtCore.QObject):
-    pass
+
+    def setup(self):
+        super().setup()
+        self.m_values={}
+
+    def clear(self):
+        self.m_values={}
+
+    def values(self):
+        return self.m_values
+
+    def value(self, name, default=None):
+        return self.m_values.get(name, default)
+
+    def setValue(self, name, value):
+        self.m_values[name]=value
+
+    def __bool__(self):
+        if self.m_values:
+            return True
+        return False
 
 class SelectionModel(vimo.Model, QtCore.QObject):
 
     element_class=SelectionElement
+
     def __init__(self, agent, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.m_agent=agent
+        self.m_selection=SelectionElement(model=self)
 
-    def addSelection(self, data={}, **kwargs):
+    def updateSelection(self, **kwargs):
         view=self.source()
         selector=self.m_agent.getAgent(view=view)
-        if selector:
-            selection=selector.select(
-                    view, data, **kwargs)
-            if selection:
-                position = selection.get("metadata")
-                element = self.getSelection(position)
-                if not element:
-                    element=self.createElement(selection)
-                else:
-                    self.updateElement(element, selection)
-                return element
+        for key, value in kwargs.items():
+            self.m_selection.setValue(key, value)
+        selector.select(view, self.m_selection)
 
-    def updateSelection(self, data={}, **kwargs):
-        model=self.source()
-        selector=self.m_agent.getAgent(model=model)
-        if selector:
-            annotation=selector.annotate(
-                    model, data, **kwargs)
-            if annotation:
-                position = annotation.get("metadata")
-                element = self.getSelection(position)
-                if element:
-                    self.updateElement(element, annotation)
-                return element
+    def clearSelection(self, **kwargs):
+        view=self.source()
+        self.m_selection.clear()
+        selector=self.m_agent.getAgent(view=view)
+        selector.select(view, self.m_selection)
 
-    def delSelection(self, element=None, data=None, **kwargs):
-        model=self.source()
-        selector=self.m_agent.getAgent(model=model)
-        if selector:
-            if not element and data:
-                position = data.get("metadata")
-                element = self.getSelection(position)
-            if element:
-                data=element.data()
-                selector.deannotate(model, data, **kwargs)
-                return self.delElement(element)
-
-    def getSelection(self, value, by="metadata", **kwargs):
-        return self.getElement(value, by=by, **kwargs)
+    def getSelection(self, **kwargs):
+        return self.m_selection

@@ -23,19 +23,19 @@ class FitzBlockWord(Plug):
     def setDirection(self, element, direction=[0, 0]):
         self.m_directions[element]=direction
 
-    def update(self, element, kind=None, sel={}):
+    def update(self, element, kind=None, selection=None):
         func = getattr(self, kind, None)
         if func:
-            func(element, sel)
+            func(element, selection)
 
-    def left(self, element, sel):
+    def left(self, element, selection):
         direction=self.direction(element)
-        if sel and direction[0] == "right":
-            self.unRight(element, sel)
+        if selection and direction[0] == "right":
+            self.unRight(element, selection)
         else:
             direction[0]="left"
             self.setDirection(element, direction)
-            box, start, end, size = self.getBlockData(element, sel)
+            box, start, end, size = self.getBlockData(element, selection)
             x, y = start.x() - 2, start.y()
             w, h = 5, start.height()
             r = (0, y, x, y + h)
@@ -53,14 +53,14 @@ class FitzBlockWord(Plug):
                     r = QtCore.QRectF(tl, br)
                     box.insert(0, element.unify(r))
 
-    def right(self, element, sel):
+    def right(self, element, selection):
         direction=self.direction(element)
-        if sel and direction[0] == "left":
-            self.unLeft(element, sel)
+        if selection and direction[0] == "left":
+            self.unLeft(element, selection)
         else:
             direction[0] = "right"
             self.setDirection(element, direction)
-            box, start, end, size = self.getBlockData(element, sel)
+            box, start, end, size = self.getBlockData(element, selection)
             x, y = end.x() + end.width() + 1, end.y()
             w, h = size.width(), end.height()
             r = (x, y, x + w, y + h)
@@ -94,11 +94,11 @@ class FitzBlockWord(Plug):
         x = "left" if x == "right" else "right"
         self.setDirection(element, [x, y])
 
-    def getBlockData(self, element, sel):
-        if sel:
-            box = sel["box"]
+    def getBlockData(self, element, selection):
+        if selection:
+            box = selection.value("box")
             if len(box) > 0:
-                self.setLast(element, sel)
+                self.setLast(element, selection)
             size = element.size()
             start = element.m_norm.mapRect(box[0])
             end = element.m_norm.mapRect(box[-1])
@@ -107,11 +107,11 @@ class FitzBlockWord(Plug):
     def getBlockText(self, element, *args, **kwargs):
         return element.m_data.get_text(*args, **kwargs)
 
-    def last(self, element, sel):
+    def last(self, element, selection):
         direction=self.direction(element)
         direction[0] = "right"
         self.setDirection(element, direction)
-        box, start, end, size = self.getBlockData(element, sel)
+        box, start, end, size = self.getBlockData(element, selection)
         x, y = end.x(), end.y()
         w, h = element.size().width(), end.height()
         r = (x, y, x + w, y + h)
@@ -122,11 +122,11 @@ class FitzBlockWord(Plug):
             r = QtCore.QRectF(tl, br)
             box[-1] = element.unify(r)
 
-    def first(self, element, sel):
+    def first(self, element, selection):
         direction=self.direction(element)
         direction[0] = "left"
         self.setDirection(element, direction)
-        b, s, e, size = self.getBlockData(element, sel)
+        b, s, e, size = self.getBlockData(element, selection)
         x, y = 0, s.y()
         w, h = s.x() + s.width(), s.height()
         r = (x, y, x + w, y + h)
@@ -137,16 +137,16 @@ class FitzBlockWord(Plug):
             r = QtCore.QRectF(tl, br)
             b[0] = element.unify(r)
 
-    def down(self, element, sel):
+    def down(self, element, selection):
         direction=self.direction(element)
-        if sel and direction[1] == "up":
-            self.unUp(element, sel)
+        if selection and direction[1] == "up":
+            self.unUp(element, selection)
         else:
             direction[1] = "down"
             self.setDirection(element, direction)
             box, start, end, size = self.getBlockData(
-                    element, sel)
-            self.update(element, "last", sel)
+                    element, selection)
+            self.update(element, "last", selection)
             x, y = end.x(), end.y() + end.height()
             w, h = end.width(), end.height()
             r = (0, y, x + w, y + h)
@@ -157,15 +157,15 @@ class FitzBlockWord(Plug):
                 r = QtCore.QRectF(tl, br)
                 box += [element.unify(r)]
 
-    def up(self, element, sel):
+    def up(self, element, selection):
         direction=self.direction(element)
-        if sel and direction[1] == "down":
-            self.unDown(element, sel)
+        if selection and direction[1] == "down":
+            self.unDown(element, selection)
         else:
             direction[1] = "up"
             self.setDirection(element, direction)
-            b, s, e, size = self.getBlockData(element, sel)
-            self.update(element, "first", sel)
+            b, s, e, size = self.getBlockData(element, selection)
+            self.update(element, "first", selection)
             x, y = s.x(), s.y() - s.height()
             w, h = s.width(), s.height()
             r = (x, y, x + w, y + h)
@@ -176,53 +176,53 @@ class FitzBlockWord(Plug):
                 r = QtCore.QRectF(tl, br)
                 b.insert(0, element.unify(r))
 
-    def unDown(self, element, sel):
-        box, start, end, size = self.getBlockData(element, sel)
+    def unDown(self, element, selection):
+        box, start, end, size = self.getBlockData(element, selection)
         if len(box) > 1:
-            sel["box"] = box[:-1]
+            selection.setValue("box", box[:-1])
         else:
             self.changeDirection(element)
-            self.up(element, sel)
+            self.up(element, selection)
 
-    def unUp(self, element, sel):
-        b, s, e, size = self.getBlockData(element, sel)
+    def unUp(self, element, selection):
+        b, s, e, size = self.getBlockData(element, selection)
         if len(b) > 1:
-            sel["box"] = b[1:]
+            selection.setValue("box", b[1:])
         else:
             self.changeDirection(element)
-            self.down(element, sel)
+            self.down(element, selection)
 
-    def unRight(self, element, sel):
-        box, start, end, size = self.getBlockData(element, sel)
+    def unRight(self, element, selection):
+        box, start, end, size = self.getBlockData(element, selection)
         x, y = end.x(), end.y()
         w, h = end.width(), end.height()
         r = (x, y, x + w, h + y)
         f = self.getBlockText(element, "words", clip=r)
         if len(f) <= 1:
             self.changeDirection(element)
-            self.left(element, sel)
+            self.left(element, selection)
         else:
             br = QtCore.QPointF(f[-2][2], f[-2][3])
             end.setBottomRight(br)
             box[-1] = element.unify(end)
 
-    def unLeft(self, element, sel):
-        box, start, end, size = self.getBlockData(element, sel)
+    def unLeft(self, element, selection):
+        box, start, end, size = self.getBlockData(element, selection)
         x, y = start.x(), start.y()
         w, h = start.width(), start.height()
         r = (x, y, x + w, h + y)
         f = self.getBlockText(element, "words", clip=r)
         if len(f) <= 1:
             self.changeDirection(element)
-            self.right(element, sel)
+            self.right(element, selection)
         else:
             tl = QtCore.QPointF(f[1][0], f[1][1])
             start.setTopLeft(tl)
             box[0] = element.unify(start)
 
-    def jump(self, element, csel, jsel):
-        cb = csel["box"]
-        jb = jsel["box"]
+    def jump(self, element, prev_selection, next_selection):
+        cb = prev_selection.value("box")
+        jb = next_selection.value("box")
         ctl = cb[0].topLeft()
         cbr = cb[-1].bottomRight()
         jtl = jb[0].topLeft()
@@ -240,21 +240,21 @@ class FitzBlockWord(Plug):
             wf = None
             lines = []
             if cbr.y() > jtl.y():
-                self.last(jsel)
-                self.first(csel)
-                b, s, e, size = self.getBlockData(jsel)
+                self.last(next_selection)
+                self.first(prev_selection)
+                b, s, e, size = self.getBlockData(next_selection)
                 tl = (0, e.bottomRight().y())
-                b, s, e, size = self.getBlockData(csel)
+                b, s, e, size = self.getBlockData(prev_selection)
                 br = (s.topRight().y(), size.width())
                 r = (tl[0], tl[1], br[1], br[0])
                 wf = self.getBlockText(element, "words", clip=r)
                 direction = ["left", "down"]
             elif cbr.y() < jtl.y():
-                self.last(csel)
-                self.first(jsel)
-                b, s, e, size = self.getBlockData(csel)
+                self.last(prev_selection)
+                self.first(next_selection)
+                b, s, e, size = self.getBlockData(prev_selection)
                 tl = (0, e.bottomRight().y())
-                b, s, e, size = self.getBlockData(jsel)
+                b, s, e, size = self.getBlockData(next_selection)
                 br = (s.topRight().y(), size.width())
                 r = (tl[0], tl[1], br[1], br[0])
                 wf = self.getBlockText(element, "words", clip=r)
@@ -279,4 +279,5 @@ class FitzBlockWord(Plug):
             for r in lines:
                 i = element.unify(r)
                 cb.append(i)
-        csel["box"] = sorted(cb, key=lambda r: (r.y(), r.x()))
+        new_box=sorted(cb, key=lambda r: (r.y(), r.x()))
+        prev_selection.setValue("box", new_box)

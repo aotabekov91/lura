@@ -34,6 +34,7 @@ class FitzWordVisual(Plug):
                 hinter.setExitSubmode('word')
 
     def go(self, view, xrange=[1], kind='last'):
+        selector=self.app.plugman.plugs.get('Selection')
         if kind=='toggle':
             self.toggleDirection(view)
         elif kind=='jump':
@@ -41,28 +42,30 @@ class FitzWordVisual(Plug):
         else:
             if not self.m_blocker:
                 return
-            for row in range(xrange[-1]):
-                selection = view.selection()
+            for time in range(xrange[-1]):
+                selection=selector.selection(view)
                 if not selection:
                     return
-                item = selection["item"]
+                item = selection.value('item')
                 element = item.element()
                 self.m_blocker.update(element, kind, selection)
                 item.refresh()
 
     def toggleDirection(self, view):
-        selection = view.selection()
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
         if selection:
-            item = selection["item"]
+            item = selection.value("item")
             element = item.element()
             element.toggleDirection(0)
 
     def jump(self, kind, data):
         item = data["item"]
+        view=item.view()
         element = item.element()
-        s = self.selection()
-        if s and data:
-            element.jumpToBlock(s, data)
+        block = self.selection()
+        if block and data:
+            element.jumpToBlock(block, data)
         elif data:
-            item = data["item"]
-            view.select(item, data)
+            selector=self.app.plugman.plugs.get('Selection')
+            selector.select(view, **data)
