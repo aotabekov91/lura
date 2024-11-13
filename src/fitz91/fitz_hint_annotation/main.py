@@ -108,5 +108,7 @@ class FitzAnnotationHint(Plug):
         data=annotation.data()
         element = data["element"]
         idx=element.index()
-        item=view.item(idx)
-        view.select(item, data)
+        data['item']=view.item(idx)
+        selector=self.app.plugman.plugs.get('Selection')
+        if selector:
+            selector.select(view, **data)

@@ -3,19 +3,19 @@
 * [ ] Should support annotations
 * [ ] Should support plugin system
 * [ ] Should support tiling
-	* [ ] Closing a pane is not working
 * [ ] Should support visual mode
 
 ## Sprint.Annotations backlog: Should support annotations
 
-* [ ] Engineer Sqlite annotation database
-	* [ ] As simple as possible with extensions in mind
-		* [ ] Metadata field parsing format :current:
-* [ ] Support different types of annotation
-* [ ] Adjust bookmarks/quickmarks to the annotation model version
-* [ ] Annotation hinting :current:
+* [x] Annotation hinting 
+* [x] Separate selection into a its own class
+* [x] Adjust bookmarks/quickmarks to the annotation model version
+* [.] Engineer Sqlite annotation database
+	* [x] As simple as possible with extensions in mind
+	* [ ] Metadata field parsing format :next:
+* [.] Support different types of annotation
+* [ ] Separate all view mixins [fitz] into a its own class :current:
 * [ ] Finish picky
-* [ ] Separate selection into a its own class
 
 ## Sprint.VisualMode backlog: Should support visual mode
 
@@ -28,11 +28,13 @@
 	* [ ] Save last opened page
 	* [ ] Save last view/window layout
 
-## Quickfixes
+## Bugs
 
+* [x] viewselect :bug:
 * [ ] Search index is not changing when jumping to the first/end
 * [ ] Visual word exiting without choosing a hint
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Pane fullscreening changes position/on second try throws an error
 * [ ] Normal mode <c-[> clean up selection
 * [ ] View.Locate/Scale/Pos/Go should be factored out to its own class
+* [ ] Closing a pane is not working

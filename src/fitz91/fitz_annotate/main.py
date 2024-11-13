@@ -17,14 +17,15 @@ class FitzAnnotate(Plug):
         if annotate:
             annotate.addAgent('FitzModel', self)
 
-    def open(self, view, data={}, center=True):
+    def goTo(self, view, data, center=True):
         boxes = data.get("box", None)
         page = data.get("page", None)
         if all([view, page, boxes]):
-            item = view.item(page)
             top_left = boxes[0].topLeft()
+            selector=self.app.plugman.plugs.get('Selection')
             view.goTo(page, top_left.x(), top_left.y(), center=center)
-            view.select(item, data)
+            if selector:
+                selector.select(view, **data)
 
     def setPage(self, model, data):
         page = data.get("page", None)
