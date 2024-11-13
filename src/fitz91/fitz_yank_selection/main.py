@@ -25,7 +25,8 @@ class FitzYankSelection(Plug):
         return text
 
     def yankSelection(self, view):
-        selection = view.selection()
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
         if not selection:
             return
         text = []

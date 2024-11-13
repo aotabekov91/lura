@@ -28,13 +28,14 @@ class Strikeout(Plug):
     @tag("<c-s>(annotate)")
     def strikeout(self, xrange=[1]):
         view=self.app.stateman.view()
-        data=view.selection()
-        if data:
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
+        if selection:
             key=xrange[0]
             color=self.m_colors.get(key, self.default_color)
             striker=self.getAgent(view=view)
-            data['annotation_color']=color
-            return striker.activate(view=view, data=data)
+            selection['annotation_color']=color
+            return striker.activate(view=view, data=selection)
 
     @tag("<c-S>(annotate)")
     def restrikeout(self, xrange=[1]):

@@ -44,7 +44,8 @@ class Annotate(Plug, QtCore.QObject):
     @tag("d(annotate)")
     def deannotate(self):
         view=self.app.stateman.view()
-        data=view.selection()
-        if data:
-            print(data)
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
+        if selection:
+            print(selection)
             #todo 

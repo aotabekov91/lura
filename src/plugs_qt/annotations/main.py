@@ -69,6 +69,8 @@ class Annotations(Plug):
             view=self.app.stateman.subview()
             model=view.model()
             annotator=self.app.plugman.plugs.get('Annotate')
+            selector=self.app.plugman.plugs.get('Selection')
             annotation_model=annotator.getModel(model)
-            annotation_model.delAnnotate(element, view=view)
-            #todo model.modelChanged -> view.redraw
+            annotation_model.delAnnotate(element)
+            if selector:
+                selector.cleanUpSelection(view)

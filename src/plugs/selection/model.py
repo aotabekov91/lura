@@ -7,22 +7,34 @@ class SelectionElement(Element, QtCore.QObject):
 
     def setup(self):
         super().setup()
-        self.m_values={}
+        self.m_data={}
 
     def clear(self):
-        self.m_values={}
+        self.m_data={}
 
-    def values(self):
-        return self.m_values
+    def data(self):
+        return self.m_data
 
-    def value(self, name, default=None):
-        return self.m_values.get(name, default)
+    def value(self, key, default=None):
+        return self.m_data.get(key, default)
 
-    def setValue(self, name, value):
-        self.m_values[name]=value
+    def setValue(self, key, value):
+        self.m_data[key]=value
+
+    def get(self, key, default=None):
+        return self.m_data.get(key, default)
+
+    def set(self, key, value):
+        self.m_data[key]=value
+
+    def __getitem__(self, key):
+        return self.value(key)
+
+    def __setitem__(self, key, value):
+        self.setValue(key, value)
 
     def __bool__(self):
-        if self.m_values:
+        if self.m_data:
             return True
         return False
 

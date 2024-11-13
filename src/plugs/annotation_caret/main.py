@@ -28,13 +28,14 @@ class Caretize(Plug):
     @tag("<c-c>(annotate)")
     def caretize(self, xrange=[1]):
         view=self.app.stateman.view()
-        data=view.selection()
-        if data:
+        selector=self.app.plugman.plugs.get('Selection')
+        selection=selector.selection(view)
+        if selection:
             key=xrange[0]
             color=self.m_colors.get(key, self.default_color)
             caretizer=self.getAgent(view=view)
-            data['annotation_color']=color
-            return caretizer.activate(view=view, data=data)
+            selection['annotation_color']=color
+            return caretizer.activate(view=view, data=selection)
 
     @tag("<c-C>(annotate)")
     def recaretize(self, xrange=[1]):

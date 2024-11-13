@@ -41,19 +41,17 @@ class FitzAnnotate(Plug):
         elif page:
             data["element"] = model.element(page)
 
-    def deannotate(self, model, data, view=None):
+    def deannotate(self, model, data):
         element=data.get('element')
         annotation=data.get('annotation_object')
         if element and annotation:
             page_data=element.data()
             page_data.delete_annot(annotation)
-            if view:
-                view.cleanUpSelection()
             model.clearPixmapCache(idx=element.index())
             model.modelUpdated.emit()
             return annotation
 
-    def annotate(self, model, data, view=None):
+    def annotate(self, model, data):
         annotation = None
         boxes=data.get("box")
         kind=data.get("annotation_kind")
@@ -82,8 +80,6 @@ class FitzAnnotate(Plug):
                     annotation.set_colors(stroke=color)
                 data['annotation_object']=annotation
                 annotation.update()
-                if view:
-                    view.cleanUpSelection()
                 model.clearPixmapCache(idx=element.index())
                 model.modelUpdated.emit()
             return data

@@ -15,16 +15,19 @@ class FitzUnderline(Plug):
         if holder:
             holder.addAgent('FitzView', self)
 
-    def activate(self, view, data=None, **kwargs):
-        if not data:
-            data=view.selection()
-        if data:
+    def activate(self, view, selection=None, **kwargs):
+        selector=self.app.plugman.plugs.get('Selection')
+        if not selection:
+            selection=selector.selection(view)
+        if selection:
             model=view.model()
-            data['annotation_kind']='underline'
+            selection['annotation_kind']='underline'
             annotator=self.app.plugman.plugs.get('Annotate')
             annotation_model=annotator.getModel(model)
-            annotation_model.addAnnotate(data=data, view=view)
-        return data
+            data=selection.data()
+            annotation_model.addAnnotate(data=data)
+            selector.cleanUpSelection(view)
+        return selection
 
     def octivate(self):
         raise
