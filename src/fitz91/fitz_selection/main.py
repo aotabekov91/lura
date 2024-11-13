@@ -34,9 +34,10 @@ class FitzSelection(Plug):
             item.painted.disconnect(self.paint)
 
     def select(self, view, selection):
-        self.wire(view, 'disconnect')
         item=selection.value('item')
-        if item:
+        current_item=self.m_views.get(view, None)
+        if item and current_item!=item:
+            self.wire(view, 'disconnect')
             self.m_views[view]=item
             self.m_items[item]=selection
             self.wire(view, 'connect')
