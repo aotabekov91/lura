@@ -4,6 +4,7 @@ from plug.utils import tag
 
 
 class Scale:
+
     canScale = True
     scaleMode = None
     zoomFactor = 0.05

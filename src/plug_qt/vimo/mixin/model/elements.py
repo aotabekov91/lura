@@ -6,16 +6,16 @@ class Elements:
     loaded = QtCore.pyqtSignal(object)
     elementCreated = QtCore.pyqtSignal(object)
 
-    def count(self):
-        return len(self.m_elements)
+    # def count(self):
+    #     return len(self.m_elements)
+
+    # def element(self, idx):
+    #     return self.m_elements.get(idx, None)
 
     def elements(self):
         if not self.m_loaded:
             self.load()
         return self.m_elements
-
-    def element(self, idx):
-        return self.m_elements.get(idx, None)
 
     def sourceElement(self):
         for i, e in self.m_elements.items():
@@ -24,14 +24,14 @@ class Elements:
 
     def load(self):
         if self.element_class:
-            elems = {}
-            for i, d in enumerate(self.m_data):
-                e = self.element_class(
-                    data=d,
-                    index=i + 1,
+            elements = {}
+            for idx, data in enumerate(self.m_data):
+                element = self.element_class(
+                    data=data,
+                    index=idx + 1,
                     model=self,
                 )
-                elems[i + 1] = e
-                self.elementCreated.emit(e)
-            self.m_elements = elems
+                elements[idx + 1] = element
+                self.elementCreated.emit(element)
+            self.m_elements = elements
             self.loaded.emit(self)

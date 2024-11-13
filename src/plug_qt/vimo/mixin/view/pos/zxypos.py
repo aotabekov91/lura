@@ -2,6 +2,7 @@ from PyQt6 import QtCore
 
 
 class ZXYPos:
+
     canJump = True
     canPosition = True
     positionChanged = QtCore.pyqtSignal()

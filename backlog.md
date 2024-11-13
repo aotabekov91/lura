@@ -7,6 +7,7 @@
 
 ## Sprint.Annotations backlog: Should support annotations
 
+* [.] Separate all view mixins [fitz] into a its own class :current:
 * [x] Annotation hinting 
 * [x] Separate selection into a its own class
 * [x] Adjust bookmarks/quickmarks to the annotation model version
@@ -14,7 +15,7 @@
 	* [x] As simple as possible with extensions in mind
 	* [ ] Metadata field parsing format :next:
 * [.] Support different types of annotation
-* [ ] Separate all view mixins [fitz] into a its own class :current:
+	* [ ] Text annotation with an overlay text editor
 * [ ] Finish picky
 
 ## Sprint.VisualMode backlog: Should support visual mode
@@ -30,7 +31,7 @@
 
 ## Bugs
 
-* [x] viewselect :bug:
+* [x] view.select :bug:
 * [ ] Search index is not changing when jumping to the first/end
 * [ ] Visual word exiting without choosing a hint
 * [ ] Some pages do not act on widewise fit zw
