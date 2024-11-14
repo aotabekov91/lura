@@ -1,14 +1,7 @@
 from plug import Plug
-from PyQt6 import QtCore
 
 class FitzGo(Plug):
 
-    # positionChanged = QtCore.pyqtSignal()
-    # positionJumped = QtCore.pyqtSignal(
-    #         object, object)
-    # positionToBeJumped = QtCore.pyqtSignal(
-    #         object, object)
-    
     def setup(self):
         super().setup()
         self.m_positions={}
@@ -17,7 +10,6 @@ class FitzGo(Plug):
         else:
             self.app.appSoonStarts.connect(
                     self.addAgent)
-        # view.viewIsRedrawn.connect(self.jumpToPosition)
 
     def addAgent(self):
         goer=self.app.plugman.plugs.get('Go')
@@ -28,6 +20,20 @@ class FitzGo(Plug):
         func = getattr(self, kind, None)
         if func:
             func(**kwargs)
+
+    def currentPosition(self, view):
+        data={}
+        idx=view.currentIndex()
+        item = view.item(idx)
+        if item:
+            pos=item.pos()
+            rect = item.boundingRect().translated(pos)
+            top_left = view.viewport().rect().topLeft()
+            top_left = view.mapToScene(top_left)
+            data['x'] = (top_left.x() - rect.x()) / rect.width()
+            data['y'] = (top_left.y() - rect.y()) / rect.height()
+            data['idx']=idx
+        return data
 
     def goToBlockleft(self, *args, **kwargs):
         self.moveScreen("left", *args, **kwargs)
@@ -63,11 +69,15 @@ class FitzGo(Plug):
             for i in range(xrange[0]):
                 view.prevItem()
 
+    def goToFirst(self, view=None, **kwargs):
+        if view:
+            kwargs['xrange']=[1]
+            self.goTo(view=view, **kwargs)
+
     def goToLast(self, view=None, **kwargs):
         if view:
             kwargs['xrange']=[view.count()]
             self.goTo(view=view, **kwargs)
-
 
     def moveScreen(self, kind, view=None, xrange=[1]):
         if view:
@@ -121,7 +131,7 @@ class FitzGo(Plug):
     def goTo(
             self, 
             view=None, 
-            xrange=None, 
+            xrange=[1], 
             x=0,
             y=0,
             center=False,
@@ -129,7 +139,7 @@ class FitzGo(Plug):
             ):
 
         if view and xrange:
-            xrange = xrange[-1] - 1
+            xrange = xrange[-1]
             item = view.item(xrange)
             if item:
                 rect = item.boundingRect()
