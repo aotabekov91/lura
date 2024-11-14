@@ -1,14 +1,23 @@
 from plug import Plug
+from PyQt6 import QtCore
 
 class FitzGo(Plug):
 
+    # positionChanged = QtCore.pyqtSignal()
+    # positionJumped = QtCore.pyqtSignal(
+    #         object, object)
+    # positionToBeJumped = QtCore.pyqtSignal(
+    #         object, object)
+    
     def setup(self):
         super().setup()
+        self.m_positions={}
         if self.app.running:
             self.addAgent()
         else:
             self.app.appSoonStarts.connect(
                     self.addAgent)
+        # view.viewIsRedrawn.connect(self.jumpToPosition)
 
     def addAgent(self):
         goer=self.app.plugman.plugs.get('Go')
@@ -59,12 +68,6 @@ class FitzGo(Plug):
             kwargs['xrange']=[view.count()]
             self.goTo(view=view, **kwargs)
 
-    def goTo(self, view=None, xrange=None, **kwargs):
-        if view and xrange:
-            idx = xrange[-1] - 1
-            print(idx)
-            # todo :current: # xyzpos goTo
-            view.setCurrentIndex(idx)
 
     def moveScreen(self, kind, view=None, xrange=[1]):
         if view:
@@ -87,6 +90,8 @@ class FitzGo(Plug):
                 deltay = horbar.value() + width * xrange[-1]
                 horbar.setValue(int(deltay))
             # self.positionChanged.emit()
+            view.viewport().update()
+            view.setVisibleItem()
 
     def moveLine(self, kind, view=None, xrange=[1]):
         if view:
@@ -110,3 +115,32 @@ class FitzGo(Plug):
             elif kind == "left":
                 deltax = horbar.value() - width * xrange[-1]
                 horbar.setValue(int(deltax))
+            view.viewport().update()
+            view.setVisibleItem()
+
+    def goTo(
+            self, 
+            view=None, 
+            xrange=None, 
+            x=0,
+            y=0,
+            center=False,
+            **kwargs
+            ):
+
+        if view and xrange:
+            xrange = xrange[-1] - 1
+            item = view.item(xrange)
+            if item:
+                rect = item.boundingRect()
+                pos = rect.translated(item.pos())
+                hor = int(pos.left() + x * pos.width())
+                ver = int(pos.top() + y * pos.height())
+                if center:
+                    vr = view.viewport().rect()
+                    ver = int(ver - vr.height() / 2.0)
+                view.verticalScrollBar().setValue(ver)
+                view.horizontalScrollBar().setValue(hor)
+                view.viewport().update()
+                view.setVisibleItem()
+                # self.positionChanged.emit()
