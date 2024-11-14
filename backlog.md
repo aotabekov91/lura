@@ -4,6 +4,8 @@
 * [ ] Should support plugin system
 * [ ] Should support tiling
 * [ ] Should support visual mode
+* [ ] Should support different layout types 
+	* [ ] Single/Double page view, etc.
 
 ## Sprint.Annotations backlog: Should support annotations
 
