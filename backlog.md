@@ -39,3 +39,4 @@
 * [ ] Normal mode <c-[> clean up selection
 * [ ] View.Locate/Scale/Pos/Go should be factored out to its own class
 * [ ] Closing a pane is not working
+* [ ] Link hint escaping without choosing is not working

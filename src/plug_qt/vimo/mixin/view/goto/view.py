@@ -2,8 +2,8 @@ from PyQt6 import QtCore, QtWidgets
 
 from .base import Go
 
-
 class ViewGo(Go):
+
     def goTo(self, xrange=None, **kwargs):
         if xrange is None:
             self.goToLast()

@@ -2,7 +2,6 @@ from plug.utils import tag
 
 from .view import ViewGo
 
-
 class SceneGo(ViewGo):
 
     @tag("<c-h>(normal)[^]")
