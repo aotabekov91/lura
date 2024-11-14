@@ -58,7 +58,6 @@ class FitzAnnotate(Plug):
         kind=data.get("annotation_kind")
         color=data.get("annotation_color", None)
         self.setPage(model, data)
-        data=model.getLocator(data=data, kind='uniq')
         element=data.get('element')
         if element:
             element_data = element.data()

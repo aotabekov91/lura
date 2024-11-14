@@ -14,9 +14,9 @@ class ZXYPos:
     def setup(self):
         super().setup()
         self.m_position = None
-        self.viewIsToBeRedrawn.connect(self.savePosition)
+        # self.viewIsToBeRedrawn.connect(self.savePosition)
         self.viewIsRedrawn.connect(self.jumpToPosition)
-        self.positionChanged.connect(self.savePositionState)
+        # self.positionChanged.connect(self.savePositionState)
 
     def getPosition(self, data=None, kind=None):
         i = self.item(self.m_curr)
@@ -37,8 +37,8 @@ class ZXYPos:
         center=False,
         **kwargs,
     ):
-        position=self.getPositionLocator()
-        self.positionToBeJumped.emit(self, position)
+        # position=self.getPositionLocator()
+        # self.positionToBeJumped.emit(self, position)
         if not xrange:
             self.goToLast()
         if type(xrange) == list:
@@ -47,8 +47,8 @@ class ZXYPos:
             center=center,
             pos=(xrange, x, y),
         )
-        position=self.getPositionLocator()
-        self.positionJumped.emit(self, position)
+        # position=self.getPositionLocator()
+        # self.positionJumped.emit(self, position)
         self.positionChanged.emit()
 
     def jumpToPosition(
@@ -82,13 +82,13 @@ class ZXYPos:
             self.horizontalScrollBar().setValue(h)
 
     def getBarPosition(self, d, x, y):
-        i = self.item(d)
-        if i:
-            r = i.boundingRect()
-            p = r.translated(i.pos())
-            h = int(p.left() + x * p.width())
-            v = int(p.top() + y * p.height())
-            return h, v
+        item = self.item(d)
+        if item:
+            rect = item.boundingRect()
+            pos = rect.translated(item.pos())
+            height = int(pos.left() + x * pos.width())
+            width = int(pos.top() + y * pos.height())
+            return height, width
 
     def savePosition(self):
         self.m_position = self.getPosition()
@@ -121,9 +121,9 @@ class ZXYPos:
             y = float(t[2])
             return i, x, y
 
-    def savePositionState(self):
-        if self.checkProp("hasStates", self.m_model):
-            p = self.getLocator(kind="position")
-            p["state"] = "position"
-            p["value"] = p["position"]
-            self.m_model.addState(p)
+    # def savePositionState(self):
+    #     if self.checkProp("hasStates", self.m_model):
+    #         p = self.getLocator(kind="position")
+    #         p["state"] = "position"
+    #         p["value"] = p["position"]
+    #         self.m_model.addState(p)

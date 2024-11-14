@@ -14,7 +14,7 @@ from .element import FitzElement
 
 class FitzModel(
     plug.utils.Cache,
-    plug_qt.vimo.mixin.model.Locate,
+    # plug_qt.vimo.mixin.model.Locate,
     plug_qt.vimo.mixin.model.Elements,
     plug_qt.vimo.model.Model,
     QtCore.QObject,
@@ -40,17 +40,10 @@ class FitzModel(
         self.m_pixmap_thread.start()
         self.assignId(self.m_source)
 
-    def getUniqLocator(
-            self, 
-            data={}, 
-            kind=None, 
-            **kwargs):
-        functor = self.findLocator("getUniq", kind)
-        if functor:
-            return functor(data)
-        data["kind"] = self.kind
-        data["source_id"] = self.id()
-        return self.createLocator(data)
+    # def getUniqLocator(self, data={}):
+    #     data["kind"] = self.kind
+    #     data["source_id"] = self.id()
+    #     return data
 
     def assignId(self, source):
         if os.path.isfile(source):

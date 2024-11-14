@@ -1,16 +1,16 @@
 from PyQt6 import QtCore
 
-from plug import Element
 from plug_qt import vimo
+from plug import Element, hashdict
 
 class SelectionElement(Element, QtCore.QObject):
 
     def setup(self):
         super().setup()
-        self.m_data={}
+        self.m_data=hashdict()
 
     def clear(self):
-        self.m_data={}
+        self.m_data=hashdict()
 
     def data(self):
         return self.m_data
@@ -52,6 +52,10 @@ class SelectionModel(vimo.Model, QtCore.QObject):
         selector=self.m_agent.getAgent(view=view)
         for key, value in kwargs.items():
             self.m_selection.setValue(key, value)
+        model=view.model()
+        if model:
+            self.m_selection.setValue('kind', model.kind)
+            self.m_selection.setValue('source_id', model.id())
         selector.select(view, self.m_selection)
 
     def clearSelection(self, **kwargs):
