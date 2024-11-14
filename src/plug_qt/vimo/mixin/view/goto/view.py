@@ -1,7 +1,5 @@
 from PyQt6 import QtCore, QtWidgets
 
-from plug.utils import tag
-
 from .base import Go
 
 

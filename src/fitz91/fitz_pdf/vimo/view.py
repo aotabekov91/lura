@@ -7,8 +7,7 @@ from .utils import Viewport
 
 class FitzView(
     plug_qt.vimo.mixin.view.Scene,
-    # plug_qt.vimo.mixin.view.Locate,  #todo: should be factored out
-    # plug_qt.vimo.mixin.view.ZXYPos,  #todo: should be factored out
+    plug_qt.vimo.mixin.view.ZXYPos,  #todo_current: should be factored out
     plug_qt.vimo.mixin.view.SceneGo, #todo: should be factored out
     plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,

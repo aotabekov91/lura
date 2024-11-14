@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from plug.utils import tag
+from plug import tag
 
 
 class Go:
