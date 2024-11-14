@@ -4,7 +4,7 @@ from plug import Plug, tag
 
 class Go(Plug, QtCore.QObject):
 
-    positionChanged = QtCore.pyqtSignal()
+    positionChanged = QtCore.pyqtSignal(object, object)
 
     def setup(self):
         super().setup()
@@ -24,6 +24,8 @@ class Go(Plug, QtCore.QObject):
         agent=self.getAgent(view=view)
         if agent:
             agent.activate(view=view, **kwargs)
+            data=agent.currentPosition(view=view)
+            self.positionChanged.emit(view, data)
 
     @tag("G(normal)")
     def go(self, xrange=None, **kwargs):
@@ -36,11 +38,11 @@ class Go(Plug, QtCore.QObject):
     def goFirst(self):
         self.goTo(kind="goToFirst")
 
-    @tag("k(normal)")
+    @tag("k/<c-<space>>(normal)")
     def goUp(self, xrange=[1], **kwargs):
         self.goTo(kind="goToUp", xrange=xrange)
 
-    @tag("j(normal)")
+    @tag("j/<space>(normal)")
     def goDown(self, xrange=[1], **kwargs):
         self.goTo(kind="goToDown", xrange=xrange)
 
