@@ -18,12 +18,12 @@ class Go(Plug, QtCore.QObject):
             name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    def goTo(self, view=None, **kwargs):
+    def goTo(self, view=None, kind='goTo', **kwargs):
         if not view:
             view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            agent.activate(view=view, **kwargs)
+            agent.activate(view=view, kind=kind, **kwargs)
             data=agent.currentPosition(view=view)
             self.positionChanged.emit(view, data)
 
