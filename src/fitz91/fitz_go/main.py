@@ -21,20 +21,6 @@ class FitzGo(Plug):
         if func:
             func(**kwargs)
 
-    def currentPosition(self, view):
-        data={}
-        idx=view.currentIndex()
-        item = view.item(idx)
-        if item:
-            pos=item.pos()
-            rect = item.boundingRect().translated(pos)
-            top_left = view.viewport().rect().topLeft()
-            top_left = view.mapToScene(top_left)
-            data['x'] = (top_left.x() - rect.x()) / rect.width()
-            data['y'] = (top_left.y() - rect.y()) / rect.height()
-            data['idx']=idx
-        return data
-
     def goToBlockleft(self, *args, **kwargs):
         self.moveScreen("left", *args, **kwargs)
 
@@ -153,4 +139,17 @@ class FitzGo(Plug):
                 view.horizontalScrollBar().setValue(hor)
                 view.viewport().update()
                 view.setVisibleItem()
-                # self.positionChanged.emit()
+
+    def currentPosition(self, view):
+        data={}
+        idx=view.currentIndex()
+        item = view.item(idx)
+        if item:
+            pos=item.pos()
+            rect = item.boundingRect().translated(pos)
+            top_left = view.viewport().rect().topLeft()
+            top_left = view.mapToScene(top_left)
+            data['x'] = (top_left.x() - rect.x()) / rect.width()
+            data['y'] = (top_left.y() - rect.y()) / rect.height()
+            data['xrange']=[idx]
+        return data

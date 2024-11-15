@@ -7,7 +7,7 @@ from .utils import Viewport
 
 class FitzView(
     plug_qt.vimo.mixin.view.Scene,
-    plug_qt.vimo.mixin.view.ZXYPos,  #todo_current: should be factored out
+    # plug_qt.vimo.mixin.view.ZXYPos,  #todo_current: should be factored out
     # plug_qt.vimo.mixin.view.SceneGo, #todo: should be factored out
     plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,
@@ -81,6 +81,9 @@ class FitzView(
         item.painted.connect(self.itemPainted)
         return item
 
+    def currentIndex(self):
+        return self.m_curr
+
     def setCurrentIndex(self, idx):
         if self.m_curr != idx:
             c, p = idx, self.m_curr
@@ -92,8 +95,8 @@ class FitzView(
             i.refresh(dropCache=True)
 
     def updateCurrent(self, refresh=False):
-        i = self.currentItem()
-        i.refresh(dropCache=refresh)
+        item = self.currentItem()
+        item.refresh(dropCache=refresh)
 
     def updateVisibile(self, refresh=False):
         for i in self.m_items.values():
@@ -136,8 +139,6 @@ class FitzView(
     def currentItem(self):
         return self.item(self.m_curr)
 
-    def currentIndex(self):
-        return self.m_curr
 
     def addItemsNear(self, rect):
         for idx, i in self.m_items.items():

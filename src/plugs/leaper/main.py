@@ -18,15 +18,44 @@ class Leaper(Plug):
     def setup(self):
         super().setup()
         self.m_leaps={}
-        self.m_leapers={}
+        self.m_agents={}
+        self.app.buffman.viewCreated.connect(
+                self.saveView)
 
-    def addLeaper(self, name, leaper):
-        self.m_leapers[name]=leaper
+    def addAgent(self, name, leaper):
+        self.m_agents[name]=leaper
 
-    def leaper(self, name):
-        return self.m_leapers.get(name, None)
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
+        return self.m_agents.get(name, None)
 
-    def node(self, view):
+    def saveView(self, view):
+        agent=self.getAgent(view=view)
+        if agent:
+            node=self.createNode()
+            self.saveNode(view, node)
+            self.connectView(view)
+
+    def connectView(self, view, kind="connect"):
+        go=self.app.plugman.plugs.get('Go')
+        goer=go.getAgent(view=view)
+        if goer and kind == "connect":
+            go.positionChanged.connect(
+                    self.setNode)
+        elif goer and kind == "disconnect":
+            go.positionChanged.disconnect(
+                    self.setNode)
+
+    def setNode(self, view, data):
+        node=self.getNode(view)
+        if node.data!=data:
+            current=self.createNode(
+                    precedent=node, data=data)
+            node.ascendent = current 
+            self.saveNode(view, current)
+
+    def getNode(self, view):
         return self.m_leaps.get(view)
 
     def saveNode(self, view, node):
@@ -38,25 +67,31 @@ class Leaper(Plug):
     @tag('i(normal)')
     def next(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        leaper=self.leaper(name)
+        leaper=self.getAgent(view=view)
         if leaper:
-            node=self.node(view)
+            node=self.getNode(view)
+            self.connectView(view, kind='disconnect')
             leaper.go(
                     view=view,
                     node=node,
                     kind='next',
-                    xrange=xrange)
+                    leaper=self,
+                    xrange=xrange,
+                    )
+            self.connectView(view)
 
     @tag('o(normal)')
     def prev(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        leaper=self.leaper(name)
+        leaper=self.getAgent(view=view)
         if leaper:
-            node=self.node(view)
+            node=self.getNode(view)
+            self.connectView(view, kind='disconnect')
             leaper.go(
                     view=view,
                     node=node,
                     kind='prev',
-                    xrange=xrange)
+                    leaper=self,
+                    xrange=xrange,
+                    )
+            self.connectView(view)
