@@ -24,6 +24,8 @@ class Buffman(
     viewerAdded = QtCore.pyqtSignal(object)
     modelLoaded = QtCore.pyqtSignal(object)
     modellerAdded = QtCore.pyqtSignal(object)
+    viewIsDrawn=QtCore.pyqtSignal(object)
+    viewIsToBeDrawn=QtCore.pyqtSignal(object)
 
     def setup(self) -> None:
         super().setup()

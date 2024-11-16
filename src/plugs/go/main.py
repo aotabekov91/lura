@@ -27,6 +27,12 @@ class Go(Plug, QtCore.QObject):
             data=agent.currentPosition(view=view)
             self.positionChanged.emit(view, data)
 
+    def currentPosition(self, view):
+        agent=self.getAgent(view=view)
+        if agent:
+            return agent.currentPosition(view=view)
+        return {}
+
     @tag("G(normal)")
     def go(self, xrange=None, **kwargs):
         kind='goTo'

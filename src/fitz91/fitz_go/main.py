@@ -15,6 +15,7 @@ class FitzGo(Plug):
         goer=self.app.plugman.plugs.get('Go')
         if goer:
             goer.addAgent('FitzView', self)
+            self.app.buffman.viewIsDrawn.connect(self.restorePosition)
 
     def activate(self, kind=None, **kwargs):
         func = getattr(self, kind, None)
@@ -153,3 +154,8 @@ class FitzGo(Plug):
             data['y'] = (top_left.y() - rect.y()) / rect.height()
             data['xrange']=[idx]
         return data
+
+    def restorePosition(self, view):
+        position=self.currentPosition(view)
+        view.setVisibleItem()
+        self.goTo(view=view, **position)

@@ -22,36 +22,38 @@ class Zoom(Plug, QtCore.QObject):
         return self.m_agents.get(name, None)
 
     @tag("zi(normal)")
-    def zoomIn(self, xrange=[1,]):
-        self.setZoom(kind="in", xrange=xrange)
+    def zoomIn(self, xrange=[1,], **kwargs):
+        self.zoomTo(kind="in", xrange=xrange, **kwargs)
 
     @tag("zo(normal)")
-    def zoomOut(self, xrange=[1,]):
-        self.setZoom(kind="out", xrange=xrange)
+    def zoomOut(self, xrange=[1,], **kwargs):
+        self.zoomTo(kind="out", xrange=xrange, **kwargs)
 
     @tag("zw(normal)")
-    def zoomToWidth(self):
-        self.setZoom(kind="width")
+    def zoomToWidth(self, **kwargs):
+        self.zoomTo(kind="width", **kwargs)
 
     @tag("za(normal)")
-    def zoomToAdjust(self):
-        self.setZoom(kind="adjust")
+    def zoomToAdjust(self, **kwargs):
+        self.zoomTo(kind="adjust", **kwargs)
 
     @tag("zh(normal)")
-    def zoomToHeight(self):
-        self.setZoom(kind="height")
+    def zoomToHeight(self, **kwargs):
+        self.zoomTo(kind="height", **kwargs)
 
     def data(self, view):
         if not view in self.m_data:
             self.m_data[view]={
-                    'zoom_round': self.zoom_round,
-                    'zoom_factor': self.zoom_factor,
+                    'round': self.zoom_round,
+                    'factor': self.zoom_factor,
                     }
         return self.m_data.get(view)
 
-    def setZoom(self, kind, xrange=[1,]):
-        view=self.app.stateman.view()
+    def zoomTo(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
         zoomer=self.getAgent(view=view)
         if zoomer:
             data=self.data(view)
-            zoomer.activate(view, kind, xrange, data)
+            zoomer.activate(view=view, data=data, **kwargs)
+            self.zoomChanged.emit(view, data)

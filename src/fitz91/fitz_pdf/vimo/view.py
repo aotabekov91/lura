@@ -65,9 +65,11 @@ class FitzView(
 
     def redraw(self):
         self.viewIsToBeRedrawn.emit()
+        self.app.buffman.viewIsToBeDrawn.emit(self)
         self.updateLayout()
         self.viewport().update()
         super().redraw()
+        self.app.buffman.viewIsDrawn.emit(self)
 
     def createItem(self, idx, element):
         item=self.item_class(
