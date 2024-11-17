@@ -11,19 +11,22 @@
 
 * [ ] Outline
 	* [ ] Two-way syncing
-* [x] Support saving states :current:
-	* [x] Save last opened page
-	* [x] Save last view/window layout
+* [ ] FilesTree
+	* [ ] self.view.activate :bug: view dock resize
 * [o] Separate all view mixins [fitz] into a its own class 
-* [x] Annotation hinting 
-* [x] Separate selection into a its own class
-* [x] Adjust bookmarks/quickmarks to the annotation model version
 * [.] Engineer Sqlite annotation database
 	* [x] As simple as possible with extensions in mind
 	* [ ] Metadata field parsing format :next:
-* [.] Support different types of annotation
+* [ ] Support different types of annotation
 	* [ ] Text annotation with an overlay text editor
+* [ ] Factor layout from fitzView[Scene]
 * [ ] Finish picky
+* [x] Annotation hinting 
+* [x] Separate selection into a its own class
+* [x] Adjust bookmarks/quickmarks to the annotation model version
+* [x] Support saving states
+	* [x] Save last opened page
+	* [x] Save last view/window layout
 
 ## Sprint.VisualMode backlog: Should support visual mode
 

@@ -6,8 +6,7 @@ from .item import FitzItem
 from .utils import Viewport
 
 class FitzView(
-    plug_qt.vimo.mixin.view.Scene,
-    # plug_qt.vimo.mixin.view.ZXYPos,  #todo_current: should be factored out
+    plug_qt.vimo.mixin.view.Scene, #todo factor layout out
     plug_qt.vimo.view.View,
     QtWidgets.QGraphicsView,
 ):
