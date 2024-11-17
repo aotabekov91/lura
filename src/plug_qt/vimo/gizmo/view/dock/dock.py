@@ -4,7 +4,6 @@ from plug_qt.vimo import View
 
 from ..tab import TabView
 
-
 class DockView(
         View, 
         QtWidgets.QDockWidget
@@ -19,7 +18,6 @@ class DockView(
         **kwargs,
     ):
         self.loc = loc
-        # self.fullscreen = None
         self.min_w = min_width
         self.min_h = min_height
         self.zfactor = zoom_factor
@@ -35,15 +33,16 @@ class DockView(
         return self.tab.previous
 
     def createTab(self):
-        t = TabView(
+        tab = TabView(
             parent=self,
             app=self.app,
             manager=self,
             identifier="T",
         )
-        self.setWidget(t)
-        self.tab = t
-        t.show()
+        tab.hasTabs=False
+        self.setWidget(tab)
+        self.tab = tab
+        tab.show()
 
     def removeView(self, view, **kwargs):
         self.hide()
@@ -54,31 +53,17 @@ class DockView(
         self.tab.addView(view)
         view.setManager(self)
 
-    def betView(
-            self, 
-            *args,
-            view=None,
-            **kwargs):
+    def betView(self, *args, view=None, **kwargs):
         self.hide()
         self.octivate()
 
-    def setView(
-            self, 
-            *args,
-            view=None, 
-            **kwargs
-            )->None:
+    def setView(self, *args, view=None, **kwargs)->None:
         self.activate()
         self.tab.setView(*args, view=view, **kwargs)
-        view.resize(self.tab.sizeHint())
+        view.resize(self.sizeHint())
 
-    def insertView(
-            self, 
-            idx=-1,
-            view=None, 
-            **kwargs):
-        self.tab.insertView(
-                idx, view, **kwargs)
+    def insertView(self, idx=-1, view=None, **kwargs):
+        self.tab.insertView(idx, view, **kwargs)
 
     def scale(self, kind, xrange=[1]):
         if self.current:

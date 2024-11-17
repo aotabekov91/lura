@@ -250,12 +250,7 @@ class View:
         if m:
             m.betView(self, *args, **kwargs)
 
-    def activate(
-            self, 
-            *args, 
-            recursive=False,
-            **kwargs
-            ):
+    def activate(self, *args, recursive=False, **kwargs):
         self.activated = True
         manager = self.manager()
         if manager:

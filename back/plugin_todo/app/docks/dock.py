@@ -16,7 +16,6 @@ class Dock(QDockWidget):
         self.createTab()
 
     def setUI(self):
-
         self.style_sheet = '''
             QWidget{
                 color: white;
@@ -27,9 +26,7 @@ class Dock(QDockWidget):
                 }
                 '''
         self.setStyleSheet(self.style_sheet)
-
         self.setContentsMargins(0, 0, 0, 0)
-
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
 

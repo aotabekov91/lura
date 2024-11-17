@@ -66,8 +66,6 @@ class FilesTree(Plug):
                 self.app.buffman.open(source=path)
             if not focus:
                 self.view.activate()
-                #todo :current:
-                # bug self.view.activate -> dock partial view shown
 
     @tag('O(normal)[FilesView]')
     def openAndFocus(self, *args, **kwargs):

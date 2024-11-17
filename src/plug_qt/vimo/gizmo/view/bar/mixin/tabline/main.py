@@ -9,8 +9,10 @@ class Tabline:
     def setupUI(self):
         super().setupUI()
         self.setupTabline()
-        self.app.appIsLaunched.connect(self.connectTabline)
-        self.app.appIsLaunched.connect(self.updateTabline)
+        self.app.appIsLaunched.connect(
+                self.connectTabline)
+        self.app.appIsLaunched.connect(
+                self.updateTabline)
 
     def updateTabline(self):
         self.updateTabLabels()
@@ -88,6 +90,8 @@ class Tabline:
             tab = getattr(view, "m_tabber", None)
         self.current = tab
         if not tab:
+            return
+        if not tab.hasTabs:
             return
         ll = self.tabline.tabs.layout()
         self.clearLayout(ll)

@@ -12,7 +12,7 @@
 * [ ] Outline
 	* [ ] Two-way syncing
 * [ ] FilesTree
-	* [ ] self.view.activate :bug: view dock resize
+	* [x] self.view.activate :bug: view dock resize
 * [o] Separate all view mixins [fitz] into a its own class 
 * [.] Engineer Sqlite annotation database
 	* [x] As simple as possible with extensions in mind
@@ -40,7 +40,7 @@
 
 ## Bugs
 
-* [x] view.select :bug:
+* [ ] view/tab/base tags are not working
 * [ ] Search index is not changing when jumping to the first/end
 * [ ] Visual word exiting without choosing a hint
 * [ ] Some pages do not act on widewise fit zw
@@ -49,3 +49,4 @@
 * [ ] View.Locate/Scale/Pos/Go should be factored out to its own class
 * [ ] Closing a pane is not working
 * [ ] Link hint escaping without choosing is not working
+* [x] view.select :bug:

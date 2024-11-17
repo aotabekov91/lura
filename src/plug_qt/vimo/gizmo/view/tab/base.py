@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
+from plug import tag
 from plug_qt import vimo, widget
-from plug.utils import tag
 
 
 class TabView(
@@ -33,7 +33,7 @@ class TabView(
             pos = pos.replace("-1", str(i), 1)
         return super().child(pos, recursive)
 
-    @tag("n(normal)")
+    @tag("n(normal)[^]")
     def addAndGoToNewTab(self, focus=False, **kwargs):
         return self.addNewTab(focus=True, **kwargs)
 
@@ -83,8 +83,9 @@ class TabView(
     def tabMoveToRight(self):
         self.tabMoveTo(kind="next")
 
-    @tag("~gt(normal)")
+    @tag("gt(normal)[^]")
     def tabGoTo(self, xrange=[], kind=None):
+        raise
         idx = self.currentIndex()
         if kind == "prev":
             xrange[-1] = max(0, idx - 1)

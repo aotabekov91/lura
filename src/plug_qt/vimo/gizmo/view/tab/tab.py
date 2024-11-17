@@ -1,7 +1,7 @@
 from PyQt6 import QtCore
 
+from plug import tag
 from plug_qt import vimo, widget
-from plug.utils import tag
 
 
 class TabView(
@@ -20,16 +20,17 @@ class TabView(
 
     def child(self, pos, recursive=True):
         if pos.startswith("x") and self.current:
-            i = self.current.posIndex()
-            pos = pos.replace("x", str(i), 1)
+            idx = self.current.posIndex()
+            pos = pos.replace("x", str(idx), 1)
         elif pos.startswith("-1"):
-            i = self.count() - 1
-            pos = pos.replace("-1", str(i), 1)
+            idx = self.count() - 1
+            pos = pos.replace("-1", str(idx), 1)
         return super().child(pos, recursive)
 
     @tag("t(normal)[^]")
-    def addAndGoToNewTab(self, focus=False, **kwargs):
-        return self.addNewTab(focus=True, **kwargs)
+    def addAndGoToNewTab(self, **kwargs):
+        kwargs['focus']=True
+        return self.addNewTab(**kwargs)
 
     @tag("T(normal)[^]")
     def addNewTab(self, focus=False, **kwargs):
