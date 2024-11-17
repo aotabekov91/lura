@@ -13,6 +13,7 @@ class Zoom(Plug, QtCore.QObject):
         self.m_data={}
         self.m_agents={}
 
+
     def addAgent(self, name, agent):
         self.m_agents[name]=agent
 
@@ -41,19 +42,29 @@ class Zoom(Plug, QtCore.QObject):
     def zoomToHeight(self, **kwargs):
         self.zoomTo(kind="height", **kwargs)
 
-    def data(self, view):
+    def currentZoom(self, view):
         if not view in self.m_data:
             self.m_data[view]={
                     'round': self.zoom_round,
                     'factor': self.zoom_factor,
                     }
+            zoomer=self.getAgent(view=view)
+            if zoomer:
+                view.resized.connect(self.updateZoom)
         return self.m_data.get(view)
+
+    def updateZoom(self, view):
+        zoom=self.currentZoom(view)
+        mode=zoom.get('mode')
+        if mode in ['width', 'height']:
+            zoom['kind']=mode
+            self.zoomTo(view=view, **zoom)
 
     def zoomTo(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
         zoomer=self.getAgent(view=view)
         if zoomer:
-            data=self.data(view)
+            data=self.currentZoom(view)
             zoomer.activate(view=view, data=data, **kwargs)
             self.zoomChanged.emit(view, data)
