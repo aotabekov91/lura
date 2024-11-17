@@ -8,6 +8,11 @@ class OutlineView(
 
     position = {"OutlineView": "D|L"}
 
+
+    #     self.app.main.display.viewChanged.connect(self.on_viewChanged)
+    #     self.app.main.display.itemChanged.connect(self.on_viewItemChanged)
+
+
     # def __init__(self, app): 
     #     super().__init__(app, position='left', mode_keys={'command':'o'})
 
@@ -40,22 +45,6 @@ class OutlineView(
     #         page=pageItem.page().pageNumber()
     #         found=self.find(page, self.outline)
     #         if found: self.ui.main.tree.setCurrentIndex(found)
-
-    # def open(self, how='reset', focus=True):
-
-    #     self.app.main.display.viewChanged.disconnect(self.on_viewChanged)
-    #     self.app.main.display.itemChanged.disconnect(self.on_viewItemChanged)
-
-    #     index=self.ui.main.tree.currentIndex()
-    #     if index:
-    #         page=index.data(Qt.UserRole+1)
-    #         left=index.data(Qt.UserRole+2)
-    #         top=index.data(Qt.UserRole+3)
-    #         self.app.main.display.currentView().goto(page, left, top)
-    #         super().open(how, focus)
-
-    #     self.app.main.display.viewChanged.connect(self.on_viewChanged)
-    #     self.app.main.display.itemChanged.connect(self.on_viewItemChanged)
 
     # def setData(self):
 

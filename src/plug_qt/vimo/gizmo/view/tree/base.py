@@ -10,5 +10,4 @@ class TreeView(
             self.m_model
             super().setModel(model)
             super(widget.TreeViewWidget, self).setModel(
-                model
-            )
+                model)

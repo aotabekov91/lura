@@ -56,7 +56,11 @@ class FitzOutline(Plug):
         destination=outline.destination(data)
         if destination!= fitz.LINK_NONE:
             page = destination.page + 1
-            item.setData(page)  # , QtCore.Qt.UserRole + 1)
+            top_right=destination.lt.abs_unit
+            x=top_right.x
+            y=top_right.y
+            data={'xrange': [page], 'x': x, 'y': y}
+            item.setData(data)
             clone_item = item.clone()
             clone_item.setText(str(page))
             clone_item.setTextAlignment(

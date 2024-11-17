@@ -9,9 +9,11 @@
 
 ## Sprint.Annotations backlog: Should support annotations
 
-* [ ] Support saving states :current:
-	* [ ] Save last opened page
-	* [ ] Save last view/window layout
+* [ ] Outline
+	* [ ] Two-way syncing
+* [x] Support saving states :current:
+	* [x] Save last opened page
+	* [x] Save last view/window layout
 * [o] Separate all view mixins [fitz] into a its own class 
 * [x] Annotation hinting 
 * [x] Separate selection into a its own class
