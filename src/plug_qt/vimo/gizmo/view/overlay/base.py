@@ -3,7 +3,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from plug_qt import vimo
 
 class OverlayView(
-        vimo.View, QtWidgets.QWidget):
+        vimo.View, 
+        QtWidgets.QWidget
+        ):
 
     def __init__(
         self,

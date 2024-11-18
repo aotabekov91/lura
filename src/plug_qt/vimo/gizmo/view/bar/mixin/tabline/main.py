@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtWidgets
 
-from plug.utils import tag
+from plug import tag
 
 from .widget import TablineWidget
 

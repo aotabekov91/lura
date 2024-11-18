@@ -9,6 +9,8 @@
 
 ## Sprint.Annotations backlog: Should support annotations
 
+* [ ] Overlaying
+	* [ ] Factoring overlay out from app view
 * [ ] Outline
 	* [ ] Two-way syncing
 * [ ] FilesTree
@@ -49,4 +51,5 @@
 * [ ] View.Locate/Scale/Pos/Go should be factored out to its own class
 * [ ] Closing a pane is not working
 * [ ] Link hint escaping without choosing is not working
+* [ ] Outline syncing with index changes
 * [x] view.select :bug:

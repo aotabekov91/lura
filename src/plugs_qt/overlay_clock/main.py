@@ -12,7 +12,7 @@ class OverlayClock(Plug):
             manager=self.app.view.overlay,
             objectName="OverlayClock")
 
-    @tag(["<c-a>t(normal)", "<c-[>/<escape>(normal)[Clock]"])
+    @tag(["<c-c>t(normal)", "<c-[>/<escape>(normal)[Clock]"])
     def toggle(self):
         self.clock.updatePosition()
         self.clock.toggle()
