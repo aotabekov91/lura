@@ -243,12 +243,12 @@ class View:
             self.activate(*args, **kwargs)
 
     def octivate(self, *args, **kwargs):
-        m = self.manager()
+        manager = self.manager()
         self.activated = False
         if self.app:
             self.app.stateman.betView(self)
-        if m:
-            m.betView(self, *args, **kwargs)
+        if manager:
+            manager.betView(self, *args, **kwargs)
 
     def activate(self, *args, recursive=False, **kwargs):
         self.activated = True

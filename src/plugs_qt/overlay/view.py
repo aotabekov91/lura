@@ -10,29 +10,35 @@ class OverlayView(
     def __init__(
         self,
         *args,
+        view=None,
         objectName="Overlay",
         **kwargs,
     ):
-        self.views = {}
         self.dark = True
         self.blur = False
         self.current = None
         self.previous = None
         self.activated = True
-        super().__init__(
-            *args, objectname=objectName, **kwargs
-        )
+        self.views={}
+        self.m_view = view 
+        super().__init__(*args, objectname=objectName, **kwargs)
         self.setPalette(
-            QtGui.QPalette(
-                QtCore.Qt.GlobalColor.transparent
-            )
-        )
+            QtGui.QPalette(QtCore.Qt.GlobalColor.transparent))
         self.setAttribute(
-            QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents
-        )
+            QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.resized.connect(self.updateOverlayPosition)
         self.setupUI()
         self.hide()
+
+    def setup(self):
+        super().setup()
+        if self.m_view:
+            self.setParent(self.m_view)
+            self.m_view.resized.connect(
+                    self.updateOverlaySize)
+
+    def updateOverlaySize(self, view):
+        self.resize(view.size())
 
     def setupUI(self):
         self.m_blur = self.blur
@@ -90,12 +96,12 @@ class OverlayView(
         active_views=[],
         **kwargs,
     ):
-        for i in self.views.values():
-            if i in active_views:
+        for v in self.views.values():
+            if v in active_views:
                 continue
-            if i == view:
+            if v == view:
                 continue
-            i.hide()
+            v.hide()
         self.m_blur = blur
         self.m_dark = dark
         c, p = view, self.current
@@ -109,11 +115,6 @@ class OverlayView(
         self.resized.disconnect(
                 self.updateOverlayPosition)
         geometry = self.geometry()
-        if self.checkProp("bar", self.app.view):
-            bsize = self.app.view.bar.size()
-            bheight = bsize.height()
-            h = geometry.height() - bheight
-            geometry.setHeight(h)
         self.setGeometry(geometry)
         self.resized.connect(self.updateOverlayPosition)
 

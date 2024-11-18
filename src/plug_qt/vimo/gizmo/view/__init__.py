@@ -3,7 +3,6 @@ from .dock import *
 from .element import ElementView
 from .input import *
 from .list import *
-from .overlay import *
 from .tab import TabView
 from .tile import *
 from .tool import ToolView

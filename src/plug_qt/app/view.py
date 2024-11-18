@@ -50,19 +50,17 @@ class View(
             manager=self,
             identifier="S",
             name='Statusbar')
-        self.overlay: view.OverlayView = view.OverlayView(
-            label="O",
-            parent=self,
-            app=self.app,
-            manager=self,
-            name='Overlay',
-            identifier="O")
+        # self.overlay: view.OverlayView = view.OverlayView(
+        #     label="O",
+        #     parent=self,
+        #     app=self.app,
+        #     manager=self,
+        #     name='Overlay',
+        #     identifier="O")
         self.setContentsMargins(0, 0, 0, 0)
         self.main.setContentsMargins(0, 0, 0, 0)
         self.setCentralWidget(self.main)
         self.setStatusBar(self.bar)
-        self.main.resized.connect(
-                self.updateOverlaySize)
         self.main.resized.connect(
                 self.resized)
 
@@ -70,7 +68,6 @@ class View(
         self.app.buffman.addView(self.bar)
         self.app.buffman.addView(self.main)
         self.app.buffman.addView(self.docks)
-        self.app.buffman.addView(self.overlay)
         current = self.main.current
         if current:
             self.app.buffman.addView(current)
@@ -80,6 +77,3 @@ class View(
 
     def setView(self, *args, **kwargs):
         self.main.setView(*args, **kwargs)
-
-    def updateOverlaySize(self, _):
-        self.overlay.resize(self.size())
