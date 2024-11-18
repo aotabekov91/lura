@@ -21,6 +21,8 @@
 	* [ ] Metadata field parsing format :next:
 * [ ] Support different types of annotation
 	* [ ] Text annotation with an overlay text editor
+* [ ] Docks view css
+	* [ ] Bookmark/quickmark/etc css 
 * [ ] Factor layout from fitzView[Scene]
 * [ ] Finish picky
 * [x] Annotation hinting 
