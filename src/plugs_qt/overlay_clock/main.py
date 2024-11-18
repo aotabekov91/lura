@@ -1,31 +1,30 @@
 from plug import tag, Plug
 
-from .view import Clock
+from .view import ClockView
+from .overlay import ClockOverlay
 
 class OverlayClock(Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.setupView()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.setupView)
+        self.setupView()
 
     def setupView(self):
-        overlayer=self.app.plugman.plugs.get('Overlay')
-        if overlayer:
-            app_overlay=overlayer.getOverlay(
-                    view=self.app.view)
-            self.clock = Clock(
+        overlay=ClockOverlay(
                 app=self.app,
-                parent=app_overlay,
-                manager=app_overlay,
-                objectName="OverlayClock")
+                view=self.app.view,
+                )
+        self.clock = ClockView(
+            app=self.app,
+            parent=overlay,
+            manager=overlay,
+            )
 
-    @tag(["<c-c>t(normal)", "<c-[>/<escape>(normal)[Clock]"])
+    @tag(["<c-c>t(normal)", "<c-[>/<escape>(normal)[ClockView]"])
     def toggle(self):
         self.clock.updatePosition()
         self.clock.toggle()
-        view=self.app.stateman.subview()
-        view.activate()
+
+        # view=self.app.stateman.subview()
+        # view.activate()
+        print(self.app.stateman.view())

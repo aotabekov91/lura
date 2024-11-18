@@ -14,12 +14,12 @@ class OverlayView(
         objectName="Overlay",
         **kwargs,
     ):
+        self.views={}
         self.dark = True
         self.blur = False
         self.current = None
         self.previous = None
         self.activated = True
-        self.views={}
         self.m_view = view 
         super().__init__(*args, objectname=objectName, **kwargs)
         self.setPalette(
@@ -56,14 +56,14 @@ class OverlayView(
 
     def paintEvent(self, event):
         if self.m_blur or self.m_dark:
-            qp = QtGui.QPainter()
-            qp.begin(self)
+            painter = QtGui.QPainter()
+            painter.begin(self)
             if self.m_blur:
-                qp.setBrush(self.blur_color)
+                painter.setBrush(self.blur_color)
             else:
-                qp.setBrush(self.dark_color)
-            qp.drawRect(self.rect())
-            qp.end()
+                painter.setBrush(self.dark_color)
+            painter.drawRect(self.rect())
+            painter.end()
         else:
             super().paintEvent(event)
 
@@ -116,7 +116,8 @@ class OverlayView(
                 self.updateOverlayPosition)
         geometry = self.geometry()
         self.setGeometry(geometry)
-        self.resized.connect(self.updateOverlayPosition)
+        self.resized.connect(
+                self.updateOverlayPosition)
 
     def activate(self, *args, **kwargs):
         pass

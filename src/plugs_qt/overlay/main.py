@@ -14,6 +14,9 @@ class Overlay(Plug):
             self.m_overlays[view]=overlay
         return self.m_overlays.get(view)
 
+    def setOverlay(self, name, overlay):
+        self.m_overlays[name]=overlay
+
     def createOverlay(self, *args, **kwargs):
         return OverlayView(
                 *args, app=self.app, **kwargs)
