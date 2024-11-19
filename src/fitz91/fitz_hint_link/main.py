@@ -21,7 +21,7 @@ class FitzLinkHint(Plug):
                     self.addHinter)
 
     def addHinter(self):
-        link_hinter=self.app.plugman.plugs.get(
+        link_hinter=self.app.plugman.getPlug(
                 'LinkHint')
         if link_hinter:
             link_hinter.addHinter('FitzView', self)
@@ -50,10 +50,10 @@ class FitzLinkHint(Plug):
         elif self.m_hint in hints:
             link=hints.get(self.m_hint)
             self.go(link, model, view)
-            link_hinter=self.app.plugman.plugs.get(
+            link_hinter=self.app.plugman.getPlug(
                     'LinkHint')
             link_hinter.toggleHint()
-            hinter=self.app.plugman.plugs.get(
+            hinter=self.app.plugman.getPlug(
                     'Hint')
             hinter.toggleHint()
         view.redraw()
@@ -84,7 +84,7 @@ class FitzLinkHint(Plug):
         alist = []
         for element_links in links.values():
             alist+=element_links
-        hinter=self.app.plugman.plugs.get(
+        hinter=self.app.plugman.getPlug(
                 'Hint')
         length, hints=hinter.generateHints(alist)
         self.cacheHints(hints, length, model)

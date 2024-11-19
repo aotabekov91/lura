@@ -11,7 +11,7 @@ class FitzQuickmark(Plug):
                     self.addToQuickmarker)
 
     def addToQuickmarker(self):
-        quickmarker=self.app.plugman.plugs.get(
+        quickmarker=self.app.plugman.getPlug(
                 'Quickmark')
         if quickmarker:
             quickmarker.addQuickmarker(

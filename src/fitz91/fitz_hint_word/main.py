@@ -16,8 +16,7 @@ class FitzWordHint(Plug):
                     self.addHinter)
 
     def addHinter(self):
-        hinter=self.app.plugman.plugs.get(
-                'WordHint', None)
+        hinter=self.app.plugman.getPlug('WordHint')
         if hinter:
             hinter.addHinter('FitzView', self)
 
@@ -105,10 +104,9 @@ class FitzWordHint(Plug):
         hints=self.m_hints
         if self.m_hint in hints:
             data=hints.get(self.m_hint)
-            selector=self.app.plugman.plugs.get('Selection')
+            selector=self.app.plugman.getPlug('Selection')
             selector.select(view, **data)
-            word_hinter=self.app.plugman.plugs.get(
-                    'WordHint')
+            word_hinter=self.app.plugman.getPlug('WordHint')
             word_hinter.toggleHint()
             view.redraw()
             return True

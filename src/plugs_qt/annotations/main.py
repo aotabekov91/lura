@@ -18,7 +18,7 @@ class Annotations(Plug):
                     self.setupView)
 
     def setupView(self):
-        self.m_annotate=self.app.plugman.plugs.get(
+        self.m_annotate=self.app.plugman.getPlug(
                 'Annotate')
         if self.m_annotate:
             self.view=self.app.buffman.createView(
@@ -68,8 +68,8 @@ class Annotations(Plug):
             element=item.element()
             view=self.app.stateman.subview()
             model=view.model()
-            annotator=self.app.plugman.plugs.get('Annotate')
-            selector=self.app.plugman.plugs.get('Selection')
+            annotator=self.app.plugman.getPlug('Annotate')
+            selector=self.app.plugman.getPlug('Selection')
             annotation_model=annotator.getModel(model)
             annotation_model.delAnnotate(element)
             if selector:

@@ -12,7 +12,7 @@ class FitzFullscreen(Plug):
                     self.addToFullscreener)
 
     def addToFullscreener(self):
-        fullscreener=self.app.plugman.plugs.get(
+        fullscreener=self.app.plugman.getPlug(
                 'Fullscreen')
         if fullscreener:
             fullscreener.addFullscreener(

@@ -12,15 +12,15 @@ class StatePosition(Plug):
                     self.connectAgent)
 
     def connectAgent(self):
-        goer=self.app.plugman.plugs.get('Go')
-        stater=self.app.plugman.plugs.get('StatesTable')
+        goer=self.app.plugman.getPlug('Go')
+        stater=self.app.plugman.getPlug('StatesTable')
         if goer and stater:
             goer.positionChanged.connect(self.savePosition)
             self.app.appIsLaunched.connect(self.setPosition)
 
     def savePosition(self, view, data):
         position=json.dumps(data)
-        stater=self.app.plugman.plugs.get('StatesTable')
+        stater=self.app.plugman.getPlug('StatesTable')
         model=view.model()
         if model:
             obj=model.id()
@@ -28,8 +28,8 @@ class StatePosition(Plug):
 
     def setPosition(self):
         views=self.app.buffman.views()
-        goer=self.app.plugman.plugs.get('Go')
-        stater=self.app.plugman.plugs.get('StatesTable')
+        goer=self.app.plugman.getPlug('Go')
+        stater=self.app.plugman.getPlug('StatesTable')
         for view in views:
             model=view.model()
             if not model: continue

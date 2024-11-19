@@ -25,7 +25,7 @@ class StatesTable(Plug, QtCore.QObject):
                     self.addTable)
 
     def addTable(self):
-        table=self.app.plugman.plugs.get('SQLiteTable')
+        table=self.app.plugman.getPlug('SQLiteTable')
         if table:
             self.m_table=table.createTable(
                     uniq=self.uniq,

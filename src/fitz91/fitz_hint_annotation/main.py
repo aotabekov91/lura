@@ -16,10 +16,8 @@ class FitzAnnotationHint(Plug):
                     self.addHinter)
 
     def addHinter(self):
-        hinter=self.app.plugman.plugs.get(
-                'AnnotationHint', None)
-        annotator=self.app.plugman.plugs.get(
-                'Annotate')
+        annotator=self.app.plugman.getPlug('Annotate')
+        hinter=self.app.plugman.getPlug('AnnotationHint')
         if hinter and annotator:
             hinter.addAgent('FitzView', self)
 
@@ -27,8 +25,8 @@ class FitzAnnotationHint(Plug):
         annotations=[]
         model=view.model()
         items=view.visibleItems()
-        hinter=self.app.plugman.plugs.get('Hint')
-        annotator=self.app.plugman.plugs.get('Annotate')
+        hinter=self.app.plugman.getPlug('Hint')
+        annotator=self.app.plugman.getPlug('Annotate')
         annotation_model=annotator.getModel(model)
         for item in items: 
             element=item.element()
@@ -91,7 +89,7 @@ class FitzAnnotationHint(Plug):
         if key in self.m_hints:
             annotation=self.m_hints.get(key)
             self.select(annotation, view)
-            annotation_hinter=self.app.plugman.plugs.get(
+            annotation_hinter=self.app.plugman.getPlug(
                     'AnnotationHint')
             annotation_hinter.toggle()
             view.redraw()
@@ -109,6 +107,6 @@ class FitzAnnotationHint(Plug):
         element = data["element"]
         idx=element.index()
         data['item']=view.item(idx)
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if selector:
             selector.select(view, **data)

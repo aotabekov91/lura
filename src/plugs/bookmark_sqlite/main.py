@@ -34,8 +34,8 @@ class BookmarkSQLiteTable(Plug, QtCore.QObject):
                     self.addTable)
 
     def addTable(self):
-        bookmark=self.app.plugman.plugs.get('Bookmark')
-        table=self.app.plugman.plugs.get('SQLiteTable')
+        bookmark=self.app.plugman.getPlug('Bookmark')
+        table=self.app.plugman.getPlug('SQLiteTable')
         if bookmark and table:
             self.m_table=table.createTable(
                     uniq=self.uniq,

@@ -12,11 +12,11 @@ class FitzWordVisual(Plug):
                     self.addToVisualizer)
 
     def addToVisualizer(self):
-        visualizer=self.app.plugman.plugs.get(
+        visualizer=self.app.plugman.getPlug(
                 'WordVisual')
-        blocker=self.app.plugman.plugs.get(
+        blocker=self.app.plugman.getPlug(
                 'FitzBlockWord')
-        selector=self.app.plugman.plugs.get(
+        selector=self.app.plugman.getPlug(
                 'Selection')
         if visualizer and blocker and selector:
             self.m_blocker=blocker
@@ -24,17 +24,17 @@ class FitzWordVisual(Plug):
                     'FitzView', self)
 
     def visualize(self, view):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if not selection:
-            hinter=self.app.plugman.plugs.get('WordHint')
+            hinter=self.app.plugman.getPlug('WordHint')
             if hinter:
                 self.app.stateman.toggleSubmode()
                 hinter.toggleHint()
                 hinter.setExitSubmode('word')
 
     def go(self, view, xrange=[1], kind='last'):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if kind=='toggle':
             self.toggleDirection(view)
         elif kind=='jump':
@@ -52,7 +52,7 @@ class FitzWordVisual(Plug):
                 item.refresh()
 
     def toggleDirection(self, view):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if selection:
             item = selection.value("item")
@@ -67,5 +67,5 @@ class FitzWordVisual(Plug):
         if block and data:
             element.jumpToBlock(block, data)
         elif data:
-            selector=self.app.plugman.plugs.get('Selection')
+            selector=self.app.plugman.getPlug('Selection')
             selector.select(view, **data)

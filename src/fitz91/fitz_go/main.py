@@ -12,7 +12,7 @@ class FitzGo(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        goer=self.app.plugman.plugs.get('Go')
+        goer=self.app.plugman.getPlug('Go')
         if goer:
             goer.addAgent('FitzView', self)
             self.app.buffman.viewIsDrawn.connect(self.restorePosition)

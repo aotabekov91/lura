@@ -11,13 +11,13 @@ class FitzLeaper(Plug):
                     self.addToLeaper)
 
     def addToLeaper(self):
-        goer=self.app.plugman.plugs.get('FitzGo')
-        leaper=self.app.plugman.plugs.get('Leaper')
+        goer=self.app.plugman.getPlug('FitzGo')
+        leaper=self.app.plugman.getPlug('Leaper')
         if leaper and goer:
             leaper.addAgent('FitzView', self)
 
     def go(self, view, kind=None, node=None, xrange=[1], leaper=None):
-        goer=self.app.plugman.plugs.get('FitzGo')
+        goer=self.app.plugman.getPlug('FitzGo')
         for i in range(xrange[-1]):
             node = leaper.getNode(view)
             if kind == "next":

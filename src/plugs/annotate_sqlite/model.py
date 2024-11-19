@@ -30,7 +30,7 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
 
     def populateModel(self, source_model):
         rows=self.getRow({'source_id': self.source_id})
-        annotator=self.app.plugman.plugs.get('Annotate')
+        annotator=self.app.plugman.getPlug('Annotate')
         if rows and annotator:
             annotation_model=self.source()
             source_model=annotation_model.source()

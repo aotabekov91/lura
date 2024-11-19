@@ -145,15 +145,12 @@ class Stateman(Plug):
         self,
         view: tp.Any,
     ) -> None:
-        # if self.m_view != view:
         subview=self.subview()
         view = self.app.view.main.current
-        print(subview, view)
         if view:
             view.activate()
         elif subview:
             subview.activate()
-
 
     def activate(
         self,

@@ -12,15 +12,15 @@ class StateZoom(Plug):
                     self.connectAgent)
 
     def connectAgent(self):
-        zoomer=self.app.plugman.plugs.get('Zoom')
-        stater=self.app.plugman.plugs.get('StatesTable')
+        zoomer=self.app.plugman.getPlug('Zoom')
+        stater=self.app.plugman.getPlug('StatesTable')
         if zoomer and stater:
             zoomer.zoomChanged.connect(self.saveZoom)
             self.app.appIsLaunched.connect(self.setZoom)
 
     def saveZoom(self, view, data):
         data=json.dumps(data)
-        stater=self.app.plugman.plugs.get('StatesTable')
+        stater=self.app.plugman.getPlug('StatesTable')
         model=view.model()
         if model:
             obj=model.id()
@@ -28,8 +28,8 @@ class StateZoom(Plug):
 
     def setZoom(self):
         views=self.app.buffman.views()
-        zoomer=self.app.plugman.plugs.get('Zoom')
-        stater=self.app.plugman.plugs.get('StatesTable')
+        zoomer=self.app.plugman.getPlug('Zoom')
+        stater=self.app.plugman.getPlug('StatesTable')
         for view in views:
             model=view.model()
             if not model: continue

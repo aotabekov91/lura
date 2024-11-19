@@ -84,3 +84,6 @@ class Plugman(Plug):
                 print(msg, name, e)
                 raise
         return plugs
+
+    def getPlug(self, name):
+        return self.plugs.get(name)

@@ -10,7 +10,7 @@ class FitzYankSelection(Plug):
                     self.addAGent)
 
     def addAGent(self):
-        holder=self.app.plugman.plugs.get(
+        holder=self.app.plugman.getPlug(
                 'YankSelection')
         if holder:
             holder.addAgent('FitzView', self)
@@ -25,7 +25,7 @@ class FitzYankSelection(Plug):
         return text
 
     def yankSelection(self, view):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if not selection:
             return
@@ -38,7 +38,7 @@ class FitzYankSelection(Plug):
         return " ".join(text)
 
     def getBlockText(self, box, element):
-        blocker=self.app.plugman.plugs.get(
+        blocker=self.app.plugman.getPlug(
                 'FitzBlockWord')
         if not blocker:
             return ""

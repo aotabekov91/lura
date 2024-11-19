@@ -11,19 +11,19 @@ class FitzHighlight(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        holder=self.app.plugman.plugs.get('Highlight')
+        holder=self.app.plugman.getPlug('Highlight')
         if holder:
             holder.addAgent('FitzView', self)
 
     def activate(self, view, selection=None, **kwargs):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if not selection:
             selection=selector.selection(view)
         if selection:
             model=view.model()
             data=selection.data()
             selection['annotation_kind']='highlight'
-            annotator=self.app.plugman.plugs.get('Annotate')
+            annotator=self.app.plugman.getPlug('Annotate')
             annotation_model=annotator.getModel(model)
             annotation_model.addAnnotate(data=data)
             selector.cleanUpSelection(view)

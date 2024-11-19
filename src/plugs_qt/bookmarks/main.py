@@ -19,7 +19,7 @@ class Bookmarks(Plug):
                     self.setupView)
 
     def setupView(self):
-        self.m_bookmarker=self.app.plugman.plugs.get(
+        self.m_bookmarker=self.app.plugman.getPlug(
                 'Bookmark')
         if self.m_bookmarker:
             self.view=self.app.buffman.createView(

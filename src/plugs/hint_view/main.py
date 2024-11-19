@@ -76,7 +76,7 @@ class ViewHint(Plug):
 
     def assignHints(self):
         views=self.getViews()
-        hinter=self.app.plugman.plugs.get('Hint')
+        hinter=self.app.plugman.getPlug('Hint')
         _, self.m_hints=hinter.generateHints(views, 'digits')
 
     def getViews(self):
@@ -97,12 +97,12 @@ class ViewHint(Plug):
                     }]
         return sorted(alist, key=lambda d: d["pos"])
 
-    def mapToUI(self, c, ui):
-        p = ui.parent()
-        if not p:
-            return c
-        c = ui.mapToParent(c)
-        return self.mapToUI(c, p)
+    def mapToUI(self, current, ui):
+        parent = ui.parent()
+        if not parent:
+            return current
+        current = ui.mapToParent(current)
+        return self.mapToUI(current, parent)
 
     def paint(self, obj, e):
         if not self.m_hinting:

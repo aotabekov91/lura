@@ -11,18 +11,18 @@ class FitzCaretize(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        holder=self.app.plugman.plugs.get('Caretize')
+        holder=self.app.plugman.getPlug('Caretize')
         if holder:
             holder.addAgent('FitzView', self)
 
     def activate(self, view, selection=None, **kwargs):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if not selection:
             selection=selector.selection(view)
         if selection:
             model=view.model()
             selection['annotation_kind']='caret'
-            annotator=self.app.plugman.plugs.get('Annotate')
+            annotator=self.app.plugman.getPlug('Annotate')
             annotation_model=annotator.getModel(model)
             data=selection.data()
             annotation_model.addAnnotate(data=data)

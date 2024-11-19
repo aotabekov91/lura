@@ -28,7 +28,7 @@ class Underline(Plug):
     @tag("<c-u>(annotate)")
     def underline(self, xrange=[1]):
         view=self.app.stateman.view()
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if selection:
             key=xrange[0]

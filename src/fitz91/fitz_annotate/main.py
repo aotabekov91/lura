@@ -13,7 +13,7 @@ class FitzAnnotate(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        annotate=self.app.plugman.plugs.get('Annotate')
+        annotate=self.app.plugman.getPlug('Annotate')
         if annotate:
             annotate.addAgent('FitzModel', self)
 
@@ -22,7 +22,7 @@ class FitzAnnotate(Plug):
         page = data.get("page", None)
         if all([view, page, boxes]):
             top_left = boxes[0].topLeft()
-            selector=self.app.plugman.plugs.get('Selection')
+            selector=self.app.plugman.getPlug('Selection')
             view.goTo(page, top_left.x(), top_left.y(), center=center)
             if selector:
                 selector.select(view, **data)

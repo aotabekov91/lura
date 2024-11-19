@@ -11,8 +11,7 @@ class FitzRotate(plug.Plug):
                     self.addToRotator)
 
     def addToRotator(self):
-        rotator=self.app.plugman.plugs.get(
-                'Rotate', None)
+        rotator=self.app.plugman.getPlug('Rotate')
         if not rotator:
             return
         rotator.addRotator('FitzView', self)

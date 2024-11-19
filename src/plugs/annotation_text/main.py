@@ -1,5 +1,8 @@
 from plug import Plug, tag
 
+from .view import TextEditView
+from .overlay import TextOverlay
+
 class Textize(Plug):
 
     default_color=(1, 0.8, 0.8)
@@ -27,15 +30,18 @@ class Textize(Plug):
 
     @tag("<c-t>(annotate)")
     def textize(self, xrange=[1]):
+        #todo :current:
         view=self.app.stateman.view()
-        data=view.selection()
-        if data:
+        selector=self.app.plugman.getPlug('Selection')
+        if selector:
+            selection=selector.selection(view=view)
             key=xrange[0]
             color=self.m_colors.get(key, self.default_color)
             textizer=self.getAgent(view=view)
-            data['annotation_color']=color
-            data['text']='text new'
-            return textizer.activate(view=view, data=data)
+            selection['annotation_kind']='text'
+            selection['annotation_color']=color
+            selection['text']='text new'
+            return textizer.activate(view=view, selection=selection)
 
     @tag("<c-T>(annotate)")
     def retextize(self, xrange=[1]):

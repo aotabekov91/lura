@@ -53,7 +53,7 @@ class FitzHint(Plug, QtCore.QObject):
     ):
         self.m_hinting = True
         self.m_hint_capturing = True
-        hinter=self.app.plugman.plugs.get('Hint')
+        hinter=self.app.plugman.getPlug('Hint')
         if alist:
             m, mm = hinter.generateHints(
                     alist, kind, **kwargs)

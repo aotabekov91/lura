@@ -38,7 +38,7 @@ class Leaper(Plug):
             self.connectView(view)
 
     def connectView(self, view, kind="connect"):
-        go=self.app.plugman.plugs.get('Go')
+        go=self.app.plugman.getPlug('Go')
         goer=go.getAgent(view=view)
         if goer and kind == "connect":
             go.positionChanged.connect(

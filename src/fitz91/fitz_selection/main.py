@@ -22,7 +22,7 @@ class FitzSelection(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if selector:
             selector.addAgent('FitzView', self)
 

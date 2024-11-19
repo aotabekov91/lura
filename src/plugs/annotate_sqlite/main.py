@@ -34,8 +34,8 @@ class AnnotateSqliteTable(Plug, QtCore.QObject):
                     self.addTable)
 
     def addTable(self):
-        annotate=self.app.plugman.plugs.get('Annotate')
-        table=self.app.plugman.plugs.get('SQLiteTable')
+        annotate=self.app.plugman.getPlug('Annotate')
+        table=self.app.plugman.getPlug('SQLiteTable')
         if annotate and table:
             self.m_table=table.createTable(
                     uniq=self.uniq,

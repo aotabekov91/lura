@@ -239,7 +239,7 @@ class TileView(vimo.View):
         view = view or self.current
         if not view:
             raise
-        copier=self.app.plugman.plugs.get('Copy')
+        copier=self.app.plugman.getPlug('Copy')
         if not copier:
             return
         view_copy=copier.copy(view)

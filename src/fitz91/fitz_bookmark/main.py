@@ -11,7 +11,7 @@ class FitzBookmark(Plug):
                     self.addToBookmarker)
 
     def addToBookmarker(self):
-        bookmarker=self.app.plugman.plugs.get(
+        bookmarker=self.app.plugman.getPlug(
                 'Bookmark')
         if bookmarker:
             bookmarker.addAgent(

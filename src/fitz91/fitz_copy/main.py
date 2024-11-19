@@ -11,17 +11,17 @@ class FitzCopy(Plug):
                     self.addToCopier)
 
     def addToCopier(self):
-        copier=self.app.plugman.plugs.get('Copy')
+        copier=self.app.plugman.getPlug('Copy')
         if copier:
             copier.addCopier('FitzView', self)
 
     def copy(self, view):
         zoom=None
         position=None
-        zoomer=self.app.plugman.plugs.get('Zoom')
+        zoomer=self.app.plugman.getPlug('Zoom')
         if zoomer:
             zoom=zoomer.currentZoom(view=view)
-        goer=self.app.plugman.plugs.get('Go')
+        goer=self.app.plugman.getPlug('Go')
         if goer:
             position=goer.currentPosition(view=view)
         manager = view.manager()

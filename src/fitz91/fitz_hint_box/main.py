@@ -17,7 +17,7 @@ class FitzBoxHint(Plug):
                     self.addToHinter)
 
     def addToHinter(self):
-        hinter=self.app.plugman.plugs.get('BoxHint')
+        hinter=self.app.plugman.getPlug('BoxHint')
         if hinter:
             hinter.addHinter('FitzView', self)
 
@@ -28,7 +28,7 @@ class FitzBoxHint(Plug):
         if self.m_hint in hints:
             box=hints.get(self.m_hint)
             self.select(view, box)
-            box_hinter=self.app.plugman.plugs.get(
+            box_hinter=self.app.plugman.getPlug(
                     'BoxHint')
             box_hinter.toggle()
             view.redraw()
@@ -143,7 +143,7 @@ class FitzBoxHint(Plug):
         painter.restore()
 
     def select(self, view, data):
-        selector=self.app.plugman.plugs.get('Selection')
+        selector=self.app.plugman.getPlug('Selection')
         if selector:
             selector.select(view, **data)
 
