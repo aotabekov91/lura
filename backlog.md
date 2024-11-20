@@ -3,13 +3,14 @@
 * [ ] Should support annotations
 * [ ] Should support plugin system
 * [ ] Should support tiling
-* [ ] Should support input mode
 * [ ] Should support visual mode
 * [ ] Should support different layout types 
 	* [ ] Single/Double page view, etc.
 
 ## Sprint.Annotations backlog: Should support annotations
 
+* [ ] Input mode
+	* [ ] As a plug container
 * [ ] Support different types of annotation
 	* [ ] Text annotation with an overlay text editor :current:
 * [ ] Outline

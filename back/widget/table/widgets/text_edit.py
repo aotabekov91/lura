@@ -1,4 +1,4 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtWidgets, QtGui
 
 from ...utils import setEditorTabSize
 
@@ -49,16 +49,16 @@ class TextEdit(QtWidgets.QTextEdit):
     def setInputMode(
         self,
         cond=False,
-        mode=None,
+        mode='append',
     ):
         self.setReadOnly(not cond)
         if cond:
             self.setFocus()
             if mode == "append":
-                pos = Qt.CursorShape.ui.QTextCursor.End
-                c = self.textCursor()
-                c.movePosition(pos)
-                self.setTextCursor(c)
+                pos = QtGui.QTextCursor.MoveOperation.End
+                cursor = self.textCursor()
+                cursor.movePosition(pos)
+                self.setTextCursor(cursor)
 
     def setTimer(self):
         self.m_reporting = True

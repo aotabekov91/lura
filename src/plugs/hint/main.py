@@ -19,7 +19,8 @@ class Hint(Plug):
         self.app.stateman.toggle(
             mode="hint",
             delisten=True,
-            passive=["hint"])
+            # passive=["hint"],
+            )
 
     @tag("<escape>(hint[any])")
     def finishHintMode(self):

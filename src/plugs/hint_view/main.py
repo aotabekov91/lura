@@ -84,10 +84,10 @@ class ViewHint(Plug):
         views = self.app.buffman.views()
         for view in views:
             if view.isVisible():
-                c = QtCore.QPoint(1, 1)
-                c = self.mapToUI(c, view)
+                point = QtCore.QPoint(1, 1)
+                point = self.mapToUI(point, view)
                 r = view.rect()
-                x, y = int(c.x() - 1), int(c.y() - 1)
+                x, y = int(point.x() - 1), int(point.y() - 1)
                 w, h = r.width(), r.height()
                 rect = QtCore.QRect(x, y, w, h)
                 alist += [{
@@ -97,11 +97,11 @@ class ViewHint(Plug):
                     }]
         return sorted(alist, key=lambda d: d["pos"])
 
-    def mapToUI(self, current, ui):
+    def mapToUI(self, point, ui):
         parent = ui.parent()
         if not parent:
-            return current
-        current = ui.mapToParent(current)
+            return point
+        current = ui.mapToParent(point)
         return self.mapToUI(current, parent)
 
     def paint(self, obj, e):

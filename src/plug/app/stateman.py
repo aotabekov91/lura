@@ -77,13 +77,10 @@ class Stateman(Plug):
             subview = subview.kind
         else:
             subview = "any"
-
-        state = (mode, submode, view, subview)
-
         if self.m_passive:
             if not self.m_mode in self.m_passive_modes:
-                state = ("any",) * 4
-        return state
+                return ("any",) * 4
+        return  (mode, submode, view, subview)
 
     def toggle(self, mode: str = None, **kwargs) -> str:
         if mode and self.m_mode != mode:

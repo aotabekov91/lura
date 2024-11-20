@@ -92,34 +92,34 @@ class TableWidget(QtWidgets.QWidget):
         elem = element or self.m_element
         items = wmap.items()
         data = elem.data()
-        for i, (n, d) in enumerate(items):
-            klass = d.get("w", "Label")
-            p = d.get("p", f"{i}x0x-1x1")
+        for row, (item_idx, item_data) in enumerate(items):
+            klass = item_data.get("w", "Label")
+            p = item_data.get("p", f"{row}x0x-1x1")
             p = [int(f) for f in p.split("x")]
-            t = str(data.get(n, "")).strip()
-            t = d.get("t", t)
+            text = str(data.get(item_idx, "")).strip()
+            text = item_data.get("t", text)
             pos = (p[0], p[1])
             if type(klass) == str:
                 klass = self.wmap.get(klass)
-            w = klass(
-                data=d,
-                text=t,
-                index=n,
+            widget = klass(
+                data=item_data,
+                text=text,
+                index=item_idx,
                 parent=self,
                 position=pos,
                 element=self.m_element,
             )
-            oname = n
-            widgets[n] = (w, p)
-            fname = d.get("n", None)
+            oname = item_idx
+            widgets[item_idx] = (widget, p)
+            fname = item_data.get("n", None)
             if fname:
                 fname = fname.split("_")
-                d = self.m_element.data()
+                item_data = self.m_element.data()
                 ftext = []
                 for f in fname:
-                    ftext += [d.get(f, "")]
+                    ftext += [item_data.get(f, "")]
                 oname = "_".join(ftext)
-            w.setObjectName(oname)
+            widget.setObjectName(oname)
         return widgets
 
     def delWidgets(self, widgets):

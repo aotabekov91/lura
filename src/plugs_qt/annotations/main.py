@@ -42,14 +42,13 @@ class Annotations(Plug):
 
     @tag('O(normal)[AnnotationView]')
     def openAndFocus(self):
-        self.open()
-        t=self.app.buffman.type()
-        t.activate()
+        self.open(focus=True)
 
     @tag('o(normal)[AnnotationView]')
-    def open(self):
+    def open(self, focus=False, **kwargs):
         item=self.view.currentItem()
-        if item: 
+        goer=self.app.plugman.getPlug('Go')
+        if item and goer: 
             data=item.element().data()
             view=self.app.stateman.subview()
             x, y = 0, 0
@@ -59,7 +58,10 @@ class Annotations(Plug):
                 box=boxes[0]
                 x=box.x()
                 y=box.y()
-            view.goTo(page, x, y)
+            goer.goTo(view=view, xrange=[page], x=x, y=y)
+            if focus:
+                view.activate()
+
 
     @tag('d(normal)[AnnotationView]')
     def delete(self):
