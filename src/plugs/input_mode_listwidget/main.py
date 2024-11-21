@@ -23,6 +23,10 @@ class ListWidgetViewInputMode(Plug):
             if functor:
                 functor(view=view, **kwargs)
 
+    def octivate(self, view=None, **kwargs):
+        if view:
+            view.setFocus()
+
     def insert(self, view=None, xrange=[1], widget=None, **kwargs):
         if not widget and view:
             item=view.currentItem()
@@ -33,7 +37,6 @@ class ListWidgetViewInputMode(Plug):
                 if data:
                     widget, _ = data
                 print(data)
-        print(widget)
         if widget:
             widget.setReadOnly(False)
             widget.setFocus()
@@ -52,4 +55,4 @@ class ListWidgetViewInputMode(Plug):
             cursor = widget.textCursor()
             cursor.movePosition(position)
             widget.setTextCursor(cursor)
-            # widget.setFocus()
+            widget.setFocus()

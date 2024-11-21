@@ -24,6 +24,11 @@ class Selection(Plug, QtCore.QObject):
     def select(self, view, **kwargs):
         selection_model=self.getModel(view)
         if selection_model:
+            selection_model.setSelection(**kwargs)
+
+    def update(self, view, **kwargs):
+        selection_model=self.getModel(view)
+        if selection_model:
             selection_model.updateSelection(**kwargs)
 
     def deselect(self, view, **kwargs):

@@ -41,7 +41,10 @@ class ViewGo(Go):
                 QtCore.Qt.KeyboardModifier.NoModifier,
             )
             self.setCurrentIndex(item)
-            self.scrollTo(item, QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+            self.scrollTo(
+                    item, 
+                    QtWidgets.QAbstractItemView.ScrollHint.EnsureVisible,
+                    )
         else:
             self.goToFirst()
 

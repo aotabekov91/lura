@@ -2,7 +2,7 @@ class Element:
     def __init__(
         self,
         id=None,
-        data=None,
+        data={},
         index=None,
         model=None,
         identifier=None,
@@ -61,3 +61,20 @@ class Element:
 
     def setIndex(self, idx):
         self.m_index = idx
+
+    def get(self, key, default=None):
+        return self.m_data.get(key, default)
+
+    def set(self, key, value):
+        self.m_data[key]=value
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def __setitem__(self, key, value):
+        self.set(key, value)
+
+    def __bool__(self):
+        if self.m_data:
+            return True
+        return False

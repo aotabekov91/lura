@@ -10,7 +10,6 @@ class FitzSelection(Plug):
     def setup(self):
         super().setup()
         self.m_views={}
-        self.m_items={}
         self.select_color = QtGui.QColor(self.select_color)
         self.select_color.setAlpha(self.select_color_alpha)
         self.m_select_brush = QtGui.QBrush(self.select_color)
@@ -27,28 +26,31 @@ class FitzSelection(Plug):
             selector.addAgent('FitzView', self)
 
     def wire(self, view, kind='connect'):
-        item=self.m_views.get(view, None)
+        item, _ =self.m_views.get(view, (None, None))
         if item and kind=='connect':
             item.painted.connect(self.paint)
         elif item and kind=='disconnect':
             item.painted.disconnect(self.paint)
 
     def select(self, view, selection):
-        item=selection.value('item')
-        current_item=self.m_views.get(view, None)
+        item=selection['item']
+        current_item, _=self.m_views.get(view, (None, None))
         if item and current_item!=item:
             self.wire(view, 'disconnect')
-            self.m_views[view]=item
-            self.m_items[item]=selection
+            self.m_views[view]=(item, selection)
             self.wire(view, 'connect')
+        elif not item and current_item:
+            self.wire(view, 'disconnect')
+            self.m_views.pop(view, None)
         view.redraw()
 
     def paint(self, painter, ops, widget, item):
-        selection=self.m_items.get(item, None)
-        if selection:
+        view=item.view()
+        current_item, selection=self.m_views.get(view, (None, None))
+        if selection and item==current_item:
             painter.save()
-            boxes = selection.value("box", [])
             rects = []
+            boxes = selection["box"] or []
             if type(boxes)!=list:
                 boxes=[boxes]
             for box in boxes:

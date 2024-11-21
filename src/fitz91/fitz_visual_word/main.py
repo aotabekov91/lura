@@ -46,7 +46,7 @@ class FitzWordVisual(Plug):
                 selection=selector.selection(view)
                 if not selection:
                     return
-                item = selection.value('item')
+                item = selection['item']
                 element = item.element()
                 self.m_blocker.update(element, kind, selection)
                 item.refresh()
@@ -55,7 +55,7 @@ class FitzWordVisual(Plug):
         selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if selection:
-            item = selection.value("item")
+            item = selection['item']
             element = item.element()
             element.toggleDirection(0)
 

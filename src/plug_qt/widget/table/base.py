@@ -61,23 +61,23 @@ class TableWidget(QtWidgets.QWidget):
 
     def setElement(self, element=None, widgets=None):
         if self.m_element:
-            s = getattr(
+            signal = getattr(
                 self.m_element,
                 "dataUpdated",
                 None,
             )
-            if s:
-                s.dataUpdated.disconnect(self.updateData)
+            if signal:
+                signal.dataUpdated.disconnect(self.updateData)
             self.delWidgets(self.m_widgets)
         self.m_element = element
         if self.m_element:
-            s = getattr(
+            signal = getattr(
                 self.m_element,
                 "dataUpdated",
                 None,
             )
-            if s:
-                s.dataUpdated.connect(self.updateData)
+            if signal:
+                signal.dataUpdated.connect(self.updateData)
             if not widgets:
                 widgets = self.createWidgets()
             self.setWidgets(widgets)

@@ -15,7 +15,12 @@ class InputMode(Plug):
         return self.m_agents.get(name, None)
 
     @tag('<escape>/<c-[>(insert)')
-    def octivate(self):
+    def octivate(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.octivate(view=view, **kwargs)
         self.app.stateman.activate('normal')
 
     @tag('i(normal)')

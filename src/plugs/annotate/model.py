@@ -9,6 +9,7 @@ class AnnotateElement(Element, QtCore.QObject):
 class AnnotateModel(vimo.Model, QtCore.QObject):
 
     element_class=AnnotateElement
+
     def __init__(self, agent, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.m_agent=agent

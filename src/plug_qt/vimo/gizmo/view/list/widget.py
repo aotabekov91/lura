@@ -17,6 +17,10 @@ class ListWidgetView(
     list_item_class = widget.ListWidgetItem
     widgetDataChanged = QtCore.pyqtSignal(object)
 
+    def setCurrentRow(self, row):
+        super().setCurrentRow(row)
+        self.indexChanged.emit(row + 1)
+
     def updateKlass(self):
         super().updateKlass()
         inc = self.m_kwargs.get("include", self.include)
@@ -35,16 +39,16 @@ class ListWidgetView(
             # self.clear()
             super().setModel(model)
             elems = model.elements()
-            for i, e in elems.items():
+            for idx, element in elems.items():
                 if self.include:
-                    for i, j in self.include.items():
-                        data = e.data()
-                        v = data.get(i)
-                        if not v in j:
+                    for k, l in self.include.items():
+                        data = element.data()
+                        v = data.get(k)
+                        if not v in l:
                             break
-                        self.addElement(e)
+                        self.addElement(element)
                 else:
-                    self.addElement(e)
+                    self.addElement(element)
             self.reconnectModel()
             self.goToFirst()
 
@@ -100,17 +104,15 @@ class ListWidgetView(
                 return self.setCurrentItem(item)
 
     def reconnectModel(self, kind="connect"):
-        m = self.m_model
-        if not m:
-            return
-        if kind == "connect":
-            m.elementAdded.connect(self.addElement)
-            m.elementRemoved.connect(self.removeElement)
-            m.elementWanted.connect(self.selectElement)
-        else:
-            m.elementAdded.disconnect(self.addElement)
-            m.elementRemoved.disconnect(self.removeElement)
-            m.elementWanted.disconnect(self.selectElement)
+        model = self.m_model
+        if model and kind == "connect":
+            model.elementAdded.connect(self.addElement)
+            model.elementRemoved.connect(self.removeElement)
+            model.elementWanted.connect(self.selectElement)
+        elif model and kind == "disconnect":
+            model.elementAdded.disconnect(self.addElement)
+            model.elementRemoved.disconnect(self.removeElement)
+            model.elementWanted.disconnect(self.selectElement)
 
     @tag("<escape>(normal)[^]")
     def octivateMe(self):

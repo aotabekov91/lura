@@ -12,29 +12,6 @@ class SelectionElement(Element, QtCore.QObject):
     def clear(self):
         self.m_data=hashdict()
 
-    def value(self, key, default=None):
-        return self.m_data.get(key, default)
-
-    def setValue(self, key, value):
-        self.m_data[key]=value
-
-    def get(self, key, default=None):
-        return self.m_data.get(key, default)
-
-    def set(self, key, value):
-        self.m_data[key]=value
-
-    def __getitem__(self, key):
-        return self.value(key)
-
-    def __setitem__(self, key, value):
-        self.setValue(key, value)
-
-    def __bool__(self):
-        if self.m_data:
-            return True
-        return False
-
 class SelectionModel(vimo.Model, QtCore.QObject):
 
     element_class=SelectionElement
@@ -42,35 +19,41 @@ class SelectionModel(vimo.Model, QtCore.QObject):
     def __init__(self, agent, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.m_agent=agent
-        self.m_selection=SelectionElement(model=self)
+        self.m_selection=SelectionElement()
 
-    def createSelection(self, data={}):
-        selection=SelectionElement(model=self)
+    def createSelection(self, data={}, **kwargs):
+        selection=SelectionElement()
         if data:
             data=hashdict(data)
             selection.setData(data)
         return selection
 
-    def setSelection(self, selection, view=None):
-        self.m_selection=selection
-        if view:
-            selector=self.m_agent.getAgent(view=view)
-            selector.select(view, self.m_selection)
+    def setSelection(self, selection=None, **kwargs):
+        if selection:
+            view=self.source()
+            self.m_selection=selection
+            if view:
+                selector=self.m_agent.getAgent(view=view)
+                selector.select(view, self.m_selection)
+        elif kwargs:
+            self.updateSelection(**kwargs)
+        else:
+            self.clearSelection(**kwargs)
 
     def updateSelection(self, **kwargs):
         for key, value in kwargs.items():
-            self.m_selection.setValue(key, value)
+            self.m_selection[key]=value
         view=self.source()
         model=view.model()
         if model:
-            self.m_selection.setValue('kind', model.kind)
-            self.m_selection.setValue('source_id', model.id())
+            self.m_selection['kind']=model.kind
+            self.m_selection['source_id']=model.id()
         selector=self.m_agent.getAgent(view=view)
         selector.select(view, self.m_selection)
 
     def clearSelection(self, **kwargs):
         view=self.source()
-        self.m_selection.clear()
+        self.m_selection=self.createSelection()
         selector=self.m_agent.getAgent(view=view)
         selector.select(view, self.m_selection)
 

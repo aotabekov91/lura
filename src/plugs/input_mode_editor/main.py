@@ -17,6 +17,10 @@ class EditorInputMode(Plug):
         if input_mode:
             input_mode.addAgent('EditorView', self)
 
+    def octivate(self, view=None, **kwargs):
+        if view:
+            view.setFocus()
+
     def activate(self, view=None, kind=None, **kwargs):
         if view and kind:
             functor=getattr(self, kind, None)

@@ -96,7 +96,7 @@ class FitzBlockWord(Plug):
 
     def getBlockData(self, element, selection):
         if selection:
-            box = selection.value("box")
+            box = selection["box"]
             if len(box) > 0:
                 self.setLast(element, selection)
             size = element.size()
@@ -221,8 +221,8 @@ class FitzBlockWord(Plug):
             box[0] = element.unify(start)
 
     def jump(self, element, prev_selection, next_selection):
-        cb = prev_selection.value("box")
-        jb = next_selection.value("box")
+        cb = prev_selection["box"]
+        jb = next_selection["box"]
         ctl = cb[0].topLeft()
         cbr = cb[-1].bottomRight()
         jtl = jb[0].topLeft()
