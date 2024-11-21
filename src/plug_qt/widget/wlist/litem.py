@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QListWidgetItem
 
 
 class ListWidgetItem(QListWidgetItem):
+
     def setCurrentItem(self):
         lwidget = self.listWidget()
         lwidget.setCurrentItem(self)

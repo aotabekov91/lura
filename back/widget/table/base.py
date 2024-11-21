@@ -179,7 +179,5 @@ class TableWidget(QtWidgets.QWidget):
     def selectToCenter(self):
         if self.m_view:
             self.m_view.setCurrentItem(self.m_item)
-            av = QtWidgets.QAbstractItemView
             self.m_view.scrollToItem(
-                self.m_item, hint=av.PositionAtTop
-            )
+                self.m_item, QtWidgets.QAbstractItemView.ScrollHint)

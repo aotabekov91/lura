@@ -64,7 +64,7 @@ class Leaper(Plug):
     def createNode(self, *args, **kwargs):
         return self.node_class(*args, **kwargs)
 
-    @tag('i(normal)')
+    @tag('<c-I>(normal)')
     def next(self, xrange=[1]):
         view=self.app.stateman.view()
         leaper=self.getAgent(view=view)
@@ -80,7 +80,7 @@ class Leaper(Plug):
                     )
             self.connectView(view)
 
-    @tag('o(normal)')
+    @tag('<c-O>(normal)')
     def prev(self, xrange=[1]):
         view=self.app.stateman.view()
         leaper=self.getAgent(view=view)

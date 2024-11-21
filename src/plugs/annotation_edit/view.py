@@ -8,20 +8,12 @@ class EditorView(
         vimo.View, 
         TableWidget,
         ):
+    pass
 
-    def setFocus(self):
-        super().setFocus()
-        widget_data=self.widget('text')
-        if widget_data:
-            widget, _ = widget_data
-            widget.setFocus()
-            widget.setInputMode(True)
-
-    # def setup(self):
-    #     super().setup()
-    #     # self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-    #     self.hide()
-
-    # def updatePosition(self):
-    #     parent = self.parent()
-    #     self.setGeometry(parent.geometry())
+    # def setFocus(self):
+    #     super().setFocus()
+    #     widget_data=self.widget('text')
+    #     if widget_data:
+    #         widget, _ = widget_data
+    #         widget.setFocus()
+    #         widget.setInputMode(True)

@@ -12,9 +12,6 @@ class SelectionElement(Element, QtCore.QObject):
     def clear(self):
         self.m_data=hashdict()
 
-    def data(self):
-        return self.m_data
-
     def value(self, key, default=None):
         return self.m_data.get(key, default)
 
@@ -47,15 +44,28 @@ class SelectionModel(vimo.Model, QtCore.QObject):
         self.m_agent=agent
         self.m_selection=SelectionElement(model=self)
 
+    def createSelection(self, data={}):
+        selection=SelectionElement(model=self)
+        if data:
+            data=hashdict(data)
+            selection.setData(data)
+        return selection
+
+    def setSelection(self, selection, view=None):
+        self.m_selection=selection
+        if view:
+            selector=self.m_agent.getAgent(view=view)
+            selector.select(view, self.m_selection)
+
     def updateSelection(self, **kwargs):
-        view=self.source()
-        selector=self.m_agent.getAgent(view=view)
         for key, value in kwargs.items():
             self.m_selection.setValue(key, value)
+        view=self.source()
         model=view.model()
         if model:
             self.m_selection.setValue('kind', model.kind)
             self.m_selection.setValue('source_id', model.id())
+        selector=self.m_agent.getAgent(view=view)
         selector.select(view, self.m_selection)
 
     def clearSelection(self, **kwargs):

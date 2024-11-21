@@ -1,0 +1,12 @@
+#OverlayView QWidget{
+	border-width: 3px;
+	border-color: red;
+	border-radius: 10px;
+	border-style: solid;
+}
+
+#OverlayView QLabel{
+	padding: 0 0 0 5;
+	background-color: green;
+}
+

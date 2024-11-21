@@ -21,7 +21,7 @@ class AnnotationEdit(Plug):
             app=self.app,
             parent=overlay,
             manager=overlay,
-            objectName='OverlayEdit',
+            objectName='AnnotationEdit',
             )
         self.view.m_wmap={
                 'id': {'w': 'Label', 'p': '0x0x1x1'}, 
@@ -50,7 +50,6 @@ class AnnotationEdit(Plug):
             self.view.setGeometry(geometry)
         self.view.setElement(annotation)
         self.view.toggle()
-        self.app.stateman.toggle('input')
         # todo :current:
 
     @tag('<c-[>(input)')
