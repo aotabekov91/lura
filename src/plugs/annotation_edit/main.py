@@ -34,10 +34,12 @@ class AnnotationEdit(Plug):
     def edit(self, view, annotation, x=None, y=None, w=150, h=150):
         boxes=annotation['box']
         if not x and boxes:
-            box=boxes[0]
+            box=boxes[-1]
             item=annotation['item']
             bottom_right=box.bottomRight()
             bottom_right=item.mapToItem(bottom_right, unified=True)
+            bottom_right=item.mapToScene(bottom_right)
+            bottom_right=view.mapFromScene(bottom_right)
             x=int(bottom_right.x())
             y=int(bottom_right.y())
         else:
@@ -51,10 +53,6 @@ class AnnotationEdit(Plug):
         self.view.setElement(annotation)
         self.view.toggle()
         # todo :current:
-
-    @tag('<c-[>(input)')
-    def test(self):
-        raise
 
     def mapToUI(self, point, ui, match):
         parent = ui.parent()
