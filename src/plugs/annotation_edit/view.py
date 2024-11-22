@@ -1,4 +1,4 @@
-from PyQt6 import QtGui
+from PyQt6 import QtCore, QtGui
 
 from plug_qt import vimo
 
@@ -8,7 +8,12 @@ class EditorView(
         vimo.View, 
         TableWidget,
         ):
-    pass
+
+    def event(self, event):
+        if event.type()== QtCore.QEvent.Type.FocusOut:
+            self.octivate()
+        return super().event(event)
+
 
     # def setFocus(self):
     #     super().setFocus()
