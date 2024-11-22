@@ -9,18 +9,24 @@ class AnnotationHint(Plug):
     def addAgent(self, name, hinter):
         self.m_agents[name]=hinter
 
-    def agent(self, name):
+    def agent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    @tag(["<c-a>(hint)", "<c-a>/<c-[>(hint[annotation])"])
-    def toggle(self):
+    @tag("<c-a>(hint)")
+    def activate(self):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        hinter=self.agent(name)
+        hinter=self.agent(view=view)
         if hinter:
-            submode=self.app.stateman.toggleSubmode(
+            self.app.stateman.toggleSubmode(
                     submode='annotation')
-            if submode=='annotation':
-                hinter.activate(view)
-            else:
-                hinter.octivate(view)
+            hinter.activate(view)
+
+    @tag("<c-a>/<c-[>(hint[annotation])")
+    def octivate(self):
+        view=self.app.stateman.view()
+        hinter=self.agent(view=view)
+        if hinter:
+            hinter.octivate(view)
+            self.app.stateman.toggle()

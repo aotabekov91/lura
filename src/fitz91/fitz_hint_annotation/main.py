@@ -89,7 +89,7 @@ class FitzAnnotationHint(Plug):
             self.select(annotation, view)
             annotation_hinter=self.app.plugman.getPlug(
                     'AnnotationHint')
-            annotation_hinter.toggle()
+            annotation_hinter.octivate()
             view.redraw()
             return True
         for hint in self.m_hints:

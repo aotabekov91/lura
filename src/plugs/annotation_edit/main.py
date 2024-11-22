@@ -1,4 +1,5 @@
 from PyQt6 import QtCore
+
 from plug import Plug, tag
 
 from .view import EditorView
@@ -6,78 +7,83 @@ from .overlay import OverlayView
 
 class AnnotationEdit(Plug):
 
-    default_color=(1, 0.8, 0.8)
-
     def setup(self):
         super().setup()
+        self.m_agents={}
         self.setupView()
 
+    def addAgent(self, name, agent):
+        self.m_agents[name]=agent
+
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
+        return self.m_agents.get(name, None)
+
+    def view(self):
+        return self.m_view
+
+    def overlay(self):
+        return self.m_overlay
+
     def setupView(self):
-        overlay=OverlayView(
+        self.m_overlay=OverlayView(
                 app=self.app,
                 view=self.app.view.main,
                 )
-        self.view = EditorView(
+        self.m_view = EditorView(
             app=self.app,
-            parent=overlay,
-            manager=overlay,
+            parent=self.m_overlay,
+            manager=self.m_overlay,
             objectName='AnnotationEdit',
             )
-        self.view.m_wmap={
+        self.m_view.m_wmap={
                 'id': {'w': 'Label', 'p': '0x0x1x1'}, 
                 'text' : {'w': 'TextEdit', 'p': '1x0x1x1'}}
 
-    def mapToView(self, view, x, y):
-        point=QtCore.QPoint(x, y)
-        return self.mapToUI(point, view, self.app.view.main)
+    @tag("<c-a>(edit)")
+    def activate(
+            self, 
+            view=None, 
+            annotation=None, 
+            width=250,
+            height=200,
+            **kwargs
+            ):
+        if not view:
+            view=self.app.stateman.view()
+        if not annotation:
+            selector=self.app.plugman.getPlug('Selection')
+            if selector:
+                selection=selector.selection(view=view)
+                if selection.__class__.__name__=='AnnotateElement':
+                    annotation=selection
+        if not annotation:
+            raise
+        agent=self.getAgent(view=view)
+        if agent:
+            self.app.stateman.setSubmode('annotation')
+            top_left=agent.getGeometry(
+                    view=view, 
+                    annotation=annotation,
+                    **kwargs)
+            if top_left:
+                self.m_view.setElement(annotation)
+                self.updateViewGeometry(top_left, width, height)
+                self.m_view.toggle()
 
-    def edit(self, view, annotation, x=None, y=None, w=150, h=150):
-        boxes=annotation['box']
-        if not x and boxes:
-            box=boxes[-1]
-            item=annotation['item']
-            bottom_right=box.bottomRight()
-            bottom_right=item.mapToItem(bottom_right, unified=True)
-            bottom_right=item.mapToScene(bottom_right)
-            bottom_right=view.mapFromScene(bottom_right)
-            x=int(bottom_right.x())
-            y=int(bottom_right.y())
-        else:
-            x=y=100
-        top_left=self.mapToView(view, x, y)
-        self.view.move(top_left)
-        if w:
-            size=QtCore.QSize(w, h)
-            geometry=QtCore.QRect(top_left, size)
-            self.view.setGeometry(geometry)
-        self.view.setElement(annotation)
-        self.view.toggle()
-        # todo :current:
+    def updateViewGeometry(self, top_left, width, height):
+        self.m_view.move(top_left)
+        geometry=self.m_view.geometry()
+        if width:
+            geometry.setWidth(width)
+        if height:
+            geometry.setHeight(height)
+        if width or height:
+            self.m_view.setGeometry(geometry)
+        print(geometry, self.m_overlay.geometry())
+        #todo
 
-    def mapToUI(self, point, ui, match):
-        parent = ui.parent()
-        if not parent:
-            return point
-        elif ui==match:
-            return point
-        current = ui.mapToParent(point)
-        return self.mapToUI(current, parent, match)
-
-    @tag("<c-t>(normal)")
-    def textize(self, xrange=[1]):
-        view=self.app.stateman.view()
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selection=selector.selection(view=view)
-            self.edit(view, selection)
-
-        # selector=self.app.plugman.getPlug('Selection')
-        # if selector:
-        #     selection=selector.selection(view=view)
-        #     key=xrange[0]
-        #     color=self.m_colors.get(key, self.default_color)
-        #     textizer=self.getAgent(view=view)
-        #     selection['annotation_kind']='text'
-        #     selection['annotation_color']=color
-        #     selection['text']='text new'
-        #     return textizer.activate(view=view, selection=selection)
+    @tag("<escape><c-[>(edit[annotation])")
+    def octivate(self):
+        raise

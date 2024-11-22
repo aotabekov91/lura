@@ -34,8 +34,10 @@ class FitzSelection(Plug):
 
     def select(self, view, selection):
         item=selection['item']
-        current_item, _=self.m_views.get(view, (None, None))
-        if item and current_item!=item:
+        current_item, current_selection=self.m_views.get(view, (None, None))
+        cond1=item and current_item!=item
+        cond2=item and current_selection!=selection
+        if cond1 or cond2:
             self.wire(view, 'disconnect')
             self.m_views[view]=(item, selection)
             self.wire(view, 'connect')

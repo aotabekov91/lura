@@ -6,9 +6,12 @@
 * [ ] Should support visual mode
 * [ ] Should support different layout types 
 	* [ ] Single/Double page view, etc.
+* [ ] Vim-like editor
+	* [ ] Different modes, etc. normal/insert
 
 ## Sprint.Annotations backlog: Should support annotations
 
+* [ ] Edit mode :current:
 * [ ] Input mode
 	* [ ] As a plug container
 * [ ] Support different types of annotation
@@ -46,6 +49,7 @@
 
 ## Bugs
 
+* [ ] annotation selection does not draw after the first annotation select
 * [ ] view/tab/base tags are not working
 * [ ] Search index is not changing when jumping to the first/end
 * [ ] Visual word exiting without choosing a hint

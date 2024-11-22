@@ -31,12 +31,10 @@ class ListWidgetViewInputMode(Plug):
         if not widget and view:
             item=view.currentItem()
             if item:
-                print(item)
                 view_widget=view.itemWidget(item)
                 data=view_widget.widget('text')
                 if data:
                     widget, _ = data
-                print(data)
         if widget:
             widget.setReadOnly(False)
             widget.setFocus()
