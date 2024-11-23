@@ -36,13 +36,13 @@ class ViewGo(Go):
                 arg, 
                 None)
         if not action is None:
-            item = self.moveCursor(
+            idx = self.moveCursor(
                 action,
                 QtCore.Qt.KeyboardModifier.NoModifier,
             )
-            self.setCurrentIndex(item)
+            self.setCurrentIndex(idx)
             self.scrollTo(
-                    item, 
+                    idx, 
                     QtWidgets.QAbstractItemView.ScrollHint.EnsureVisible,
                     )
         else:

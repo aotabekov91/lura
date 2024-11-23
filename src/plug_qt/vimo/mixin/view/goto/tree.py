@@ -1,21 +1,30 @@
+from PyQt6 import QtCore
+
 from plug.utils import tag
 
 from .view import ViewGo
 
-
 class TreeGo(ViewGo):
+
     def goTo(self, xrange=None, **kwargs):
         if xrange is None:
-            super().goToLastSibling()
+            self.goToLast()
         else:
-            i = self.currentIndex()
-            p = i.parent()
+            idx = self.currentIndex()
+            parent = idx.parent()
             row = xrange[-1] - 1
-            if p.isValid():
-                n = p.child(row, 0)
-            else:
-                n = self.m_model.index(row, 0)
-            self.setCurrentIndex(n)
+            if not parent.isValid():
+                parent=QtCore.QModelIndex()
+            child = self.m_model.index(row, 0, parent)
+            self.setCurrentIndex(child)
+
+    def goToLast(self, **kwargs):
+        index = self.currentIndex()
+        if index:
+            parent = index.parent()
+            last_row = index.model().rowCount(parent) - 1
+            last = self.m_model.index(last_row, 0, parent)
+            self.setCurrentIndex(last)
 
     def getRowIndex(self, row):
         idx = self.currentIndex()
