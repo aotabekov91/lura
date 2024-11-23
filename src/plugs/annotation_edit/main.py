@@ -5,8 +5,8 @@ from .overlay import OverlayView
 
 class AnnotationEdit(Plug):
 
-    xmargin=0
-    ymargin=0
+    xmargin=10
+    ymargin=10
 
     def setup(self):
         super().setup()
@@ -84,16 +84,16 @@ class AnnotationEdit(Plug):
         if not ogeometry.contains(vgeometry):
             x=vgeometry.x()
             w=vgeometry.width()
-            xdelta=ogeometry.width()-x-w-self.xmargin
+            xdelta=ogeometry.width()-x-w
             if xdelta<0:
-                vgeometry.setX(x+xdelta)
-                vgeometry.setWidth(w+xdelta-self.xmargin)
+                vgeometry.setX(x+xdelta-self.xmargin)
+                vgeometry.setWidth(w)
             y=vgeometry.y()
             h=vgeometry.height()
-            ydelta=ogeometry.height()-y-h-self.ymargin
+            ydelta=ogeometry.height()-y-h
             if ydelta<0:
                 vgeometry.setY(y+ydelta)
-                vgeometry.setHeight(h+ydelta-self.ymargin)
+                vgeometry.setHeight(h)
         self.m_view.setGeometry(vgeometry)
 
     @tag("<escape><c-[>(edit[annotation])")
