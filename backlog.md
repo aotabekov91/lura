@@ -49,9 +49,8 @@
 
 ## Bugs
 
-* [ ] annotation selection does not draw after the first annotation select
-* [ ] view/tab/base tags are not working
 * [ ] Search index is not changing when jumping to the first/end
+* [ ] view/tab/base tags are not working
 * [ ] Visual word exiting without choosing a hint
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Pane fullscreening changes position/on second try throws an error
@@ -63,3 +62,4 @@
 * [ ] Autosave go/zoom does not always open last state
 * [x] view.select :bug:
 * [x] FilesTree.view.activate :bug: view dock resize
+* [x] annotation selection does not draw after the first annotation select
