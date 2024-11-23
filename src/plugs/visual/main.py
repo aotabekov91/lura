@@ -7,4 +7,5 @@ class Visual(Plug):
         self.app.stateman.toggle(
             mode="visual",
             delisten=True,
-            passive=["visual"])
+            # passive=["visual"],
+            )

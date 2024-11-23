@@ -4,77 +4,58 @@ class BandVisual(Plug):
 
     def setup(self):
         super().setup()
-        self.m_bander={}
+        self.m_agent={}
 
-    def addVisualizer(self, name, bander):
-        self.m_bander[name]=bander
+    def addAgent(self, name, agent):
+        self.m_agent[name]=agent
 
-    def visualizer(self, name):
-        return self.m_bander.get(name, None)
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
+        return self.m_agent.get(name, None)
 
     @tag(["<c-b>(visual)", "<c-b>/<c-[>(visual[band])"])
     def toggle(self):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
+        agent=self.getAgent(view)
+        if agent:
             submode = self.app.stateman.toggleSubmode("band")
             if submode == "band":
-                bander.activate(view)
+                agent.activate(view)
             else:
-                bander.octivate(view)
+                agent.octivate(view)
 
     @tag("G(visual[band])")
     def setCorner(self, xrange=None):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
-            bander.go(
-                    view, 
-                    kind='corner', 
-                    xrange=xrange)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.go(view=view, kind='corner', xrange=xrange)
 
     @tag("l(visual[band])")
     def right(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
-            bander.go(
-                    view,
-                    kind='right',
-                    xrange=xrange)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.go(view=view, kind='right', xrange=xrange)
 
     @tag("h(visual[band])")
     def left(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
-            bander.go(
-                    view,
-                    kind='left',
-                    xrange=xrange)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.go(view=view, kind='left', xrange=xrange)
 
     @tag("k(visual[band])")
     def up(self, xrange=[1]): 
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
-            bander.go(
-                    view,
-                    kind='up',
-                    xrange=xrange)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.go(view=view, kind='up', xrange=xrange)
 
     @tag("j(visual[band])")
     def down(self, xrange=[1]):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        bander=self.visualizer(name)
-        if bander:
-            bander.go(
-                    view,
-                    kind='down',
-                    xrange=xrange)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.go(view=view, kind='down', xrange=xrange)

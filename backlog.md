@@ -50,6 +50,7 @@
 ## Bugs
 
 * [ ] Visual word exiting without choosing a hint
+* [ ] Outline dock view is not totally fitting
 * [ ] view/tab/base tags are not working
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Pane fullscreening changes position/on second try throws an error

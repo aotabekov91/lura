@@ -6,32 +6,34 @@ class FitzWordVisual(Plug):
         super().setup()
         self.m_blocker=None
         if self.app.running:
-            self.addToVisualizer()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToVisualizer)
+                    self.addAgent)
 
-    def addToVisualizer(self):
-        visualizer=self.app.plugman.getPlug(
+    def addAgent(self):
+        handler=self.app.plugman.getPlug(
                 'WordVisual')
         blocker=self.app.plugman.getPlug(
                 'FitzBlockWord')
         selector=self.app.plugman.getPlug(
                 'Selection')
-        if visualizer and blocker and selector:
+        if handler and blocker and selector:
             self.m_blocker=blocker
-            visualizer.addVisualizer(
-                    'FitzView', self)
+            handler.addAgent('FitzView', self)
 
-    def visualize(self, view):
+    def unvisualize(self, view=None, **kwargs):
+        pass
+
+    def visualize(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        hinter=self.app.plugman.getPlug('WordHint')
         selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
-        if not selection:
-            hinter=self.app.plugman.getPlug('WordHint')
-            if hinter:
-                self.app.stateman.toggleSubmode()
-                hinter.toggleHint()
-                hinter.setExitSubmode('word')
+        if not selection and hinter:
+            self.app.stateman.toggle('hint')
+            hinter.toggle(view=view, **kwargs)
 
     def go(self, view, xrange=[1], kind='last'):
         selector=self.app.plugman.getPlug('Selection')

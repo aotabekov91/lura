@@ -17,10 +17,7 @@ class Hint(Plug):
     @tag(["<c-f>(normal)", "<c-f>/<c-[>(hint)"])
     def toggleHint(self):
         self.app.stateman.toggle(
-            mode="hint",
-            delisten=True,
-            # passive=["hint"],
-            )
+                mode="hint", delisten=True)
 
     @tag("<escape>(hint[any])")
     def finishHintMode(self):

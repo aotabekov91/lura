@@ -4,42 +4,42 @@ class WordVisual(Plug):
 
     def setup(self):
         super().setup()
-        self.m_visualizers={}
+        self.m_agents={}
 
-    def addVisualizer(self, name, visualizer):
-        self.m_visualizers[name]=visualizer
+    def addAgent(self, name, visualizer):
+        self.m_agents[name]=visualizer
 
-    def visualizer(self, name=None, view=None):
-        if view:
+    def getAgent(self, name=None, view=None):
+        if not name and view:
             name=view.__class__.__name__
-        return self.m_visualizers.get(name, None)
+        return self.m_agents.get(name, None)
 
     @tag(["<c-w>(visual)", "<c-w>/<c-[>(visual[word])"])
-    def toggleWordVisual(self):
+    def toggle(self):
         view=self.app.stateman.view()
-        name=view.__class__.__name__
-        visualizer=self.visualizer(name)
-        if visualizer:
+        agent=self.getAgent(view=view)
+        if agent:
             submode=self.app.stateman.toggleSubmode(
                     "word")
             if submode=='word':
-                if self.check('visualize', visualizer):
-                    visualizer.visualize(view)
+                if self.check('visualize', agent):
+                    agent.visualize(view)
             else:
-                if self.check('unvisualize', visualizer):
-                    visualizer.unvisualize(view)
+                if self.check('unvisualize', agent):
+                    agent.unvisualize(view)
+                self.app.stateman.toggle()
 
     @tag("<c-j>(visual[word])")
     def jump(self):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(view, kind='jump')
 
     @tag("o(visual[word])]")
     def goFirst(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='first')
@@ -47,7 +47,7 @@ class WordVisual(Plug):
     @tag("$(visual[word])")
     def goLast(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='last')
@@ -55,7 +55,7 @@ class WordVisual(Plug):
     @tag("k(visual[word])")
     def goUp(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='up')
@@ -63,7 +63,7 @@ class WordVisual(Plug):
     @tag("j(visual[word])")
     def goDown(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='down')
@@ -71,7 +71,7 @@ class WordVisual(Plug):
     @tag("l(visual[word])")
     def goLeft(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='right')
@@ -79,7 +79,7 @@ class WordVisual(Plug):
     @tag("h(visual[word])")
     def goRight(self, xrange=[1]):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(
                     view, xrange=xrange, kind='left')
@@ -87,6 +87,6 @@ class WordVisual(Plug):
     @tag("t(visual[word])")
     def toggleDirection(self):
         view=self.app.stateman.view()
-        visualizer=self.visualizer(view=view)
+        visualizer=self.getAgent(view=view)
         if visualizer:
             visualizer.go(view, kind='toggle')

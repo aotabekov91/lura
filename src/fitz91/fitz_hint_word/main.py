@@ -66,17 +66,14 @@ class FitzWordHint(Plug):
         model=view.model()
         self.cacheModel(model)
         self.assignHints(view)
-        self.app.stateman.setFunctor(
-                self.functor)
-        view.itemPainted.connect(
-                self.paint)
+        self.app.stateman.setFunctor(self.functor)
+        view.itemPainted.connect(self.paint)
         view.redraw()
 
     def unhint(self, view):
         self.m_hint=''
         self.app.stateman.setFunctor()
-        view.itemPainted.disconnect(
-                self.paint)
+        view.itemPainted.disconnect(self.paint)
         view.redraw()
 
     def paint(self, painter, ops, widget, item):
@@ -107,7 +104,10 @@ class FitzWordHint(Plug):
             selector=self.app.plugman.getPlug('Selection')
             selector.select(view, **data)
             word_hinter=self.app.plugman.getPlug('WordHint')
-            word_hinter.toggleHint()
+            word_hinter.toggle()
+            word_visual=self.app.plugman.getPlug('FitzWordVisual')
+            if word_visual:
+                self.app.stateman.toggle(mode='visual', submode='word')
             view.redraw()
             return True
         for hint in hints:
