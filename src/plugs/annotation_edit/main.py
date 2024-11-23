@@ -1,11 +1,12 @@
-from PyQt6 import QtCore
-
 from plug import Plug, tag
 
 from .view import EditorView
 from .overlay import OverlayView
 
 class AnnotationEdit(Plug):
+
+    xmargin=0
+    ymargin=0
 
     def setup(self):
         super().setup()
@@ -74,15 +75,26 @@ class AnnotationEdit(Plug):
 
     def updateViewGeometry(self, top_left, width, height):
         self.m_view.move(top_left)
-        geometry=self.m_view.geometry()
+        vgeometry=self.m_view.geometry()
         if width:
-            geometry.setWidth(width)
+            vgeometry.setWidth(width)
         if height:
-            geometry.setHeight(height)
-        if width or height:
-            self.m_view.setGeometry(geometry)
-        print(geometry, self.m_overlay.geometry())
-        #todo
+            vgeometry.setHeight(height)
+        ogeometry=self.m_overlay.geometry()
+        if not ogeometry.contains(vgeometry):
+            x=vgeometry.x()
+            w=vgeometry.width()
+            xdelta=ogeometry.width()-x-w-self.xmargin
+            if xdelta<0:
+                vgeometry.setX(x+xdelta)
+                vgeometry.setWidth(w+xdelta-self.xmargin)
+            y=vgeometry.y()
+            h=vgeometry.height()
+            ydelta=ogeometry.height()-y-h-self.ymargin
+            if ydelta<0:
+                vgeometry.setY(y+ydelta)
+                vgeometry.setHeight(h+ydelta-self.ymargin)
+        self.m_view.setGeometry(vgeometry)
 
     @tag("<escape><c-[>(edit[annotation])")
     def octivate(self):
