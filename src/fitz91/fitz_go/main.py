@@ -1,3 +1,5 @@
+from PyQt6 import QtCore
+
 from plug import Plug
 
 class FitzGo(Plug):
@@ -138,6 +140,14 @@ class FitzGo(Plug):
                     ver = int(ver - vr.height() / 2.0)
                 view.verticalScrollBar().setValue(ver)
                 view.horizontalScrollBar().setValue(hor)
+                # if center:
+                #     point=QtCore.QPointF(x, y)
+                #     point=item.mapToItem(point, unified=True)
+                #     point=item.mapToScene(point)
+                #     print(point)
+                #     point=view.mapFromScene(point)
+                #     print(point)
+                #     view.centerOn(point.x(), point.y())
                 view.viewport().update()
                 view.setVisibleItem()
 
