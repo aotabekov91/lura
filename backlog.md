@@ -49,8 +49,7 @@
 
 ## Bugs
 
-* [ ] Visual word exiting without choosing a hint
-* [ ] Outline dock view is not totally fitting
+* [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] view/tab/base tags are not working
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Pane fullscreening changes position/on second try throws an error
@@ -64,3 +63,5 @@
 * [x] FilesTree.view.activate :bug: view dock resize
 * [x] annotation selection does not draw after the first annotation select
 * [x] Search index is not changing when jumping to the first/end
+* [x] Visual word exiting without choosing a hint
+* [x] TreeView normal jumping with gg/G calls an error 

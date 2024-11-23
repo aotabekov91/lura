@@ -4,6 +4,7 @@ from plug import tag
 
 
 class Go:
+
     canGo = True
     positionChanged = QtCore.pyqtSignal()
 
@@ -34,9 +35,9 @@ class Go:
     @tag("G(normal)[^]")
     def goto(self, xrange=None, **kwargs):
         if not xrange:
-            f = getattr(self, "goToLast", None)
-            if f:
-                f(**kwargs)
+            func = getattr(self, "goToLast", None)
+            if func:
+                func(xrange=xrange, **kwargs)
         else:
             self.go(xrange=xrange, **kwargs)
 
