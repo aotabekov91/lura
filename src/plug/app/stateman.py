@@ -22,12 +22,14 @@ class Stateman(Plug):
     def setViewDefaultMode(
         self,
         view: tp.Any = None,
+        mode="normal",
+        **kwargs,
     ) -> None:
         mode = None
         if view:
-            mode = view.default_mode
-        mode = mode or self.default_mode
-        self.activate(mode)
+            mode = getattr(view, 'default_mode', mode)
+        if mode:
+            self.activate(mode)
 
     def functor(self):
         return self.m_functor
@@ -118,20 +120,18 @@ class Stateman(Plug):
     def setView(
         self,
         view: tp.Any = None,
+        **kwargs,
     ) -> None:
         if not view:
             return
         self.m_view = view
-        self.setSubview(view)
-        self.setViewDefaultMode(view)
+        self.setSubview(view, **kwargs)
+        self.setViewDefaultMode(view, **kwargs)
 
     def subview(self) -> tp.Any:
         return self.m_subview
 
-    def setSubview(
-        self,
-        view: tp.Any = None,
-    ) -> None:
+    def setSubview(self, view: tp.Any = None, **kwargs) -> None:
         if not view:
             return
         model = view.model()
