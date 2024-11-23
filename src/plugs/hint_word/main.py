@@ -5,7 +5,6 @@ class WordHint(Plug):
     def setup(self):
         super().setup()
         self.m_hinters={}
-        self.m_submode=None
 
     def setExitSubmode(self, submode=None):
         self.m_submode=submode
@@ -28,7 +27,4 @@ class WordHint(Plug):
                 hinter.hint(view)
             else:
                 hinter.unhint(view)
-                if self.m_submode:
-                    self.app.stateman.toggleSubmode(
-                            submode=self.m_submode)
-
+                self.app.stateman.toggle()
