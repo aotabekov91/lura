@@ -3,6 +3,7 @@ from PyQt6 import QtCore
 import plug
 
 class View(plug.View):
+
     cleanUpWanted = QtCore.pyqtSignal()
     viewIsRedrawn = QtCore.pyqtSignal()
     resized = QtCore.pyqtSignal(object)

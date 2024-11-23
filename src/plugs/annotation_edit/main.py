@@ -31,6 +31,7 @@ class AnnotationEdit(Plug):
         self.m_overlay=OverlayView(
                 app=self.app,
                 view=self.app.view.main,
+                identifier='O',
                 )
         self.m_view = EditorView(
             app=self.app,
@@ -63,7 +64,6 @@ class AnnotationEdit(Plug):
             raise
         agent=self.getAgent(view=view)
         if agent:
-            self.app.stateman.setSubmode('annotation')
             top_left=agent.getGeometry(
                     view=view, 
                     annotation=annotation,
@@ -71,7 +71,7 @@ class AnnotationEdit(Plug):
             if top_left:
                 self.m_view.setElement(annotation)
                 self.updateViewGeometry(top_left, width, height)
-                self.m_view.toggle()
+                self.m_view.activate()
 
     def updateViewGeometry(self, top_left, width, height):
         self.m_view.move(top_left)

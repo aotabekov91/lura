@@ -257,7 +257,7 @@ class View:
             manager.setView(*args, view=self, **kwargs)
             if recursive and not manager.activated:
                 manager.activate(recursive=recursive)
-        self.app.stateman.setView(view=self)
+        self.app.stateman.setView(view=self, **kwargs)
         if self.checkProp("setFocus"):
             self.show()
             self.setFocus()
