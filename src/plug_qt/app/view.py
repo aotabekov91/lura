@@ -1,10 +1,8 @@
 import typing as tp
 
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore
 
-from plug import utils
 from plug_qt.vimo.gizmo import view
-
 
 class View(
     view.WindowView,
@@ -27,8 +25,6 @@ class View(
                 self.addToBuffer)
 
     def setupUI(self) -> None:
-        tab_klass = utils.Factory(
-            view.TileView, QtWidgets.QWidget)
         self.main: view.TabView = view.TabView(
             label="C",
             parent=self,
@@ -36,7 +32,7 @@ class View(
             manager=self,
             name='Center',
             identifier="C",
-            tab_classes={"default": tab_klass})
+            tab_classes={"default": view.TileView})
         self.docks: view.Docks = view.Docks(
             label="D",
             parent=self,

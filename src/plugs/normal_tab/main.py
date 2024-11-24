@@ -2,9 +2,7 @@ from PyQt6 import QtCore
 
 from plug import Plug, tag
 
-class Go(Plug, QtCore.QObject):
-
-    positionChanged = QtCore.pyqtSignal(object, object)
+class ViewNormal(Plug, QtCore.QObject):
 
     def setup(self):
         super().setup()

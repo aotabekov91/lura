@@ -139,10 +139,10 @@ class TabView(
             return copy
 
     def getNewTab(self, **kwargs):
-        n = self.tabGet()
-        if n:
-            self.addView(n, **kwargs)
-        return n
+        new = self.tabGet()
+        if new:
+            self.addView(new, **kwargs)
+        return new
 
     def addView(self, v, **kwargs):
         self.tabAdd(v, **kwargs)

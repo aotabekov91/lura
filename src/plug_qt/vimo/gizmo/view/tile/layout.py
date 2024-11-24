@@ -57,8 +57,8 @@ class TileLayout(QtCore.QObject):
             **kwargs
             ):
         if not view is None:
-            c, p = view, self.current
-            self.current, self.previous = c, p
+            current, previous = view, self.current
+            self.current, self.previous = current, previous
             leaf = self.getLeaf(view)
             self.setLeaf(leaf)
             self.update()
@@ -231,7 +231,7 @@ class TileLayout(QtCore.QObject):
             self.root.equalize()
             self.update()
 
-    def goTo(self, kind, xrange=None, view=None):
+    def goTo(self, kind=None, xrange=None, view=None, **kwargs):
         view = view or self.current_leaf.view
         pos = ["right", "left", "down", "up"]
         if kind in pos:
@@ -239,24 +239,24 @@ class TileLayout(QtCore.QObject):
             self.setLeaf(leaf)
             return leaf
         elif kind == "next":
-            w = self.findSibling(view, "next")
-            return self.setView(w)
+            next_view = self.findSibling(view, "next")
+            return self.setView(view=next_view)
         elif kind == "prev":
-            w = self.findSibling(view, "prev")
-            return self.setView(w)
+            next_view = self.findSibling(view, "prev")
+            return self.setView(view=next_view)
         elif kind == "first":
-            w = next(self.root.views(), None)
-            return self.setView(w)
+            next_view = next(self.root.views(), None)
+            return self.setView(view=next_view)
         elif kind == "last":
             views = list(self.root.views())
-            w = views[-1] if len(views) else None
-            return self.setView(w)
+            next_view = views[-1] if len(views) else None
+            return self.setView(next_view)
         elif type(xrange) == int:
             xrange[-1] -= 1
             views = list(self.root.views())
             if 0 <= xrange < len(views):
-                w = views[xrange]
-                return self.setView(w)
+                next_view = views[xrange]
+                return self.setView(view=next_view)
 
     def move(
         self,

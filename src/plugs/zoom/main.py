@@ -13,7 +13,6 @@ class Zoom(Plug, QtCore.QObject):
         self.m_data={}
         self.m_agents={}
 
-
     def addAgent(self, name, agent):
         self.m_agents[name]=agent
 

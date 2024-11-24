@@ -1,8 +1,6 @@
-from PyQt6 import QtCore
-
 from plug import Plug
 
-class FitzGo(Plug):
+class FitzNormal(Plug):
 
     def setup(self):
         super().setup()
@@ -14,9 +12,9 @@ class FitzGo(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        goer=self.app.plugman.getPlug('Go')
-        if goer:
-            goer.addAgent('FitzView', self)
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            normal.addAgent('FitzView', self)
             self.app.buffman.viewIsDrawn.connect(self.restorePosition)
 
     def activate(self, kind=None, **kwargs):
