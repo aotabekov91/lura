@@ -41,7 +41,7 @@ class Selection(Plug, QtCore.QObject):
         if selection_model:
             return selection_model.getSelection(**kwargs)
 
-    @tag('<escape>(normal)')
+    @tag('<c-[>/<escape>(normal)')
     def cleanUpSelection(self, view=None):
         if not view:
             view=self.app.stateman.view()

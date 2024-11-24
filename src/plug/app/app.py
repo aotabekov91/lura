@@ -103,8 +103,3 @@ class App(Plug):
         while self.wants_to_wait:
             time.sleep(0.01)
         sys.exit()
-
-    @tag("<c-[>(normal)")
-    def hide(self) -> None:
-        if self.ui and self.canHide:
-            self.ui.hide()
