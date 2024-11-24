@@ -70,43 +70,25 @@ class WindowNormal(Plug):
     def splitVertically(self, **kwargs):
         self.activate(action='splitTo', kind="vertical", **kwargs)
 
-
-    @tag("f(normal)")
-    def toggleSplit(self):
-        self.m_layout.toggleSplit()
-
-    @tag("<c-k>(normal)")
-    def goBlockup(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockup", xrange=xrange)
-
-    @tag("<c-j>(normal)")
-    def goBlockdown(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockdown", xrange=xrange)
-
-    @tag("<c-h>(normal)")
-    def goBlockleft(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockleft", xrange=xrange)
-
-    @tag("<c-l>(normal)")
-    def goBlockRight(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockright", xrange=xrange)
-
     @tag("n(normal)")
     def goNext(self, xrange=[1], **kwargs):
-        self.activate(kind="goToNext", xrange=xrange)
+        self.activate(action='goTo', kind="next", xrange=xrange, **kwargs)
 
     @tag("p(normal)")
     def goPrev(self, xrange=[1], **kwargs):
-        self.activate(kind="goToPrev", xrange=xrange)
-
+        self.activate(action='goTo', kind="prev", xrange=xrange, **kwargs)
+        
     @tag("zk(normal)")
-    def viewZoomInUp(self, xrange=[1], **kwargs):
-        self.m_layout.resize(kind="up", xrange=xrange)
+    def zoomTopUp(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="up", xrange=xrange, **kwargs)
 
     @tag("zK(normal)")
-    def viewZoomOutUp(self, xrange=[1], **kwargs):
-        self.m_layout.resize(
-            kind="up", inc=False, xrange=xrange)
+    def zoomTopDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="down", inc=False, xrange=xrange, **kwargs)
+
+    @tag("zj(normal)")
+    def zoomDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="down", xrange=xrange, **kwargs)
 
     @tag("zj(normal)")
     def viewZoomInDown(self, xrange=[1], **kwargs):
@@ -134,6 +116,24 @@ class WindowNormal(Plug):
     def viewZoomOutLeft(self, xrange=[1], **kwargs):
         self.m_layout.resize(
             kind="left", inc=False, xrange=xrange)
+
+
+
+    @tag("<c-k>(normal)")
+    def goBlockup(self, xrange=[1], **kwargs):
+        self.activate(kind="goToBlockup", xrange=xrange)
+
+    @tag("<c-j>(normal)")
+    def goBlockdown(self, xrange=[1], **kwargs):
+        self.activate(kind="goToBlockdown", xrange=xrange)
+
+    @tag("<c-h>(normal)")
+    def goBlockleft(self, xrange=[1], **kwargs):
+        self.activate(kind="goToBlockleft", xrange=xrange)
+
+    @tag("<c-l>(normal)")
+    def goBlockRight(self, xrange=[1], **kwargs):
+        self.activate(kind="goToBlockright", xrange=xrange)
 
     # @tag("gg(normal)")
     # def viewGoToFirst(self, **kwargs):

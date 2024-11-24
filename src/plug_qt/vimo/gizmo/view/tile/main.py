@@ -23,6 +23,9 @@ class TileView(
             new.view.activate()
         return new
 
+    def zoomTo(self, **kwargs):
+        self.m_layout.resize(**kwargs)
+
     def copy(self, full=False):
         new_tile=self.__class__(app=self.app)
         if not self.current:

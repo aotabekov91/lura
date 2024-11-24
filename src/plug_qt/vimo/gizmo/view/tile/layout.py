@@ -258,7 +258,7 @@ class TileLayout(QtCore.QObject):
                 next_view = views[xrange]
                 return self.setView(view=next_view)
 
-    def move(
+    def moveTo(
         self,
         xrange=[1],
         kind=None,
@@ -336,30 +336,33 @@ class TileLayout(QtCore.QObject):
             l = p
             p = l.parent
 
-    def resize(self, kind, inc=True, xrange=[1]):
-        l = self.current_leaf
-        p = l.parent
-        delta = self.delta * xrange
-        while p:
-            cond = p.horizontal
+    def resize(self, kind=None, inc=True, xrange=[1]):
+        leaf = self.current_leaf
+        parent = leaf.parent
+        delta = self.delta * xrange[-1]
+        print(kind)
+        while parent:
+            cond = parent.horizontal
             if kind in ["left", "right"]:
-                cond = not p.horizontal
+                cond = not parent.horizontal
             if kind in ["right", "down"]:
-                cond = cond and l is p.leaves[0]
-                ratio = max(5, p.ratio - delta)
+                cond = cond and leaf is parent.leaves[0]
+                cond=True #todo :current:
+                ratio = max(5, parent.ratio - delta)
                 if inc:
-                    ratio = min(95, p.ratio + delta)
+                    ratio = min(95, parent.ratio + delta)
+                print(cond, ratio)
             elif kind in ["left", "up"]:
-                cond = cond and l is p.leaves[1]
-                ratio = min(95, p.ratio + delta)
+                cond = cond and leaf is parent.leaves[1]
+                ratio = min(95, parent.ratio + delta)
                 if inc:
-                    ratio = max(5, p.ratio - delta)
+                    ratio = max(5, parent.ratio - delta)
             if cond:
-                p.ratio = ratio
-                p.update()
+                parent.ratio = ratio
+                parent.update()
                 break
-            l = p
-            p = l.parent
+            leaf = parent
+            parent = leaf.parent
 
     def toggleFullscreen(self, v):
         if v.isFullscreen:
