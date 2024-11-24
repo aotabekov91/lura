@@ -26,9 +26,18 @@ class OverlayView(
             QtGui.QPalette(QtCore.Qt.GlobalColor.transparent))
         self.setAttribute(
             QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        self.resized.connect(self.updateOverlayPosition)
+        # self.resized.connect(self.updateOverlayPosition)
         self.setupUI()
         self.hide()
+        self.updateOverlaySize(view)
+
+    # def updateOverlayPosition(self):
+    #     self.resized.disconnect(
+    #             self.updateOverlayPosition)
+    #     geometry = self.geometry()
+    #     self.setGeometry(geometry)
+    #     self.resized.connect(
+    #             self.updateOverlayPosition)
 
     def setup(self):
         super().setup()
@@ -38,7 +47,8 @@ class OverlayView(
                     self.updateOverlaySize)
 
     def updateOverlaySize(self, view):
-        self.resize(view.size())
+        if view:
+            self.resize(view.size())
 
     def setupUI(self):
         self.m_blur = self.blur
@@ -111,13 +121,6 @@ class OverlayView(
         view.setFocus()
         self.app.view.update()
 
-    def updateOverlayPosition(self):
-        self.resized.disconnect(
-                self.updateOverlayPosition)
-        geometry = self.geometry()
-        self.setGeometry(geometry)
-        self.resized.connect(
-                self.updateOverlayPosition)
 
     def activate(self, *args, **kwargs):
         pass

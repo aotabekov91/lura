@@ -6,57 +6,61 @@ class FitzFullscreen(Plug):
         super().setup()
         self.m_states={}
         if self.app.running:
-            self.addToFullscreener()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToFullscreener)
+                    self.addAgent)
 
-    def addToFullscreener(self):
-        fullscreener=self.app.plugman.getPlug(
-                'Fullscreen')
-        if fullscreener:
-            fullscreener.addFullscreener(
-                    'FitzView', self)
+    def addAgent(self):
+        overlay=self.app.plugman.getPlug('Overlay')
+        holder=self.app.plugman.getPlug('Fullscreen')
+        if holder and overlay:
+            holder.addAgent('FitzView', self)
 
     def saveState(self, view, state={}):
         self.m_states[view]=state
 
-    def state(self, view):
+    def getState(self, view):
         return self.m_states.get(view, {})
 
-    def activate(self, view):
-        size = view.size()
-        idx = view.posIndex()
-        manager = view.manager()
-        geometry = view.geometry()
-        updater = lambda: self.update(view)
-        state={'idx':idx, 
-              'size': size,
-              'manager': manager,
-              'updater': updater,
-              'geometry': geometry,
-              }
-        self.saveState(view, state)
-        manager.removeView(view)
-        overlay = self.app.view.overlay
-        overlay.addView(view)
-        overlay.setView(view)
-        overlay.resized.connect(updater)
-        view.activate(recursive=True)
-        updater()
+    def activate(self, view=None, **kwargs):
+        if view:
+            size = view.size()
+            idx = view.posIndex()
+            manager = view.manager()
+            geometry = view.geometry()
+            updateView = lambda: self.updateView(view)
+            state={'idx':idx, 
+                  'size': size,
+                  'manager': manager,
+                  'geometry': geometry,
+                  'updater': updateView,
+                  }
+            self.saveState(view, state)
+            overlay=self.app.plugman.getPlug('Overlay')
+            parent = overlay.getOverlay(self.app.view)
+            if parent:
+                manager.removeView(view)
+                parent.addView(view)
+                parent.setView(view)
+                parent.resized.connect(updateView)
+                view.activate(recursive=True)
+                updateView()
 
     def octivate(self, view):
-        manager = view.manager()
-        manager.removeView(view)
-        manager.octivate()
-        state=self.state(view)
+        state=self.getState(view)
         idx=state.get('idx', None)
         size=state.get('size', None)
-        manager=state.get('manager', None)
-        updater=state.get('updater', None)
+        updateView=state.get('updater', None)
         geometry=state.get('geometry', None)
-        overlay = self.app.view.overlay
-        overlay.resized.disconnect(updater)
+        overlay=self.app.plugman.getPlug('Overlay')
+        parent = overlay.getOverlay(self.app.view)
+        if parent:
+            parent.resized.disconnect(updateView)
+        manager = view.manager()
+        manager.octivate()
+        manager.removeView(view)
+        manager=state.get('manager', None)
         view.setManager(manager)
         manager.insertView(
             view=view,
@@ -66,6 +70,6 @@ class FitzFullscreen(Plug):
         self.saveState(view)
         view.activate()
 
-    def update(self, view):
-        overlay = self.app.view.overlay
-        view.setGeometry(overlay.geometry())
+    def updateView(self, view):
+        manager=view.manager()
+        view.setGeometry(manager.geometry())

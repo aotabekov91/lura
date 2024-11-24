@@ -7,27 +7,29 @@ class Fullscreen(Plug):
         self.m_fullscreen={}
         self.m_fullsreeners={}
 
-    def addFullscreener(self, name, fullscreener):
-        self.m_fullsreeners[name]=fullscreener
+    def addAgent(self, name, getAgent):
+        self.m_fullsreeners[name]=getAgent
 
-    def fullscreener(self, name):
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
         return self.m_fullsreeners.get(name, None)
 
-    def isFullscreen(self, view):
+    def checkFullscreen(self, view):
         return self.m_fullscreen.get(view, False)
 
     def setFullscreen(self, view, cond):
         self.m_fullscreen[view]=cond
 
     @tag("f(normal)")
-    def toggle(self):
-        view=self.app.stateman.view()
-        name=view.__class__.__name__
-        fullscreener=self.fullscreener(name)
-        if fullscreener:
-            if self.isFullscreen(view):
-                fullscreener.octivate(view)
-                self.setFullscreen(view, False)
-            else:
-                fullscreener.activate(view)
+    def toggle(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        agent=self.getAgent(view=view)
+        if agent:
+            if not self.checkFullscreen(view):
+                agent.activate(view=view, **kwargs)
                 self.setFullscreen(view, True)
+            else:
+                agent.octivate(view=view, **kwargs)
+                self.setFullscreen(view, False)
