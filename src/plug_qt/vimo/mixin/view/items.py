@@ -2,8 +2,8 @@ from PyQt6 import QtCore
 
 from plug_qt.vimo.item import Item
 
-from .layout import Layout
 from .scene import Scene
+from .layout import Layout
 
 
 class Items(Scene, Layout):

@@ -1,16 +1,10 @@
 from PyQt6 import QtCore
 
-
 class Elements:
+
     hasElements = True
     loaded = QtCore.pyqtSignal(object)
     elementCreated = QtCore.pyqtSignal(object)
-
-    # def count(self):
-    #     return len(self.m_elements)
-
-    # def element(self, idx):
-    #     return self.m_elements.get(idx, None)
 
     def elements(self):
         if not self.m_loaded:

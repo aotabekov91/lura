@@ -14,7 +14,6 @@ from .element import FitzElement
 
 class FitzModel(
     plug.utils.Cache,
-    # plug_qt.vimo.mixin.model.Locate,
     plug_qt.vimo.mixin.model.Elements,
     plug_qt.vimo.model.Model,
     QtCore.QObject,
