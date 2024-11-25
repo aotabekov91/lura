@@ -84,100 +84,60 @@ class WindowNormal(Plug):
 
     @tag("zK(normal)")
     def zoomTopDown(self, xrange=[1], **kwargs):
-        self.activate(action='zoomTo', kind="down", inc=False, xrange=xrange, **kwargs)
+        self.activate(action='zoomTo', kind="up", inc=False, xrange=xrange, **kwargs)
 
     @tag("zj(normal)")
-    def zoomDown(self, xrange=[1], **kwargs):
+    def zoomBottomUp(self, xrange=[1], **kwargs):
         self.activate(action='zoomTo', kind="down", xrange=xrange, **kwargs)
 
-    @tag("zj(normal)")
-    def viewZoomInDown(self, xrange=[1], **kwargs):
-        self.m_layout.resize(kind="down", xrange=xrange)
-
     @tag("zJ(normal)")
-    def viewZoomOutDown(self, xrange=[1], **kwargs):
-        self.m_layout.resize(
-            kind="down", inc=False, xrange=xrange)
+    def zoomBottomDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="down", inc=False, xrange=xrange, **kwargs)
 
     @tag("zl(normal)")
-    def viewZoomInRight(self, xrange=[1], **kwargs):
-        self.m_layout.resize(kind="right", xrange=xrange)
+    def zoomRightUp(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="right", xrange=xrange, **kwargs)
 
     @tag("zL(normal)")
-    def viewZoomOutRight(self, xrange=[1], **kwargs):
-        self.m_layout.resize(
-            kind="right", inc=False, xrange=xrange)
+    def zoomRightDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="right", inc=False, xrange=xrange, **kwargs)
 
     @tag("zh(normal)")
-    def viewZoomInLeft(self, xrange=[1], **kwargs):
-        self.m_layout.resize(kind="left", xrange=xrange)
+    def zoomLeftUp(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="left", xrange=xrange, **kwargs)
 
     @tag("zH(normal)")
-    def viewZoomOutLeft(self, xrange=[1], **kwargs):
-        self.m_layout.resize(
-            kind="left", inc=False, xrange=xrange)
+    def zoomLeftDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind="left", inc=False, xrange=xrange, **kwargs)
 
-
-
-    @tag("<c-k>(normal)")
-    def goBlockup(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockup", xrange=xrange)
-
-    @tag("<c-j>(normal)")
-    def goBlockdown(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockdown", xrange=xrange)
-
-    @tag("<c-h>(normal)")
-    def goBlockleft(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockleft", xrange=xrange)
-
-    @tag("<c-l>(normal)")
-    def goBlockRight(self, xrange=[1], **kwargs):
-        self.activate(kind="goToBlockright", xrange=xrange)
-
-    # @tag("gg(normal)")
-    # def viewGoToFirst(self, **kwargs):
-    #     self.viewGoTo(kind="first")
-
-    @tag("x(normal)")
-    def viewFlip(self):
-        new, current = self.m_layout.swap()
-        if new and new.view:
-            new.view.activate()
-
-    @tag("e(normal)")
-    def equalizeRatio(self):
-        self.m_layout.equalize()
-
-
-    @tag("~gW(normal)")
-    def viewMoveTo(self, xrange=None, **kwargs):
-        return self.m_layout.move(xrange=xrange, **kwargs)
+    @tag("ze(normal)")
+    def zoomToEqual(self, **kwargs):
+        self.activate(action='zoomTo', kind="equal", **kwargs)
 
     @tag("K(normal)")
-    def viewMoveToUp(self, xrange=[1]):
-        self.viewMoveTo(kind="up", xrange=xrange)
+    def moveToUp(self, xrange=[1], **kwargs):
+        self.activate(action='moveTo', kind="up", xrange=xrange, **kwargs)
 
     @tag("J(normal)")
-    def viewMoveToDown(self, xrange=[1]):
-        self.viewMoveTo(kind="down", xrange=xrange)
+    def moveToDown(self, xrange=[1], **kwargs):
+        self.activate(action='moveTo', kind="down", xrange=xrange, **kwargs)
 
     @tag("H(normal)")
-    def viewMoveToLeft(self, xrange=[1]):
-        self.viewMoveTo(kind="left", xrange=xrange)
+    def moveToLeft(self, xrange=[1], **kwargs):
+        self.activate(action='moveTo', kind="left", xrange=xrange, **kwargs)
 
     @tag("L(normal)")
-    def viewMoveToRight(self, xrange=[1]):
-        self.viewMoveTo(kind="right", xrange=xrange)
+    def moveToRight(self, xrange=[1], **kwargs):
+        self.activate(action='moveTo', kind="right", xrange=xrange, **kwargs)
+
+    @tag("x(normal)")
+    def flipTo(self, **kwargs):
+        self.activate(action='flipTo', **kwargs)
+
+    @tag("X(normal)")
+    def flipToWithNoFocus(self, **kwargs):
+        self.activate(action='flipTo', focus=False, **kwargs)
 
     @tag("c(normal)")
-    def closeView(self, v=None, **kwargs):
-        l = self.m_layout
-        p = l.findSibling(kind="prev")
-        n = l.findSibling(kind="next")
-        v = v or self.current
-        l.removeView(v)
-        if p and v != p:
-            p.activate()
-        elif n:
-            n.activate()
+    def closeView(self, **kwargs):
+        self.activate(action='close', **kwargs)

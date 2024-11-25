@@ -44,21 +44,15 @@ class TileLayout(QtCore.QObject):
 
     def setLeaf(self, leaf):
         if not leaf is None:
-            c, p = leaf, self.current_leaf
-            (
-                self.current_leaf,
-                self.previous_leaf,
-            ) = (c, p)
+            current, previous = leaf, self.current_leaf
+            self.current_leaf=current
+            self.previous_leaf=previous
 
-    def setView(
-            self, 
-            *args, 
-            view=None, 
-            **kwargs
-            ):
-        if not view is None:
+    def setView(self, *args, view=None, **kwargs):
+        if view:
             current, previous = view, self.current
-            self.current, self.previous = current, previous
+            if current!=previous:
+                self.current, self.previous = current, previous
             leaf = self.getLeaf(view)
             self.setLeaf(leaf)
             self.update()
@@ -162,7 +156,7 @@ class TileLayout(QtCore.QObject):
         if views:
             return views[idx]
 
-    def findLeaf(self, d):
+    def findLeaf(self, kind):
         l = self.current_leaf
         p = l.parent
         while p:
@@ -174,7 +168,7 @@ class TileLayout(QtCore.QObject):
                 self.current_leaf.w,
                 self.current_leaf.h,
             )
-            if d == "up":
+            if kind == "up":
                 if p.horizontal and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = x + w * 0.5
@@ -185,7 +179,7 @@ class TileLayout(QtCore.QObject):
                         else:
                             n_ = n_.leaves[0]
                     return n_
-            elif d == "down":
+            elif kind == "down":
                 if p.horizontal and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = x + w * 0.5
@@ -196,7 +190,7 @@ class TileLayout(QtCore.QObject):
                         else:
                             n_ = n_.leaves[1]
                     return n_
-            elif d == "left":
+            elif kind == "left":
                 if not p.horizontal and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = y + h * 0.5
@@ -207,7 +201,7 @@ class TileLayout(QtCore.QObject):
                         else:
                             n_ = n_.leaves[0]
                     return n_
-            elif d == "right":
+            elif kind == "right":
                 if not p.horizontal and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = y + h * 0.5
@@ -221,11 +215,11 @@ class TileLayout(QtCore.QObject):
             l = p
             p = l.parent
 
-    def equalize(self):
+    def equalizeSize(self):
         cond = False
-        for n in self.root:
-            if n.ratio != 50:
-                n.ratio = 50
+        for leaf in self.root:
+            if leaf.ratio != 50:
+                leaf.ratio = 50
                 cond = True
         if cond:
             self.root.equalize()
@@ -270,7 +264,7 @@ class TileLayout(QtCore.QObject):
         if kind:
             l = self.findLeaf(kind)
             if l:
-                self.swap(l, leaf)
+                self.flipTo(l, leaf)
             else:
                 leaf = self.current_leaf
                 self.removeView(leaf.view)
@@ -302,56 +296,42 @@ class TileLayout(QtCore.QObject):
             if 0 <= xrange < len(views):
                 v = views[xrange]
                 l = self.getLeaf(v)
-                self.swap(l, leaf)
+                self.flipTo(l, leaf)
 
-    def swap(self, n=None, c=None):
-        n = n or self.previous_leaf
-        c = c or self.current_leaf
-        cp = getattr(c, "parent", None)
-        np = getattr(n, "parent", None)
-        if cp and np:
-            cidx = cp.leaves.index(c)
-            nidx = np.leaves.index(n)
-            cp.leaves[cidx] = n
-            np.leaves[nidx] = c
-            n.parent = cp
-            c.parent = np
+    def flipTo(self, new=None, old=None, focus=True, **kwargs):
+        old=old or self.current
+        new=new or self.previous
+        new_leaf=self.getLeaf(old)
+        current_leaf=self.getLeaf(new)
+        nparent = getattr(new_leaf, "parent", None)
+        cparent = getattr(current_leaf, "parent", None)
+        if cparent and nparent:
+            if focus:
+                new.activate()
+            cidx = cparent.leaves.index(current_leaf)
+            nidx = nparent.leaves.index(new_leaf)
+            cparent.leaves[cidx] = new_leaf
+            nparent.leaves[nidx] = current_leaf
+            new_leaf.parent = cparent
+            current_leaf.parent = nparent
             self.update()
-        return n, c
+        return new_leaf, current_leaf
 
-    def flip(self, d):
-        l = self.current_leaf
-        p = l.parent
-        while p:
-            c = not p.horizontal
-            if d in ["left", "right"]:
-                c = p.horizontal
-            cond = c and l is p.leaves[0]
-            if d in ["left", "up"]:
-                cond = c and l is p.leaves[1]
-            if cond:
-                p.leaves = p.leaves[::-1]
-                self.update()
-                break
-            l = p
-            p = l.parent
-
-    def resize(self, kind=None, inc=True, xrange=[1]):
+    def zoomTo(self, kind=None, inc=True, xrange=[1]):
         leaf = self.current_leaf
         parent = leaf.parent
         delta = self.delta * xrange[-1]
-        print(kind)
         while parent:
             cond = parent.horizontal
+            if kind=='equal':
+                return self.equalizeSize()
             if kind in ["left", "right"]:
                 cond = not parent.horizontal
             if kind in ["right", "down"]:
                 cond = cond and leaf is parent.leaves[0]
-                cond=True #todo :current:
                 ratio = max(5, parent.ratio - delta)
                 if inc:
                     ratio = min(95, parent.ratio + delta)
-                print(cond, ratio)
             elif kind in ["left", "up"]:
                 cond = cond and leaf is parent.leaves[1]
                 ratio = min(95, parent.ratio + delta)
@@ -364,33 +344,15 @@ class TileLayout(QtCore.QObject):
             leaf = parent
             parent = leaf.parent
 
-    def toggleFullscreen(self, v):
-        if v.isFullscreen:
-            o = v.app.view.overlay
-            o.resized.disconnect(v.updateFullscreenPosition)
-            v.setManager(v.m_prev_man)
-            if self.count() == 0:
-                v.m_prev_man.addView(v)
-            else:
-                v.m_prev_man.addView(
-                    v, position=v.m_prev_pos
-                )
-            self.update()
-            v.activate()
-        else:
-            m = v.manager()
-            v.m_prev_man = m
-            _, pos = m.removeView(v)
-            v.m_prev_pos = pos
-            v.app.view.overlay.addView(v)
-            v.app.view.overlay.setView(v)
-            v.app.view.overlay.resized.connect(
-                v.updateFullscreenPosition
-            )
-            v.updateFullscreenPosition()
-            p = getattr(v, "getPosition", None)
-            if not p:
-                return
-            pos = p()
-            v.goTo(pos[0])
-        v.isFullscreen = not v.isFullscreen
+    def close(self, view=None, **kwargs):
+        view = view or self.current
+        if view:
+            prev_view = self.findSibling(kind="prev")
+            next_view = self.findSibling(kind="next")
+            self.removeView(view)
+            if prev_view and view != prev_view:
+                prev_view.activate()
+                return prev_view
+            elif next_view:
+                next_view.activate()
+                return next_view

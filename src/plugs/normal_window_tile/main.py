@@ -14,6 +14,8 @@ class TileWindowNormal(Plug):
         holder=self.app.plugman.getPlug('WindowNormal')
         if holder:
             holder.addAgent('goTo', 'TileView', self)
+            holder.addAgent('close', 'TileView', self)
+            holder.addAgent('flipTo', 'TileView', self)
             holder.addAgent('zoomTo', 'TileView', self)
             holder.addAgent('moveTo', 'TileView', self)
             holder.addAgent('splitTo', 'TileView', self)

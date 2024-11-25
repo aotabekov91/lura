@@ -17,14 +17,41 @@ class TileView(
     layout_class: tp.Any = TileLayout
     prefix_keys: tp.List[str] = ["<c-w>(normal)"]
 
+    def close(self, **kwargs):
+        return self.m_layout.close(**kwargs)
+
     def goTo(self, **kwargs):
-        new = self.m_layout.goTo(**kwargs)
-        if new and new.view:
-            new.view.activate()
-        return new
+        leaf=self.m_layout.goTo(**kwargs)
+        if leaf and leaf.view:
+            leaf.view.activate()
+        return leaf
 
     def zoomTo(self, **kwargs):
-        self.m_layout.resize(**kwargs)
+        return self.m_layout.zoomTo(**kwargs)
+
+    def moveTo(self, **kwargs):
+        return self.m_layout.moveTo(**kwargs)
+
+    def flipTo(self, **kwargs):
+        self.m_layout.flipTo(**kwargs)
+
+    def splitTo(
+        self,
+        view=None,
+        focus=True,
+        kind="vertical",
+        **kwargs,
+    ):
+        copier=self.app.plugman.getPlug('Copy')
+        if copier:
+            view = view or self.current
+            copy=copier.copy(view)
+            if copy:
+                orientation = kind == "horizontal"
+                self.addView(copy, horizontal=orientation)
+                if focus:
+                    copy.activate()
+
 
     def copy(self, full=False):
         new_tile=self.__class__(app=self.app)
@@ -106,26 +133,6 @@ class TileView(
                 return
             view = c.view
         return l.removeView(view)
-
-    def splitTo(
-        self,
-        view=None,
-        focus=True,
-        kind="vertical",
-    ):
-        view = view or self.current
-        if not view:
-            raise
-        copier=self.app.plugman.getPlug('Copy')
-        if not copier:
-            return
-        view_copy=copier.copy(view)
-        if not view_copy:
-            return
-        stand = kind == "horizontal"
-        self.addView(view_copy, horizontal=stand)
-        if focus:
-            view_copy.activate()
 
     def update(self):
         self.m_layout.update()
