@@ -1,6 +1,5 @@
 from PyQt6 import QtCore
 
-from plug import tag
 from plug_qt import vimo, widget
 
 
@@ -33,11 +32,9 @@ class TabView(
             pos = pos.replace("-1", str(i), 1)
         return super().child(pos, recursive)
 
-    @tag("n(normal)[^]")
     def addAndGoToNewTab(self, focus=False, **kwargs):
         return self.addNewTab(focus=True, **kwargs)
 
-    @tag("N(normal)")
     def addNewTab(self, focus=False, **kwargs):
         t = self.getNewTab(**kwargs)
         if focus and t:
@@ -45,47 +42,37 @@ class TabView(
             t.activate()
         return t
 
-    @tag("T(normal)")
     def addCopyTab(self, tab=None, **kwargs):
         c = self.getCopyTab(tab, **kwargs)
         if c:
             self.addView(c)
         return c
 
-    @tag("t(normal)")
     def addAndGoToCopyTab(self, tab=None, **kwargs):
         c = self.addCopyTab(tab, **kwargs)
         if c:
             c.activate()
         return c
 
-    @tag("c(normal)[^]")
     def closeCurrentTab(self):
         return self.tabClose()
 
-    @tag("x(normal)[^]")
     def swapCurrent(self, **kwargs):
         self.setView(self.previous)
 
-    @tag("l(normal)[^]")
     def tabGoToNext(self):
         self.tabGoTo(kind="next")
 
-    @tag("h(normal)[^]")
     def tabGoToPrev(self):
         self.tabGoTo(kind="prev")
 
-    @tag("H(normal)[^]")
     def tabMoveToLeft(self):
         self.tabMoveTo(kind="prev")
 
-    @tag("L(normal)[^]")
     def tabMoveToRight(self):
         self.tabMoveTo(kind="next")
 
-    @tag("gt(normal)[^]")
     def tabGoTo(self, xrange=[], kind=None):
-        raise
         idx = self.currentIndex()
         if kind == "prev":
             xrange[-1] = max(0, idx - 1)
@@ -108,7 +95,6 @@ class TabView(
         if ntab:
             ntab.activate()
 
-    @tag("~gT(normal)[^]")
     def tabMoveTo(self, kind=None, xrange=None):
         c = self.currentIndex()
         if kind == "prev":

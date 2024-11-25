@@ -1,1 +1,1 @@
-from .main import TileView
+from .base import TileView

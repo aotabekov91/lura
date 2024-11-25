@@ -1,4 +1,4 @@
-from .main import Normal
+from .main import TabNormal
 
 def get_plug_class():
-    return Normal
+    return TabNormal
