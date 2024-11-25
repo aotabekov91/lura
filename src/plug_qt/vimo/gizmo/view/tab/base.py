@@ -2,7 +2,6 @@ from PyQt6 import QtCore
 
 from plug_qt import vimo, widget
 
-
 class TabView(
     vimo.View,
     widget.StackedWidget,
@@ -13,15 +12,69 @@ class TabView(
     tab_classes = {}
     canSetView = True
     initial_create = True
-    prefix_keys = ["<c-t>(normal)"]
     viewAdded = QtCore.pyqtSignal(object)
     viewCreated = QtCore.pyqtSignal(object)
+    viewRemoved = QtCore.pyqtSignal(object)
 
     def updateKlass(self):
         super().updateKlass()
         pos = self.m_kwargs.get("tab_classes", {}).copy()
         if pos:
             self.tab_classes.update(pos)
+
+    def flipTo(self, view=None, **kwargs):
+        if not view:
+            view=self.previous
+        if view:
+            view.activate()
+
+    def moveTo(self, kind=None, xrange=None, view=None, **kwargs):
+        if not view:
+            idx = self.currentIndex()
+            view = self.widget(idx)
+        else:
+            idx=getattr(view, 'm_tab_name', 0)
+        if kind in ["prev", "left"]:
+            xrange = [max(0, idx - 1)]
+        elif kind in ["next", "right"]:
+            xrange = [min(self.count() - 1, idx + 1)]
+        elif xrange:
+            xrange[-1] -= 1
+        elif xrange is None:
+            xrange = [self.count() - 1]
+        if xrange and view:
+            self.removeView(view)
+            self.insertView(idx=xrange[-1], view=view, **kwargs)
+            view.activate(**kwargs)
+
+    def goTo(self, xrange=[], kind=None, **kwargs):
+        idx = self.currentIndex()
+        if kind in ["prev", "left"]:
+            xrange = [idx - 1]
+            if xrange[-1]<0:
+                xrange[-1] = self.count()-1
+        elif kind in ["next", "right"]:
+            xrange = [idx + 1]
+            if xrange[-1] >= self.count():
+                xrange[-1] = 0
+        elif kind == "first":
+            xrange=[0]
+        elif kind == "last" or xrange is None:
+            xrange = [self.count() - 1]
+        elif not xrange:
+            return
+        else:
+            xrange[-1] -= 1
+        view = self.widget(xrange[-1])
+        if view:
+            view.activate()
+
+    def create(self, focus=False, **kwargs):
+        view = self.getNewTab(**kwargs)
+        if focus and view:
+            self.setView(view)
+            view.activate()
+        return view
 
     def child(self, pos, recursive=True):
         if pos.startswith("x") and self.current:
@@ -33,14 +86,7 @@ class TabView(
         return super().child(pos, recursive)
 
     def addAndGoToNewTab(self, focus=False, **kwargs):
-        return self.addNewTab(focus=True, **kwargs)
-
-    def addNewTab(self, focus=False, **kwargs):
-        t = self.getNewTab(**kwargs)
-        if focus and t:
-            self.setView(t)
-            t.activate()
-        return t
+        return self.create(focus=True, **kwargs)
 
     def addCopyTab(self, tab=None, **kwargs):
         c = self.getCopyTab(tab, **kwargs)
@@ -54,66 +100,9 @@ class TabView(
             c.activate()
         return c
 
-    def closeCurrentTab(self):
-        return self.tabClose()
-
-    def swapCurrent(self, **kwargs):
-        self.setView(self.previous)
-
-    def tabGoToNext(self):
-        self.tabGoTo(kind="next")
-
-    def tabGoToPrev(self):
-        self.tabGoTo(kind="prev")
-
-    def tabMoveToLeft(self):
-        self.tabMoveTo(kind="prev")
-
-    def tabMoveToRight(self):
-        self.tabMoveTo(kind="next")
-
-    def tabGoTo(self, xrange=[], kind=None):
-        idx = self.currentIndex()
-        if kind == "prev":
-            xrange[-1] = max(0, idx - 1)
-        elif kind == "next":
-            xrange[-1] = idx + 1
-            if xrange[-1] >= self.count():
-                xrange[-1] = 0
-            # xrange=min(self.count()-1, idx+1)
-        elif kind == "first":
-            xrange[-1] = 0
-        elif kind == "last":
-            xrange[-1] = self.count() - 1
-        elif xrange is None:
-            xrange[-1] = self.count() - 1
-        elif not xrange:
-            return
-        else:
-            xrange[-1] -= 1
-        ntab = self.widget(xrange[-1])
-        if ntab:
-            ntab.activate()
-
-    def tabMoveTo(self, kind=None, xrange=None):
-        c = self.currentIndex()
-        if kind == "prev":
-            xrange = max(0, c - 1)
-        elif kind == "next":
-            xrange = min(self.count() - 1, c + 1)
-        elif type(xrange) == int:
-            xrange[-1] -= 1
-        elif xrange is None:
-            xrange = self.count() - 1
-        else:
-            return
-        w = self.widget(c)
-        self.removeView(w)
-        self.insertView(xrange, w)
-        self.setView(w)
 
     def initiate(self):
-        view = self.addNewTab()
+        view = self.create()
         if view:
             self.setView(view=view, focus=False)
 
@@ -130,10 +119,10 @@ class TabView(
             return copy
 
     def getNewTab(self, **kwargs):
-        n = self.tabGet()
-        if n:
-            self.addView(n, **kwargs)
-        return n
+        view = self.tabGet()
+        if view:
+            self.addView(view, **kwargs)
+        return view
 
     def addView(self, view, **kwargs):
         self.tabAdd(view, **kwargs)
@@ -141,7 +130,7 @@ class TabView(
         view.hasTabber = True
         view.m_tabber = self
         self.viewAdded.emit(view)
-        self.tabReindex()
+        self.updateIndex()
         return view
 
     def setView(
@@ -156,23 +145,19 @@ class TabView(
             self.current=view
             self.setCurrentIndex(view.posIndex() - 1)
             if not self.activated and recursive_activate:
-                self.activate(
-                    recursive_activate=True,
-                    **kwargs,
-                )
-
+                self.activate(recursive_activate=True, **kwargs)
 
     def tabGet(self, kind="default"):
-        k = self.tab_classes.get(kind)
-        if k:
-            v = k(
+        klass = self.tab_classes.get(kind)
+        if klass:
+            view = klass(
                 parent=self,
                 app=self.app,
                 pindex=self.m_id,
                 config=self.m_config,
             )
-            self.viewCreated.emit(v)
-            return v
+            self.viewCreated.emit(view)
+            return view
 
     def tabAdd(self, tab, **kwargs):
         tab.m_tabber = self
@@ -180,48 +165,41 @@ class TabView(
         tab.setPosIndex(idx + 1)
         tab.m_tab_name = idx
 
-    def insertView(
-        self,
-        idx=-1,
-        view=None,
-        **kwargs,
-    ):
-        idx += 1
+    def insertView(self, idx=-1, view=None, **kwargs):
         super().insertWidget(idx, view)
+        idx += 1
         view.setPosIndex(idx)
         view.setManager(self)
         view.m_tab_name = idx
         view.hasTabber = True
         view.m_tabber = self
         self.viewAdded.emit(view)
-        self.tabReindex()
+        self.updateIndex()
         return view
 
-    def removeView(self, v, **kwargs):
-        super().removeWidget(v)
-        idx = v.posIndex()
-        self.tabReindex()
-        v.setManager()
-        v.setPosIndex()
-        return v, idx
+    def removeView(self, view, **kwargs):
+        super().removeWidget(view)
+        idx = view.posIndex()
+        self.updateIndex()
+        view.setManager()
+        view.setPosIndex()
+        self.viewRemoved.emit(view)
+        return view, idx
 
-    def tabReindex(self):
+    def updateIndex(self):
         for i in range(self.count()):
             v = self.widget(i)
             v.setPosIndex(i + 1)
 
-    def tabClose(self, tab=None, limit=1):
+    def close(self, view=None, limit=1, **kwargs):
         if self.count() <= limit:
             return
-        tab = tab or self.current
-        if tab:
-            idx = tab.posIndex()
-            tab.m_tabber = None
-            self.removeView(tab)
-            delattr(tab, "m_tabber")
-        tab = self.widget(idx - 1)
-        if tab:
-            self.setView(tab)
+        view = view or self.current
+        if view:
+            self.goTo(kind='prev')
+            view.m_tabber = None
+            self.removeView(view)
+            delattr(view, "m_tabber")
 
     def activate(self, descend=True, **kwargs):
         super().activate(**kwargs)

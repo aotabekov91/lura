@@ -3,6 +3,8 @@
 ## Doing
 
 * [ ] View/tab/base tags are not working
+	* [ ] Statusbar not redrawing after moving tab
+		* [ ] Refactor bar actually
 * [ ] Fullscreen plug
 	* [ ] Tab view app.view.main cannot restore previous layout
 		* [ ] Add placeholder for a view that is being fullscreened
