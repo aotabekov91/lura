@@ -5,7 +5,7 @@ class Bookmarks(Plug):
 
     locator='position'
     default_mode='normal'
-    position = {"BookmarkView": "D|L"}
+    position = {"BookmarkView": "D|R"}
     widget_map={
             'id': {'w':  'Label', 'p': '0x0x1x1'},
             'text': {'w': 'TextEdit', 'p': '1x0x1x1'}}

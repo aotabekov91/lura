@@ -25,7 +25,7 @@ class Highlight(Plug):
             name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    @tag("<c-h>(annotate)")
+    @tag("<c-h>(annotate/visual[any])")
     def highlight(self, xrange=[1]):
         view=self.app.stateman.view()
         selector=self.app.plugman.getPlug('Selection')
@@ -35,7 +35,14 @@ class Highlight(Plug):
             color=self.m_colors.get(key, self.default_color)
             agent=self.getAgent(view=view)
             selection['annotation_color']=color
-            return agent.activate(view=view, data=selection)
+            agent.activate(view=view, data=selection)
+        else:
+            raise # todo activate word hinting
+        self.app.stateman.toggle()
+
+    @tag("<c-H>(annotate)")
+    def rehighlight(self, xrange=[1]):
+        raise # todo
 
     @tag("<c-H>(annotate)")
     def rehighlight(self, xrange=[1]):

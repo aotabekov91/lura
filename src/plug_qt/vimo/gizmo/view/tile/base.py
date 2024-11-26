@@ -113,10 +113,11 @@ class TileView(
     def clear(self):
         self.m_layout.clear()
 
-    def addView(self, view, **kwargs):
-        view.setManager(self)
-        self.m_layout.addView(view, **kwargs)
-        return view
+    def addView(self, view=None, **kwargs):
+        if view:
+            view.setManager(self)
+            self.m_layout.addView(view=view, **kwargs)
+            return view
 
     def insertView(self, idx, view, **kwargs):
         view.setManager(self)

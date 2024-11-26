@@ -63,7 +63,7 @@ class TileLayout(QtCore.QObject):
         view.setParent(self.parent)
         if self.count() == 0:
             return self.addView(
-                view, horizontal=horizontal, **kwargs
+                view=view, horizontal=horizontal, **kwargs
             )
         else:
             if idx == 1:
@@ -81,30 +81,31 @@ class TileLayout(QtCore.QObject):
 
     def addView(
         self,
-        view,
+        view=None,
         horizontal=True,
         position=None,
         **kwargs,
     ):
-        view.setParent(self.parent)
-        if position:
-            idx, ort, p = position
-            p.horizontal = ort
-            p.insert(view, idx, self.ratio)
-        else:
-            self.current_leaf = (
-                self.current_leaf or self.root
-            )
-            l = self.current_leaf
-            l.horizontal = horizontal
-            l.insert(
-                view,
-                int(self.lower_right),
-                self.ratio,
-            )
-        self.m_count += 1
-        if not self.current:
-            self.setView(view)
+        if view:
+            view.setParent(self.parent)
+            if position:
+                idx, ort, p = position
+                p.horizontal = ort
+                p.insert(view, idx, self.ratio)
+            else:
+                self.current_leaf = (
+                    self.current_leaf or self.root
+                )
+                l = self.current_leaf
+                l.horizontal = horizontal
+                l.insert(
+                    view,
+                    int(self.lower_right),
+                    self.ratio,
+                )
+            self.m_count += 1
+            if not self.current:
+                self.setView(view)
 
     def removeView(self, v=None, **kwargs):
         v = v or self.current

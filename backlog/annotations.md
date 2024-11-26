@@ -1,5 +1,15 @@
 # Annotations
 
+## Doing
+
+* [ ] Add a toggle for cursor is visible
+
+## Todo
+
+* [ ] Factor tags from docks out
+	* [ ] Add normal mode for docks
+* [ ] Factor goto from all views out
+* [ ] Refactor bar actually
 * [ ] FilesTree
 	* [ ] NerdTree like functionality with keybindings
 * [ ] Edit mode :current:
@@ -15,6 +25,9 @@
 	* [ ] Metadata field parsing format :next:
 * [ ] Docks view css
 	* [ ] Bookmark/quickmark/etc css 
+
+## Done
+
 * [x] Annotation hinting 
 * [x] Separate selection into a its own class
 * [x] Adjust bookmarks/quickmarks to the annotation model version
@@ -25,3 +38,47 @@
 	* [x] Factoring overlay out from app view
 * [x] Support different types of annotation
 	* [x] Text annotation with an overlay text editor :current:
+* [ ] Annotate
+	* [ ] Annotations deannotate/reannotate
+	* [ ] Enable activating annotation mode in visual mode
+
+# Miscellenuos
+ 
+* [ ] Dictionary lookup plugin
+
+# Bugs
+	
+## Doing
+
+* [ ] Selection's text is only the first word of whole selection regardless how long it actually is
+	* [ ] For example, see annotations
+* [ ] Fullscreen plug
+	* [ ] Tab view app.view.main cannot restore previous layout
+		* [ ] Add placeholder for a view that is being fullscreened
+	* [x] Pane fullscreening changes position/on second try throws an error
+ 
+## Todo
+
+* [ ] Annotation mode should change to normal after annotating
+* [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
+* [ ] Some pages do not act on widewise fit zw
+* [ ] Link hint escaping without choosing is not working
+* [ ] Outline syncing with index changes
+* [ ] Autosave go/zoom does not always open last state
+* [ ] Statusbar not redrawing after moving tab
+* [ ] Bookmarks view is not showing anything if a model is annotated for the first time
+* [ ] Selection.setValue is removed but plugs are adjusted, some throw errors
+* [ ] Search is not jumping, i.e., showing pages
+
+## Done
+
+* [x] Normal mode <c-[> clean up selection
+* [x] view.select :bug:
+* [x] FilesTree.view.activate :bug: view dock resize
+* [x] annotation selection does not draw after the first annotation select
+* [x] Search index is not changing when jumping to the first/end
+* [x] Visual word exiting without choosing a hint
+* [x] TreeView normal jumping with gg/G calls an error 
+* [x] View/tab/base tags are not working
+* [x] View.Locate/Scale/Pos/Go should be factored out to its own class
+* [x] Closing a pane is not working

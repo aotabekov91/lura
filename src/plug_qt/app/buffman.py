@@ -53,11 +53,11 @@ class Buffman(
             signal.connect(self.posIndexChanged)
         self.viewAdded.emit(view)
 
-    def locate(self, view, **kwargs):
-        man = super().locate(view, **kwargs)
-        if man:
-            man.addView(view, **kwargs)
-        return man
+    # def locate(self, **kwargs):
+    #     manager = super().locate(**kwargs)
+    #     if manager:
+    #         manager.addView(**kwargs)
+    #     return manager
 
     def addViewer(self, name: str, klass: tp.Any) -> tp.Any:
         cond = not klass in self.m_viewers

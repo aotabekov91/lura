@@ -44,11 +44,11 @@ class Normal(Plug, QtCore.QObject):
     def goFirst(self):
         self.goTo(kind="goToFirst")
 
-    @tag("k/<c-<space>>(normal)")
+    @tag("k(normal)")
     def goUp(self, xrange=[1], **kwargs):
         self.goTo(kind="goToUp", xrange=xrange)
 
-    @tag("j/<space>(normal)")
+    @tag("j(normal)")
     def goDown(self, xrange=[1], **kwargs):
         self.goTo(kind="goToDown", xrange=xrange)
 
@@ -60,19 +60,19 @@ class Normal(Plug, QtCore.QObject):
     def goRight(self, xrange=[1], **kwargs):
         self.goTo(kind="goToRight", xrange=xrange)
 
-    @tag("<c-k>(normal)")
+    @tag("K/<c-<space>>(normal)")
     def goBlockup(self, xrange=[1], **kwargs):
         self.goTo(kind="goToBlockup", xrange=xrange)
 
-    @tag("<c-j>(normal)")
+    @tag("J/<space>(normal)")
     def goBlockdown(self, xrange=[1], **kwargs):
         self.goTo(kind="goToBlockdown", xrange=xrange)
 
-    @tag("<c-h>(normal)")
+    @tag("H(normal)")
     def goBlockleft(self, xrange=[1], **kwargs):
         self.goTo(kind="goToBlockleft", xrange=xrange)
 
-    @tag("<c-l>(normal)")
+    @tag("L(normal)")
     def goBlockRight(self, xrange=[1], **kwargs):
         self.goTo(kind="goToBlockright", xrange=xrange)
 

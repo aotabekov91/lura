@@ -67,9 +67,9 @@ class DockView(
 
     def scale(self, kind, xrange=[1]):
         if self.current:
-            self.setZoom(kind, xrange)
+            self.zoomTo(kind, xrange)
 
-    def setZoom(self, kind, xrange=[1]):
+    def zoomTo(self, kind, xrange=[1]):
         if kind == "out":
             zf = (1.0 - self.zfactor) ** xrange
         elif kind == "in":

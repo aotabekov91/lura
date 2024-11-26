@@ -44,18 +44,16 @@ class Buffman(Plug):
     ) -> None:
         self.m_views.add(view)
 
-    def locate(
-        self,
-        view: tp.Any,
-        pos: tp.Dict[str, str] = {},
-        **kwargs,
-    ) -> tp.Any:
-        pos = view.position.copy()
-        pos.update(pos)
-        loc = pos.get(view.name, None)
-        if not loc:
-            return
-        return self.app.view.child(loc)
+    def locate(self, view=None, pos = {}, **kwargs) -> tp.Any:
+        if view:
+            view_pos = view.position.copy()
+            pos.update(view_pos)
+            loc = pos.get(view.name, None)
+            if loc:
+                manager=self.app.view.child(loc)
+                return loc, manager
+        return None, None
+
 
     def setup(self) -> None:
         super().setup()
@@ -130,10 +128,13 @@ class Buffman(Plug):
         kwargs["app"] = self.app
         kwargs["config"] = gen_conf
         view = self.create(klass, **kwargs)
-        self.locate(view, **kwargs)
         view.setModel(model=model)
         view.resetConfigure(model=model, **kwargs)
         self.saveView(model, view)
+        loc, manager=self.locate(view=view, **kwargs)
+        # print(loc, manager, view)
+        if manager:
+            manager.addView(view=view, loc=loc, **kwargs)
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:
