@@ -27,6 +27,8 @@
 	* [ ] Metadata field parsing format :next:
 * [ ] Docks view css
 	* [ ] Bookmark/quickmark/etc css 
+* [ ] Annotate
+	* [ ] Annotations deannotate/reannotate
 
 ## Done
 
@@ -42,9 +44,7 @@
 	* [x] Factoring overlay out from app view
 * [x] Support different types of annotation
 	* [x] Text annotation with an overlay text editor :current:
-* [ ] Annotate
-	* [ ] Annotations deannotate/reannotate
-	* [ ] Enable activating annotation mode in visual mode
+* [x] Enable activating annotation mode in visual mode
 
 # Miscellenuos
  

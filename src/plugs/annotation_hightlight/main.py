@@ -25,7 +25,7 @@ class Highlight(Plug):
             name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    @tag("<c-h>(annotate/visual[any])")
+    @tag("<c-h>(annotate)")
     def highlight(self, xrange=[1]):
         view=self.app.stateman.view()
         selector=self.app.plugman.getPlug('Selection')

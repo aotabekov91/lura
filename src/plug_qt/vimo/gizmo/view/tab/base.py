@@ -7,8 +7,6 @@ class TabView(
     widget.StackedWidget,
 ):
     hasTabs = True
-    current = None
-    previous = None
     tab_classes = {}
     canSetView = True
     initial_create = True
@@ -18,6 +16,10 @@ class TabView(
 
     def updateKlass(self):
         super().updateKlass()
+        self.hasTabs = self.m_kwargs.get(
+                "has_tabs", self.hasTabs)
+        self.initial_create = self.m_kwargs.get(
+                "initial_create", self.initial_create)
         pos = self.m_kwargs.get("tab_classes", {}).copy()
         if pos:
             self.tab_classes.update(pos)
@@ -107,6 +109,8 @@ class TabView(
             self.setView(view=view, focus=False)
 
     def setup(self):
+        self.current = None
+        self.previous = None
         super().setup()
         if self.initial_create:
             self.initiate()

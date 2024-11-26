@@ -8,32 +8,33 @@ class DockNormal(Plug):
         super().setup()
         self.m_agents={}
 
-    def addAgent(self, action, name, agent):
-        if not action in self.m_agents:
-            self.m_agents[action]={}
-        self.m_agents[action][name]=agent
+    def addAgent(self, action, agent):
+        self.m_agents[action]=agent
 
-    def getAgent(self, action=None, name=None, view=None):
-        if view and not name:
-            name=view.__class__.__name__
-        holder=self.m_agents.get(action, {})
-        return holder.get(name, None)
-
-    def findAgent(self, action, view):
-        while view:
-            manager=view.manager()
-            agent=self.getAgent(action=action, view=view)
-            if agent:
-                return agent, view
-            view=manager
-        return None, None 
+    def getAgent(self, action=None, **kwargs):
+        return self.m_agents.get(action, {})
 
     def activate(self, view=None, action=None, kind='goTo', **kwargs):
+        manager=self.app.view.docks
         if not view:
             view=self.app.stateman.view()
-        agent, window=self.findAgent(action, view)
+        agent=self.getAgent(action=action)
+        func=getattr(manager, action, None)
         if agent:
-            agent.activate(window=window, kind=kind, action=action, **kwargs)
+            agent.activate(
+                    view=view,
+                    kind=kind, 
+                    action=action, 
+                    window=manager, 
+                    **kwargs)
+        elif func:
+            func(
+                    view=view,
+                    window=manager, 
+                    kind=kind, 
+                    action=action, 
+                    **kwargs
+                    )
 
     @tag("k(normal)")
     def goUp(self, xrange=[1], **kwargs):
@@ -59,9 +60,9 @@ class DockNormal(Plug):
     def hideAll(self, **kwargs):
         self.activate(action='hide', kind='all', **kwargs)
 
-    ###
-    
-    #todo :current:
+    @tag("L(normal)")
+    def moveToRight(self, xrange=[1], **kwargs):
+        self.activate(action='moveTo', kind='R', xrange=xrange, **kwargs)
     
     @tag("K(normal)")
     def moveToUp(self, xrange=[1], **kwargs):
@@ -75,9 +76,9 @@ class DockNormal(Plug):
     def moveToLeft(self, xrange=[1], **kwargs):
         self.activate(action='moveTo', kind='L', xrange=xrange, **kwargs)
 
-    @tag("L(normal)")
-    def moveToRight(self, xrange=[1], **kwargs):
-        self.activate(action='moveTo', kind='R', xrange=xrange, **kwargs)
+    ###
+    
+    #todo :current:
 
     @tag("x(normal)")
     def flipTo(self, **kwargs):
@@ -86,9 +87,6 @@ class DockNormal(Plug):
     @tag("X(normal)")
     def flipToWithNoFocus(self, **kwargs):
         self.activate(action='flipTo', focus=False, **kwargs)
-
-
-
 
     @tag("zk(normal)")
     def zoomTopUp(self, xrange=[1], **kwargs):
@@ -125,4 +123,3 @@ class DockNormal(Plug):
     @tag("ze(normal)")
     def zoomToEqual(self, **kwargs):
         self.activate(action='zoomTo', kind="equal", **kwargs)
-

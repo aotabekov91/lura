@@ -60,22 +60,24 @@ class Docks(
             self.m_docks += [dock]
         self.hide(kind='all')
 
-    def moveTo(self, kind, dock=None, **kwargs):
-        dock = dock or self.m_current
-        area = getattr(self, kind, None)
-        if area and dock and dock.isVisible():
-            area = self.addView(dock.current, kind)
-            if area:
-                area.activate(area.current)
+    def moveTo(self, kind=None, dock=None, view=None, **kwargs):
+        dock = getattr(self, kind, None)
+        if not view and self.m_current:
+            view=self.m_current.current
+        if view:
+            self.addView(view=view, dock=dock, **kwargs)
+            view.activate(**kwargs)
 
     def goTo(self, kind=None, **kwargs):
         dock = getattr(self, kind, None)
-        if dock and dock.isVisible():
+        # if dock and dock.isVisible():
+        if dock and dock.current:
             dock.current.activate(**kwargs)
 
     def zoomTo(self, dock=None, **kwargs):
         dock = dock or self.m_current
-        if dock and dock.isVisible():
+        # if dock and dock.isVisible():
+        if dock:
             dock.scale(**kwargs)
 
     def hide(self, xrange=[], kind=None, **kwargs):
@@ -90,19 +92,22 @@ class Docks(
                 dock.hide()
                 dock.octivate(**kwargs)
 
-    def addView(self, view=None, loc=None, **kwargs):
-        if loc and view:
+    def addView(self, view=None, loc=None, dock=None, **kwargs):
+        if not dock and loc:
             dock = getattr(self, loc, None)
-            if dock:
-                self.removeView(view)
-                dock.addView(view)
+        if dock and view:
+            self.removeView(view=view)
+            dock.addView(view=view)
             return dock
 
     def removeView(self, view=None, **kwargs):
-        dock = getattr(view, "dock", None)
-        if dock:
-            dock.removeView(view)
-        return view
+        if view:
+            manager=view.manager()
+            if manager:
+                manager.hide()
+                manager.removeView(view)
+                manager.octivate(**kwargs)
+            return view
 
     def setCurrent(self, dock):
         self.m_current = dock

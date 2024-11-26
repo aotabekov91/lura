@@ -38,8 +38,10 @@ class DockView(
             app=self.app,
             manager=self,
             identifier="T",
+            has_tabs=False,
+            tab_classes={},
+            initial_create=False,
         )
-        tab.hasTabs=False
         self.setWidget(tab)
         self.tab = tab
         tab.show()
