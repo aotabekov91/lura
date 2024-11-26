@@ -44,11 +44,11 @@ class Normal(Plug, QtCore.QObject):
     def goFirst(self):
         self.goTo(kind="goToFirst")
 
-    @tag("k(normal)")
+    @tag("k/<vwheel_up>(normal)")
     def goUp(self, xrange=[1], **kwargs):
         self.goTo(kind="goToUp", xrange=xrange)
 
-    @tag("j(normal)")
+    @tag("j/<vwheel_down>(normal)")
     def goDown(self, xrange=[1], **kwargs):
         self.goTo(kind="goToDown", xrange=xrange)
 
