@@ -10,10 +10,11 @@
 ## Todo
 
 * [ ] Factor goto from all views out
-* [ ] Refactor bar actually
+* [ ] Refactor bar
 * [ ] FilesTree
-	* [ ] NerdTree like functionality with keybindings
+	* [ ] Partially NerdTree like functionality with keybindings
 * [ ] Edit mode :current:
+* [ ] Exec mode
 * [ ] Input mode
 	* [ ] As a plug container
 	* [ ] ListWidgetView

@@ -4,8 +4,7 @@
 * [ ] [#2 Support visual mode](visual.md)
 * [ ] Support plugin system
 	* [ ] Picky like neovim's Lazy
-* [ ] Support tiling
-	* [ ] Saving and restoring its layout
+* [ ] [#5 Support tiling](tiling.md)
 * [ ] Support different layout types 
 	* [ ] Single/Double page view, etc.
 * [ ] Support help
