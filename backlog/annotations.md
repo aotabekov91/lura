@@ -4,12 +4,11 @@
 
 ## Doing
 
-* [ ] Enable mouse scrolling to change item visibility
+* [ ] Factor tags from docks out
+	* [ ] Add/finish normal mode for docks
 
 ## Todo
 
-* [ ] Factor tags from docks out
-	* [ ] Add normal mode for docks
 * [ ] Factor goto from all views out
 * [ ] Refactor bar actually
 * [ ] FilesTree
@@ -30,6 +29,7 @@
 
 ## Done
 
+* [x] Enable mouse scrolling to change item visibility
 * [x] Add a toggle for cursor is visible
 * [x] Annotation hinting 
 * [x] Separate selection into a its own class
