@@ -95,6 +95,9 @@ class Earman(
         self.addEventHandler(
                 QtCore.QEvent.Type.MouseButtonPress,
                 self.handleEvent)
+        self.addEventHandler(
+                QtCore.QEvent.Type.Wheel,
+                self.handleEvent)
 
     def connectEarman(self):
         self.app.qapp.installEventFilter(self)
@@ -123,18 +126,32 @@ class Earman(
 
     def parseEvent(self, event):
         cmd = "{text}"
+        kind=event.type()
         shift = QtCore.Qt.KeyboardModifier.ShiftModifier
         ctrl = QtCore.Qt.KeyboardModifier.ControlModifier
         if event.modifiers() & ctrl:
             cmd = "<c-{text}>"
-        if hasattr(event, 'text'):
+        if kind==QtCore.QEvent.Type.KeyPress:
             if event.text():
                 text = self.key_map.get(event.key(), "")
                 if event.modifiers() & shift:
                     text = text.upper()
                 return cmd.format(text=text)
-        elif hasattr(event, 'button'):
+        elif kind==QtCore.QEvent.Type.MouseButtonPress:
             text = mouse_mapping.get(event.button(), "")
+            return cmd.format(text=text)
+        elif kind==QtCore.QEvent.Type.Wheel:
+            delta=event.angleDelta()
+            horizontal=delta.x()
+            vertical=delta.y()
+            if horizontal and horizontal>0:
+                text='<hwheel_up>'
+            elif horizontal and horizontal<0:
+                text='<hwheel_down>'
+            elif vertical and vertical>0:
+                text='<vwheel_up>'
+            else:
+                text='<vwheel_down>'
             return cmd.format(text=text)
 
     def updatePressedKey(self, key):
