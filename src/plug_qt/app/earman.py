@@ -7,7 +7,14 @@ import plug
 # non-blocking pure python timer
 # pure python standard events
 
-mapping = {
+mouse_mapping={
+        QtCore.Qt.MouseButton.LeftButton: "<mouse_left>",
+        QtCore.Qt.MouseButton.RightButton: "<mouse_right>",
+        QtCore.Qt.MouseButton.RightButton: "<mouse_right>",
+        QtCore.Qt.MouseButton.MiddleButton: "<mouse_middle>",
+        }
+
+key_mapping = {
     16777220: "<return>",
     0x2F: "/",
     0x01000000: "<escape>",
@@ -71,7 +78,7 @@ class Earman(
             if name.startswith("Key_"):
                 name = name.replace("Key_", "")
                 self.key_map[code] = name.lower()
-        self.key_map.update(mapping)
+        self.key_map.update(key_mapping)
 
     def setup(self) -> None:
         super().setup()
@@ -79,6 +86,15 @@ class Earman(
         self.setKeyMap()
         self.setParent(self.app)
         self.connectEarman()
+        self.addHandlers()
+
+    def addHandlers(self):
+        self.addEventHandler(
+                QtCore.QEvent.Type.KeyPress,
+                self.handleEvent)
+        self.addEventHandler(
+                QtCore.QEvent.Type.MouseButtonPress,
+                self.handleEvent)
 
     def connectEarman(self):
         self.app.qapp.installEventFilter(self)
@@ -97,18 +113,37 @@ class Earman(
         self.objectAdded.emit(obj)
 
     def eventFilter(self, widget, event):
-        if event.type() == QtCore.QEvent.Type.KeyPress:
+        handler=self.eventHandler(event.type())
+        if handler:
             self.timer.stop()
-            if event.text() and self.handleEvent(event):
+            if handler(widget, event):
                 event.accept()
                 return True
         return False
 
+    def parseEvent(self, event):
+        cmd = "{text}"
+        shift = QtCore.Qt.KeyboardModifier.ShiftModifier
+        ctrl = QtCore.Qt.KeyboardModifier.ControlModifier
+        if event.modifiers() & ctrl:
+            cmd = "<c-{text}>"
+        if hasattr(event, 'text'):
+            if event.text():
+                text = self.key_map.get(event.key(), "")
+                if event.modifiers() & shift:
+                    text = text.upper()
+                return cmd.format(text=text)
+        elif hasattr(event, 'button'):
+            text = mouse_mapping.get(event.button(), "")
+            return cmd.format(text=text)
+
     def updatePressedKey(self, key):
-        super().updatePressedKey(key)
-        digits = ",".join(self.digits())
-        text = f"{digits}{self.m_letters}"
-        self.keysChanged.emit(text)
+        if super().updatePressedKey(key):
+            digits = ",".join(self.digits())
+            text = f"{digits}{self.m_letters}"
+            self.keysChanged.emit(text)
+            return True
+        return False
 
     def clearKeys(self, clear_text=False):
         self.timer.stop()
@@ -205,13 +240,3 @@ class Earman(
             count=count,
         )
 
-    def parseEvent(self, event):
-        cmd = "{text}"
-        shift = QtCore.Qt.KeyboardModifier.ShiftModifier
-        ctrl = QtCore.Qt.KeyboardModifier.ControlModifier
-        if event.modifiers() & ctrl:
-            cmd = "<c-{text}>"
-        text = self.key_map.get(event.key(), "")
-        if event.modifiers() & shift:
-            text = text.upper()
-        return cmd.format(text=text)

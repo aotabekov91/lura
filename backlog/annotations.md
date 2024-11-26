@@ -1,8 +1,10 @@
+[Index](product.md)
+
 # Annotations
 
 ## Doing
 
-* [ ] Add a toggle for cursor is visible
+* [ ] Enable mouse scrolling to change item visibility
 
 ## Todo
 
@@ -28,6 +30,7 @@
 
 ## Done
 
+* [x] Add a toggle for cursor is visible
 * [x] Annotation hinting 
 * [x] Separate selection into a its own class
 * [x] Adjust bookmarks/quickmarks to the annotation model version
@@ -59,6 +62,7 @@
  
 ## Todo
 
+* [ ] Toggle gray scale does not change some items when they only partially visible
 * [ ] Annotation mode should change to normal after annotating
 * [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] Some pages do not act on widewise fit zw

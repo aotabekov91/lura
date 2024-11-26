@@ -13,14 +13,20 @@ class Earman(Plug):
     wait_time: int = 50
     delisten_key: tp.List[tp.Any] = []
 
-    def __init__(self, app: tp.Any) -> None:
-        super().__init__(app)
+    def setup(self):
         self.m_keys = {}
         self.m_digits = []
         self.m_leaders = {}
         self.m_objects = {}
         self.m_letters = ""
         self.m_func_objects = {}
+        self.m_event_handlers={}
+
+    def eventHandler(self, kind):
+        return self.m_event_handlers.get(kind, None)
+
+    def addEventHandler(self, kind, handler):
+        self.m_event_handlers[kind]=handler
 
     def letters(self) -> str:
         return self.m_letters
@@ -132,16 +138,14 @@ class Earman(Plug):
         return False
 
     def run(self, match, partial, xrange):
-        if len(match) != 1:
-            return
-        t = self.timer
-        t.timeout.disconnect()
-        f = lambda: self.execute(match, xrange)
-        t.timeout.connect(f)
-        w = self.wait_time
-        if not partial:
-            w = self.wait_run
-        t.start(w)
+        if len(match) == 1:
+            self.timer.timeout.disconnect()
+            func = lambda: self.execute(match, xrange)
+            self.timer.timeout.connect(func)
+            w = self.wait_time
+            if not partial:
+                w = self.wait_run
+            self.timer.start(w)
 
     def execute(self, match=None, xrange=None):
         if not match or len(match) > 1:
@@ -162,13 +166,14 @@ class Earman(Plug):
         pass
 
     def parseEvent(self, event):
-        return event
+        if hasattr(event, 'text'):
+            return event.text()
 
     def updatePressedKey(self, event):
         text = self.parseEvent(event)
         if not text:
-            return
-        if text.isnumeric():
+            return False
+        elif text.isnumeric():
             if not self.m_digits:
                 self.m_digits += [text]
             else:
@@ -177,23 +182,24 @@ class Earman(Plug):
             self.m_digits += [""]
         else:
             self.m_letters += text
+        return True
 
-    def handleEvent(self, event) -> bool:
-        self.updatePressedKey(event)
-        pressed = self.letters()
-        if self.checkKeyer(pressed):
-            return True
-        elif self.checkPartial(pressed):
-            return True
-        elif self.checkFunctor(pressed):
-            return True
-        # elif self.checkDelisten(pressed):
-        # return True
-        # elif self.checkPassive(pressed):
-        #     return False
-        elif self.checkMatch(pressed):
-            return True
-        self.clearKeys()
+    def handleEvent(self, widget, event) -> bool:
+        if self.updatePressedKey(event):
+            pressed = self.letters()
+            if self.checkKeyer(pressed):
+                return True
+            elif self.checkPartial(pressed):
+                return True
+            elif self.checkFunctor(pressed):
+                return True
+            # elif self.checkDelisten(pressed):
+            # return True
+            # elif self.checkPassive(pressed):
+            #     return False
+            elif self.checkMatch(pressed):
+                return True
+            self.clearKeys()
         return False
 
     @classmethod
