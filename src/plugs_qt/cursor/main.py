@@ -8,8 +8,8 @@ class Cursor(Plug):
         super().setup()
         self.m_cursor=self.app.view.cursor()
 
-    @tag("<c-a>c(normal)")
-    def toggleCursor(self):
+    @tag("C(normal)")
+    def toggle(self):
         blank = QtCore.Qt.CursorShape.BlankCursor
         arrow = QtCore.Qt.CursorShape.ArrowCursor
         if self.m_cursor == blank:
