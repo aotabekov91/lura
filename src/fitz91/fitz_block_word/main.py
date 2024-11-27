@@ -179,7 +179,7 @@ class FitzBlockWord(Plug):
     def unDown(self, element, selection):
         box, start, end, size = self.getBlockData(element, selection)
         if len(box) > 1:
-            selection.setValue("box", box[:-1])
+            selection["box"]=box[:-1]
         else:
             self.changeDirection(element)
             self.up(element, selection)
@@ -187,7 +187,7 @@ class FitzBlockWord(Plug):
     def unUp(self, element, selection):
         b, s, e, size = self.getBlockData(element, selection)
         if len(b) > 1:
-            selection.setValue("box", b[1:])
+            selection["box"]=b[1:]
         else:
             self.changeDirection(element)
             self.down(element, selection)
@@ -280,4 +280,4 @@ class FitzBlockWord(Plug):
                 i = element.unify(r)
                 cb.append(i)
         new_box=sorted(cb, key=lambda r: (r.y(), r.x()))
-        prev_selection.setValue("box", new_box)
+        prev_selection["box"]=new_box

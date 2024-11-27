@@ -55,7 +55,7 @@
 	
 ## Doing
 
-* [ ] Search is not jumping, i.e., showing pages
+* [ ] Selection.setValue is removed but plugs are adjusted, some throw errors
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
 * [ ] Fullscreen plug
@@ -73,10 +73,10 @@
 * [ ] Autosave go/zoom does not always open last state
 * [ ] Statusbar not redrawing after moving tab
 * [ ] Bookmarks view is not showing anything if a model is annotated for the first time
-* [ ] Selection.setValue is removed but plugs are adjusted, some throw errors
 
 ## Done
 
+* [x] Search is not jumping, i.e., showing pages
 * [x] Annotation mode should change to normal after annotating
 * [x] Normal mode <c-[> clean up selection
 * [x] view.select :bug:
