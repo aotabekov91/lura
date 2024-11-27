@@ -24,10 +24,6 @@ class DockView(
         super().__init__(objectName=objectName, **kwargs)
         self.createTab()
 
-    def activate(self, *args, **kwargs):
-        super().activate(*args, **kwargs)
-        if self.current:
-            self.current.resize(self.sizeHint())
 
     @property
     def current(self):

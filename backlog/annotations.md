@@ -55,6 +55,7 @@
 	
 ## Doing
 
+* [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
 * [ ] Fullscreen plug
@@ -65,7 +66,6 @@
 ## Todo
 
 * [ ] Toggle gray scale does not change some items when they only partially visible
-* [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Link hint escaping without choosing is not working
 * [ ] Outline syncing with index changes
