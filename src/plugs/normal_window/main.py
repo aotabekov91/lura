@@ -33,7 +33,7 @@ class WindowNormal(Plug):
             view=self.app.stateman.view()
         agent, window=self.findAgent(action, view)
         if agent:
-            agent.activate(window=window, kind=kind, action=action, **kwargs)
+            return agent.activate(window=window, kind=kind, action=action, **kwargs)
 
     @tag("gg(normal)")
     def goFirst(self, **kwargs):
@@ -44,39 +44,39 @@ class WindowNormal(Plug):
         kind=None
         if not xrange:
             kind='last'
-        self.activate(action='goTo', kind=kind, xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind=kind, xrange=xrange, **kwargs)
 
     @tag("k(normal)")
     def goUp(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="up", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="up", xrange=xrange, **kwargs)
 
     @tag("j(normal)")
     def goDown(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="down", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="down", xrange=xrange, **kwargs)
 
     @tag("h(normal)")
     def goLeft(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="left", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="left", xrange=xrange, **kwargs)
 
     @tag("l(normal)")
     def goRight(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="right", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="right", xrange=xrange, **kwargs)
 
     @tag("s(normal)")
     def splitHorizontally(self, **kwargs):
-        self.activate(action='splitTo', kind="horizontal", **kwargs)
+        return self.activate(action='splitTo', kind="horizontal", **kwargs)
 
     @tag("v(normal)")
     def splitVertically(self, **kwargs):
-        self.activate(action='splitTo', kind="vertical", **kwargs)
+        return self.activate(action='splitTo', kind="vertical", **kwargs)
 
     @tag("n(normal)")
     def goNext(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="next", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="next", xrange=xrange, **kwargs)
 
     @tag("p(normal)")
     def goPrev(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="prev", xrange=xrange, **kwargs)
+        return self.activate(action='goTo', kind="prev", xrange=xrange, **kwargs)
         
     @tag("zk(normal)")
     def zoomTopUp(self, xrange=[1], **kwargs):

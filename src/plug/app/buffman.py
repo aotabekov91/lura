@@ -164,9 +164,9 @@ class Buffman(Plug):
                 )
 
     def initiate(self, source: str, **kwargs) -> tp.Any:
-        m = self.getModel(source, **kwargs)
-        if m:
-            return self.getView(m, **kwargs)
+        model = self.getModel(source, **kwargs)
+        if model:
+            return self.getView(model, **kwargs)
 
     def open(self, source: str, **kwargs) -> tp.Any:
         view = self.initiate(source, **kwargs)

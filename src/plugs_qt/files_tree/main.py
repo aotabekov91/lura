@@ -55,15 +55,28 @@ class FilesTree(Plug):
     def toggleOutline(self):
         self.view.toggle()
 
+    @tag('t(normal)[FilesView]')
+    def openInTab(self, *args, **kwargs):
+        view=self.app.stateman.subview()
+        tab=self.app.plugman.getPlug('TabNormal')
+        if tab:
+            tab.activate(action='create', view=view, focus=True)
+            self.open(*args, **kwargs)
+
+    @tag('T(normal)[FilesView]')
+    def openInTabAndFocus(self, *args, **kwargs):
+        kwargs['focus']=True
+        self.openInTab(*args, **kwargs)
+
     @tag('o(normal)[FilesView]')
-    def open(self, focus=False):
+    def open(self, focus=False, **kwargs):
         idx=self.view.currentIndex()
         path=self.getPath(idx)
         if path:
             if os.path.isdir(path): 
                 self.view.expand(idx)
             else:
-                self.app.buffman.open(source=path)
+                self.app.buffman.open(source=path, **kwargs)
             if not focus:
                 self.view.activate()
 

@@ -4,8 +4,8 @@
 
 ## Doing
 
-* [ ] Docks view css
-	* [ ] Bookmark/quickmark/etc css 
+* [ ] FilesTree
+	* [ ] Partially NerdTree like functionality with keybindings
 * [ ] Annotate
 	* [ ] reannotate
 
@@ -13,8 +13,6 @@
 
 * [ ] Factor goto from all views out
 * [ ] Refactor bar
-* [ ] FilesTree
-	* [ ] Partially NerdTree like functionality with keybindings
 * [ ] Edit mode :current:
 * [ ] Exec mode
 * [ ] Input mode
@@ -30,6 +28,8 @@
 
 ## Done
 
+* [x] Docks view css
+	* [x] Bookmark/quickmark/etc css 
 * [x] Deannotate
 * [x] Factor tags from docks out
 	* [x] Add/finish normal mode for docks
