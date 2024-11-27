@@ -4,8 +4,8 @@
 
 ## Doing
 
-* [ ] Factor tags from docks out
-	* [ ] Add/finish normal mode for docks
+* [ ] Annotate
+	* [ ] reannotate
 
 ## Todo
 
@@ -27,11 +27,12 @@
 	* [ ] Metadata field parsing format :next:
 * [ ] Docks view css
 	* [ ] Bookmark/quickmark/etc css 
-* [ ] Annotate
-	* [ ] Annotations deannotate/reannotate
 
 ## Done
 
+* [x] Deannotate
+* [x] Factor tags from docks out
+	* [x] Add/finish normal mode for docks
 * [x] Enable mouse scrolling to change item visibility
 * [x] Add a toggle for cursor is visible
 * [x] Annotation hinting 

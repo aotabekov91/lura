@@ -21,13 +21,6 @@ class SelectionModel(vimo.Model, QtCore.QObject):
         self.m_agent=agent
         self.m_selection=SelectionElement()
 
-    def createSelection(self, data={}, **kwargs):
-        selection=SelectionElement()
-        if data:
-            data=hashdict(data)
-            selection.setData(data)
-        return selection
-
     def setSelection(self, selection=None, **kwargs):
         if selection:
             view=self.source()
@@ -59,3 +52,11 @@ class SelectionModel(vimo.Model, QtCore.QObject):
 
     def getSelection(self, **kwargs):
         return self.m_selection
+
+    @classmethod
+    def createSelection(cls, data={}, **kwargs):
+        selection=SelectionElement()
+        if data:
+            data=hashdict(data)
+            selection.setData(data)
+        return selection

@@ -22,24 +22,24 @@ class Selection(Plug, QtCore.QObject):
         self.app.buffman.viewCreated.connect(self.createModel)
 
     def select(self, view, **kwargs):
-        selection_model=self.getModel(view)
-        if selection_model:
-            selection_model.setSelection(**kwargs)
+        model=self.getModel(view)
+        if model:
+            model.setSelection(**kwargs)
 
     def update(self, view, **kwargs):
-        selection_model=self.getModel(view)
-        if selection_model:
-            selection_model.updateSelection(**kwargs)
+        model=self.getModel(view)
+        if model:
+            model.updateSelection(**kwargs)
 
     def deselect(self, view, **kwargs):
-        selection_model=self.getModel(view)
-        if selection_model:
-            selection_model.clearSelection(**kwargs)
+        model=self.getModel(view)
+        if model:
+            model.clearSelection(**kwargs)
 
     def selection(self, view, **kwargs):
-        selection_model=self.getModel(view)
-        if selection_model:
-            return selection_model.getSelection(**kwargs)
+        model=self.getModel(view)
+        if model:
+            return model.getSelection(**kwargs)
 
     @tag('<c-[>/<escape>(normal)')
     def cleanUpSelection(self, view=None):
@@ -66,3 +66,6 @@ class Selection(Plug, QtCore.QObject):
             self.m_models[view]=selection_model
             self.modelCreated.emit(selection_model)
             return view
+
+    def createSelection(self, *args, **kwargs):
+        return SelectionModel.createSelection(*args, **kwargs) 

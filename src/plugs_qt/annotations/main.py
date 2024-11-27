@@ -45,11 +45,13 @@ class Annotations(Plug):
         self.open(focus=True)
 
     @tag('o(normal)[AnnotationView]')
-    def open(self, focus=False, **kwargs):
+    def open(self, focus=False, select=True, **kwargs):
         item=self.view.currentItem()
-        goer=self.app.plugman.getPlug('Go')
-        if item and goer: 
-            data=item.element().data()
+        normal=self.app.plugman.getPlug('Normal')
+        selection=self.app.plugman.getPlug('Selection')
+        if item and normal: 
+            element=item.element()
+            data=element.data()
             view=self.app.stateman.subview()
             x, y = 0, 0
             page=data.get('page', 0)
@@ -58,7 +60,10 @@ class Annotations(Plug):
                 box=boxes[0]
                 x=box.x()
                 y=box.y()
-            goer.goTo(view=view, xrange=[page], x=x, y=y)
+            data['item']=view.item(page)
+            normal.goTo(view=view, xrange=[page], x=x, y=y, center=True)
+            if select and selection:
+                selection.select(view, selection=element)
             if focus:
                 view.activate()
 

@@ -1,13 +1,13 @@
 from PyQt6 import QtCore, QtWidgets
 
-import plug_qt
+from plug_qt.vimo import mixin, view
 
 from .item import FitzItem
 from .utils import Viewport
 
 class FitzView(
-    plug_qt.vimo.mixin.view.Scene, #todo factor layout out
-    plug_qt.vimo.view.View,
+    mixin.view.Scene, #todo factor layout out
+    view.View,
     QtWidgets.QGraphicsView,
 ):
     hasItems = True

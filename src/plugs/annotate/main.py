@@ -47,5 +47,9 @@ class Annotate(Plug, QtCore.QObject):
         selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if selection:
-            print(selection)
-            #todo 
+            model=view.model()
+            selector=self.app.plugman.getPlug('Selection')
+            annotation_model=self.getModel(model)
+            annotation_model.delAnnotate(selection)
+            if selector:
+                selector.cleanUpSelection(view)
