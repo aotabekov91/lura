@@ -21,7 +21,7 @@ class FitzCopy(Plug):
         zoomer=self.app.plugman.getPlug('Zoom')
         if zoomer:
             zoom=zoomer.currentZoom(view=view)
-        goer=self.app.plugman.getPlug('Go')
+        goer=self.app.plugman.getPlug('Normal')
         if goer:
             position=goer.currentPosition(view=view)
         manager = view.manager()

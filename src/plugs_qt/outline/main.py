@@ -104,7 +104,7 @@ class Outline(Plug):
     @tag('o(normal)[OutlineView]')
     def open(self, view=None, focus=False):
         item=self.view.currentItem()
-        goer=self.app.plugman.getPlug('Go')
+        goer=self.app.plugman.getPlug('Normal')
         if not view:
             view=self.app.stateman.subview()
         if item and goer:
