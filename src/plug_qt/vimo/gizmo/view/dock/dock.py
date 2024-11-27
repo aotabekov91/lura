@@ -24,6 +24,11 @@ class DockView(
         super().__init__(objectName=objectName, **kwargs)
         self.createTab()
 
+    def activate(self, *args, **kwargs):
+        super().activate(*args, **kwargs)
+        if self.current:
+            self.current.resize(self.sizeHint())
+
     @property
     def current(self):
         return self.tab.current
@@ -50,40 +55,47 @@ class DockView(
         self.hide()
         self.tab.removeView(view)
 
+    def betView(self, *args, view=None, **kwargs):
+        self.hide()
+        self.octivate()
+
     def addView(self, view, **kwargs):
         view.setMinimumSize(self.min_w, self.min_h)
         self.tab.addView(view)
         view.setManager(self)
 
-    def betView(self, *args, view=None, **kwargs):
-        self.hide()
-        self.octivate()
-
     def setView(self, *args, view=None, **kwargs)->None:
-        self.activate()
+        self.activate(dock=self, recursive=True)
         self.tab.setView(*args, view=view, **kwargs)
-        view.resize(self.sizeHint())
 
     def insertView(self, idx=-1, view=None, **kwargs):
         self.tab.insertView(idx, view, **kwargs)
 
-    def scale(self, kind, xrange=[1]):
-        if self.current:
-            self.zoomTo(kind, xrange)
-
-    def zoomTo(self, kind, xrange=[1]):
-        if kind == "out":
-            zf = (1.0 - self.zfactor) ** xrange
-        elif kind == "in":
-            zf = (1.0 + self.zfactor) ** xrange
-        else:
-            return
-        s = self.size()
-        w, h = s.width(), s.height()
-        c = self.current.size()
-        if self.loc in ["left", "right"]:
-            w = int(c.width() * zf)
-            self.setFixedWidth(w)
-        else:
-            h = int(c.height() * zf)
-            self.setFixedHeight(h)
+    def zoomTo(self, kind, xrange=[1], **kwargs):
+        factor=None
+        if self.loc=="L" and kind=="R":
+            factor = (1.0 + self.zfactor) ** xrange[-1]
+        elif self.loc=="L" and kind=="L":
+            factor = (1.0 - self.zfactor) ** xrange[-1]
+        elif self.loc=="R" and kind=="L":
+            factor = (1.0 + self.zfactor) ** xrange[-1]
+        elif self.loc=="R" and kind=="R":
+            factor = (1.0 - self.zfactor) ** xrange[-1]
+        elif self.loc=="U" and kind=="D":
+            factor = (1.0 + self.zfactor) ** xrange[-1]
+        elif self.loc=="U" and kind=="U":
+            factor = (1.0 - self.zfactor) ** xrange[-1]
+        elif self.loc=="D" and kind=="U":
+            factor = (1.0 + self.zfactor) ** xrange[-1]
+        elif self.loc=="D" and kind=="D":
+            factor = (1.0 - self.zfactor) ** xrange[-1]
+        if factor:
+            size = self.size()
+            width, height = size.width(), size.height()
+            tab_size = self.current.size()
+            if self.loc in ["L", "R"]:
+                width = int(tab_size.width() * factor)
+                self.setFixedWidth(width)
+            else:
+                height = int(tab_size.height() * factor)
+                self.setFixedHeight(height)

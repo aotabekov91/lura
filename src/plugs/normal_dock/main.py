@@ -16,20 +16,18 @@ class DockNormal(Plug):
 
     def activate(self, view=None, action=None, kind='goTo', **kwargs):
         manager=self.app.view.docks
-        if not view:
-            view=self.app.stateman.view()
+        # if not view:
+        #     view=self.app.stateman.view()
         agent=self.getAgent(action=action)
         func=getattr(manager, action, None)
         if agent:
             agent.activate(
-                    view=view,
                     kind=kind, 
                     action=action, 
                     window=manager, 
                     **kwargs)
         elif func:
             func(
-                    view=view,
                     window=manager, 
                     kind=kind, 
                     action=action, 
@@ -52,14 +50,6 @@ class DockNormal(Plug):
     def goRight(self, xrange=[1], **kwargs):
         self.activate(action='goTo', kind="R", xrange=xrange, **kwargs)
 
-    @tag("<c-h>(normal)")
-    def hide(self, xrange=None, **kwargs):
-        self.activate(action='hide', xrange=xrange, **kwargs)
-
-    @tag("<c-H>(normal)")
-    def hideAll(self, **kwargs):
-        self.activate(action='hide', kind='all', **kwargs)
-
     @tag("L(normal)")
     def moveToRight(self, xrange=[1], **kwargs):
         self.activate(action='moveTo', kind='R', xrange=xrange, **kwargs)
@@ -76,10 +66,6 @@ class DockNormal(Plug):
     def moveToLeft(self, xrange=[1], **kwargs):
         self.activate(action='moveTo', kind='L', xrange=xrange, **kwargs)
 
-    ###
-    
-    #todo :current:
-
     @tag("x(normal)")
     def flipTo(self, **kwargs):
         self.activate(action='flipTo', **kwargs)
@@ -88,21 +74,14 @@ class DockNormal(Plug):
     def flipToWithNoFocus(self, **kwargs):
         self.activate(action='flipTo', focus=False, **kwargs)
 
-    @tag("zk(normal)")
-    def zoomTopUp(self, xrange=[1], **kwargs):
-        self.activate(action='zoomTo', kind='U', xrange=xrange, **kwargs)
+    @tag("<c-h>(normal)")
+    def hide(self, xrange=None, **kwargs):
+        print(kwargs)
+        self.activate(action='hide', xrange=xrange, **kwargs)
 
-    @tag("zK(normal)")
-    def zoomTopDown(self, xrange=[1], **kwargs):
-        self.activate(action='zoomTo', kind='U', inc=False, xrange=xrange, **kwargs)
-
-    @tag("zj(normal)")
-    def zoomBottomUp(self, xrange=[1], **kwargs):
-        self.activate(action='zoomTo', kind='D', xrange=xrange, **kwargs)
-
-    @tag("zJ(normal)")
-    def zoomBottomDown(self, xrange=[1], **kwargs):
-        self.activate(action='zoomTo', kind='D', inc=False, xrange=xrange, **kwargs)
+    @tag("<c-H>(normal)")
+    def hideAll(self, **kwargs):
+        self.activate(action='hide', kind='all', **kwargs)
 
     @tag("zl(normal)")
     def zoomRightUp(self, xrange=[1], **kwargs):
@@ -120,6 +99,18 @@ class DockNormal(Plug):
     def zoomLeftDown(self, xrange=[1], **kwargs):
         self.activate(action='zoomTo', kind='L', inc=False, xrange=xrange, **kwargs)
 
-    @tag("ze(normal)")
-    def zoomToEqual(self, **kwargs):
-        self.activate(action='zoomTo', kind="equal", **kwargs)
+    @tag("zk(normal)")
+    def zoomTopUp(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind='U', xrange=xrange, **kwargs)
+
+    @tag("zK(normal)")
+    def zoomTopDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind='U', inc=False, xrange=xrange, **kwargs)
+
+    @tag("zj(normal)")
+    def zoomBottomUp(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind='D', xrange=xrange, **kwargs)
+
+    @tag("zJ(normal)")
+    def zoomBottomDown(self, xrange=[1], **kwargs):
+        self.activate(action='zoomTo', kind='D', inc=False, xrange=xrange, **kwargs)
