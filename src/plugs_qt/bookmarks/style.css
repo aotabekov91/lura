@@ -1,0 +1,8 @@
+QWidget#AnnotationView QLabel{
+	padding: 0 0 0 5;
+	background-color: green;
+	border-width: 3px;
+	border-radius: 10px;
+	border-style: solid;
+}
+

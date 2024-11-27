@@ -4,6 +4,8 @@
 
 ## Doing
 
+* [ ] Docks view css
+	* [ ] Bookmark/quickmark/etc css 
 * [ ] Annotate
 	* [ ] reannotate
 
@@ -25,8 +27,6 @@
 * [.] Engineer Sqlite annotation database
 	* [x] As simple as possible with extensions in mind
 	* [ ] Metadata field parsing format :next:
-* [ ] Docks view css
-	* [ ] Bookmark/quickmark/etc css 
 
 ## Done
 

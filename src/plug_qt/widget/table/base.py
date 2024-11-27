@@ -109,17 +109,17 @@ class TableWidget(QtWidgets.QWidget):
                 position=pos,
                 element=self.m_element,
             )
-            oname = item_idx
+            object_name = item_idx
             widgets[item_idx] = (widget, p)
-            fname = item_data.get("n", None)
-            if fname:
-                fname = fname.split("_")
+            field_name = item_data.get("n", None)
+            if field_name:
+                field_name = field_name.split("_")
                 item_data = self.m_element.data()
-                ftext = []
-                for f in fname:
-                    ftext += [item_data.get(f, "")]
-                oname = "_".join(ftext)
-            widget.setObjectName(oname)
+                field_text = []
+                for field in field_name:
+                    field_text += [item_data.get(field, "")]
+                object_name = "_".join(field_text)
+            widget.setObjectName(object_name)
         return widgets
 
     def delWidgets(self, widgets):
