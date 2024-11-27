@@ -4,6 +4,7 @@
 
 ## Doing
 
+* [ ] Dictionary lookup plugin
 * [ ] Annotate
 	* [ ] reannotate
 
@@ -48,20 +49,16 @@
 * [x] Enable activating annotation mode in visual mode
 
 # Miscellenuos
- 
-* [ ] Dictionary lookup plugin
 
 # Bugs
 	
 ## Doing
 
-* [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
 * [ ] Fullscreen plug
 	* [ ] Tab view app.view.main cannot restore previous layout
 		* [ ] Add placeholder for a view that is being fullscreened
-	* [x] Pane fullscreening changes position/on second try throws an error
  
 ## Todo
 
@@ -75,6 +72,8 @@
 
 ## Done
 
+* [x] Pane fullscreening changes position/on second try throws an error
+* [x] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [x] Selection.setValue is removed but plugs are adjusted, some throw errors
 * [x] Search is not jumping, i.e., showing pages
 * [x] Annotation mode should change to normal after annotating
