@@ -4,8 +4,6 @@
 
 ## Doing
 
-* [ ] FilesTree
-	* [ ] Partially NerdTree like functionality with keybindings
 * [ ] Annotate
 	* [ ] reannotate
 
@@ -28,6 +26,8 @@
 
 ## Done
 
+* [x] FilesTree
+	* [x] Partially NerdTree like functionality with keybindings
 * [x] Docks view css
 	* [x] Bookmark/quickmark/etc css 
 * [x] Deannotate
@@ -55,6 +55,7 @@
 	
 ## Doing
 
+* [ ] Search is not jumping, i.e., showing pages
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
 * [ ] Fullscreen plug
@@ -65,7 +66,6 @@
 ## Todo
 
 * [ ] Toggle gray scale does not change some items when they only partially visible
-* [ ] Annotation mode should change to normal after annotating
 * [ ] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [ ] Some pages do not act on widewise fit zw
 * [ ] Link hint escaping without choosing is not working
@@ -74,10 +74,10 @@
 * [ ] Statusbar not redrawing after moving tab
 * [ ] Bookmarks view is not showing anything if a model is annotated for the first time
 * [ ] Selection.setValue is removed but plugs are adjusted, some throw errors
-* [ ] Search is not jumping, i.e., showing pages
 
 ## Done
 
+* [x] Annotation mode should change to normal after annotating
 * [x] Normal mode <c-[> clean up selection
 * [x] view.select :bug:
 * [x] FilesTree.view.activate :bug: view dock resize
