@@ -53,3 +53,4 @@ class Annotate(Plug, QtCore.QObject):
             annotation_model.delAnnotate(selection)
             if selector:
                 selector.cleanUpSelection(view)
+        self.toggle()

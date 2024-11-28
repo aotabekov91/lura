@@ -4,12 +4,10 @@
 
 ## Doing
 
-* [ ] Dictionary lookup plugin
-* [ ] Annotate
-	* [ ] reannotate
-
 ## Todo
 
+* [ ] Annotate
+	* [ ] reannotate
 * [ ] Factor goto from all views out
 * [ ] Refactor bar
 * [ ] Edit mode :current:
@@ -27,6 +25,7 @@
 
 ## Done
 
+* [x] Dictionary lookup plugin
 * [x] FilesTree
 	* [x] Partially NerdTree like functionality with keybindings
 * [x] Docks view css

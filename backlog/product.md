@@ -4,6 +4,8 @@
 * [ ] [#2 Support visual mode](visual.md)
 * [ ] Support plugin system
 	* [ ] Picky like neovim's Lazy
+	* [ ] Enable installing plugin specific python packages
+		* [ ] For example, lookup plugin requirements.txt 
 * [ ] [#5 Support tiling](tiling.md)
 * [ ] Support different layout types 
 	* [ ] Single/Double page view, etc.
