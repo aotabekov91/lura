@@ -13,7 +13,11 @@ class Fullscreen(Plug):
     def getAgent(self, name=None, view=None):
         if not name and view:
             name=view.__class__.__name__
-        return self.m_fullsreeners.get(name, None)
+        agent=self.m_fullsreeners.get(name, None)
+        if agent:
+            return agent
+        elif view and view.manager():
+            return self.getAgent(view=view.manager())
 
     def checkFullscreen(self, view):
         return self.m_fullscreen.get(view, False)

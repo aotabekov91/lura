@@ -12,9 +12,10 @@
 * [ ] Support help
 	* [ ] a la vim's help
 * [ ] Support exec mode
-* [ ] Support input mode
+* [ ] [# Support input mode](input.md)
 	* [ ] Vim-like editor
 		* [ ] Different modes, etc. normal/insert
+* [ ] Edit mode
 
 * [ ] [Bugs](bugs.md)
 * [ ] [Miscellenous](miscellenous.md)

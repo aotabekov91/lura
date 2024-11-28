@@ -1,6 +1,10 @@
 [Index](product.md)
 
 # Annotations
+ 
+* [ ] Fullscreen plug
+	* [ ] Tab view app.view.main cannot restore previous layout
+		* [ ] Add placeholder for a view that is being fullscreened
 
 ## Doing
 
@@ -10,11 +14,7 @@
 	* [ ] reannotate
 * [ ] Factor goto from all views out
 * [ ] Refactor bar
-* [ ] Edit mode :current:
-* [ ] Exec mode
-* [ ] Input mode
-	* [ ] As a plug container
-	* [ ] ListWidgetView
+	* [ ] Statusbar not redrawing after moving tab
 * [ ] Outline
 	* [ ] Two-way syncing
 * [o] Separate all view mixins [fitz] into a its own class 
@@ -55,9 +55,6 @@
 
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
-* [ ] Fullscreen plug
-	* [ ] Tab view app.view.main cannot restore previous layout
-		* [ ] Add placeholder for a view that is being fullscreened
  
 ## Todo
 
@@ -66,7 +63,6 @@
 * [ ] Link hint escaping without choosing is not working
 * [ ] Outline syncing with index changes
 * [ ] Autosave go/zoom does not always open last state
-* [ ] Statusbar not redrawing after moving tab
 * [ ] Bookmarks view is not showing anything if a model is annotated for the first time
 
 ## Done

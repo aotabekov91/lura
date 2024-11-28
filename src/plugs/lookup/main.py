@@ -19,7 +19,7 @@ class Lookup(Plug):
         self.view=self.app.buffman.createView(
                 LookupView, None)
 
-    @tag(['<c-u>(normal)', '<c-u><c-[>/<escape>(normal)[LookupView]'])
+    @tag(['<c-u>(normal)', '<c-u>/<c-[>/<escape>(normal)[LookupView]'])
     def toggle(self):
         self.view.toggle()
 

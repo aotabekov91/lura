@@ -32,6 +32,7 @@ class AnnotationEdit(Plug):
                 app=self.app,
                 view=self.app.view.main,
                 identifier='O',
+                objectName='AnnotationEditView',
                 )
         self.m_view = EditorView(
             app=self.app,

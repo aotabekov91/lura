@@ -119,16 +119,3 @@ QLabel#HintBoxLabel:focus{
 #Tabline QLabel#AppIndex{
 	color: #90ee90;
 }
-
-#OverlayClock {
-	color: green;
-}
-
-#OverlayInput {
-	border-width: 5px;
-	border-color: green;
-	border-radius: 15px;
-	border-style: solid;
-	padding: 10 10 10 10;
-	background-color: rgba(5, 5, 5, 200);
-}
