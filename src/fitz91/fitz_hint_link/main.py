@@ -15,39 +15,36 @@ class FitzLinkHint(Plug):
         self.m_hints={}
         self.m_length={}
         if self.app.running:
-            self.addHinter()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addHinter)
+                    self.addAgent)
 
-    def addHinter(self):
-        link_hinter=self.app.plugman.getPlug(
+    def addAgent(self):
+        holder=self.app.plugman.getPlug(
                 'LinkHint')
-        if link_hinter:
-            link_hinter.addHinter('FitzView', self)
+        if holder:
+            holder.addAgent('FitzView', self)
 
     def hint(self, view):
         self.cacheLinks(view)
-        view.itemPainted.connect(self.paintLinks)
+        view.itemPainted.connect(self.paint)
         self.app.stateman.setFunctor(
-                self.linkFunctor)
+                self.functor)
         view.redraw()
 
     def unhint(self, view):
         self.m_hint=''
-        view.itemPainted.disconnect(self.paintLinks)
+        view.itemPainted.disconnect(self.paint)
         view.redraw()
         self.app.stateman.setFunctor()
 
-    def linkFunctor(self, key, earman):
+    def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
         model=view.model()
         hints=self.hints(model)
-        length=self.hintLength(model)
-        if len(self.m_hint)>length:
-            self.m_hint=''
-        elif self.m_hint in hints:
+        if self.m_hint in hints:
             link=hints.get(self.m_hint)
             self.go(link, model, view)
             link_hinter=self.app.plugman.getPlug(
@@ -56,8 +53,13 @@ class FitzLinkHint(Plug):
             hinter=self.app.plugman.getPlug(
                     'Hint')
             hinter.toggleHint()
+        for hint in hints:
+            if self.checkHint(hint):
+                view.redraw()
+                return True
+        self.m_hint=''
         view.redraw()
-        return True
+        return False
 
     def links(self, model):
         return self.m_links.get(model, None)
@@ -132,7 +134,7 @@ class FitzLinkHint(Plug):
                 link = link.next
         return links
 
-    def paintLinks(self, painter, ops, widget, item):
+    def paint(self, painter, ops, widget, item):
         painter.save()
         view=item.view()
         model=view.model()

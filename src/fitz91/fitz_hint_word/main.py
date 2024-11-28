@@ -10,15 +10,15 @@ class FitzWordHint(Plug):
         self.m_cache={}
         self.m_hints={}
         if self.app.running:
-            self.addHinter()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addHinter)
+                    self.addAgent)
 
-    def addHinter(self):
-        hinter=self.app.plugman.getPlug('WordHint')
-        if hinter:
-            hinter.addHinter('FitzView', self)
+    def addAgent(self):
+        hodler=self.app.plugman.getPlug('WordHint')
+        if hodler:
+            hodler.addAgent('FitzView', self)
 
     def words(self, model):
         return self.m_cache.get(model, None)
@@ -108,7 +108,8 @@ class FitzWordHint(Plug):
             word_hinter.toggle()
             word_visual=self.app.plugman.getPlug('FitzWordVisual')
             if word_visual:
-                self.app.stateman.toggle(mode='visual', submode='word')
+                self.app.stateman.toggle(
+                        mode='visual', submode='word')
             view.redraw()
             return True
         for hint in hints:

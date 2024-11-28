@@ -9,7 +9,7 @@ class WordHint(Plug):
     def setExitSubmode(self, submode=None):
         self.m_submode=submode
 
-    def addHinter(self, name, hinter):
+    def addAgent(self, name, hinter):
         self.m_hinters[name]=hinter
 
     def getAgent(self, name=None, view=None):

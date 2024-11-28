@@ -2,11 +2,11 @@
 
 # Annotations
  
+## Doing
+
 * [ ] Fullscreen plug
 	* [ ] Tab view app.view.main cannot restore previous layout
 		* [ ] Add placeholder for a view that is being fullscreened
-
-## Doing
 
 ## Todo
 
@@ -17,6 +17,7 @@
 	* [ ] Statusbar not redrawing after moving tab
 * [ ] Outline
 	* [ ] Two-way syncing
+		* [ ] Outline syncing with index changes
 * [o] Separate all view mixins [fitz] into a its own class 
 	* [ ] Factor layout from fitzView[Scene]
 * [.] Engineer Sqlite annotation database
@@ -53,6 +54,7 @@
 	
 ## Doing
 
+* [ ] Link hint escaping without choosing is not working
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
  
@@ -60,8 +62,7 @@
 
 * [ ] Toggle gray scale does not change some items when they only partially visible
 * [ ] Some pages do not act on widewise fit zw
-* [ ] Link hint escaping without choosing is not working
-* [ ] Outline syncing with index changes
+	* [ ] It had to do with visibleItems()
 * [ ] Autosave go/zoom does not always open last state
 * [ ] Bookmarks view is not showing anything if a model is annotated for the first time
 
