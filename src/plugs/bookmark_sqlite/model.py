@@ -1,4 +1,6 @@
+import json
 from PyQt6 import QtCore
+
 from plug_qt import vimo
 
 class Model(vimo.Model, QtCore.QObject):
@@ -31,10 +33,22 @@ class Model(vimo.Model, QtCore.QObject):
     def populateModel(self, model):
         rows=self.getRow({'source_id': self.source_id})
         for row in rows: 
+            self.decodeMetadata(row)
             model.createElement(row)
+
+    def decodeMetadata(self, data):
+        metadata=data.get('metadata').replace("'", '"')
+        if metadata:
+            data['position']=json.loads(metadata)
+
+    def encodeMetadata(self, data):
+        position=data.get('position', None)
+        if position:
+            data['metadata']=json.dumps(position)
 
     def addRow(self, element):
         data=element.data()
+        self.encodeMetadata(data)
         idx=self.table.writeRow(data)
         data={self.uniq_field: idx}
         element.updateData(data)
@@ -49,6 +63,7 @@ class Model(vimo.Model, QtCore.QObject):
         criteria={self.uniq_field: data[self.uniq_field]}
         if field: 
             data={field: data.get(field)}
+        self.encodeMetadata(data)
         self.table.updateRow(criteria, data) 
 
     def getAllRows(self):

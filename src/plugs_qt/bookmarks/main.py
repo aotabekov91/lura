@@ -50,10 +50,12 @@ class Bookmarks(Plug):
     @tag('o(normal)[BookmarkView]')
     def open(self):
         item=self.view.currentItem()
-        if item: 
+        normal=self.app.plugman.getPlug('Normal')
+        if item and normal: 
             data=item.element().data()
+            position=data.get('position')
             view=self.app.stateman.subview()
-            view.openLocator(data, kind=self.locator)
+            normal.goTo(view=view, **position)
 
     @tag('d(normal)[BookmarkView]')
     def delete(self):

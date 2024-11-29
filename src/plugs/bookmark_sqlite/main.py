@@ -10,11 +10,11 @@ class BookmarkSQLiteTable(Plug, QtCore.QObject):
     database_name='bookmark'
     fields = [
         'text text',
-        'position text',
+        'metadata text',
         'source_id text',
         'id integer PRIMARY KEY AUTOINCREMENT',
         ]
-    uniq={'uniq_bookmark':  ('source_id', 'position')}
+    uniq={'uniq_bookmark':  ('source_id', 'metadata')}
 
     def table(self):
         return self.m_table
