@@ -54,7 +54,7 @@
 	
 ## Doing
 
-* [ ] Search some keys do not enter, e.g., o
+* [ ] Bookmarks view is not showing anything if a model is annotated for the first time
  
 ## Todo
 
@@ -63,10 +63,10 @@
 * [ ] Some pages do not act on widewise fit zw
 	* [ ] It had to do with visibleItems()
 * [ ] Autosave go/zoom does not always open last state
-* [ ] Bookmarks view is not showing anything if a model is annotated for the first time
 
 ## Done
 
+* [x] Search some keys do not enter, e.g., o
 * [x] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [x] For example, see annotations
 * [x] Link hint escaping without choosing is not working
