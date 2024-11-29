@@ -60,7 +60,8 @@ class FitzBlockWord(Plug):
         else:
             direction[0] = "right"
             self.setDirection(element, direction)
-            box, start, end, size = self.getBlockData(element, selection)
+            box, start, end, size = self.getBlockData(
+                    element, selection)
             x, y = end.x() + end.width() + 1, end.y()
             w, h = size.width(), end.height()
             r = (x, y, x + w, y + h)
@@ -77,6 +78,22 @@ class FitzBlockWord(Plug):
                     br = QtCore.QPointF(f[0][2], f[0][3])
                     r = QtCore.QRectF(tl, br)
                     box += [element.unify(r)]
+            self.updateText(selection)
+
+    def updateText(self, selection):
+        text=[]
+        boxes=selection['box']
+        item=selection['item']
+        element=item.element()
+        for box in boxes:
+            mbox = element.m_norm.mapRect(box)
+            x=mbox.x()
+            y=mbox.y()
+            w=x+mbox.width()
+            h=y+mbox.height()
+            clip=(x, y, w, h)
+            text+=[self.getBlockText(element, 'block', clip=clip)]
+        selection['text']= ' '.join(text)
 
     def toggle(self, element, idx):
         direction=self.direction(element)
@@ -111,7 +128,8 @@ class FitzBlockWord(Plug):
         direction=self.direction(element)
         direction[0] = "right"
         self.setDirection(element, direction)
-        box, start, end, size = self.getBlockData(element, selection)
+        box, start, end, size = self.getBlockData(
+                element, selection)
         x, y = end.x(), end.y()
         w, h = element.size().width(), end.height()
         r = (x, y, x + w, y + h)
