@@ -54,11 +54,11 @@
 	
 ## Doing
 
-[ ] Selection problem with upping/downing
+* [ ] Search some keys do not enter, e.g., o
  
 ## Todo
 
-* [ ] Search some keys do not enter, e.g., o
+* [ ] Selection problem with upping/downing
 * [ ] Toggle gray scale does not change some items when they only partially visible
 * [ ] Some pages do not act on widewise fit zw
 	* [ ] It had to do with visibleItems()

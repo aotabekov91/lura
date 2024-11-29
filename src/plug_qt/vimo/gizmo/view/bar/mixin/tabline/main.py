@@ -62,7 +62,7 @@ class Tabline:
             self.rename_widget = w
             self.activeEdit(edit=w.m_tab_name)
 
-    @tag("<enter>/<return>")
+    @tag("<enter>/<return>(edit[tab])")
     def renameTab(self):
         w = self.rename_widget
         if self.current and w:

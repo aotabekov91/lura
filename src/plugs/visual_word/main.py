@@ -36,7 +36,7 @@ class WordVisual(Plug):
         if visualizer:
             visualizer.go(view, kind='jump')
 
-    @tag("o(visual[word])]")
+    @tag("o(visual[word])")
     def goFirst(self, xrange=[1]):
         view=self.app.stateman.view()
         visualizer=self.getAgent(view=view)
