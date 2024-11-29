@@ -2,15 +2,19 @@ from PyQt6 import QtCore
 
 
 class TileLeaf(QtCore.QObject):
+
     def __init__(self, parent=None):
         self.ratio = 50
         self.leaves = []
         self.view = None
         self.horizontal = False
-        self.parent = parent
+        self.m_parent = parent
         self.x, self.y = 0, 0
         self.h, self.w = 9, 16
         super().__init__(parent)
+
+    def parentLeaf(self):
+        return self.m_parent
 
     def __iter__(self):
         yield self
@@ -66,7 +70,7 @@ class TileLeaf(QtCore.QObject):
             keep = self.leaves[1]
         self.leaves = keep.leaves
         for c in self.leaves:
-            c.parent = self
+            c.m_parent = self
         self.horizontal = keep.horizontal
         leaf.view.m_leaf_idx = None
         self.ratio = keep.ratio

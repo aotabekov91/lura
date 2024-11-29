@@ -25,16 +25,17 @@ class FitzFullscreen(Plug):
 
     def activate(self, view=None, **kwargs):
         if view:
-            size = view.size()
-            idx = view.posIndex()
             manager = view.manager()
-            geometry = view.geometry()
             updateView = lambda: self.updateView(view)
-            state={'idx':idx, 
-                  'size': size,
-                  'manager': manager,
-                  'geometry': geometry,
-                  'updater': updateView,
+            leaf=manager.getLeaf(view)
+            parent_leaf=leaf.parentLeaf()
+            state={
+                    'size': view.size(),
+                    'manager': manager, 
+                    'idx': view.posIndex(),
+                    'geometry': view.geometry(), 
+                    'updater': updateView,
+                    'horizontal': parent_leaf.horizontal, 
                   }
             self.saveState(view, state)
             overlay=self.app.plugman.getPlug('Overlay')
@@ -53,6 +54,7 @@ class FitzFullscreen(Plug):
         size=state.get('size', None)
         updateView=state.get('updater', None)
         geometry=state.get('geometry', None)
+        horizontal=state.get('horizontal', None)
         overlay=self.app.plugman.getPlug('Overlay')
         parent = overlay.getOverlay(self.app.view)
         if parent:
@@ -62,10 +64,12 @@ class FitzFullscreen(Plug):
         manager.removeView(view)
         manager=state.get('manager', None)
         view.setManager(manager)
+        print(horizontal)
         manager.insertView(
             view=view,
             idx=idx,
             size=size,
+            horizontal=horizontal,
             geometry=geometry)
         self.saveState(view)
         view.activate()

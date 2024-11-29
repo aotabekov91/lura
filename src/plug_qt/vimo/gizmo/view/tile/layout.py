@@ -35,6 +35,11 @@ class TileLayout(QtCore.QObject):
     def views(self):
         return self.root.views()
 
+    def horizontal(self, view):
+        leaf=self.getLeaf(view)
+        if leaf:
+            return leaf.horizontal
+
     def getLeaf(self, view):
         if not view:
             return
@@ -66,15 +71,13 @@ class TileLayout(QtCore.QObject):
                 view=view, horizontal=horizontal, **kwargs
             )
         else:
-            if idx == 1:
-                l = self.root
-            for p in self.views():
-                if p.posIndex() == idx - 1:
-                    l = self.getLeaf(p)
+            leaf = self.root
+            for aview in self.views():
+                if aview.posIndex() == idx:
+                    leaf = self.getLeaf(aview)
                     break
-            if l:
-                l.horizontal = horizontal
-                l.insert(view, 1, self.ratio)
+            leaf.horizontal = horizontal
+            leaf.insert(view, 0, self.ratio)
         self.update()
         self.m_count += 1
         self.setView(view)
@@ -83,26 +86,20 @@ class TileLayout(QtCore.QObject):
         self,
         view=None,
         horizontal=True,
-        position=None,
         **kwargs,
     ):
         if view:
             view.setParent(self.parent)
-            if position:
-                idx, ort, p = position
-                p.horizontal = ort
-                p.insert(view, idx, self.ratio)
-            else:
-                self.current_leaf = (
-                    self.current_leaf or self.root
-                )
-                l = self.current_leaf
-                l.horizontal = horizontal
-                l.insert(
-                    view,
-                    int(self.lower_right),
-                    self.ratio,
-                )
+            self.current_leaf = (
+                self.current_leaf or self.root
+            )
+            leaf = self.current_leaf
+            leaf.horizontal = horizontal
+            leaf.insert(
+                view,
+                int(self.lower_right),
+                self.ratio,
+            )
             self.m_count += 1
             if not self.current:
                 self.setView(view)
@@ -111,24 +108,24 @@ class TileLayout(QtCore.QObject):
         v = v or self.current
         v.setManager()
         v.setParent(None)
-        l = self.getLeaf(v)
-        if l:
-            p = l.parent
+        leaf = self.getLeaf(v)
+        if leaf:
+            p = leaf.m_parent
             if p:
                 ort = p.horizontal
-                idx = p.leaves.index(l)
-                l = l.parent.remove(l)
-                nv = next(l.views(), None)
+                idx = p.leaves.index(leaf)
+                leaf = leaf.m_parent.remove(leaf)
+                nv = next(leaf.views(), None)
                 if nv is None:
                     self.current_leaf = self.root
                 else:
                     self.setView(nv)
-                if l.parent:
-                    l.parent.update()
+                if leaf.m_parent:
+                    leaf.m_parent.update()
                 else:
                     self.root.update()
                 return nv, (idx, ort, p)
-            l.view = None
+            leaf.view = None
             self.current_leaf = self.root
         self.m_count -= 1
         return None, None
@@ -141,9 +138,9 @@ class TileLayout(QtCore.QObject):
         self.geometryChanged.emit()
 
     def toggleSplit(self):
-        if self.current_leaf.parent:
-            cond = self.current_leaf.parent.horizontal
-            self.current_leaf.parent.horizontal = not cond
+        if self.current_leaf.m_parent:
+            cond = self.current_leaf.m_parent.horizontal
+            self.current_leaf.m_parent.horizontal = not cond
             self.update()
 
     def findSibling(self, v=None, kind="next"):
@@ -158,9 +155,9 @@ class TileLayout(QtCore.QObject):
             return views[idx]
 
     def findLeaf(self, kind):
-        l = self.current_leaf
-        p = l.parent
-        while p:
+        leaf = self.current_leaf
+        parent = leaf.m_parent
+        while parent:
             x, y = (
                 self.current_leaf.x,
                 self.current_leaf.y,
@@ -170,8 +167,8 @@ class TileLayout(QtCore.QObject):
                 self.current_leaf.h,
             )
             if kind == "up":
-                if p.horizontal and l is p.leaves[1]:
-                    n_ = p.leaves[0]
+                if parent.horizontal and leaf is parent.leaves[1]:
+                    n_ = parent.leaves[0]
                     center = x + w * 0.5
                     while n_.view is None:
                         c = n_.leaves[1].x < center
@@ -181,8 +178,8 @@ class TileLayout(QtCore.QObject):
                             n_ = n_.leaves[0]
                     return n_
             elif kind == "down":
-                if p.horizontal and l is p.leaves[0]:
-                    n_ = p.leaves[1]
+                if parent.horizontal and leaf is parent.leaves[0]:
+                    n_ = parent.leaves[1]
                     center = x + w * 0.5
                     while n_.view is None:
                         c = n_.leaves[1].x > center
@@ -192,8 +189,8 @@ class TileLayout(QtCore.QObject):
                             n_ = n_.leaves[1]
                     return n_
             elif kind == "left":
-                if not p.horizontal and l is p.leaves[1]:
-                    n_ = p.leaves[0]
+                if not parent.horizontal and leaf is parent.leaves[1]:
+                    n_ = parent.leaves[0]
                     center = y + h * 0.5
                     while n_.view is None:
                         c = n_.leaves[1].y < center
@@ -203,8 +200,8 @@ class TileLayout(QtCore.QObject):
                             n_ = n_.leaves[0]
                     return n_
             elif kind == "right":
-                if not p.horizontal and l is p.leaves[0]:
-                    n_ = p.leaves[1]
+                if not parent.horizontal and leaf is parent.leaves[0]:
+                    n_ = parent.leaves[1]
                     center = y + h * 0.5
                     while n_.view is None:
                         c = n_.leaves[1].y > center
@@ -213,8 +210,8 @@ class TileLayout(QtCore.QObject):
                         else:
                             n_ = n_.leaves[1]
                     return n_
-            l = p
-            p = l.parent
+            leaf = parent
+            parent = leaf.parent
 
     def equalizeSize(self):
         cond = False
@@ -284,8 +281,8 @@ class TileLayout(QtCore.QObject):
                         self.root,
                         leaf,
                     ]
-                self.root.parent = newroot
-                leaf.parent = newroot
+                self.root.m_parent = newroot
+                leaf.m_parent = newroot
                 self.root = newroot
                 leaf.view.setManager(self.parent)
                 leaf.view.setParent(self.parent)
@@ -304,8 +301,8 @@ class TileLayout(QtCore.QObject):
         new=new or self.previous
         new_leaf=self.getLeaf(old)
         current_leaf=self.getLeaf(new)
-        nparent = getattr(new_leaf, "parent", None)
-        cparent = getattr(current_leaf, "parent", None)
+        nparent = getattr(new_leaf, "m_parent", None)
+        cparent = getattr(current_leaf, "m_parent", None)
         if cparent and nparent:
             if focus:
                 new.activate()
@@ -313,14 +310,14 @@ class TileLayout(QtCore.QObject):
             nidx = nparent.leaves.index(new_leaf)
             cparent.leaves[cidx] = new_leaf
             nparent.leaves[nidx] = current_leaf
-            new_leaf.parent = cparent
-            current_leaf.parent = nparent
+            new_leaf.m_parent = cparent
+            current_leaf.m_parent = nparent
             self.update()
         return new_leaf, current_leaf
 
     def zoomTo(self, kind=None, inc=True, xrange=[1]):
         leaf = self.current_leaf
-        parent = leaf.parent
+        parent = leaf.m_parent
         delta = self.delta * xrange[-1]
         while parent:
             cond = parent.horizontal
@@ -343,7 +340,7 @@ class TileLayout(QtCore.QObject):
                 parent.update()
                 break
             leaf = parent
-            parent = leaf.parent
+            parent = leaf.m_parent
 
     def close(self, view=None, **kwargs):
         view = view or self.current

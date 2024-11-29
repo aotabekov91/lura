@@ -64,6 +64,12 @@ class TileView(
         current_copy.activate()
         return new_tile
 
+    def horizontal(self, view):
+        return self.m_layout.horizontal(view)
+
+    def getLeaf(self, view):
+        return self.m_layout.getLeaf(view)
+
     def child(self, pos, recursive=True):
         if pos.startswith("x") and self.current:
             i = self.current.posIndex()
@@ -127,13 +133,12 @@ class TileView(
         self.m_layout.setView(*args, **kwargs)
 
     def removeView(self, view=None, **kwargs):
-        l = self.m_layout
         if not view:
-            c = self.m_layout.current_leaf
-            if not c:
-                return
-            view = c.view
-        return l.removeView(view)
+            leaf = self.m_layout.current_leaf
+            if leaf: 
+                view = leaf.view
+        if view:
+            return self.m_layout.removeView(view)
 
     def update(self):
         self.m_layout.update()

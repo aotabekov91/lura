@@ -54,12 +54,12 @@
 	
 ## Doing
 
-* [ ] Link hint escaping without choosing is not working
 * [ ] Selection's text is only the first word of whole selection regardless how long it actually is
 	* [ ] For example, see annotations
  
 ## Todo
 
+* [ ] Search some keys do not enter, e.g., o
 * [ ] Toggle gray scale does not change some items when they only partially visible
 * [ ] Some pages do not act on widewise fit zw
 	* [ ] It had to do with visibleItems()
@@ -68,6 +68,7 @@
 
 ## Done
 
+* [x] Link hint escaping without choosing is not working
 * [x] Pane fullscreening changes position/on second try throws an error
 * [x] Outline [i.g. all dock views] dock view is not totally fitting sometimes
 * [x] Selection.setValue is removed but plugs are adjusted, some throw errors
