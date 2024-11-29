@@ -69,7 +69,7 @@ class WordVisual(Plug):
                     view, xrange=xrange, kind='down')
 
     @tag("l(visual[word])")
-    def goLeft(self, xrange=[1]):
+    def goRight(self, xrange=[1]):
         view=self.app.stateman.view()
         visualizer=self.getAgent(view=view)
         if visualizer:
@@ -77,7 +77,7 @@ class WordVisual(Plug):
                     view, xrange=xrange, kind='right')
 
     @tag("h(visual[word])")
-    def goRight(self, xrange=[1]):
+    def goLeft(self, xrange=[1]):
         view=self.app.stateman.view()
         visualizer=self.getAgent(view=view)
         if visualizer:

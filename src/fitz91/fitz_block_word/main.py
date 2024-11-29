@@ -9,8 +9,8 @@ class FitzBlockWord(Plug):
         self.m_lasts={}
         self.m_directions={}
 
-    def last(self, element):
-        self.m_lasts.get(element)
+    # def last(self, element):
+    #     self.m_lasts.get(element)
 
     def setLast(self, element, last):
         self.m_lasts[element]=last
@@ -38,7 +38,7 @@ class FitzBlockWord(Plug):
             box, start, end, size = self.getBlockData(element, selection)
             x, y = start.x() - 2, start.y()
             w, h = 5, start.height()
-            r = (0, y, x, y + h)
+            r = (0, y, x, y + h/2.)
             f = self.getBlockText(element, "words", clip=r)
             if f:
                 tl = QtCore.QPointF(f[-1][0], f[-1][1])
@@ -132,7 +132,7 @@ class FitzBlockWord(Plug):
                 element, selection)
         x, y = end.x(), end.y()
         w, h = element.size().width(), end.height()
-        r = (x, y, x + w, y + h)
+        r = (x, y, x + w, y + h/2.)
         f = self.getBlockText(element, "blocks", clip=r)
         if f:
             tl = QtCore.QPointF(f[0][0], f[0][1])
@@ -167,7 +167,7 @@ class FitzBlockWord(Plug):
             self.update(element, "last", selection)
             x, y = end.x(), end.y() + end.height()
             w, h = end.width(), end.height()
-            r = (0, y, x + w, y + h)
+            r = (0, y, x + w, y + h/2.)
             f = self.getBlockText(element, "blocks", clip=r)
             if f:
                 tl = QtCore.QPointF(f[0][0], f[0][1])
@@ -186,7 +186,7 @@ class FitzBlockWord(Plug):
             self.update(element, "first", selection)
             x, y = s.x(), s.y() - s.height()
             w, h = s.width(), s.height()
-            r = (x, y, x + w, y + h)
+            r = (x, y, x + w, y + h/2.)
             f = self.getBlockText(element, "blocks", clip=r)
             if f:
                 tl = QtCore.QPointF(f[0][0], f[0][1])
@@ -211,28 +211,44 @@ class FitzBlockWord(Plug):
             self.down(element, selection)
 
     def unRight(self, element, selection):
-        box, start, end, size = self.getBlockData(element, selection)
+        box, start, end, size = self.getBlockData(
+                element, selection)
         x, y = end.x(), end.y()
         w, h = end.width(), end.height()
-        r = (x, y, x + w, h + y)
+        r = (x, y+h/2., x + w, y+h/2.)
         f = self.getBlockText(element, "words", clip=r)
-        if len(f) <= 1:
+        if not selection and len(f) <= 0:
             self.changeDirection(element)
             self.left(element, selection)
+        elif len(f)==1:
+            box=box[:-1]
+            if box:
+                selection['box']=box
+            else:
+                self.changeDirection(element)
+                self.left(element, selection)
         else:
             br = QtCore.QPointF(f[-2][2], f[-2][3])
             end.setBottomRight(br)
             box[-1] = element.unify(end)
 
     def unLeft(self, element, selection):
-        box, start, end, size = self.getBlockData(element, selection)
+        box, start, end, size = self.getBlockData(
+                element, selection)
         x, y = start.x(), start.y()
         w, h = start.width(), start.height()
-        r = (x, y, x + w, h + y)
+        r = (x, y+h/2., x + w, y+h/2.)
         f = self.getBlockText(element, "words", clip=r)
-        if len(f) <= 1:
+        if not selection and len(f) <= 0:
             self.changeDirection(element)
             self.right(element, selection)
+        elif len(f)==1:
+            box=box[1:]
+            if box:
+                selection['box']=box
+            else:
+                self.changeDirection(element)
+                self.right(element, selection)
         else:
             tl = QtCore.QPointF(f[1][0], f[1][1])
             start.setTopLeft(tl)

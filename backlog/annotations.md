@@ -54,8 +54,7 @@
 	
 ## Doing
 
-* [ ] Selection's text is only the first word of whole selection regardless how long it actually is
-	* [ ] For example, see annotations
+[ ] Selection problem with upping/downing
  
 ## Todo
 
@@ -68,6 +67,8 @@
 
 ## Done
 
+* [x] Selection's text is only the first word of whole selection regardless how long it actually is
+	* [x] For example, see annotations
 * [x] Link hint escaping without choosing is not working
 * [x] Pane fullscreening changes position/on second try throws an error
 * [x] Outline [i.g. all dock views] dock view is not totally fitting sometimes
