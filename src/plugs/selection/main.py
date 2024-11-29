@@ -67,5 +67,7 @@ class Selection(Plug, QtCore.QObject):
             self.modelCreated.emit(selection_model)
             return view
 
-    def createSelection(self, *args, **kwargs):
-        return SelectionModel.createSelection(*args, **kwargs) 
+    def createSelection(self, view=None, **kwargs):
+        model=self.getModel(view)
+        if model:
+            return model.createSelection(**kwargs) 

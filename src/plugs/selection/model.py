@@ -24,6 +24,7 @@ class SelectionModel(vimo.Model, QtCore.QObject):
     def setSelection(self, selection=None, **kwargs):
         if selection:
             view=self.source()
+            model=view.model()
             self.m_selection=selection
             if view:
                 selector=self.m_agent.getAgent(view=view)
@@ -37,10 +38,10 @@ class SelectionModel(vimo.Model, QtCore.QObject):
         for key, value in kwargs.items():
             self.m_selection[key]=value
         view=self.source()
-        model=view.model()
-        if model:
-            self.m_selection['kind']=model.kind
-            self.m_selection['source_id']=model.id()
+        # model=view.model()
+        # if model:
+        #     self.m_selection['kind']=model.kind
+        #     self.m_selection['source_id']=model.id()
         selector=self.m_agent.getAgent(view=view)
         selector.select(view, self.m_selection)
 
@@ -53,10 +54,12 @@ class SelectionModel(vimo.Model, QtCore.QObject):
     def getSelection(self, **kwargs):
         return self.m_selection
 
-    @classmethod
-    def createSelection(cls, data={}, **kwargs):
+    def createSelection(self, data={}, **kwargs):
         selection=SelectionElement()
-        if data:
-            data=hashdict(data)
-            selection.setData(data)
+        view=self.source()
+        model=view.model()
+        data=hashdict(data)
+        data['kind']=model.kind
+        data['source_id']=model.id()
+        selection.setData(data)
         return selection
