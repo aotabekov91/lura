@@ -89,11 +89,11 @@ class FitzBlockWord(Plug):
             mbox = element.m_norm.mapRect(box)
             x=mbox.x()
             y=mbox.y()
-            w=x+mbox.width()
-            h=y+mbox.height()
-            clip=(x, y, w, h)
+            w=mbox.width()
+            h=mbox.height()
+            clip=(x, y+h/2., x+w, y+h/2.)
             text+=[self.getBlockText(element, 'block', clip=clip)]
-        selection['text']= ' '.join(text)
+        selection['text']=' '.join(text).replace('\n', ' ')
 
     def toggle(self, element, idx):
         direction=self.direction(element)
