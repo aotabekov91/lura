@@ -30,6 +30,7 @@ class Fullscreen(Plug):
         if not view:
             view=self.app.stateman.view()
         agent=self.getAgent(view=view)
+        print(view, agent, self.m_fullsreeners)
         if agent:
             if not self.checkFullscreen(view):
                 agent.activate(view=view, **kwargs)
