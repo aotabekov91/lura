@@ -11,9 +11,9 @@ Estimated time:
  
 * [ ] [Bug: Item zooming](../tasks/item_zooming.md)
 * [ ] [Bug: Grayscale item](../tasks/item_grayscale.md)
-* [ ] [Bug: Autosave go/zoom](../tasks/autosave_go_md)
 * [ ] [Bug: Statusbar not redrawing](../tasks/statusbar_drawing.md)
 * [ ] [Bug: Selection upping/downing](../tasks/selection_upping.md)
+* [x] [Bug: Autosave go/zoom](../tasks/autosave_go_md)
 * [x] Bookmarks view is not showing anything if a model is annotated for the first time
 * [x] Search some keys do not enter, e.g., o
 * [x] Selection's text is only the first word of whole selection regardless how long it actually is
