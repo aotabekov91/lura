@@ -16,23 +16,18 @@ class FitzZoom(Plug):
             zoomer.addAgent('FitzView', self)
 
     def activate(self, view=None, kind=None, xrange=[1], data={}, **kwargs):
-        zoom_round = data.get('round') 
-        zoom_factor = data.get('factor') 
-        if kind == "out":
-            scale = 1.0 - zoom_factor * xrange[0]
-            scale = round(scale, zoom_round)
-        elif kind == "in":
-            scale = 1.0 + zoom_factor * xrange[0]
-            scale = round(scale, zoom_round)
-        self.updateItemScale(view, kind, data)
+        self.updateItemScale(view, kind, data, xrange)
         view.redraw()
 
-    def updateItemScale(self, view, kind, data):
+    def updateItemScale(self, view, kind, data, xrange):
+        zoom_factor = data.get('factor') 
+        zoom_round = data.get('round', 3) 
         size = view.size()
         weight = size.width()
         height = size.height()
         items=view.getItems()
         for idx, item in items:
+            scale=item.getScale()
             dw, dh = item.displayedSize()
             if kind == "width":
                 scale = weight / float(dw)
@@ -40,9 +35,13 @@ class FitzZoom(Plug):
                 scale = height / float(dh)
             elif kind == "adjust":
                 scale = min(weight / float(dw), height / float(dh))
-            else:
-                scale = float(kind) * float(item.scale)
-            data['kind']=scale
-            data['mode']=kind
-            item.scale=scale
-            item.redraw()
+            elif kind == "out":
+                scale = scale - zoom_factor * xrange[0]
+            elif kind == "in":
+                scale = scale + zoom_factor * xrange[0]
+            elif type(kind)==float:
+                scale=kind
+            if scale:
+                data['kind']=scale
+                data['mode']=kind
+                item.setScale(round(scale, zoom_round))

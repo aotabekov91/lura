@@ -66,20 +66,20 @@ class SinglePage:
         **kwargs,
     ):
         ph = 0.0
-        ps = self.pageSpacing
-        for i in items.values():
-            br = i.boundingRect()
-            x = -br.left() - 0.5 * br.width()
-            y = height - br.top()
-            w, h = br.width(), br.height()
-            i.setPos(x, y)
-            if hasattr(i, "m_rect"):
-                i.m_rect.setX(x)
-                i.m_rect.setY(y)
-                i.m_rect.setWidth(w)
-                i.m_rect.setHeight(h)
-            ph = br.height()
-            x = min(x, -0.5 * br.width())
-            right = max(right, 0.5 * br.width())
-            height += ps + ph
+        page_spacing = self.pageSpacing
+        for item in items.values():
+            rect = item.boundingRect()
+            x = -rect.left() - 0.5 * rect.width()
+            y = height - rect.top()
+            w, h = rect.width(), rect.height()
+            item.setPos(x, y)
+            if hasattr(item, "m_rect"):
+                item.m_rect.setX(x)
+                item.m_rect.setY(y)
+                item.m_rect.setWidth(w)
+                item.m_rect.setHeight(h)
+            ph = rect.height()
+            x = min(x, -0.5 * rect.width())
+            right = max(right, 0.5 * rect.width())
+            height += page_spacing + ph
         return x, right, height

@@ -19,7 +19,7 @@ class RenderItem(Item):
         self.m_rect = QtCore.QRectF()
         self.m_norm = QtGui.QTransform()
         self.m_trans = QtGui.QTransform()
-        self.scale = c.get("xresol", 1.0)
+        self.m_scale = c.get("xresol", 1.0)
         self.xresol = c.get("xresol", 72.0)
         self.yresol = c.get("yresol", 72.0)
         self.rotation = c.get("rotation", 0)
@@ -59,7 +59,7 @@ class RenderItem(Item):
         return self.m_size
 
     def scaledResol(self):
-        s = self.scale
+        s = self.m_scale
         r = self.devicePixelRatio
         x = self.xresol * s * r
         y = self.yresol * s * r
@@ -83,8 +83,8 @@ class RenderItem(Item):
 
     def updateTrans(self):
         s = self.size()
-        x = self.xresol * self.scale / 72.0
-        y = self.yresol * self.scale / 72.0
+        x = self.xresol * self.m_scale / 72.0
+        y = self.yresol * self.m_scale / 72.0
         self.m_norm.reset()
         self.m_trans.reset()
         self.m_trans.scale(x, y)

@@ -1,4 +1,4 @@
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, QtGui
 
 from plug_qt.vimo import mixin, view
 
@@ -21,10 +21,11 @@ class FitzView(
     position = {"FitzView": "C|x"}
 
     def setup(self):
-        self.m_curr = 1
         self.m_items = {}
-        self.m_prev = None
+        self.m_current = 1
+        self.m_previous = None
         self.m_fetched = -1
+        self.m_norm = QtGui.QTransform()
         self.m_viewport = Viewport()
         self.setViewport(self.m_viewport)
         self.m_viewport.updated.connect(self.updateItems)
@@ -47,28 +48,51 @@ class FitzView(
         if self.m_fetched >= self.count():
             self.m_viewport.updated.disconnect(self.updateItems)
         else:
-            r = self.viewport().geometry()
-            r = self.mapToScene(r)
-            self.addItemsNear(r.boundingRect())
+            rect = self.viewport().geometry()
+            rect = self.mapToScene(rect)
+            self.addItemsNear(rect.boundingRect())
 
     def setItems(self, model):
         x = self.logicalDpiX()
         y = self.logicalDpiY()
         elems = model.elements().values()
-        for j, e in enumerate(elems):
-            i = self.createItem(j, e)
-            i.setVisible(False)
-            i.setResol(x, y)
-            self.m_items[e.index()] = i
+        for idx, elem in enumerate(elems):
+            item = self.createItem(idx, elem)
+            item.setVisible(False)
+            item.setResol(x, y)
+            self.m_items[elem.index()] = item
         self.redraw()
 
     def redraw(self):
         self.viewIsToBeRedrawn.emit()
         self.app.buffman.viewIsToBeDrawn.emit(self)
+        position=self.getScenePosition()
         self.updateLayout()
+        self.setScenePosition(position)
         self.viewport().update()
         super().redraw()
         self.app.buffman.viewIsDrawn.emit(self)
+
+    def updateLayout(self):
+        super().updateLayout()
+        self.updateNormTransform()
+
+    def updateNormTransform(self):
+        self.m_norm.reset()
+        rect=self.sceneRect()
+        size=rect.size()
+        self.m_norm.scale(size.width(), size.height())
+
+    def getScenePosition(self):
+        view=self.viewport().rect()
+        scene=self.mapToScene(view).boundingRect()
+        inv=self.m_norm.inverted()[0]
+        position=inv.map(scene.center())
+        return position
+
+    def setScenePosition(self, position):
+        position=self.m_norm.map(position)
+        self.centerOn(position)
 
     def createItem(self, idx, element):
         item=self.item_class(
@@ -82,49 +106,49 @@ class FitzView(
         return item
 
     def currentIndex(self):
-        return self.m_curr
+        return self.m_current
 
     def setCurrentIndex(self, idx):
-        if self.m_curr != idx:
-            c, p = idx, self.m_curr
-            self.m_curr, self.m_prev = c, p
-        self.indexChanged.emit(self.m_curr)
+        if self.m_current != idx:
+            current, previous = idx, self.m_current
+            self.m_current, self.m_previous = current, previous
+        self.indexChanged.emit(self.m_current)
 
     def refresh(self):
-        for j, i in self.getItems():
-            i.refresh(dropCache=True)
+        for idx, item in self.getItems():
+            item.refresh(dropCache=True)
 
     def updateCurrent(self, refresh=False):
         item = self.currentItem()
         item.refresh(dropCache=refresh)
 
     def updateVisibile(self, refresh=False):
-        for i in self.m_items.values():
-            if i.isVisible():
-                i.refresh(refresh)
+        for item in self.m_items.values():
+            if item.isVisible():
+                item.refresh(refresh)
 
     def visibleItems(self):
-        r = self.viewport().rect()
-        return self.items(r)
+        rect = self.viewport().rect()
+        return self.items(rect)
 
     def setVisibleItem(self):
-        v = self.viewport()
-        v.update()
+        viewport = self.viewport()
+        viewport.update()
         r = self.viewport().rect()
         x, w = int(r.width() / 2 - 5), 10
         y, h = int(r.height() / 2 - 5), 10
-        v = QtCore.QRect(x, y, w, h)
-        i = self.items(v)
-        idx = self.m_curr
-        if i:
-            idx = i[0].index()
+        viewport = QtCore.QRect(x, y, w, h)
+        item = self.items(viewport)
+        idx = self.m_current
+        if item:
+            idx = item[0].index()
         self.setCurrentIndex(idx)
 
     def item(self, idx=None, element=None):
         if element:
-            for i in self.m_items.values():
-                if i.element() == element:
-                    return i
+            for item in self.m_items.values():
+                if item.element() == element:
+                    return item
         else:
             return self.m_items.get(idx, None)
 
@@ -137,20 +161,19 @@ class FitzView(
         return len(self.m_items)
 
     def currentItem(self):
-        return self.item(self.m_curr)
-
+        return self.item(self.m_current)
 
     def addItemsNear(self, rect):
-        for idx, i in self.m_items.items():
-            c1 = i.scene()
-            c2 = i.isVisible()
-            if c1 and c2:
+        for idx, item in self.m_items.items():
+            cond1 = item.scene()
+            cond2 = item.isVisible()
+            if cond1 and cond2:
                 continue
             else:
-                if not rect.intersects(i.m_rect):
+                if not rect.intersects(item.m_rect):
                     continue
-                if not c1:
+                if not cond1:
                     self.m_fetched += 1
-                    self.m_scene.addItem(i)
-                if not c2:
-                    i.setVisible(True)
+                    self.m_scene.addItem(item)
+                if not cond2:
+                    item.setVisible(True)

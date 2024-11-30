@@ -102,7 +102,7 @@ class Part(QtCore.QObject):
         s = self.m_rect
         i = self.m_item
         pos = s.x(), s.y(), s.width(), s.height()
-        d = i.index(), i.xresol, i.yresol, i.scale
+        d = i.index(), i.xresol, i.yresol, i.m_scale
         return (pos, d)
 
     def setCache(self, key, value):

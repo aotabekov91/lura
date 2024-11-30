@@ -16,17 +16,17 @@ class Render:
 
     def setup(self):
         super().setup()
-        v = self.m_kwargs
+        config = self.m_kwargs
         self.m_key = hashdict()
         self.m_rect = QtCore.QRectF()
         self.m_brect = QtCore.QRectF()
         self.m_size = self.m_rect.size()
         self.m_trans = QtGui.QTransform()
-        self.scale = v.get("scale", 1.0)
-        self.xresol = v.get("xresol", 72.0)
-        self.yresol = v.get("yresol", 72.0)
-        self.tileSize = v.get("tileSize", 1024)
-        self.devicePixelRatio = v.get("devicePixelRatio", 1)
+        self.m_scale = config.get("scale", 1.0)
+        self.xresol = config.get("xresol", 72.0)
+        self.yresol = config.get("yresol", 72.0)
+        self.tileSize = config.get("tileSize", 1024)
+        self.devicePixelRatio = config.get("devicePixelRatio", 1)
         self.m_view.pixmapReady.connect(self.setPixmap)
         self.prepareGeometry()
 
@@ -55,6 +55,13 @@ class Render:
         data = model.getPixmap(self.m_element, self.m_key)
         if data:
             return data[-1]
+
+    def getScale(self):
+        return self.m_scale
+
+    def setScale(self, scale):
+        self.m_scale=scale
+        self.redraw()
 
     def updateKey(self):
         rs = self.m_brect.size()
@@ -112,8 +119,8 @@ class Render:
 
     def updateTransformation(self):
         self.m_trans.reset()
-        x = self.xresol * self.scale / 72.0
-        y = self.yresol * self.scale / 72.0
+        x = self.xresol * self.m_scale / 72.0
+        y = self.yresol * self.m_scale / 72.0
         self.m_trans.scale(x, y)
 
     def prepareGeometry(self):

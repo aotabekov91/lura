@@ -12,47 +12,11 @@ Picks = [
 	{plug='fitz91/fitz_search', base='http://192.168.178.10'}
 ]
 
-	# 'src/lura_plugs/table',
-	# 'src/lura_plugs/ctrlp',
-	# 'lura_plugs/green_elf',
-	# ]
-
 # [[Plugman.Picks]]
 # pick = 'aotabekov91/sainan'
 # subdir = [
 # 	'src/sainan/plugs/client/czmq',
 # 	]
-
-# [ModelView.Bookmark]
-# want='attach'
-# model_name='bookmark'
-# view_prefix=['<c-.>[^]']
-# tab_prefix=['b(command)']
-# position={BookmarkTab= 'D|R'}
-
-# [ModelView.Bookmark.widget_map]
-# id = {w =  'Label', p = '0x0x1x1'}
-# text = {w = 'TextEdit', p = '1x0x1x1'}
-
-# [ModelView.Quickmark]
-# want='attach'
-# model_name='quickmark'
-# tab_prefix={command = 'q'}
-# view_prefix={'|^' = '<c-.>'}
-# position={QuickmarkTab= 'D|R'}
-# widget_map={mark = {w = 'Label', p = '0x0x1x1'}}
-
-# [ModelView.Annotation]
-# want='attach'
-# locator='annotation'
-# model_name='annotation'
-# tab_prefix={command = 'a'}
-# view_prefix={'|^' = '<c-.>'}
-# position={AnnotationTab= 'D|R'}
-
-# [ModelView.Annotation.widget_map]
-# id = {w =  'Label', p = '0x0x1x1', n = 'function'}
-# text = {w = 'TextEdit', p = '1x0x1x1'}
 
 # [ModelView.Metadata]
 # want='attach'
@@ -65,39 +29,6 @@ Picks = [
 # [ModelView.Metadata.widget_map]
 # field = {w = 'Label', p = '0x0x1x1', title=true}
 # value = {w = 'TextEdit', p = '1x0x1x1'}
-
-
-# [Table.State]
-# uid='id'
-# name='state'
-# want='attach'
-# props=['hasStates']
-
-# [Table.Quickmark]
-# uid='id'
-# want='attach'
-# name='quickmark'
-# props=['canQuickmark']
-
-# [Table.Bookmark]
-# uid='id'
-# want='attach'
-# name='bookmark'
-# props=['canBookmark']
-
-# [Table.Annotation]
-# uid='id'
-# want='attach'
-# name='annotation'
-# props=['canAnnotate']
-
-# [Table.Metadata]
-# uid='id'
-# want='attach'
-# name='metadata'
-# row_model=true
-# autocreate=true
-# props=['hasMetadata']
 
 # [ZMQClient.Settings]
 # router_port=22223
@@ -138,14 +69,4 @@ copyToClipboardModifiers = 1 #todo
 
 [FitzView.Layout]
 pageSpacing = 5
-padding = [5, 5, 5, 5] #todo
-
-[OverlayView]
-blur_color=[125, 125, 125, 200]
-
-[FitzView.State]
-scale=true
-position=true
-
-[ImageQtView]
-continuousMode = false
+padding = [0, 0, 0, 0] #todo
