@@ -1,4 +1,0 @@
-[Index](product.md)
-
-# Bugs
- 
