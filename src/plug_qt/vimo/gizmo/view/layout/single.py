@@ -1,6 +1,3 @@
-from PyQt6 import QtCore
-
-
 class SinglePage:
     def __init__(
         self,

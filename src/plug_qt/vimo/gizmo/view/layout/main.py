@@ -1,7 +1,7 @@
 from .single import SinglePage
 
+class Layout:
 
-class BaseLayout:
     def __init__(
         self,
         view,

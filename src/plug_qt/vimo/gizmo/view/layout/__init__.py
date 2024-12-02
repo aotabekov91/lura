@@ -1,2 +1,2 @@
-from .layout import BaseLayout
+from .main import Layout
 from .single import SinglePage

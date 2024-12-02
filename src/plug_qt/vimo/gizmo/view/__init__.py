@@ -5,6 +5,7 @@ from .input import *
 from .list import *
 from .tab import TabView
 from .tile import *
+from .layout import *
 from .tool import ToolView
 from .tree import TreeView
 from .window import WindowView

@@ -48,13 +48,16 @@ class FitzNormal(Plug):
 
     def goToNext(self, view=None, xrange=[1], **kwargs):
         if view:
-            for i in range(xrange[0]):
-                view.nextItem()
+            count=view.count()
+            idx=view.currentIndex()
+            idx = min(idx + xrange[-1], count)
+            self.goTo(view=view, xrange=[idx])
 
     def goToPrev(self, view=None, xrange=[1], **kwargs):
         if view:
-            for i in range(xrange[0]):
-                view.prevItem()
+            idx=view.currentIndex()
+            idx = max(1, idx - xrange[-1])
+            self.goTo(view=view, xrange=[idx])
 
     def goToFirst(self, view=None, **kwargs):
         if view:

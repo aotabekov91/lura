@@ -1,35 +1,63 @@
 from PyQt6 import QtCore, QtWidgets, QtGui
 
-from plug_qt.vimo import mixin, view
+from plug_qt.vimo import view, gizmo
 
 from .item import FitzItem
-from .utils import Viewport
+from .utils import Viewport, FitzScene
 
 class FitzView(
-    mixin.view.Scene, #todo factor layout out
     view.View,
     QtWidgets.QGraphicsView,
 ):
-    hasItems = True
     canFollow = True
-    canUpdateItems = True
+    scene_color = "black"
+    position = {"FitzView": "C|x"}
     indexChanged = QtCore.pyqtSignal(object)
     itemPainted = QtCore.pyqtSignal(
         object, object, object, object)
-
-    item_class = FitzItem
-    position = {"FitzView": "C|x"}
+    pixmapReady = QtCore.pyqtSignal(object, object, object)
 
     def setup(self):
         self.m_items = {}
         self.m_current = 1
-        self.m_previous = None
         self.m_fetched = -1
-        self.m_norm = QtGui.QTransform()
+        self.m_scene = None
+        self.m_previous = None
         self.m_viewport = Viewport()
+        self.m_norm = QtGui.QTransform()
         self.setViewport(self.m_viewport)
         self.m_viewport.updated.connect(self.updateItems)
+        self.setupScene()
+        self.setupLayout()
         super().setup()
+        self.modelChanged.connect(self.connectPixmap)
+
+    def setLayout(self, layout):
+        self.m_layout = layout
+        self.redraw()
+
+    def layout(self):
+        return self.m_layout
+
+    def connectPixmap(self, model):
+        if model:
+            model.pixmapReady.connect(self.pixmapReady)
+
+    def setupScene(self):
+        scene = FitzScene() 
+        self.m_scene = scene
+        self.setScene(scene)
+        if self.scene_color:
+            color = QtGui.QColor(self.scene_color)
+            scene.setBackgroundBrush(color)
+
+    def setupLayout(self):
+        config = self.m_config.get("Layout", {})
+        self.m_layout = gizmo.view.Layout(
+            self, config=config)
+
+    def clearScene(self):
+        self.m_scene.clear()
 
     def setModel(self, model):
         self.clearScene()
@@ -48,7 +76,8 @@ class FitzView(
         if self.m_fetched >= self.count():
             self.m_viewport.updated.disconnect(self.updateItems)
         else:
-            rect = self.viewport().geometry()
+            viewport = self.viewport()
+            rect = viewport.geometry()
             rect = self.mapToScene(rect)
             self.addItemsNear(rect.boundingRect())
 
@@ -74,7 +103,11 @@ class FitzView(
         self.app.buffman.viewIsDrawn.emit(self)
 
     def updateLayout(self):
-        super().updateLayout()
+        y = 0.0
+        x, r, h = self.m_layout.load(self.m_items)
+        w = r - x
+        self.m_scene.setSceneRect(x, y, w, h)
+        self.setSceneRect(QtCore.QRectF(x, y, w, h))
         self.updateNormTransform()
 
     def updateNormTransform(self):
@@ -95,7 +128,7 @@ class FitzView(
         self.centerOn(position)
 
     def createItem(self, idx, element):
-        item=self.item_class(
+        item=FitzItem(
             view=self,
             element=element,
             index=idx + 1,
