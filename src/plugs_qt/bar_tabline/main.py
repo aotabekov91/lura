@@ -1,13 +1,13 @@
 from PyQt6 import QtCore, QtWidgets
 
-from plug import tag
+from plug import tag, Plug
 
-from .widget import TablineWidget
+from .view import TablineWidget
 
+class BarTabline(Plug):
 
-class Tabline:
-    def setupUI(self):
-        super().setupUI()
+    def setup(self):
+        super().setup()
         self.setupTabline()
         self.app.appIsLaunched.connect(
                 self.connectTabline)
@@ -27,14 +27,15 @@ class Tabline:
             self.tabline.andex.setText(alabel)
 
     def setupTabline(self):
+        bar=self.app.view.bar
         self.m_tabs = {}
         self.rename_widget = None
         self.tabline = TablineWidget()
-        idx = self.stack.addWidget(self.tabline)
+        idx = bar.stack.addWidget(self.tabline)
         self.tabline.m_idx = idx
-        self.stack.setCurrentIndex(idx)
+        bar.stack.setCurrentIndex(idx)
         self.tabline.show()
-        self.stack.show()
+        bar.stack.show()
 
     def connectTabline(self):
         self.app.buffman.viewCreated.connect(
@@ -128,19 +129,20 @@ class Tabline:
         tw.show()
         self.tabline.tabs.show()
 
-    def updateTabs(self, v):
-        t = None
-        if self.checkProp("hasTabs", v):
-            t = v
-        elif self.checkProp("m_tabber", v):
-            t = v.m_tabber
-        if t:
-            w = QtWidgets.QWidget()
-            l = QtWidgets.QHBoxLayout(w)
-            l.setContentsMargins(0, 0, 0, 0)
-            l.setSpacing(5)
-            w.setLayout(l)
-            self.m_tabs[t] = w
-            t.currentChanged.connect(
-                self.updateTabIndexLabel
-            )
+    def updateTabs(self, view):
+        tab = None
+        if not view:
+            return
+        if view.checkProp("hasTabs", view):
+            tab = view
+        elif view.checkProp("m_tabber", view):
+            tab = view.m_tabber
+        if tab:
+            widget = QtWidgets.QWidget()
+            layout = QtWidgets.QHBoxLayout(widget)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(5)
+            widget.setLayout(layout)
+            self.m_tabs[tab] = widget
+            tab.currentChanged.connect(
+                self.updateTabIndexLabel)

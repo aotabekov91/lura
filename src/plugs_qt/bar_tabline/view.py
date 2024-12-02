@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 
 class TablineWidget(QtWidgets.QWidget):
+
     def __init__(self):
         super().__init__(objectName="Tabline")
         self.setupUI()
@@ -9,46 +10,38 @@ class TablineWidget(QtWidgets.QWidget):
         self.updateClock()
 
     def setupUI(self):
-        l = QtWidgets.QHBoxLayout(self)
+        layout = QtWidgets.QHBoxLayout(self)
         self.setContentsMargins(0, 0, 0, 0)
-        l.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(l)
-        l.setSpacing(0)
-
-        self.andex = QtWidgets.QLabel(objectName="AppIndex")
-
-        self.index = QtWidgets.QLabel(objectName="TabIndex")
-
-        self.tabs = QtWidgets.QWidget(objectName="Tabs")
-
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        layout.setSpacing(0)
+        self.andex = QtWidgets.QLabel(
+                objectName="AppIndex")
+        self.index = QtWidgets.QLabel(
+                objectName="TabIndex")
+        self.tabs = QtWidgets.QWidget(
+                objectName="Tabs")
         tl = QtWidgets.QHBoxLayout(self.tabs)
         self.tabs.setLayout(tl)
         tl.setContentsMargins(0, 0, 0, 0)
-
-        self.clock = QtWidgets.QLabel(objectName="Clock")
-
+        self.clock = QtWidgets.QLabel(
+                objectName="Clock")
         self.andex.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignCenter
-            | QtCore.Qt.AlignmentFlag.AlignVCenter
-        )
-
+            | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.index.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignCenter
-            | QtCore.Qt.AlignmentFlag.AlignVCenter
-        )
-
+            | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.clock.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignCenter
-            | QtCore.Qt.AlignmentFlag.AlignVCenter
-        )
-
-        l.addWidget(self.andex)
-        l.addStretch(1)
-        l.addWidget(self.index)
-        l.addStretch(100)
-        l.addWidget(self.tabs)
-        l.addStretch(2)
-        l.addWidget(self.clock)
+            | QtCore.Qt.AlignmentFlag.AlignVCenter)
+        layout.addWidget(self.andex)
+        layout.addStretch(1)
+        layout.addWidget(self.index)
+        layout.addStretch(100)
+        layout.addWidget(self.tabs)
+        layout.addStretch(2)
+        layout.addWidget(self.clock)
 
     def setText(self, kind, text):
         f = getattr(self, kind, None)

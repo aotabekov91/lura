@@ -2,7 +2,6 @@ from . import base, mixin
 
 
 class StatusBarView(
-    mixin.Tabline,
     mixin.Editline,
     mixin.Powerline,
     base.BaseStatusBarView,
