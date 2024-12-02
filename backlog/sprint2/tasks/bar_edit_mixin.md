@@ -1,10 +1,10 @@
 [Index](../index.md)
 
-Status: done
-Work done: 1
+Status: 
+Work done: 
 Actual time: 1h
-Estimated time: 2h
+Estimated time: 1h
 
 # Task
 
-* Factor tabline from tab out as an independent plugin
+* Factor tab edit from tab out as an independent plugin
