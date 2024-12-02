@@ -13,15 +13,6 @@ class TreeViewWidget(QtWidgets.QTreeView):
         self.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-    def currentItem(self, idx=None):
-        m = self.model()
-        if m:
-            idx = idx or self.currentIndex()
-            if type(m) == QtCore.QSortFilterProxyModel:
-                idx = m.mapToSource(idx)
-            if idx and hasattr(m, "itemFromIndex"):
-                return m.itemFromIndex(idx)
-
     def expand(self, idx=None, **kwargs):
         idx = idx or self.currentIndex()
         self.setCurrentIndex(idx)
@@ -78,18 +69,7 @@ class TreeViewWidget(QtWidgets.QTreeView):
                 self.setRootIndex(p)
                 self.setCurrentIndex(idx)
 
-    # def getRowIndex(self, row):
-    #     idx = self.model().index(0, 0)
-    #     for i in range(row):
-    #         idx = self.indexBelow(idx)
-    #     return idx
-
-    def getRowIndex(self, row):
-        idx = self.currentIndex()
-        pidx = idx.parent()
-        return pidx.child(row, 0)
-
-    def goToParent(self, xrange=[1], **kwargs):
+    def parentUp(self, xrange=[1], **kwargs):
         for i in range(xrange):
             idx = self.currentIndex()
             p = idx.parent()
@@ -99,11 +79,11 @@ class TreeViewWidget(QtWidgets.QTreeView):
                 f = self.m_model.index(0, 0)
                 return self.setCurrentIndex(f)
 
-    def goToSiblingDown(self, xrange=[1], **kwargs):
+    def siblingDown(self, xrange=[1], **kwargs):
         for row in range(xrange):
             self.goToSibling(kind="down")
 
-    def goToSiblingUp(self, xrange=[1], **kwargs):
+    def siblingUp(self, xrange=[1], **kwargs):
         for row in range(xrange):
             self.goToSibling(kind="up")
 
@@ -124,10 +104,8 @@ class TreeViewWidget(QtWidgets.QTreeView):
         self.setCurrentIndex(n_idx)
 
     def first(self, **kwargs):
-        idx = self.rootIndex()
-        if idx:
-            child = idx.child(0, 0)
-            self.setCurrentIndex(child)
+        kwargs['xrange']=[1]
+        self.goTo(**kwargs)
 
     # def last(self):
     #     idx = self.rootIndex()
@@ -145,11 +123,28 @@ class TreeViewWidget(QtWidgets.QTreeView):
             last = self.m_model.index(last_row, 0, parent)
             self.setCurrentIndex(last)
 
+    def goToLast(self, **kwargs):
+        m = self.m_model
+        if self.checkProp("rowCount", m):
+            xrange = [m.rowCount()]
+        else:
+            xrange = [m.count()]
+        self.goTo(xrange)
+
+
     def right(self, **kwargs):
         self.expand()
 
     def left(self, **kwargs):
         self.collapse()
+
+    def up(self, xrange=[1], **kwargs):
+        for row in range(xrange[-1]):
+            self.move("MoveUp")
+
+    def down(self, xrange=[1], **kwargs):
+        for row in range(xrange[-1]):
+            self.move("MoveDown")
 
     def firstSibling(self, **kwargs):
         idx = self.currentIndex()
@@ -169,7 +164,6 @@ class TreeViewWidget(QtWidgets.QTreeView):
     def goTo(self, kind=None, xrange=None, **kwargs):
         if kind:
             func=getattr(self, kind, None)
-            print(kind, func)
             if func:
                 func(xrange=xrange, **kwargs)
         elif xrange:
@@ -177,7 +171,24 @@ class TreeViewWidget(QtWidgets.QTreeView):
             self.setCurrentIndex(idx)
         elif xrange is None:
             self.last(xrange=xrange, **kwargs)
-            
+
+    def move(self, arg, **kwargs):
+        cursor=QtWidgets.QAbstractItemView.CursorAction
+        action = getattr(cursor, arg, None)
+        if not action is None:
+            mode=QtCore.Qt.KeyboardModifier.NoModifier
+            hint=QtWidgets.QAbstractItemView.ScrollHint
+            ensure=hint.EnsureVisible
+            idx = self.moveCursor(action, mode)
+            self.setCurrentIndex(idx)
+            self.scrollTo(idx, ensure) 
+
+    def getRowIndex(self, row):
+        idx = self.model().index(0, 0)
+        for i in range(row):
+            idx = self.indexBelow(idx)
+        return idx
+
     def setCurrentIndex(self, idx):
         if idx is None:
             return
@@ -199,21 +210,11 @@ class TreeViewWidget(QtWidgets.QTreeView):
                 self.currentItem()
             )
 
-    def up(self, xrange=[1], **kwargs):
-        for row in range(xrange[-1]):
-            self.move("MoveUp")
-
-    def down(self, xrange=[1], **kwargs):
-        for row in range(xrange[-1]):
-            self.move("MoveDown")
-
-    def move(self, arg, **kwargs):
-        cursor=QtWidgets.QAbstractItemView.CursorAction
-        action = getattr(cursor, arg, None)
-        if not action is None:
-            mode=QtCore.Qt.KeyboardModifier.NoModifier
-            hint=QtWidgets.QAbstractItemView.ScrollHint
-            ensure=hint.EnsureVisible
-            idx = self.moveCursor(action, mode)
-            self.setCurrentIndex(idx)
-            self.scrollTo(idx, ensure) 
+    def currentItem(self, idx=None):
+        m = self.model()
+        if m:
+            idx = idx or self.currentIndex()
+            if type(m) == QtCore.QSortFilterProxyModel:
+                idx = m.mapToSource(idx)
+            if idx and hasattr(m, "itemFromIndex"):
+                return m.itemFromIndex(idx)
