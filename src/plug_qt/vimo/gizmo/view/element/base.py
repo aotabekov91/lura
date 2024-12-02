@@ -3,7 +3,7 @@ from plug_qt.vimo.mixin import view
 
 
 class ElementView(
-    view.TableWidgetGo,
+    # view.TableWidgetGo,
     vimo.View,
     widget.TableWidget,
 ):

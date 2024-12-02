@@ -5,6 +5,7 @@ class TreeView(
     vimo.View,
     widget.TreeViewWidget,
 ):
+
     def setModel(self, model):
         if model:
             self.m_model

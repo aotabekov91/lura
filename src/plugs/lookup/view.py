@@ -2,7 +2,7 @@ from plug_qt.vimo import mixin
 from plug_qt.vimo.gizmo.view.tree import TreeView
 
 class LookupView(
-        mixin.view.TreeGo,
+        # mixin.view.TreeGo,
         TreeView
         ):
 

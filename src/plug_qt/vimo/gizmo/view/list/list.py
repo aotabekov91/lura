@@ -4,7 +4,7 @@ from plug_qt.widget import ListViewWidget
 
 
 class ListView(
-    view.ViewGo,
+    # view.ViewGo,
     vimo.View,
     ListViewWidget,
 ):

@@ -6,7 +6,7 @@ from plug_qt.vimo.mixin import view
 
 
 class ListWidgetView(
-    view.WidgetGo,
+    # view.WidgetGo,
     vimo.View,
     widget.ListWidget,
 ):
@@ -50,7 +50,7 @@ class ListWidgetView(
                 else:
                     self.addElement(element)
             self.reconnectModel()
-            self.goToFirst()
+            # self.goToFirst()
 
     def cleanUp(self):
         super().clear()

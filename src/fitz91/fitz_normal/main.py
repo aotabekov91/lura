@@ -14,7 +14,7 @@ class FitzNormal(Plug):
     def addAgent(self):
         normal=self.app.plugman.getPlug('Normal')
         if normal:
-            normal.addAgent('FitzView', self)
+            normal.addAgent('goTo', 'FitzView', self)
             self.app.buffman.viewIsDrawn.connect(self.restorePosition)
 
     def activate(self, kind=None, **kwargs):
@@ -22,49 +22,49 @@ class FitzNormal(Plug):
         if func:
             func(**kwargs)
 
-    def goToBlockleft(self, *args, **kwargs):
+    def blockleft(self, *args, **kwargs):
         self.moveScreen("left", *args, **kwargs)
 
-    def goToBlockright(self, *args, **kwargs):
+    def blockright(self, *args, **kwargs):
         self.moveScreen("right", *args, **kwargs)
 
-    def goToBlockup(self, *args, **kwargs):
+    def blockup(self, *args, **kwargs):
         self.moveScreen("up", *args, **kwargs)
 
-    def goToBlockdown(self, *args, **kwargs):
+    def blockdown(self, *args, **kwargs):
         self.moveScreen("down", *args, **kwargs)
 
-    def goToDown(self, *args, **kwargs):
+    def down(self, *args, **kwargs):
         self.moveLine("down", *args, **kwargs)
 
-    def goToUp(self, *args, **kwargs):
+    def up(self, *args, **kwargs):
         self.moveLine("up", *args, **kwargs)
 
-    def goToLeft(self, *args, **kwargs):
+    def left(self, *args, **kwargs):
         self.moveLine("left", *args, **kwargs)
 
-    def goToRight(self, *args,  **kwargs):
+    def right(self, *args,  **kwargs):
         self.moveLine("right", *args, **kwargs)
 
-    def goToNext(self, view=None, xrange=[1], **kwargs):
+    def next(self, view=None, xrange=[1], **kwargs):
         if view:
             count=view.count()
             idx=view.currentIndex()
             idx = min(idx + xrange[-1], count)
             self.goTo(view=view, xrange=[idx])
 
-    def goToPrev(self, view=None, xrange=[1], **kwargs):
+    def prev(self, view=None, xrange=[1], **kwargs):
         if view:
             idx=view.currentIndex()
             idx = max(1, idx - xrange[-1])
             self.goTo(view=view, xrange=[idx])
 
-    def goToFirst(self, view=None, **kwargs):
+    def first(self, view=None, **kwargs):
         if view:
             kwargs['xrange']=[1]
             self.goTo(view=view, **kwargs)
 
-    def goToLast(self, view=None, **kwargs):
+    def last(self, view=None, **kwargs):
         if view:
             kwargs['xrange']=[view.count()]
             self.goTo(view=view, **kwargs)
