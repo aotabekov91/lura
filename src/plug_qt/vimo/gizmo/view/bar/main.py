@@ -3,12 +3,12 @@ from . import base, mixin
 
 class StatusBarView(
     mixin.Editline,
-    mixin.Powerline,
     base.BaseStatusBarView,
 ):
     def setup(self):
         super().setup()
         self.editWanted.connect(self.toggleTabline)
+        self.show()
 
     def toggleTabline(self, cond):
         if cond:

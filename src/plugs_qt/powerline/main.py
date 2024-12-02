@@ -1,19 +1,21 @@
-from .widget import PowerlineWidget
+from plug import Plug
 
+from .view import PowerlineWidget
 
-class Powerline:
-    def setupUI(self):
-        super().setupUI()
+class Powerline(Plug):
+
+    def setup(self):
+        super().setup()
         self.setupPowerline()
         self.connectPowerline()
 
     def setupPowerline(self):
+        bar=self.app.view.bar
         self.m_view = None
         self.m_subview = None
         self.status = PowerlineWidget()
-        self.m_layout.insertWidget(0, self.status)
+        bar.m_layout.insertWidget(0, self.status)
         self.status.show()
-        self.show()
 
     def connectPowerline(self):
         self.app.earman.keysChanged.connect(
