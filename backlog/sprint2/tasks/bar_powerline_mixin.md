@@ -2,7 +2,7 @@
 
 Status: 
 Work done: 
-Actual time:
+Actual time: 0.5h
 Estimated time: 1h
 
 # Task
