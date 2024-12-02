@@ -32,7 +32,7 @@ class EditlineWidget(QtWidgets.QWidget):
         self.setLayout(l)
         l.setSpacing(0)
 
-    def clearEdit(self):
+    def clear(self):
         self.m_text.clear()
 
     def text(self):
@@ -41,14 +41,14 @@ class EditlineWidget(QtWidgets.QWidget):
     def setText(self, text):
         self.m_text.setText(text)
 
-    def octivateEdit(self, label=":", edit=""):
+    def octivate(self, label=":", edit=""):
         self.m_text.clear()
         self.m_text.hide()
         self.m_text.setText(str(edit))
         self.m_label.setText(str(label))
         self.editWanted.emit(False)
 
-    def activateEdit(
+    def activate(
         self,
         label=":",
         edit="",

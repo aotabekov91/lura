@@ -28,9 +28,10 @@ class Bookmark(Plug, QtCore.QObject):
                 self.modelCreated.emit(bookmark_model)
 
     @tag(["b(normal)" ,"<escape>/<c-[>(bookmark[any])"])
-    def toggleBookmark(self):
+    def toggle(self):
         view=self.app.stateman.view()
-        if view:
+        editor=self.app.plugman.getPlug('Editline')
+        if view and editor:
             model=view.model()
             bookmark_model=self.getModel(model)
             if bookmark_model:
@@ -38,17 +39,22 @@ class Bookmark(Plug, QtCore.QObject):
                     mode="bookmark",
                     passive=["bookmark"])
                 if mode=='bookmark':
-                    self.activateEdit(view)
+                    self.activate(view)
                 else:
-                    self.app.view.bar.octivateEdit()
-                    self.app.stateman.toggle()
+                    self.octivate()
+
+    def octivate(self):
+        editor=self.app.plugman.getPlug('Editline')
+        editor.octivate()
+        self.app.stateman.toggle()
 
     @tag("<enter>/<return>(bookmark)")
     def bookmark(self):
         view=self.app.stateman.view()
         model=view.model()
         bookmark_model=self.getModel(model)
-        bookmark = self.app.view.bar.text()
+        editline=self.app.plugman.getPlug('Editline')
+        bookmark=editline.text()
         normal=self.app.plugman.getPlug('Normal')
         if normal and bookmark_model:
             data={
@@ -57,12 +63,13 @@ class Bookmark(Plug, QtCore.QObject):
                     'position': normal.currentPosition(view=view),
                  }
             bookmark_model.addBookmark(data)
-            self.toggleBookmark()
+            self.toggle()
 
-    def activateEdit(self, view):
+    def activate(self, view):
         model=view.model()
         bookmark_model=self.getModel(model)
         normal=self.app.plugman.getPlug('Normal')
+        editor=self.app.plugman.getPlug('Editline')
         text=''
         if normal:
             position=normal.currentPosition(view=view)
@@ -70,4 +77,4 @@ class Bookmark(Plug, QtCore.QObject):
                     position, by="position")
             if bookmark:
                 text=bookmark.data("text")
-        self.app.view.bar.activateEdit(edit=text)
+        editor.activate(edit=text)

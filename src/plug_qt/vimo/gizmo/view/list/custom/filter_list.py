@@ -61,7 +61,7 @@ class FilterListView(ListView):
         super().octivate(*args, **kwargs)
 
     def resetFilter(self):
-        self.app.view.bar.clearEdit()
+        self.app.view.bar.clear()
 
     def updateFilter(self):
         if self.m_model:

@@ -1,10 +1,10 @@
 from PyQt6 import QtCore, QtWidgets
 
-from plug import tag, Plug
+from plug import Plug
 
 from .view import TablineWidget
 
-class BarTabline(Plug):
+class Tabline(Plug):
 
     def setup(self):
         super().setup()
@@ -50,27 +50,6 @@ class BarTabline(Plug):
         self.app.buffman.posIndexChanged.connect(
             self.updateLabels
         )
-
-    @tag("r(command)")
-    def startRenameTab(self, xrange=None):
-        if self.current:
-            idx = self.current.currentIndex()
-            if xrange:
-                idx = xrange[-1] - 1
-            self.activate()
-            self.setSubmode("rename")
-            w = self.current.widget(idx)
-            self.rename_widget = w
-            self.activeEdit(edit=w.m_tab_name)
-
-    @tag("<enter>/<return>(edit[tab])")
-    def renameTab(self):
-        w = self.rename_widget
-        if self.current and w:
-            n = self.app.view.bar.edit.text()
-            w.m_tab_name = n
-            self.updateTabLabels(tab=self.current)
-        self.octivateEdit()
 
     def clearLayout(self, l):
         i = l.takeAt(0)

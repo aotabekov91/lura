@@ -19,7 +19,6 @@ class CtrlPTab(view.TabView):
 
     @tag('<c-p>', modes=['normal'])
     def activate(self, **kwargs):
-
         super().activate(
                 blur=False, 
                 dark=False,
@@ -27,12 +26,14 @@ class CtrlPTab(view.TabView):
                 )
         self.app.stateman.setMode(
                 'input', passive=['input'])
-        self.app.view.bar.activateEdit('>')
+        editor=self.app.plugman.getPlug('Editline')
+        if editor:
+            editor.activate('>')
 
     @tag(['<c-[>', '<escape>'], modes=['input|^'])
     def octivate(self, *args, **kwargs):
-
-        self.app.view.bar.octivateEdit()
+        editor=self.app.plugman.getPlug('Editline')
+        editor.octivate()
         super().octivate(*args, **kwargs)
 
     def sizeHint(self):

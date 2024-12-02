@@ -1,7 +1,7 @@
 from plug.utils import tag
 
-
 class Metadata:
+
     hasMetadata = True
 
     @tag("M(command)")
@@ -26,7 +26,8 @@ class Metadata:
 
     @tag("<escape>(metadata[any])[^]")
     def finishMetadataMode(self):
-        self.app.view.bar.octivateEdit()
+        editor=self.app.plugman.getPlug('Editline')
+        editor.octivate()
         self.app.stateman.setMode()
 
     def setMetadata(self):
@@ -34,4 +35,6 @@ class Metadata:
         e = self.m_model.getMetadata("title", by="field")
         if e:
             text = e.data("value")
-        self.app.view.bar.activateEdit(edit=text)
+        editor=self.app.plugman.getPlug('Editline')
+        if editor:
+            editor.activate(edit=text)

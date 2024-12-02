@@ -1,8 +1,7 @@
 from plug.utils import tag
-from PyQt6 import QtCore
-
 
 class Yank:
+
     def setup(self):
         super().setup()
         self.m_last_yanked_dir = None
@@ -42,14 +41,11 @@ class Yank:
 
     @tag("yis(visual[band])[^]")
     def yankAsImageToSave(self, *args, **kwargs):
-        img = self.yankImage()
-        if not img:
-            return
-        self.app.stateman.toggle("save", submode="image")
-        self.app.view.bar.activateEdit(
-            label="Path",
-            edit=self.m_last_yanked_dir,
-        )
+        image = self.yankImage()
+        editor=self.app.plugman.getPlug('Editline')
+        if image and editor:
+            self.app.stateman.toggle("save", submode="image")
+            editor.activate(label="Path", edit=self.m_last_yanked_dir)
 
     @tag("<c-m>/<return>(save[image])[^]")
     def saveYankedImage(self, *args, **kwargs):
@@ -65,7 +61,9 @@ class Yank:
 
     @tag("<escape>/<c-[>(save[image])[^]")
     def cleanUpYankedImage(self, *args, **kwargs):
-        self.app.view.bar.octivateEdit()
+        editor=self.app.plugman.getPlug('Editline')
+        if editor:
+            editor.octivate()
         self.app.stateman.toggle()
         self.cleanUp()
 

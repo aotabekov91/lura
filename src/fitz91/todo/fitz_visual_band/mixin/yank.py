@@ -43,13 +43,10 @@ class Yank:
     @tag("yis(visual[band])[^]")
     def yankAsImageToSave(self, *args, **kwargs):
         img = self.yankImage()
-        if not img:
-            return
-        self.app.stateman.toggle("save", submode="image")
-        self.app.view.bar.activateEdit(
-            label="Path",
-            edit=self.m_last_yanked_dir,
-        )
+        editor=self.app.plugman.getPlug('Editline')
+        if img and editor:
+            self.app.stateman.toggle("save", submode="image")
+            editor.activate(label="Path", edit=self.m_last_yanked_dir)
 
     @tag("<c-m>/<return>(save[image])[^]")
     def saveYankedImage(self, *args, **kwargs):
@@ -65,7 +62,8 @@ class Yank:
 
     @tag("<escape>/<c-[>(save[image])[^]")
     def cleanUpYankedImage(self, *args, **kwargs):
-        self.app.view.bar.octivateEdit()
+        editor=self.app.plugman.getPlug('Editline')
+        editor.octivate()
         self.app.stateman.toggle()
         self.cleanUp()
 

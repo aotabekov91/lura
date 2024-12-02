@@ -1,18 +1,44 @@
-from . import base, mixin
+from PyQt6 import QtWidgets
+
+from plug.utils import tag
+from plug_qt import vimo, widget
 
 
 class StatusBarView(
-    mixin.Editline,
-    base.BaseStatusBarView,
+    vimo.View,
+    widget.StatusBar,
 ):
     def setup(self):
         super().setup()
-        self.editWanted.connect(self.toggleTabline)
+        self.setupContainer()
         self.show()
 
-    def toggleTabline(self, cond):
-        if cond:
-            idx = self.edit.m_idx
+    def setupContainer(self):
+        self.container = QtWidgets.QWidget(
+            objectName="Container"
+        )
+        self.container.setContentsMargins(0, 0, 0, 0)
+        self.addPermanentWidget(self.container, 10)
+        self.m_layout = QtWidgets.QVBoxLayout(
+            self.container
+        )
+        self.m_layout.setContentsMargins(0, 0, 0, 0)
+        self.m_layout.setSpacing(0)
+        self.container.setLayout(self.m_layout)
+        self.stack = QtWidgets.QStackedWidget(
+            objectName="Stack"
+        )
+        self.m_layout.addWidget(self.stack)
+        self.setContentsMargins(0, 0, 3, 0)
+        self.layout().setContentsMargins(0, 0, 0, 0)
+        self.setSizeGripEnabled(False)
+        self.layout().setSpacing(0)
+        self.stack.hide()
+        self.hide()
+
+    @tag("tb(normal)")
+    def toggle(self):
+        if self.isVisible():
+            self.hide()
         else:
-            idx = self.tabline.m_idx
-        self.stack.setCurrentIndex(idx)
+            self.show()
