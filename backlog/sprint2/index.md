@@ -11,9 +11,9 @@ Date: 2.12.2024-31.12.2024
 ## Objectives
 
 * [ ] [Sprint 1: Support annotation](objectives/s1_annotation.md)
-* [ ] [Sprint 1: Separate mixins](objectives/s1_mixins.md)
 * [ ] [Sprint 1: Plugins](objectives/s1_plugins.md)
 * [ ] [Sprint 1: Bugs](objectives/s1_bugs.md)
+* [x] [Sprint 1: Separate mixins](objectives/s1_mixins.md)
 
 * [ ] [Visual mode](objectives/visual.md)
 * [ ] [Plugin system](objectives/plugin_system.md)
@@ -23,4 +23,5 @@ Date: 2.12.2024-31.12.2024
 * [ ] [Input mode](objectives/input_mode.md)
 * [ ] [View layout](objectives/view_layout.md)
 * [ ] [Plugins](objectives/plugins.md)
+* [ ] [Factoring out](objectives/factoring_out.md)
 * [ ] [Bugs](objectives/bugs.md)

@@ -23,14 +23,11 @@ class Powerline(Plug):
         self.app.stateman.modeChanged.connect(
                 self.setMode)
         self.app.stateman.viewChanged.connect(
-            self.updateView
-        )
+            self.updateView)
         self.app.stateman.subviewChanged.connect(
-            self.setSubview
-        )
+            self.setSubview)
         self.app.stateman.submodeChanged.connect(
-            self.setSubmode
-        )
+            self.setSubmode)
 
     def setSubview(self, v):
         m = None
@@ -60,16 +57,16 @@ class Powerline(Plug):
 
     def reconnect(self, kind="disconnect"):
         if self.m_view:
-            for f in [
+            for func in [
                 "indexChanged",
                 "detailChanged",
             ]:
-                s = self.m_view.getAttr(f, "signal")
-                n = f.replace("Changed", "")
-                n = "set" + n.title()
-                if s:
-                    s = getattr(s, kind)
-                    s(getattr(self, n))
+                signal = self.m_view.getAttr(func, "signal")
+                name = func.replace("Changed", "")
+                name = "set" + name.title()
+                if signal:
+                    signal = getattr(signal, kind)
+                    signal(getattr(self, name))
 
     def setMode(self, m=None):
         if m:

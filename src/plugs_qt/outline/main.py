@@ -1,3 +1,5 @@
+from PyQt6 import QtCore
+
 from plug import Plug, tag
 
 from .view import OutlineView
@@ -8,73 +10,54 @@ class Outline(Plug):
 
     def setup(self):
         super().setup()
-        self.m_outliners={}
-        self.m_current_view=None
+        self.m_agents={}
+        self.m_view=None
         self.setupView()
 
-    # def updateOutlineIndex(self, view):
-    #     # view_model=view.model()
-    #     idx=view.currentIndex()
-    #     tree_model=self.view.model()
-    #     # self.findOutlineIndex(tree_model, QModelIndex(), idx)
-    #     found=self.find(idx, tree_model)
-    #     print(found)
-    #     self.view.setCurrentIndex(found)
+    def addAgent(self, name, agent):
+        self.m_agents[name]=agent
 
-    # def findOutlineIndex(self, model, parent_idx, idx):
-    #     for i in range(model.rowCount(parent_idx)):
-    #         child_idx=model.index(i, 0, parent_idx)
-    #         page_idx=model.index(i, 1, parent_idx)
-    #         data=model.data(page_idx)
-    #         if idx and data: 
-    #             data=int(data)
-    #             if data<=idx:
-    #                 print(data, idx)
-    #         if model.hasChildren(child_idx):
-    #             self.findOutlineIndex(model, child_idx, idx)
-
-    # def find(self, item, model, parent=None):
-    #     root=model.invisibleRootItem()
-    #     print(root.rowCount())
-    #     if root.rowCount()>0: 
-    #         if not parent: 
-    #             parent=model.indexFromItem(root.child(0,0))
-    #         for row in range(model.rowCount(parent)):
-    #             index=model.index(row, 0, parent)
-    #             if index==model.indexFromItem(item): 
-    #                 return index
-    #         print(model.rowCount(parent))
-    #         for row in range(model.rowCount(parent)):
-    #             index=model.index(row, 0, parent)
-    #             match=self.sync(item, model, index)
-    #             if match.isValid():
-    #                 return match
-    #         return model.indexFromItem(root.child(0,0))
-
-    # def sync(self, page, model, parent):
-    #     raise
-    #     for row in range(model.rowCount(parent)):
-    #         index=model.index(row, 0, parent)
-    #         data=model.index(row, 1, parent)
-    #         print(data, page)
-    #         if page==data: 
-    #             return index
-    #     for row in range(model.rowCount(parent)):
-    #         index=model.index(row, 0, parent)
-    #         match=self.sync(page, model, index)
-    #         if match.isValid():
-    #             return match
-    #     return QModelIndex()
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
+        return self.m_agents.get(name, None)
 
     def updateOutline(self, view):
-        model=view.model()
-        name=model.__class__.__name__
-        outliner=self.outliner(name)
-        if outliner:
-            outline=outliner.getOutline(model)
+        agent=self.getAgent(view=view)
+        if agent:
+            model=view.model()
+            outline=agent.getOutline(model)
             if outline:
                 self.view.setModel(outline)
-                # self.updateOutlineIndex(view)
+                self.connectView(view)
+
+    def connectView(self, view):
+        if self.m_view:
+            self.m_view.indexChanged.disconnect(
+                    self.updateOutlineIndex)
+        self.m_view=view
+        view.indexChanged.connect(
+                self.updateOutlineIndex)
+
+    def updateOutlineIndex(self, idx):
+        model=self.view.model()
+        root_idx=QtCore.QModelIndex()
+        found=self.find(idx, model, root_idx) 
+        if found:
+            self.view.setCurrentIndex(found)
+
+    def find(self, idx, model, parent):
+        for row in range(model.rowCount(parent)):
+            title_idx=model.index(row, 0, parent)
+            page_idx=model.index(row, 1, parent)
+            page=int(page_idx.data())
+            if idx==page: 
+                return title_idx
+        for row in range(model.rowCount(parent)):
+            title_idx=model.index(row, 0, parent)
+            match=self.find(idx, model, title_idx)
+            if match and match.isValid():
+                return match
 
     def updateHeaderRatio(self):
         header=self.view.header()
@@ -90,12 +73,6 @@ class Outline(Plug):
                 self.updateOutline)
         self.view.resized.connect(
                 self.updateHeaderRatio)
-
-    def addOutliner(self, name, outliner):
-        self.m_outliners[name]=outliner
-
-    def outliner(self, name):
-        return self.m_outliners.get(name, None)
 
     @tag('<c-o>(normal/outline)')
     def toggleOutline(self):

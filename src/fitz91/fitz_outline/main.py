@@ -9,18 +9,15 @@ class FitzOutline(Plug):
         super().setup()
         self.m_outlines={}
         if self.app.running:
-            self.addToOutline()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToOutline)
+                    self.addAgent)
 
-    def addToOutline(self):
-        self.app.wait()
-        plugs=self.app.plugman.plugs
-        outliner=plugs.get('Outline')
-        if outliner:
-            outliner.addOutliner('FitzModel', self)
-        self.app.wait(-1)
+    def addAgent(self):
+        holder=self.app.plugman.getPlug('Outline')
+        if holder:
+            holder.addAgent('FitzView', self)
 
     def getOutline(self, model):
         outline=self.m_outlines.get(model, None)

@@ -3,7 +3,7 @@
 Status:
 Work done:
 Actual time:
-Estimated time:
+Estimated time: 1h
 
 ## Description
 
