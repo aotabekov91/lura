@@ -20,11 +20,8 @@ class TreeView(vimo.View, QtWidgets.QTreeView):
 
     def setModel(self, model):
         if model:
-            print(model)
-            self.m_model=model
-            super().setModel(model)
-            super(QtWidgets.QTreeView, self).setModel(
-                model)
+            super(vimo.View, self).setModel(model)
+            super(QtWidgets.QTreeView, self).setModel(model)
 
     def expand(self, idx=None, **kwargs):
         idx = idx or self.currentIndex()

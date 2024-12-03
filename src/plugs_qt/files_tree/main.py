@@ -5,12 +5,6 @@ from plug import Plug, tag, Model, Factory
 
 from .view import FilesView
 
-class FileSystemModel(
-        Model,
-        QtGui.QFileSystemModel,
-        ):
-    pass
-
 class FilesTree(Plug):
 
     def setup(self):
@@ -28,9 +22,8 @@ class FilesTree(Plug):
                 return path
 
     def setPath(self, path=None):
-        model=FileSystemModel()
-        # klass=Factory(Model, QtGui.QFileSystemModel)
-        # model=klass()
+        klass=Factory(Model, QtGui.QFileSystemModel)
+        model=klass()
         self.view.setModel(model)
         if path is None: 
             path = os.path.abspath('.')

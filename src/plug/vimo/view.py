@@ -209,7 +209,7 @@ class View:
     def setModel(self, model):
         if id(self.m_model) != id(model):
             self.m_model = model
-            self.kind = model.kind
+            self.kind = getattr(model, 'kind', None)
 
     def setProp(self, name, value=True, view=None):
         view = view or self

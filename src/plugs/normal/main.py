@@ -26,7 +26,6 @@ class Normal(Plug, QtCore.QObject):
             view=self.app.stateman.view()
         func=getattr(view, action, None)
         agent=self.getAgent(action=action, view=view)
-        print(func)
         if agent:
             agent.activate(view=view, kind=kind, **kwargs)
             data=agent.currentPosition(view=view)
