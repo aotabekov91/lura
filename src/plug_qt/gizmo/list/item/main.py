@@ -1,11 +1,28 @@
+from PyQt6 import QtCore, QtWidgets
+
 from plug_qt import vimo
-from plug_qt.widget import ListViewWidget
 
+class ListItemView(vimo.View, QtWidgets.QListView):
 
-class ListView(
-    vimo.View,
-    ListViewWidget,
-):
+    def setup(self):
+        super().setup()
+        self.setProperties()
+
+    def currentItem(self, idx=None):
+        model = self.model()
+        if model:
+            idx = idx or self.currentIndex()
+            if type(model) == QtCore.QSortFilterProxyModel:
+                idx = model.mapToSource(idx)
+            if hasattr(model, "itemFromIndex"):
+                return model.itemFromIndex(idx)
+
+    def setProperties(self):
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
     def setModel(self, model):
         if model:
             super().setModel(model)

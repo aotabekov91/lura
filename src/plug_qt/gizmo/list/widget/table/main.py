@@ -4,7 +4,6 @@ from PyQt6 import QtCore, QtWidgets
 
 from . import widgets
 
-
 class TableWidget(QtWidgets.QWidget):
     wmap = {
         "Label": widgets.Label,

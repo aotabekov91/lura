@@ -1,8 +1,8 @@
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtWidgets
 
-from plug_qt import vimo, widget
+from plug_qt import vimo
 
-class ListWidgetView(vimo.View, widget.ListWidget):
+class ListWidgetView(vimo.View, QtWidgets.QListWidget):
 
     include = {}
     exclude = {}
@@ -10,6 +10,23 @@ class ListWidgetView(vimo.View, widget.ListWidget):
     widget_class = widget.TableWidget
     list_item_class = widget.ListWidgetItem
     widgetDataChanged = QtCore.pyqtSignal(object)
+
+    def setup(self):
+        super().setup()
+        self.setProperties()
+
+    def setProperties(self):
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setResizeMode(
+            QtWidgets.QListView.ResizeMode.Adjust)
+        self.setWindowFlags(
+            QtCore.Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(
+            QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
 
     def setCurrentRow(self, row):
         super().setCurrentRow(row)
