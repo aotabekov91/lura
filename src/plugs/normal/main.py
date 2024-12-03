@@ -24,6 +24,7 @@ class Normal(Plug, QtCore.QObject):
     def activate(self, view=None, action=None, kind='goTo', **kwargs):
         if not view:
             view=self.app.stateman.view()
+        print(view, action, kind)
         func=getattr(view, action, None)
         agent=self.getAgent(action=action, view=view)
         if agent:
@@ -72,7 +73,7 @@ class Normal(Plug, QtCore.QObject):
 
     @tag("J/<space>(normal)")
     def goBlockdown(self, xrange=[1], **kwargs):
-        self.activate(aciton='goTo', kind="blockdown", xrange=xrange)
+        self.activate(action='goTo', kind="blockdown", xrange=xrange)
 
     @tag("H(normal)")
     def goBlockleft(self, xrange=[1], **kwargs):
