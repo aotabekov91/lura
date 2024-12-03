@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-
 class LineEdit(QtWidgets.QLineEdit):
+
     canEdit = True
     focusGained = QtCore.pyqtSignal()
     geometryChanged = QtCore.pyqtSignal()

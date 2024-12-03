@@ -2,10 +2,10 @@ import typing as tp
 
 from PyQt6 import QtCore
 
-from plug_qt.vimo.gizmo import view
+from plug_qt import gizmo
 
 class View(
-    view.WindowView,
+    gizmo.WindowView,
 ):
     activated: bool = True
     isAppView: bool = True
@@ -25,34 +25,27 @@ class View(
                 self.addToBuffer)
 
     def setupUI(self) -> None:
-        self.main: view.TabView = view.TabView(
+        self.main: gizmo.TabView = gizmo.TabView(
             label="C",
             parent=self,
             app=self.app,
             manager=self,
             name='Center',
             identifier="C",
-            tab_classes={"default": view.TileView})
-        self.docks: view.Docks = view.Docks(
+            tab_classes={"default": gizmo.TileView})
+        self.docks: gizmo.Docks = gizmo.Docks(
             label="D",
             parent=self,
             app=self.app,
             manager=self,
             identifier="D")
-        self.bar: view.StatusBarView = view.StatusBarView(
+        self.bar: gizmo.StatusBarView = gizmo.StatusBarView(
             label="S",
             parent=self,
             app=self.app,
             manager=self,
             identifier="S",
             name='Statusbar')
-        # self.overlay: view.OverlayView = view.OverlayView(
-        #     label="O",
-        #     parent=self,
-        #     app=self.app,
-        #     manager=self,
-        #     name='Overlay',
-        #     identifier="O")
         self.setContentsMargins(0, 0, 0, 0)
         self.main.setContentsMargins(0, 0, 0, 0)
         self.setCentralWidget(self.main)

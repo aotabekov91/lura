@@ -2,8 +2,8 @@ from PyQt6 import QtCore
 
 import plug
 
-
 class Item(plug.Item):
+
     viewIsSet = QtCore.pyqtSignal()
     elementIsSet = QtCore.pyqtSignal()
 

@@ -1,2 +1,2 @@
-from .base import TableWidget
 from .widgets import *
+from .base import TableWidget

@@ -15,11 +15,9 @@ class View(plug.View):
     modelChanged = QtCore.pyqtSignal(object)
     indexChanged = QtCore.pyqtSignal(object)
     posIndexChanged = QtCore.pyqtSignal(
-        object, object, object
-    )
+        object, object, object)
     identifierChanged = QtCore.pyqtSignal(
-        object, object, object
-    )
+        object, object, object)
     geometryChanged = QtCore.pyqtSignal()
     modelIsToBeChanged = QtCore.pyqtSignal(object, object)
     viewIsToBeRedrawn = QtCore.pyqtSignal()
@@ -45,11 +43,9 @@ class View(plug.View):
         if not hasattr(self, t):
             return
         self.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
     def setChild(self, obj):
         super().setChild(obj)

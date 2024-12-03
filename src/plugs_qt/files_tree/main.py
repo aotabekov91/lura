@@ -1,7 +1,7 @@
 import os
 from PyQt6 import QtGui
 
-from plug import Plug, tag, Model
+from plug import Plug, tag, Model, Factory
 
 from .view import FilesView
 
@@ -28,12 +28,14 @@ class FilesTree(Plug):
                 return path
 
     def setPath(self, path=None):
-        files_model=FileSystemModel()
-        self.view.setModel(files_model)
+        model=FileSystemModel()
+        # klass=Factory(Model, QtGui.QFileSystemModel)
+        # model=klass()
+        self.view.setModel(model)
         if path is None: 
             path = os.path.abspath('.')
-        files_model.setRootPath(path)
-        idx=files_model.index(path)
+        model.setRootPath(path)
+        idx=model.index(path)
         self.view.setRootIndex(idx)
         for row in range(1, 4): 
             self.view.hideColumn(row)

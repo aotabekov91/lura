@@ -1,5 +1,5 @@
 from plug import Plug, tag
-from plug_qt.vimo.gizmo.view.list import ListWidgetView
+from plug_qt.gizmo import ListWidgetView
 
 class Annotations(Plug):
 

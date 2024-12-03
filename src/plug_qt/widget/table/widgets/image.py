@@ -4,8 +4,8 @@ from PyQt6 import QtCore, QtGui
 
 from .label import Label
 
-
 class Image(Label):
+
     def setData(self, data):
         if not data:
             return

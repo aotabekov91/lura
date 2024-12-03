@@ -21,9 +21,9 @@ class FitzCopy(Plug):
         zoomer=self.app.plugman.getPlug('Zoom')
         if zoomer:
             zoom=zoomer.currentZoom(view=view)
-        goer=self.app.plugman.getPlug('Normal')
-        if goer:
-            position=goer.currentPosition(view=view)
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            position=normal.currentPosition(view=view)
         manager = view.manager()
         klass = view.__class__
         copy = self.app.buffman.create(
@@ -36,5 +36,5 @@ class FitzCopy(Plug):
         if zoom:
             zoomer.zoomTo(view=copy, **zoom)
         if position:
-            goer.goTo(view=copy, **position)
+            normal.activate(action='goTo', view=copy, **position)
         return copy

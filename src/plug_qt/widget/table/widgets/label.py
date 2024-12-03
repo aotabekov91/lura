@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtWidgets
 
-
 class Label(QtWidgets.QLabel):
+
     canEdit = False
     focusGained = QtCore.pyqtSignal()
     geometryChanged = QtCore.pyqtSignal()

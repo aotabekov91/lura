@@ -2,8 +2,8 @@ from PyQt6 import QtCore, QtWidgets
 
 from ...utils import setEditorTabSize
 
-
 class TextEdit(QtWidgets.QTextEdit):
+
     canEdit = True
     focusGained = QtCore.pyqtSignal()
     geometryChanged = QtCore.pyqtSignal()
