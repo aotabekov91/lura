@@ -24,7 +24,6 @@ class Normal(Plug, QtCore.QObject):
     def activate(self, view=None, action=None, kind='goTo', **kwargs):
         if not view:
             view=self.app.stateman.view()
-        print(view, action, kind)
         func=getattr(view, action, None)
         agent=self.getAgent(action=action, view=view)
         if agent:
