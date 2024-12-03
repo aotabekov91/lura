@@ -61,7 +61,7 @@ class Annotations(Plug):
                 x=box.x()
                 y=box.y()
             data['item']=view.item(page)
-            normal.goTo(view=view, xrange=[page], x=x, y=y, center=True)
+            normal.activate(action='goTo', view=view, xrange=[page], x=x, y=y, center=True)
             if select and selection:
                 selection.select(view, selection=element)
             if focus:
