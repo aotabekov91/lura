@@ -9,5 +9,5 @@ Estimated time:
 
 ## Tasks
 
-* [ ] [Task: Outline syncing](../tasks/outline_syncing.md)
 * [ ] [Task: Fullscreen central tile view](../tasks/fullscreen_tile.md)
+* [x] [Task: Outline syncing](../tasks/outline_syncing.md)
