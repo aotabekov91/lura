@@ -183,11 +183,17 @@ class TreeViewWidget(QtWidgets.QTreeView):
             self.setCurrentIndex(idx)
             self.scrollTo(idx, ensure) 
 
+    # def getRowIndex(self, row):
+    #     idx = self.model().index(0, 0)
+    #     for i in range(row):
+    #         idx = self.indexBelow(idx)
+    #     return idx
+
+    # todo: go to last
     def getRowIndex(self, row):
-        idx = self.model().index(0, 0)
-        for i in range(row):
-            idx = self.indexBelow(idx)
-        return idx
+        idx = self.currentIndex()
+        pidx = idx.parent()
+        return pidx.child(row, 0)
 
     def setCurrentIndex(self, idx):
         if idx is None:
