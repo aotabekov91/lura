@@ -19,10 +19,10 @@ class Bookmark(Plug, QtCore.QObject):
 
     def createModel(self, view):
         normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            position=normal.currentPosition(view=view)
-            if position:
-                model=view.model()
+        if view and normal:
+            model=view.model()
+            agent=normal.getAgent(action='goTo', view=view)
+            if model and agent:
                 bookmark_model=BookmarkModel(source=model)
                 self.m_models[model]=bookmark_model
                 self.modelCreated.emit(bookmark_model)
@@ -42,6 +42,20 @@ class Bookmark(Plug, QtCore.QObject):
                     self.activate(view)
                 else:
                     self.octivate()
+
+    def activate(self, view):
+        model=view.model()
+        bookmark_model=self.getModel(model)
+        normal=self.app.plugman.getPlug('Normal')
+        editor=self.app.plugman.getPlug('Editline')
+        text=''
+        if normal:
+            position=normal.currentPosition(view=view)
+            bookmark=bookmark_model.getBookmark(
+                    position, by="position")
+            if bookmark:
+                text=bookmark.data("text")
+        editor.activate(edit=text)
 
     def octivate(self):
         editor=self.app.plugman.getPlug('Editline')
@@ -64,17 +78,3 @@ class Bookmark(Plug, QtCore.QObject):
                  }
             bookmark_model.addBookmark(data)
             self.toggle()
-
-    def activate(self, view):
-        model=view.model()
-        bookmark_model=self.getModel(model)
-        normal=self.app.plugman.getPlug('Normal')
-        editor=self.app.plugman.getPlug('Editline')
-        text=''
-        if normal:
-            position=normal.currentPosition(view=view)
-            bookmark=bookmark_model.getBookmark(
-                    position, by="position")
-            if bookmark:
-                text=bookmark.data("text")
-        editor.activate(edit=text)
