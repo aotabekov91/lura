@@ -2,13 +2,15 @@ from PyQt6 import QtCore, QtWidgets
 
 from plug_qt import vimo
 
+from .row import RowWidget, RowItem
+
 class ListWidgetView(vimo.View, QtWidgets.QListWidget):
 
     include = {}
     exclude = {}
     widget_map = {}
-    widget_class = widget.TableWidget
-    list_item_class = widget.ListWidgetItem
+    widget_class = RowWidget
+    list_item_class = RowItem
     widgetDataChanged = QtCore.pyqtSignal(object)
 
     def setup(self):

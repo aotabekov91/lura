@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtWidgets
 
-from ...utils import setEditorTabSize
+from .utils import setEditorTabSize
 
 class TextEdit(QtWidgets.QTextEdit):
 
