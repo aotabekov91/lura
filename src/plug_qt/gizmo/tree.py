@@ -7,17 +7,6 @@ class TreeViewWidget(QtWidgets.QTreeView):
     itemChanged = QtCore.pyqtSignal(object)
     indexChanged = QtCore.pyqtSignal(object)
 
-    def setup(self):
-        super().setup()
-        self.setProperties()
-
-    def setProperties(self):
-        self.setHeaderHidden(True)
-        self.setVerticalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
     # todo
     # def setModel(self, model):
     #     if model:
@@ -225,3 +214,14 @@ class TreeView(vimo.View, TreeViewWidget):
         if model:
             super().setModel(model)
             super(TreeViewWidget, self).setModel(model)
+
+    def setup(self):
+        super().setup()
+        self.setProperties()
+
+    def setProperties(self):
+        self.setHeaderHidden(True)
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)

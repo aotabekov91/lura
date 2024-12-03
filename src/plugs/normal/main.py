@@ -34,7 +34,7 @@ class Normal(Plug, QtCore.QObject):
             func(kind=kind, **kwargs)
 
     def currentPosition(self, view):
-        agent=self.getAgent(view=view)
+        agent=self.getAgent(action='goTo', view=view)
         if agent:
             return agent.currentPosition(view=view)
         return {}
