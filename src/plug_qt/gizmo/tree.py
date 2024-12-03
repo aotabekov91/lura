@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from plug_qt import vimo
 
-class TreeView(vimo.View, QtWidgets.QTreeView):
+class TreeViewWidget(QtWidgets.QTreeView):
 
     itemChanged = QtCore.pyqtSignal(object)
     indexChanged = QtCore.pyqtSignal(object)
@@ -18,10 +18,11 @@ class TreeView(vimo.View, QtWidgets.QTreeView):
         self.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-    def setModel(self, model):
-        if model:
-            super(vimo.View, self).setModel(model)
-            super(QtWidgets.QTreeView, self).setModel(model)
+    # todo
+    # def setModel(self, model):
+    #     if model:
+    #         super(Tree, self).setModel(model)
+    #         super(TreeView, self).setModel(model)
 
     def expand(self, idx=None, **kwargs):
         idx = idx or self.currentIndex()
@@ -217,3 +218,10 @@ class TreeView(vimo.View, QtWidgets.QTreeView):
                 idx = m.mapToSource(idx)
             if idx and hasattr(m, "itemFromIndex"):
                 return m.itemFromIndex(idx)
+
+class TreeView(vimo.View, TreeViewWidget):
+
+    def setModel(self, model):
+        if model:
+            super().setModel(model)
+            super(TreeViewWidget, self).setModel(model)
