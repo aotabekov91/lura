@@ -38,13 +38,13 @@ class Leaper(Plug):
             self.connectView(view)
 
     def connectView(self, view, kind="connect"):
-        go=self.app.plugman.getPlug('Normal')
-        goer=go.getAgent(view=view)
-        if goer and kind == "connect":
-            go.positionChanged.connect(
+        normal=self.app.plugman.getPlug('Normal')
+        view_normal=normal.getAgent(view=view)
+        if view_normal and kind == "connect":
+            normal.positionChanged.connect(
                     self.setNode)
-        elif goer and kind == "disconnect":
-            go.positionChanged.disconnect(
+        elif view_normal and kind == "disconnect":
+            normal.positionChanged.disconnect(
                     self.setNode)
 
     def setNode(self, view, data):

@@ -1,10 +1,6 @@
-from plug_qt.vimo import mixin
-from plug_qt.vimo.gizmo.view.tree import TreeView
+from plug_qt.gizmo import TreeView
 
-class FilesView(
-        mixin.view.TreeGo,
-        TreeView
-        ):
+class FilesView(TreeView):
 
     position = {"FilesView": "D|L"}
 

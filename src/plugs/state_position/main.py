@@ -12,10 +12,10 @@ class StatePosition(Plug):
                     self.connectAgent)
 
     def connectAgent(self):
-        goer=self.app.plugman.getPlug('Normal')
+        normal=self.app.plugman.getPlug('Normal')
         stater=self.app.plugman.getPlug('StatesTable')
-        if goer and stater:
-            goer.positionChanged.connect(self.savePosition)
+        if normal and stater:
+            normal.positionChanged.connect(self.savePosition)
             self.app.appIsLaunched.connect(self.setPosition)
 
     def savePosition(self, view, data):
@@ -28,7 +28,7 @@ class StatePosition(Plug):
 
     def setPosition(self):
         views=self.app.buffman.views()
-        goer=self.app.plugman.getPlug('Normal')
+        normal=self.app.plugman.getPlug('Normal')
         stater=self.app.plugman.getPlug('StatesTable')
         for view in views:
             model=view.model()
@@ -39,4 +39,4 @@ class StatePosition(Plug):
             data=data[0]
             position_text=data['value'].replace("'", '"')
             position=json.loads(position_text)
-            goer.goTo(view, **position)
+            normal.activate(action='goTo', view=view, **position)

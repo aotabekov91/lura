@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "app_qt"
+version = "0.0.1"
+readme = "README.md"
+description = "A plug for qt"
+authors = ["A O <adhambek.otabekov.post@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+PyQt6="==6.7.0"
+app = {path = "/home/adam/code/app"}
+gizmo = {path = "/home/adam/code/gizmo"}
+gizmo_qt = {path = "/home/adam/code/gizmo_qt"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

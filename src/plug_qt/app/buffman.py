@@ -8,17 +8,11 @@ class Buffman(
         QtCore.QObject
 ):
 
-    viewCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(
-        object
-    )
-    modelCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(
-        object
-    )
+    viewCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
+    modelCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
     viewAdded = QtCore.pyqtSignal(object)
     viewClosed = QtCore.pyqtSignal(object)
-    posIndexChanged = QtCore.pyqtSignal(
-        object, object, object
-    )
+    posIndexChanged = QtCore.pyqtSignal(object, object, object)
 
     typerAdded = QtCore.pyqtSignal(object)
     viewerAdded = QtCore.pyqtSignal(object)

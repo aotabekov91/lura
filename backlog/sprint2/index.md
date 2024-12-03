@@ -22,4 +22,5 @@ Date: 2.12.2024-31.12.2024
 * [ ] [Help mode](objectives/help_mode.md)
 * [ ] [Input mode](objectives/input_mode.md)
 * [ ] [View layout](objectives/view_layout.md)
+* [ ] [Plugins](objectives/plugins.md)
 * [ ] [Bugs](objectives/bugs.md)

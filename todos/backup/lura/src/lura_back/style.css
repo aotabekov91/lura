@@ -1,0 +1,134 @@
+QWidget {
+	color: white;
+	font-size: 16px; 
+	background-color: black;
+}
+
+QLineEdit {
+	border-width: 0px;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QMainWindow::separator {
+    width: 0px;
+    margin: 0px;
+    height: 0px;
+    padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QDockWidget QWidget#View {
+	padding: 0 0 0 0;
+	border-width: 0px; 
+	border-style: solid;
+	border-color: transparent;
+}
+
+QListView::item{
+	border-width: 2px; 
+	border-style: solid;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QListView::item:selected {
+	border-color: green;
+	background-color: green;
+}
+
+QListWidget::item:selected {
+	background-color: transparent;
+}
+
+QTreeView::branch:selected {
+	background-color: green;
+}
+
+QTreeView::item:selected {
+	color: white;
+	background-color: green;
+}
+
+QToolBar {
+	padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QStatusBar {
+	padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QStatusBar::item {
+	border: none; 
+	border-width: 0px;
+}
+
+QLabel#CurrentTab{
+	color: white;
+	background-color: green;
+}
+
+QLabel#HintBoxLabel{
+	color: black;
+	border-width: 1px;
+	border-style: solid;
+	border-color: green;
+	background-color: rgb(51, 136, 34, 30);
+}
+
+QLabel#HintBoxLabel:focus{
+	color: white;
+	background-color: rgb(11, 186, 4, 90);
+}
+
+#Input {
+	color: white;
+	padding: 0 0 0 0;
+	border-width: 3px;
+	border-color: green;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: rgba(0, 0, 0, .8); 
+}
+
+#Powerline QLabel{
+	color: white;
+	padding: 0 5px 0 5px;
+	background-color: transparent;
+}
+
+#Powerline QLabel#ModeName{
+	background-color: green;
+}
+
+#Powerline QLabel#TypeName{
+	background-color: transparent;
+}
+
+#Powerline QLabel#ViewName{
+	background-color: transparent;
+}
+
+#Powerline QLabel#IndexName{
+	background-color: green;
+}
+
+#Tabline QLabel#AppIndex{
+	color: #90ee90;
+}
+
+#OverlayClock {
+	color: green;
+}
+
+#OverlayInput {
+	border-width: 5px;
+	border-color: green;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	background-color: rgba(5, 5, 5, 200);
+}

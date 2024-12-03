@@ -1,5 +1,5 @@
 from plug import Plug, tag
-from plug_qt.vimo.gizmo.view.list import ListWidgetView
+from plug_qt.gizmo import ListWidgetView
 
 class Bookmarks(Plug):
 
@@ -55,7 +55,7 @@ class Bookmarks(Plug):
             data=item.element().data()
             position=data.get('position')
             view=self.app.stateman.subview()
-            normal.goTo(view=view, **position)
+            normal.activate(action='goTo', view=view, **position)
 
     @tag('d(normal)[BookmarkView]')
     def delete(self):

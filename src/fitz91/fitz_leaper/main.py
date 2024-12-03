@@ -11,13 +11,13 @@ class FitzLeaper(Plug):
                     self.addToLeaper)
 
     def addToLeaper(self):
-        goer=self.app.plugman.getPlug('FitzGo')
+        normal=self.app.plugman.getPlug('Normal')
         leaper=self.app.plugman.getPlug('Leaper')
-        if leaper and goer:
+        if leaper and normal:
             leaper.addAgent('FitzView', self)
 
     def go(self, view, kind=None, node=None, xrange=[1], leaper=None):
-        goer=self.app.plugman.getPlug('FitzGo')
+        normal=self.app.plugman.getPlug('Normal')
         for i in range(xrange[-1]):
             node = leaper.getNode(view)
             if kind == "next":
@@ -26,7 +26,7 @@ class FitzLeaper(Plug):
                     break
                 data=ascendent.data
                 leaper.saveNode(view, ascendent)
-                goer.goTo(view=view, **data)
+                normal.activate(action='goTo', view=view, **data)
             elif kind == "prev":
                 precedent=node.precedent
                 if not precedent:
@@ -35,4 +35,4 @@ class FitzLeaper(Plug):
                 if not data:
                     break
                 leaper.saveNode(view, precedent)
-                goer.goTo(view=view, **data)
+                normal.activate(action='goTo', view=view, **data)

@@ -1,11 +1,8 @@
 from plug_qt import vimo
 
-from plug_qt.widget import TableWidget
+from plug_qt.gizmo import RowWidget
 
-class EditorView(
-        vimo.View, 
-        TableWidget,
-        ):
+class EditorView(vimo.View, RowWidget):
 
     def activate(self, *args, **kwargs):
         self.app.stateman.viewChanged.connect(

@@ -1,0 +1,8 @@
+[Desktop Entry]
+
+Type=Application
+Version=0.0.1
+Name=lura
+Comment=A document viewer
+Path=/home/adam/.local/bin/lura
+Exec=lura

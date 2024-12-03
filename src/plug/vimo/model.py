@@ -3,8 +3,8 @@ from collections import OrderedDict
 
 from .element import Element
 
-
 class Model:
+
     kind = None
     name = None
     wantView = []

@@ -1,9 +1,5 @@
-from plug_qt.vimo import mixin
-from plug_qt.vimo.gizmo.view.tree import TreeView
+from plug_qt.gizmo import TreeView
 
-class LookupView(
-        mixin.view.TreeGo,
-        TreeView
-        ):
+class LookupView(TreeView):
 
     position = {"LookupView": "D|D"}
