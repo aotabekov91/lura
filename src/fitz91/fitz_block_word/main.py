@@ -132,13 +132,15 @@ class FitzBlockWord(Plug):
                 element, selection)
         x, y = end.x(), end.y()
         w, h = element.size().width(), end.height()
-        r = (x, y, x + w, y + h/2.)
+        r = (x, y+h/2., x + w, y + h/2.)
         f = self.getBlockText(element, "blocks", clip=r)
         if f:
             tl = QtCore.QPointF(f[0][0], f[0][1])
             br = QtCore.QPointF(f[0][2], f[0][3])
             r = QtCore.QRectF(tl, br)
-            box[-1] = element.unify(r)
+            unified = element.unify(r)
+            if box[-1]!=unified:
+                box[-1] = element.unify(r)
 
     def first(self, element, selection):
         direction=self.direction(element)
@@ -147,7 +149,7 @@ class FitzBlockWord(Plug):
         b, s, e, size = self.getBlockData(element, selection)
         x, y = 0, s.y()
         w, h = s.x() + s.width(), s.height()
-        r = (x, y, x + w, y + h)
+        r = (x, y+h/2., x + w, y + h/2.)
         f = self.getBlockText(element, "blocks", clip=r)
         if f:
             tl = QtCore.QPointF(f[0][0], f[0][1])
@@ -182,17 +184,20 @@ class FitzBlockWord(Plug):
         else:
             direction[1] = "up"
             self.setDirection(element, direction)
-            b, s, e, size = self.getBlockData(element, selection)
+            box, start, e, size = self.getBlockData(
+                    element, selection)
             self.update(element, "first", selection)
-            x, y = s.x(), s.y() - s.height()
-            w, h = s.width(), s.height()
-            r = (x, y, x + w, y + h/2.)
+            x= start.x()
+            y= start.y()
+            w = size.width()-start.x()
+            h = start.height()
+            r = (x, y-h/2., x + w, y)
             f = self.getBlockText(element, "blocks", clip=r)
             if f:
                 tl = QtCore.QPointF(f[0][0], f[0][1])
                 br = QtCore.QPointF(f[0][2], f[0][3])
                 r = QtCore.QRectF(tl, br)
-                b.insert(0, element.unify(r))
+                box.insert(0, element.unify(r))
 
     def unDown(self, element, selection):
         box, start, end, size = self.getBlockData(element, selection)
