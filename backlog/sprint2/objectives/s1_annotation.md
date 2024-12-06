@@ -13,5 +13,5 @@ Estimated time:
 
 ## Tasks
 
-* [ ] [Task: Reannotate](../tasks/reannotate.md)
+* [x] [Task: Reannotate](../tasks/reannotate.md)
 * [x] [Task: Sqlite annotation database](../tasks/ann_database.md)

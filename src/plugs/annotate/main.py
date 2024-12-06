@@ -41,16 +41,29 @@ class Annotate(Plug, QtCore.QObject):
         if annotator:
             self.app.stateman.toggle("annotate")
 
+    def activate(self, action=None, model=None, selection=None, **kwargs):
+        annotation_model=self.getModel(model)
+        if selection and annotation_model:
+            data=selection.data()
+            if action=='add':
+                kind=selection.__class__.__name__
+                if kind=='AnnotateElement':
+                    annotation_model.updAnnotate(data=data, element=selection)
+                else:
+                    annotation_model.addAnnotate(data=data)
+            elif action=='del':
+                    annotation_model.delAnnotate(element=selection)
+
     @tag("d(annotate)")
-    def deannotate(self):
-        view=self.app.stateman.view()
+    def deannotate(self, view=None, selection=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
         selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view)
+        if not selection and selector:
+            selection=selector.selection(view)
         if selection:
             model=view.model()
-            selector=self.app.plugman.getPlug('Selection')
-            annotation_model=self.getModel(model)
-            annotation_model.delAnnotate(selection)
+            self.activate(action='del', model=model, selection=selection)
             if selector:
                 selector.cleanUpSelection(view)
         self.toggle()

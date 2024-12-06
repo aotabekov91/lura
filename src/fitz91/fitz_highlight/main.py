@@ -21,11 +21,9 @@ class FitzHighlight(Plug):
             selection=selector.selection(view)
         if selection:
             model=view.model()
-            data=selection.data()
             selection['annotation_kind']='highlight'
             annotator=self.app.plugman.getPlug('Annotate')
-            annotation_model=annotator.getModel(model)
-            annotation_model.addAnnotate(data=data)
+            annotator.activate(action='add', model=model, selection=selection, **kwargs)
             selector.cleanUpSelection(view)
         return selection
 

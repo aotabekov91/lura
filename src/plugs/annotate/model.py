@@ -21,34 +21,22 @@ class AnnotateModel(vimo.Model, QtCore.QObject):
             annotation=annotator.annotate(
                     model, data, **kwargs)
             if annotation:
-                position = annotation.get("metadata")
-                element = self.getAnnotate(position)
-                if not element:
-                    element=self.createElement(annotation)
-                else:
-                    self.updateElement(element, annotation)
-                return element
+                return self.createElement(annotation)
 
-    def updateAnnotate(self, data={}, **kwargs):
+    def updAnnotate(self, element=None, **kwargs):
         model=self.source()
         annotator=self.m_agent.getAgent(model=model)
-        if annotator:
-            annotation=annotator.annotate(
-                    model, data, **kwargs)
-            if annotation:
-                position = annotation.get("metadata")
-                element = self.getAnnotate(position)
-                if element:
-                    self.updateElement(element, annotation)
-                return element
+        if annotator and element:
+            self.delAnnotate(element=element)
+            self.addAnnotate(**kwargs)
 
     def delAnnotate(self, element=None, data=None, **kwargs):
         model=self.source()
         annotator=self.m_agent.getAgent(model=model)
         if annotator:
             if not element and data:
-                position = data.get("metadata")
-                element = self.getAnnotate(position)
+                metadata = data.get("metadata")
+                element = self.getAnnotate(metadata)
             if element:
                 data=element.data()
                 annotator.deannotate(model, data, **kwargs)
