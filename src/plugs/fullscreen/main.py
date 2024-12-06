@@ -5,15 +5,15 @@ class Fullscreen(Plug):
     def setup(self):
         super().setup()
         self.m_fullscreen={}
-        self.m_fullsreeners={}
+        self.m_fullscreeners={}
 
     def addAgent(self, name, getAgent):
-        self.m_fullsreeners[name]=getAgent
+        self.m_fullscreeners[name]=getAgent
 
     def getAgent(self, name=None, view=None):
         if not name and view:
             name=view.__class__.__name__
-        agent=self.m_fullsreeners.get(name, None)
+        agent=self.m_fullscreeners.get(name, None)
         if agent:
             return agent
         elif view and view.manager():
