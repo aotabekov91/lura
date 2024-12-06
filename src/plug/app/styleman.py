@@ -6,8 +6,8 @@ import typing as tp
 from ..plug import Plug
 from ..utils import tag
 
-
 class Styleman(Plug):
+
     current: str = None
     style: str = "default"
     styles: tp.Dict[str, tp.Any] = {}
@@ -18,8 +18,7 @@ class Styleman(Plug):
 
     def setColorschemeFiller(self) -> None:
         self.app.buffman.setFiller(
-            "colorscheme", self.colorschemeFiller
-        )
+            "colorscheme", self.colorschemeFiller)
 
     def colorschemeFiller(self, name) -> tp.List[str]:
         alist = []
