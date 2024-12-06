@@ -15,10 +15,10 @@ Date: 2.12.2024-31.12.2024
 * [x] [Sprint 1: Bugs](objectives/s1_bugs.md)
 * [x] [Sprint 1: Separate mixins](objectives/s1_mixins.md)
 
+* [.] [Exec mode](objectives/exec_mode.md)
 * [ ] [Visual mode](objectives/visual.md)
 * [ ] [Plugin system](objectives/plugin_system.md)
 * [ ] [Edit mode](objectives/edit_mode.md)
-* [ ] [Exec mode](objectives/exec_mode.md)
 * [ ] [Help mode](objectives/help_mode.md)
 * [ ] [Input mode](objectives/input_mode.md)
 * [ ] [View layout](objectives/view_layout.md)
