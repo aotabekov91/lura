@@ -101,19 +101,21 @@ class FitzModel(
         else:
             cache = self.getCache(name='pixmap')
             for key in cache.keys():
-                if idx == key.get('idx', None):
+                if idx == key[0]:
                     self.dropCache(key, 'pixmap')
                     break
         # self.modelUpdated.emit()
 
     def getPixmap(self, element, key):
         idx=element.index()
-        pixmap = self.getCache(hash(key), "pixmap")
+        cache_key=(idx, hash(key))
+        pixmap = self.getCache(cache_key, "pixmap")
         if pixmap:
             return idx, key, pixmap
         self.m_pixmap_queue.put((element, key))
 
     def setPixmap(self, element, key, pixmap):
         idx=element.index()
-        self.setCache(hash(key), pixmap, "pixmap")
+        cache_key=(idx, hash(key))
+        self.setCache(cache_key, pixmap, "pixmap")
         self.pixmapReady.emit(idx, key, pixmap)
