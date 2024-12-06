@@ -23,7 +23,7 @@ class InputMode(Plug):
             agent.octivate(view=view, **kwargs)
         self.app.stateman.activate('normal')
 
-    @tag('i(normal)')
+    @tag('i(edit)')
     def insert(self, view=None, xrange=[1], **kwargs):
         if not view:
             view=self.app.stateman.view()
@@ -37,7 +37,7 @@ class InputMode(Plug):
                     **kwargs
                     )
 
-    @tag('a(normal)')
+    @tag('a(edit)')
     def append(self, view=None, xrange=[1], **kwargs):
         if not view:
             view=self.app.stateman.view()

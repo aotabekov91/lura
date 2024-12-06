@@ -2,20 +2,13 @@ from tempfile import NamedTemporaryFile as TmpFile
 
 import pynvim
 
-
 class NVim:
+
     def __init__(self):
         self.inputId = 0
         self.nvim = pynvim.attach(
             "child",
-            argv=[
-                "/bin/env",
-                "nvim",
-                "--embed",
-                "--headless",
-            ],
-        )
-
+            argv=["/bin/env", "nvim", "--embed", "--headless"])
         self.inputDoneFile = TmpFile()
 
     def setText(self, text):

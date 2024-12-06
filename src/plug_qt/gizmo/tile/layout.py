@@ -211,7 +211,7 @@ class TileLayout(QtCore.QObject):
                             n_ = n_.leaves[1]
                     return n_
             leaf = parent
-            parent = leaf.parent
+            parent = leaf.m_parent
 
     def equalizeSize(self):
         cond = False

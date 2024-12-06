@@ -1,10 +1,10 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from ...utils import setEditorTabSize
 from .nvim import NVim
-
+# from ...utils import setEditorTabSize
 
 class VimEditor(QtWidgets.QTextEdit):
+
     modeChanged = QtCore.pyqtSignal(object)
 
     def __init__(
@@ -25,7 +25,7 @@ class VimEditor(QtWidgets.QTextEdit):
 
         self.setVim(vim)
         self.setFont(QtGui.QFont(font))
-        setEditorTabSize(self, self.tab_stop)
+        # setEditorTabSize(self, self.tab_stop)
 
     def setVim(self, nvim=None):
         if not nvim:
