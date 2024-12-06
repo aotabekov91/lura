@@ -52,6 +52,7 @@ class FitzBlockWord(Plug):
                     br = QtCore.QPointF(f[-1][2], f[-1][3])
                     r = QtCore.QRectF(tl, br)
                     box.insert(0, element.unify(r))
+            self.updateText(selection)
 
     def right(self, element, selection):
         direction=self.direction(element)
@@ -141,6 +142,7 @@ class FitzBlockWord(Plug):
             unified = element.unify(r)
             if box[-1]!=unified:
                 box[-1] = element.unify(r)
+            self.updateText(selection)
 
     def first(self, element, selection):
         direction=self.direction(element)
@@ -156,6 +158,7 @@ class FitzBlockWord(Plug):
             br = QtCore.QPointF(f[0][2], f[0][3])
             r = QtCore.QRectF(tl, br)
             b[0] = element.unify(r)
+            self.updateText(selection)
 
     def down(self, element, selection):
         direction=self.direction(element)
@@ -176,6 +179,7 @@ class FitzBlockWord(Plug):
                 br = QtCore.QPointF(f[0][2], f[0][3])
                 r = QtCore.QRectF(tl, br)
                 box += [element.unify(r)]
+                self.updateText(selection)
 
     def up(self, element, selection):
         direction=self.direction(element)
@@ -198,6 +202,7 @@ class FitzBlockWord(Plug):
                 br = QtCore.QPointF(f[0][2], f[0][3])
                 r = QtCore.QRectF(tl, br)
                 box.insert(0, element.unify(r))
+                self.updateText(selection)
 
     def unDown(self, element, selection):
         box, start, end, size = self.getBlockData(element, selection)
@@ -206,6 +211,7 @@ class FitzBlockWord(Plug):
         else:
             self.changeDirection(element)
             self.up(element, selection)
+        self.updateText(selection)
 
     def unUp(self, element, selection):
         b, s, e, size = self.getBlockData(element, selection)
@@ -214,6 +220,7 @@ class FitzBlockWord(Plug):
         else:
             self.changeDirection(element)
             self.down(element, selection)
+        self.updateText(selection)
 
     def unRight(self, element, selection):
         box, start, end, size = self.getBlockData(
@@ -236,6 +243,7 @@ class FitzBlockWord(Plug):
             br = QtCore.QPointF(f[-2][2], f[-2][3])
             end.setBottomRight(br)
             box[-1] = element.unify(end)
+        self.updateText(selection)
 
     def unLeft(self, element, selection):
         box, start, end, size = self.getBlockData(
@@ -258,6 +266,7 @@ class FitzBlockWord(Plug):
             tl = QtCore.QPointF(f[1][0], f[1][1])
             start.setTopLeft(tl)
             box[0] = element.unify(start)
+        self.updateText(selection)
 
     def jump(self, element, prev_selection, next_selection):
         cb = prev_selection["box"]
