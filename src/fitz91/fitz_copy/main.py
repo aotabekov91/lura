@@ -31,7 +31,6 @@ class FitzCopy(Plug):
             app=self.app,
             config=view.config())
         copy.setModel(view.model())
-        self.app.buffman.saveView(view.model(), copy)
         copy.setManager(manager)
         if zoom:
             zoomer.zoomTo(view=copy, **zoom)
