@@ -29,7 +29,6 @@ class FitzView(
         self.setupScene()
         self.setupLayout()
         super().setup()
-        self.modelChanged.connect(self.connectPixmap)
 
     def setLayout(self, layout):
         self.m_layout = layout
@@ -38,9 +37,10 @@ class FitzView(
     def layout(self):
         return self.m_layout
 
-    def connectPixmap(self, model):
-        if model:
-            model.pixmapReady.connect(self.pixmapReady)
+    def refreshItem(self, idx, data, pixmap):
+        item=self.item(idx)
+        if item and item.keys()==data:
+            item.refresh()
 
     def setupScene(self):
         scene = FitzScene() 
@@ -70,6 +70,7 @@ class FitzView(
             model.modelUpdated.connect(self.redraw)
             self.modelLoaded.emit(self, self.m_model)
             self.modelChanged.emit(self.m_model)
+            model.pixmapReady.connect(self.refreshItem)
 
     def updateItems(self):
         if self.m_fetched >= self.count():

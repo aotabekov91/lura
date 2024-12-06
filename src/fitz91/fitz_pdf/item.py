@@ -2,13 +2,10 @@ from math import floor
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from plug_qt import vimo
 from plug import hashdict
+from plug_qt.vimo.item import Item
 
-class FitzItem(
-    vimo.item.Item,
-    QtWidgets.QGraphicsObject,
-):
+class FitzItem(Item, QtWidgets.QGraphicsObject):
 
     canRender = True
     painted = QtCore.pyqtSignal(
@@ -27,7 +24,6 @@ class FitzItem(
         self.yresol = config.get("yresol", 72.0)
         self.tileSize = config.get("tileSize", 1024)
         self.devicePixelRatio = config.get("devicePixelRatio", 1)
-        self.m_view.pixmapReady.connect(self.setPixmap)
         self.prepareGeometry()
 
     def setElement(self, elem):
@@ -37,7 +33,7 @@ class FitzItem(
             self.redraw()
 
     def paint(self, painter, options, widget):
-        pixmap = self.takePixmap()
+        pixmap = self.getPixmap()
         if pixmap:
             opt = QtGui.QPainter.RenderHint.Antialiasing
             opt = (
@@ -54,7 +50,7 @@ class FitzItem(
             self.painted.emit(
                     painter, options, widget, self)
 
-    def takePixmap(self):
+    def getPixmap(self):
         if not self.m_key:
             self.updateKey()
         model=self.m_element.model()
@@ -78,6 +74,7 @@ class FitzItem(
         self.m_key['ypos']=round(ypos, 3)
         self.m_key['idx']=self.m_element.index()
         self.m_key['pixel']=self.devicePixelRatio
+        self.m_key['scale']=self.m_scale
 
     def setKey(self, name, value):
         self.m_key[name]=value
@@ -85,11 +82,8 @@ class FitzItem(
     def key(self, name):
         return self.m_key.get(name, None)
 
-    def setPixmap(self, idx, data, pixmap):
-        c1 = self.index() == idx
-        c2 = data == self.m_key
-        if c1 and c2:
-            self.refresh()
+    def keys(self):
+        return self.m_key
 
     def refresh(self):
         if self.scene():
@@ -130,13 +124,13 @@ class FitzItem(
         self.m_trans.scale(x, y)
 
     def prepareGeometry(self):
-        s = self.size()
-        p = QtCore.QPointF()
-        r = QtCore.QRectF(p, s)
-        r = self.m_trans.mapRect(r)
-        r.setWidth(floor(r.width()))
-        r.setHeight(floor(r.height()))
-        self.setBoundingRect(r)
+        size = self.size()
+        point = QtCore.QPointF()
+        rect = QtCore.QRectF(point, size)
+        rect = self.m_trans.mapRect(rect)
+        rect.setWidth(floor(rect.width()))
+        rect.setHeight(floor(rect.height()))
+        self.setBoundingRect(rect)
 
     def mapToElement(self, p, unify=True):
         e = self.m_element

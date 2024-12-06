@@ -26,6 +26,7 @@ class FitzZoom(Plug):
         weight = size.width()
         height = size.height()
         items=view.getItems()
+        scales={}
         for idx, item in items:
             scale=item.getScale()
             dw, dh = item.displayedSize()
@@ -42,6 +43,9 @@ class FitzZoom(Plug):
             elif type(kind)==float:
                 scale=kind
             if scale:
+                scale=round(scale, zoom_round)
                 data['kind']=scale
                 data['mode']=kind
-                item.setScale(round(scale, zoom_round))
+                scales[item]=scale
+        for item, scale in scales.items():
+            item.setScale(scale)

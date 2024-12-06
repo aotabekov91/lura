@@ -63,9 +63,12 @@ class FitzModel(
         self.m_pixmap_queue = Queue()
         self.m_pixmap_thread = QtCore.QThread()
         self.m_pixmap_task = Task(self.m_pixmap_queue)
-        self.m_pixmap_task.pixmapReady.connect(self.setPixmap)
-        self.m_pixmap_task.moveToThread(self.m_pixmap_thread)
-        self.m_pixmap_thread.started.connect(self.m_pixmap_task.run)
+        self.m_pixmap_task.pixmapReady.connect(
+                self.setPixmap)
+        self.m_pixmap_task.moveToThread(
+                self.m_pixmap_thread)
+        self.m_pixmap_thread.started.connect(
+                self.m_pixmap_task.run)
         self.m_pixmap_thread.start()
         self.assignId(self.m_source)
 
@@ -105,12 +108,12 @@ class FitzModel(
 
     def getPixmap(self, element, key):
         idx=element.index()
-        pixmap = self.getCache(key, "pixmap")
+        pixmap = self.getCache(hash(key), "pixmap")
         if pixmap:
             return idx, key, pixmap
         self.m_pixmap_queue.put((element, key))
 
     def setPixmap(self, element, key, pixmap):
         idx=element.index()
-        self.setCache(key, pixmap, "pixmap")
+        self.setCache(hash(key), pixmap, "pixmap")
         self.pixmapReady.emit(idx, key, pixmap)
