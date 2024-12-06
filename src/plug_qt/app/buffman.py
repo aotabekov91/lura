@@ -8,7 +8,6 @@ class Buffman(
         QtCore.QObject
 ):
 
-    viewCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
     modelCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
     viewAdded = QtCore.pyqtSignal(object)
     viewClosed = QtCore.pyqtSignal(object)
@@ -20,6 +19,8 @@ class Buffman(
     modellerAdded = QtCore.pyqtSignal(object)
     viewIsDrawn=QtCore.pyqtSignal(object)
     viewIsToBeDrawn=QtCore.pyqtSignal(object)
+    viewCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
+    viewClosed: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
 
     def setup(self) -> None:
         super().setup()
@@ -31,10 +32,16 @@ class Buffman(
         if model:
             self.modelCreated.emit(model)
 
-    def saveView(self, model: tp.Any, view: tp.Any) -> None:
-        super().saveView(model, view)
+    def saveView(self, view: tp.Any) -> None:
+        super().saveView(view)
         if view:
             self.viewCreated.emit(view)
+            view.closeWanted.connect(self.removeView)
+
+    def removeView(self, view=None, **kwargs):
+        super().removeView(view=view, **kwargs)
+        if view:
+            self.viewClosed.emit(view)
 
     def create(self, klass, **kwargs):
         view = super().create(klass, **kwargs)
@@ -46,12 +53,6 @@ class Buffman(
         if signal:
             signal.connect(self.posIndexChanged)
         self.viewAdded.emit(view)
-
-    # def locate(self, **kwargs):
-    #     manager = super().locate(**kwargs)
-    #     if manager:
-    #         manager.addView(**kwargs)
-    #     return manager
 
     def addViewer(self, name: str, klass: tp.Any) -> tp.Any:
         cond = not klass in self.m_viewers

@@ -2,10 +2,8 @@ from PyQt6 import QtCore, QtWidgets
 
 from plug_qt import vimo
 
-class TabView(
-    vimo.View,
-    QtWidgets.QStackedWidget,
-):
+class TabView(vimo.View, QtWidgets.QStackedWidget):
+
     hasTabs = True
     tab_classes = {}
     canSetView = True
@@ -15,9 +13,9 @@ class TabView(
     viewRemoved = QtCore.pyqtSignal(object)
 
     def setup(self):
+        super().setup()
         self.current = None
         self.previous = None
-        super().setup()
         self.setProperties()
         if self.initial_create:
             self.initiate()
@@ -34,9 +32,9 @@ class TabView(
                 "has_tabs", self.hasTabs)
         self.initial_create = self.m_kwargs.get(
                 "initial_create", self.initial_create)
-        pos = self.m_kwargs.get("tab_classes", {}).copy()
-        if pos:
-            self.tab_classes.update(pos)
+        tab_classes = self.m_kwargs.get("tab_classes", {})
+        if tab_classes:
+            self.tab_classes.update(tab_classes.copy())
 
     def flipTo(self, view=None, **kwargs):
         if not view:
@@ -116,12 +114,10 @@ class TabView(
             c.activate()
         return c
 
-
     def initiate(self):
         view = self.create()
         if view:
             self.setView(view=view, focus=False)
-
 
     def getCopyTab(self, tab=None, **kwargs):
         c = tab or self.current
@@ -135,6 +131,34 @@ class TabView(
         if view:
             self.addView(view, **kwargs)
         return view
+
+    def tabGet(self, kind="default"):
+        klass = self.tab_classes.get(kind)
+        if klass and self.app:
+            view=self.app.buffman.create(
+                    klass=klass, 
+                    parent=self, 
+                    app=self.app, 
+                    pindex=self.m_id, 
+                    config=self.m_config,
+                    )
+            self.viewCreated.emit(view)
+            return view
+        elif klass:
+            view = klass(
+                parent=self,
+                app=self.app,
+                pindex=self.m_id,
+                config=self.m_config,
+            )
+            self.viewCreated.emit(view)
+            return view
+
+    def tabAdd(self, tab, **kwargs):
+        tab.m_tabber = self
+        idx = self.addWidget(tab)
+        tab.setPosIndex(idx + 1)
+        tab.m_tab_name = idx
 
     def addView(self, view, **kwargs):
         self.tabAdd(view, **kwargs)
@@ -159,24 +183,6 @@ class TabView(
             if not self.activated and recursive_activate:
                 self.activate(recursive_activate=True, **kwargs)
 
-    def tabGet(self, kind="default"):
-        klass = self.tab_classes.get(kind)
-        if klass:
-            view = klass(
-                parent=self,
-                app=self.app,
-                pindex=self.m_id,
-                config=self.m_config,
-            )
-            self.viewCreated.emit(view)
-            return view
-
-    def tabAdd(self, tab, **kwargs):
-        tab.m_tabber = self
-        idx = self.addWidget(tab)
-        tab.setPosIndex(idx + 1)
-        tab.m_tab_name = idx
-
     def insertView(self, idx=-1, view=None, **kwargs):
         super().insertWidget(idx, view)
         idx += 1
@@ -198,20 +204,21 @@ class TabView(
         self.viewRemoved.emit(view)
         return view, idx
 
-    def updateIndex(self):
-        for i in range(self.count()):
-            v = self.widget(i)
-            v.setPosIndex(i + 1)
-
     def close(self, view=None, limit=1, **kwargs):
         if self.count() <= limit:
             return
         view = view or self.current
         if view:
             self.goTo(kind='prev')
-            view.m_tabber = None
             self.removeView(view)
+            view.closeWanted.emit(view)
+            view.m_tabber = None
             delattr(view, "m_tabber")
+
+    def updateIndex(self):
+        for i in range(self.count()):
+            v = self.widget(i)
+            v.setPosIndex(i + 1)
 
     def activate(self, descend=True, **kwargs):
         super().activate(**kwargs)

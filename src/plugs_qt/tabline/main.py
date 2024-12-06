@@ -39,32 +39,34 @@ class Tabline(Plug):
 
     def connectTabline(self):
         self.app.buffman.viewCreated.connect(
-            self.updateTabs
-        )
+            self.updateTabsOnCreate)
+        self.app.buffman.viewClosed.connect(
+            self.updateTabsOnClose)
         self.app.stateman.viewChanged.connect(
-            self.updateTabLabels
-        )
+            self.updateTabLabels)
         self.app.stateman.viewChanged.connect(
-            self.updateLabels
-        )
+            self.updateLabels)
         self.app.buffman.posIndexChanged.connect(
-            self.updateLabels
-        )
+            self.updateLabels)
 
-    def clearLayout(self, l):
-        i = l.takeAt(0)
-        while not i is None:
-            w = i.widget()
-            if w:
-                w.setParent(None)
-                w.hide()
-            i = l.takeAt(0)
+    def updateTabsOnClose(self, view):
+        manager=view.manager()
+        self.updateTabLabels(view=view)
 
-    def updateTabIndexLabel(self, idx):
+    def clearLayout(self, layout):
+        item = layout.takeAt(0)
+        while not item is None:
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+                widget.hide()
+            item = layout.takeAt(0)
+
+    def updateTabIndexLabel(self, *args, **kwargs):
         self.updateTabLabels(tab=self.current)
 
     def updateTabLabels(self, view=None, tab=None):
-        if hasattr(view, "hasTabs"):
+        if view and hasattr(view, "hasTabs"):
             tab = view
         if not tab:
             tab = getattr(view, "m_tabber", None)
@@ -73,19 +75,19 @@ class Tabline(Plug):
             return
         if not tab.hasTabs:
             return
-        ll = self.tabline.tabs.layout()
-        self.clearLayout(ll)
+        layout = self.tabline.tabs.layout()
+        self.clearLayout(layout)
         self.tabline.tabs.hide()
-        tw = self.m_tabs.get(tab)
-        if not tw:
-            self.updateTabs(tab)
-        tw = self.m_tabs.get(tab)
-        tl = tw.layout()
+        widget = self.m_tabs.get(tab)
+        if not widget:
+            self.updateTabsOnCreate(tab)
+        widget = self.m_tabs.get(tab)
+        widget_layout = widget.layout()
         idx = tab.currentIndex()
-        self.clearLayout(tl)
-        for i in range(tab.count()):
+        self.clearLayout(widget_layout)
+        for page in range(tab.count()):
             oname = "Tab"
-            w = tab.widget(i)
+            w = tab.widget(page)
             widx = w.posIndex()
             idx = w.identifier()
             name = f"[{widx}]"
@@ -99,16 +101,13 @@ class Tabline(Plug):
             l.setContentsMargins(0, 0, 0, 0)
             l.setAlignment(
                 QtCore.Qt.AlignmentFlag.AlignCenter
-                | QtCore.Qt.AlignmentFlag.AlignVCenter
-            )
-            tl.addWidget(
-                l, QtCore.Qt.AlignmentFlag.AlignCenter
-            )
-        ll.addWidget(tw)
-        tw.show()
+                | QtCore.Qt.AlignmentFlag.AlignVCenter)
+            widget_layout.addWidget(l, QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(widget)
+        widget.show()
         self.tabline.tabs.show()
 
-    def updateTabs(self, view):
+    def updateTabsOnCreate(self, view):
         tab = None
         if not view:
             return

@@ -36,12 +36,9 @@ class App(
          self.qapp.setApplicationName(self.name)
          self.setParent(self.qapp)
     
-    def setupView(
-         self, 
-         view: tp.Any = View
-     ) -> None:
-         if view:
-             self.ui = view(app=self)
+    def setupView(self, klass: tp.Any = View) -> None:
+         if klass:
+             self.ui = klass(app=self)
     
     def setupParts(
          self,

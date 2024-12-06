@@ -2,7 +2,6 @@ import typing as tp
 
 from ..plug import Plug
 
-
 class Buffman(Plug):
     def __init__(self, app: tp.Any) -> None:
         super().__init__(app)
@@ -35,14 +34,16 @@ class Buffman(Plug):
     def create(
         self, klass: tp.Callable[[...], tp.Any], **kwargs
     ) -> tp.Any:
-        return klass(**kwargs)
+        if klass:
+            view=klass(**kwargs)
+            self.saveView(view)
+            return view
 
-    def saveView(
-        self,
-        model: tp.Any,
-        view: tp.Any,
-    ) -> None:
+    def saveView(self, view: tp.Any) -> None:
         self.m_views.add(view)
+
+    def removeView(self, view=None, **kwargs):
+        self.m_views.discard(view)
 
     def locate(self, view=None, pos = {}, **kwargs) -> tp.Any:
         if view:
@@ -130,9 +131,7 @@ class Buffman(Plug):
         view = self.create(klass, **kwargs)
         view.setModel(model=model)
         view.resetConfigure(model=model, **kwargs)
-        self.saveView(model, view)
         loc, manager=self.locate(view=view, **kwargs)
-        # print(loc, manager, view)
         if manager:
             manager.addView(view=view, loc=loc, **kwargs)
         return view
