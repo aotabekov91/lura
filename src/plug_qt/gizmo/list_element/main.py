@@ -29,6 +29,7 @@ class ListWidgetView(vimo.View, QtWidgets.QListWidget):
         self.setAttribute(
             QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
+
     def setCurrentRow(self, row):
         super().setCurrentRow(row)
         self.indexChanged.emit(row + 1)

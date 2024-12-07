@@ -4,7 +4,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from . import widgets
 
-class RowWidget(QtWidgets.QWidget):
+class ElementView(QtWidgets.QWidget):
 
     wmap = {
         "Label": widgets.Label,
