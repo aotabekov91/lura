@@ -1,4 +1,4 @@
-from .main import ListWidgetViewInputMode
+from .main import ElementListViewInputMode
 
 def get_plug_class():
-    return ListWidgetViewInputMode
+    return ElementListViewInputMode

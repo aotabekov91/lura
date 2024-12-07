@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from plug_qt import vimo
 
-class ListItemView(vimo.View, QtWidgets.QListView):
+class ItemListView(vimo.View, QtWidgets.QListView):
 
     def setup(self):
         super().setup()

@@ -5,7 +5,7 @@ from gizmo_qt.mixin import view
 from gizmo.utils import tag
 
 
-class ListWidgetView(
+class ElementListView(
     view.Hint,
     view.Input,
     view.WidgetGo,

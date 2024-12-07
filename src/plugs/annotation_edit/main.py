@@ -1,6 +1,7 @@
 from plug import Plug, tag
 
-from .view import EditorView
+from plug_qt.gizmo import ElementView
+
 from .overlay import OverlayView
 
 class AnnotationEdit(Plug):
@@ -34,15 +35,19 @@ class AnnotationEdit(Plug):
                 identifier='O',
                 objectName='AnnotationEditView',
                 )
-        self.m_view = EditorView(
+        self.m_view = ElementView(
                 app=self.app,
                 name='AnnotationView',
-                parent=self.m_overlay,
                 manager=self.m_overlay,
                 objectName='AnnotationEdit')
+        self.m_view.setParent(self.m_overlay)
         self.m_view.m_wmap={
                 'id': {'w': 'Label', 'p': '0x0x1x1'}, 
                 'text' : {'w': 'TextEdit', 'p': '1x0x1x1'}}
+
+    def checkViewChange(self, view):
+        if self.m_view!=view:
+            self.m_view.octivate()
 
     @tag("<c-a>(edit)")
     def activate(
@@ -71,6 +76,9 @@ class AnnotationEdit(Plug):
                 self.m_view.setElement(annotation)
                 self.updateViewGeometry(top_left, width, height)
                 self.m_view.activate()
+        self.app.stateman.viewChanged.connect(
+                self.checkViewChange)
+
 
     def updateViewGeometry(self, top_left, width, height):
         self.m_view.move(top_left)
@@ -97,4 +105,6 @@ class AnnotationEdit(Plug):
 
     @tag("<escape>/<c-[>(normal)[AnnotationView]")
     def octivate(self):
+        self.app.stateman.viewChanged.disconnect(
+                self.checkViewChange)
         self.m_view.octivate()

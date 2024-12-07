@@ -1,5 +1,5 @@
 from plug import Plug, tag
-from plug_qt.gizmo import ListWidgetView
+from plug_qt.gizmo import ElementListView
 
 class Annotations(Plug):
 
@@ -22,7 +22,7 @@ class Annotations(Plug):
                 'Annotate')
         if self.m_annotate:
             self.view=self.app.buffman.createView(
-                    ListWidgetView, 
+                    ElementListView, 
                     name='AnnotationView',
                     position=self.position,
                     widget_map=self.widget_map,

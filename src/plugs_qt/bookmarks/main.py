@@ -1,5 +1,5 @@
 from plug import Plug, tag
-from plug_qt.gizmo import ListWidgetView
+from plug_qt.gizmo import ElementListView
 
 class Bookmarks(Plug):
 
@@ -23,7 +23,7 @@ class Bookmarks(Plug):
                 'Bookmark')
         if self.m_bookmarker:
             self.view=self.app.buffman.createView(
-                    ListWidgetView, 
+                    ElementListView, 
                     name='BookmarkView',
                     position=self.position,
                     widget_map=self.widget_map,

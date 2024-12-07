@@ -4,7 +4,7 @@
 
 * Vim-like editor
 	* Different modes, etc. normal/insert
-* ListWidgetView input mode support
+* ElementListView input mode support
 
 ## Tasks
 

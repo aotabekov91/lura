@@ -2,7 +2,7 @@ from PyQt6 import QtGui
 
 from plug import Plug
 
-class ListWidgetViewInputMode(Plug):
+class ElementListViewInputMode(Plug):
 
     def setup(self):
         super().setup()
@@ -15,8 +15,8 @@ class ListWidgetViewInputMode(Plug):
     def addAgent(self):
         input_mode=self.app.plugman.getPlug('InputMode')
         if input_mode:
-            input_mode.addAgent('insert', 'ListWidgetView', self)
-            input_mode.addAgent('append', 'ListWidgetView', self)
+            input_mode.addAgent('insert', 'ElementListView', self)
+            input_mode.addAgent('append', 'ElementListView', self)
 
     def activate(self, view=None, kind=None, **kwargs):
         if view and kind:

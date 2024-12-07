@@ -2,9 +2,11 @@ from collections import OrderedDict
 
 from PyQt6 import QtCore, QtWidgets
 
+from plug_qt.vimo import View
+
 from . import widgets
 
-class ElementView(QtWidgets.QWidget):
+class ElementView(View, QtWidgets.QWidget):
 
     wmap = {
         "Label": widgets.Label,
