@@ -5,7 +5,6 @@ import typing as tp
 from ..plug import Plug
 from ..utils import parse
 
-
 class Earman(Plug):
     """The class listens to/acts on key presses"""
 
@@ -187,7 +186,7 @@ class Earman(Plug):
     def handleEvent(self, widget, event) -> bool:
         if self.updatePressedKey(event):
             pressed = self.letters()
-            if self.checkKeyer(pressed):
+            if self.checkKeyer(event):
                 return True
             elif self.checkPartial(pressed):
                 return True

@@ -15,7 +15,8 @@ class ListWidgetViewInputMode(Plug):
     def addAgent(self):
         input_mode=self.app.plugman.getPlug('InputMode')
         if input_mode:
-            input_mode.addAgent('ListWidgetView', self)
+            input_mode.addAgent('insert', 'ListWidgetView', self)
+            input_mode.addAgent('append', 'ListWidgetView', self)
 
     def activate(self, view=None, kind=None, **kwargs):
         if view and kind:

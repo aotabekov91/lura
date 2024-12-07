@@ -7,3 +7,5 @@
 * ListWidgetView input mode support
 
 ## Tasks
+
+* [.] [NVim edit/input plugin](../tasks/nvim.md)

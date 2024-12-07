@@ -35,11 +35,11 @@ class AnnotationEdit(Plug):
                 objectName='AnnotationEditView',
                 )
         self.m_view = EditorView(
-            app=self.app,
-            parent=self.m_overlay,
-            manager=self.m_overlay,
-            objectName='AnnotationEdit',
-            )
+                app=self.app,
+                name='AnnotationView',
+                parent=self.m_overlay,
+                manager=self.m_overlay,
+                objectName='AnnotationEdit')
         self.m_view.m_wmap={
                 'id': {'w': 'Label', 'p': '0x0x1x1'}, 
                 'text' : {'w': 'TextEdit', 'p': '1x0x1x1'}}
@@ -61,10 +61,8 @@ class AnnotationEdit(Plug):
                 selection=selector.selection(view=view)
                 if selection.__class__.__name__=='AnnotateElement':
                     annotation=selection
-        if not annotation:
-            raise
         agent=self.getAgent(view=view)
-        if agent:
+        if agent and annotation:
             top_left=agent.getGeometry(
                     view=view, 
                     annotation=annotation,
@@ -97,6 +95,6 @@ class AnnotationEdit(Plug):
                 vgeometry.setHeight(h)
         self.m_view.setGeometry(vgeometry)
 
-    @tag("<escape><c-[>(edit[annotation])")
+    @tag("<escape>/<c-[>(normal)[AnnotationView]")
     def octivate(self):
-        raise
+        self.m_view.octivate()

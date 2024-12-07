@@ -1,4 +1,4 @@
-from tempfile import NamedTemporaryFile as TmpFile
+from tempfile import NamedTemporaryFile as File
 
 import pynvim
 
@@ -16,7 +16,7 @@ class NVim:
             ],
         )
 
-        self.inputDoneFile = TmpFile()
+        self.inputDoneFile = File()
 
     def setText(self, text):
         self.buffman()[:] = text.split("\n")

@@ -1,7 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from .nvim import NVim
-# from ...utils import setEditorTabSize
 
 class VimEditor(QtWidgets.QTextEdit):
 
@@ -18,10 +17,7 @@ class VimEditor(QtWidgets.QTextEdit):
         self.mode = None
         self.abort = False
         self.tab_stop = tab_stop
-        super().__init__(
-            objectName=objectName,
-            **kwargs,
-        )
+        super().__init__(objectName=objectName, **kwargs)
 
         self.setVim(vim)
         self.setFont(QtGui.QFont(font))
@@ -36,8 +32,8 @@ class VimEditor(QtWidgets.QTextEdit):
         super().setText(text)
         self.nvim.setText(text)
 
-    def keyPressEvent(self, e):
-        key = e.text()
+    def keyPressEvent(self, event):
+        key = event.text()
         if key:
             self.nvim.keyPress(key)
             while self.nvim.isBlocked():
@@ -53,7 +49,6 @@ class VimEditor(QtWidgets.QTextEdit):
     def clear(self):
         super().clear()
         self.nvim.setText("")
-        # TODO: instead of jk [which is custom-specific] send Escape to return to normal mode from insert mode
         self.nvim.keyPress("jk")
 
     def updateMode(self):

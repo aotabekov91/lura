@@ -22,22 +22,20 @@ class Stateman(Plug):
     def setViewDefaultMode(
         self,
         view: tp.Any = None,
-        mode="normal",
+        mode=None,
+        default=None,
         **kwargs,
     ) -> None:
-        mode = None
         if view:
-            mode = getattr(view, 'default_mode', mode)
+            default= getattr(view, 'default_mode', self.default_mode)
+        mode=mode or default
         if mode:
             self.activate(mode)
 
     def functor(self):
         return self.m_functor
 
-    def setFunctor(
-        self,
-        functor: tp.Callable[[...], tp.Any] = None,
-    ) -> tp.Callable[[...], tp.Any]:
+    def setFunctor(self, functor=None):
         self.app.earman.clearKeys(True)
         self.m_functor = functor
         return functor

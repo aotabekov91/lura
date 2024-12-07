@@ -1,15 +1,15 @@
-from tempfile import NamedTemporaryFile as TmpFile
-
 import pynvim
+
+from tempfile import NamedTemporaryFile as File
 
 class NVim:
 
     def __init__(self):
-        self.inputId = 0
+        self.input_idx = 0
+        self.input_file = File()
         self.nvim = pynvim.attach(
-            "child",
-            argv=["/bin/env", "nvim", "--embed", "--headless"])
-        self.inputDoneFile = TmpFile()
+                "child",
+                argv=["/bin/env", "nvim", "--embed", "--headless"])
 
     def setText(self, text):
         self.buffman()[:] = text.split("\n")
@@ -30,12 +30,12 @@ class NVim:
         ]
 
     def keyPress(self, key):
-        self.inputId += 1
+        self.input_idx += 1
         self.nvim.input(key)
         self.nvim.call(
             "writefile",
-            [self.inputId],
-            self.inputDoneFile.name,
+            [self.input_idx],
+            self.input_file.name,
             async_=True,
         )
 
@@ -56,7 +56,7 @@ class NVim:
         return self.nvim.eval(expr)
 
     def isBlocked(self):
-        with open(self.inputDoneFile.name, "r") as f:
+        with open(self.input_file.name, "r") as f:
             data = f.read().strip()
-            return data != str(self.inputId)
+            return data != str(self.input_idx)
         return False

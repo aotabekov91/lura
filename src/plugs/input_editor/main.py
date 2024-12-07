@@ -1,4 +1,4 @@
-from PyQt6 import QtGui, QtCore
+from PyQt6 import QtGui, QtCore, QtWidgets
 
 from plug import Plug
 
@@ -13,19 +13,22 @@ class EditorInputMode(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        input_mode=self.app.plugman.getPlug('InputMode')
-        if input_mode:
-            input_mode.addAgent('EditorView', self)
+        mode=self.app.plugman.getPlug('Input')
+        if mode:
+            mode.addAgent('insert', 'EditorView', self)
+            mode.addAgent('append', 'EditorView', self)
+            mode.addAgent('update', 'EditorView', self)
+            mode.addAgent('populate', 'EditorView', self)
 
     def octivate(self, view=None, **kwargs):
         if view:
             view.setFocus()
 
-    def activate(self, view=None, kind=None, **kwargs):
-        if view and kind:
-            functor=getattr(self, kind, None)
-            if functor:
-                functor(view=view, **kwargs)
+    def activate(self, action=None, **kwargs):
+        if action:
+            func=getattr(self, action, None)
+            if func:
+                func(**kwargs)
 
     def insert(self, view=None, xrange=[1], widget=None, **kwargs):
         if not widget:
@@ -37,7 +40,9 @@ class EditorInputMode(Plug):
             widget.setFocus()
 
     def append(self, view=None, xrange=[1], widget=None, **kwargs):
-        if not widget:
+        if not view:
+            view=self.app.stateman.view()
+        if view and not widget:
             data=view.widget('text')
             if data:
                 widget, _ = data
@@ -48,3 +53,78 @@ class EditorInputMode(Plug):
             cursor.movePosition(position)
             widget.setTextCursor(cursor)
             widget.setFocus()
+
+    def populate(self, view=None, xrange=[1], nvim=None, widget=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        if view and not widget:
+            data=view.widget('text')
+            if data:
+                widget, _ = data
+        if widget and nvim:
+            widget.setReadOnly(False)
+            text=widget.toPlainText()
+            nvim.setText(text)
+            widget.setFocus()
+
+    def update(self, view=None, nvim=None, widget=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        if view and not widget:
+            data=view.widget('text')
+            if data:
+                widget, _ = data
+        if widget and nvim:
+            mode = nvim.mode()
+            document=widget.document()
+            widget.setPlainText(nvim.text())
+            row, col = nvim.cursorPosition()
+            cursor = QtGui.QTextCursor(document)
+            cursor.setPosition(nvim.byte(row, col))
+            widget.setTextCursor(cursor)
+            cond = mode != "i"
+            cond = cond and mode != "v"
+            cond = cond and mode != "V"
+            cond = cond and mode != ""
+            cond = cond and mode[0] != "c"
+            selections = []
+            cursor_mode=QtGui.QTextCursor.MoveMode
+            cursor_op=QtGui.QTextCursor.MoveOperation
+            if cond:
+                sel = QtWidgets.QTextEdit.ExtraSelection()
+                sel.cursor = cursor
+                sel.cursor.movePosition(
+                        cursor_op.NextCharacter, cursor_mode.KeepAnchor)
+                sel.format = QtGui.QTextCharFormat()
+                sel.format.setBackground(QtCore.Qt.GlobalColor.black)
+                sel.format.setForeground(QtCore.Qt.GlobalColor.white)
+                selections.append(sel)
+            if mode in ["v", "V", ""]:
+                row2, col2 = nvim.cursorAnchor()
+                if row2 > 0 and col2 >= 0:
+                    begin = nvim.byte(row, col)
+                    end = nvim.byte(row2, col2)
+                    if end <= begin + 1:
+                        begin += 1
+                        end -= 1
+                    sel = QtWidgets.QTextEdit.ExtraSelection()
+                    sel.cursor = QtGui.QTextCursor(document)
+                    sel.cursor.setPosition(begin)
+                    if mode == "V":
+                        if begin <= end:
+                            sel.cursor.movePosition(cursor_op.StartOfBlock)
+                        else:
+                            sel.cursor.movePosition(cursor_op.EndOfBlock)
+                    sel.cursor.setPosition(end, cursor_mode.KeepAnchor)
+                    if mode == "V":
+                        if end <= begin:
+                            sel.cursor.movePosition(
+                                cursor_op.StartOfBlock, cursor_mode.KeepAnchor)
+                        else:
+                            sel.cursor.movePosition(
+                                cursor_op.EndOfBlock, cursor_mode.KeepAnchor)
+                    sel.format = QtGui.QTextCharFormat()
+                    sel.format.setBackground(QtCore.Qt.GlobalColor.black)
+                    sel.format.setForeground(QtCore.Qt.GlobalColor.white)
+                    selections.append(sel)
+            widget.setExtraSelections(selections)
