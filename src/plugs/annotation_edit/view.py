@@ -17,16 +17,3 @@ class EditorView(vimo.View, RowWidget):
     def checkViewChange(self, view):
         if self!=view:
             self.octivate()
-
-    # def event(self, event):
-    #     if event.type()== QtCore.QEvent.Type.FocusOut:
-    #         self.octivate()
-    #     return super().event(event)
-
-    # def setFocus(self):
-    #     super().setFocus()
-    #     widget_data=self.widget('text')
-    #     if widget_data:
-    #         widget, _ = widget_data
-    #         widget.setFocus()
-    #         widget.setInputMode(True)

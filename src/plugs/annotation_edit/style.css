@@ -5,6 +5,10 @@
 	border-style: solid;
 }
 
+#AnnotationEditView QWidget:focus {
+	border-color: green;
+}
+
 #AnnotationEditView QLabel{
 	padding: 0 0 0 5;
 	background-color: green;
