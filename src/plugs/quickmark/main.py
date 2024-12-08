@@ -31,7 +31,7 @@ class Quickmark(Plug):
         name=view.__class__.__name__
         quickmarker=self.quickmarker(name)
         if quickmarker:
-            self.app.stateman.toggle(
+            self.app.stateman.activate(
                 submode="mark",
                 mode="quickmark",
                 passive=["quickmark", "any"],
@@ -43,7 +43,7 @@ class Quickmark(Plug):
         name=view.__class__.__name__
         quickmarker=self.quickmarker(name)
         if quickmarker:
-            self.app.stateman.toggle(
+            self.app.stateman.activate(
                 submode="jump",
                 mode="quickmark",
                 passive=["quickmark", "any"],
@@ -51,7 +51,7 @@ class Quickmark(Plug):
 
     @tag("<escape>/<c-[>(quickmark)")
     def finishQuickmarkMode(self):
-        self.app.stateman.octivate()
+        self.app.stateman.activate()
 
     def quickmarks(self, view):
         model=view.model()

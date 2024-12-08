@@ -16,12 +16,12 @@ class Hint(Plug):
 
     @tag(["<c-f>(normal)", "<c-f>/<c-[>(hint)"])
     def toggleHint(self):
-        self.app.stateman.toggle(
-                mode="hint", delisten=True)
+        self.app.stateman.activate(
+                mode="hint", delisten=True, toggle_mode=True)
 
     @tag("<escape>(hint[any])")
     def finishHintMode(self):
-        self.app.stateman.toggle()
+        self.app.stateman.activate()
 
     def generateHints(self, alist, kind="letter"):
         list_len = len(alist)

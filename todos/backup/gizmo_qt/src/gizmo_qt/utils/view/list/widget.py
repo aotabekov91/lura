@@ -118,7 +118,7 @@ class ElementListView(
 
     @tag("<escape>(normal)[^]")
     def octivateMe(self):
-        super().octivate(recursive_octivate=True)
+        super().octivate(recursive=True)
 
     def sizeHint(self):
         h = 0

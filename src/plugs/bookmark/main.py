@@ -32,12 +32,12 @@ class Bookmark(Plug, QtCore.QObject):
         view=self.app.stateman.view()
         editor=self.app.plugman.getPlug('Editline')
         if view and editor:
-            model=view.model()
-            bookmark_model=self.getModel(model)
-            if bookmark_model:
-                mode=self.app.stateman.toggle(
+            model=self.getModel(view.model())
+            if model:
+                mode=self.app.stateman.activate(
                     mode="bookmark",
-                    passive=["bookmark"])
+                    passive=["bookmark"],
+                    toggle_mode=True)
                 if mode=='bookmark':
                     self.activate(view)
                 else:
@@ -60,7 +60,7 @@ class Bookmark(Plug, QtCore.QObject):
     def octivate(self):
         editor=self.app.plugman.getPlug('Editline')
         editor.octivate()
-        self.app.stateman.toggle()
+        self.app.stateman.activate()
 
     @tag("<enter>/<return>(bookmark)")
     def bookmark(self):

@@ -12,29 +12,28 @@ class Stateman(
     subviewChanged = QtCore.pyqtSignal(object)
     submodeChanged = QtCore.pyqtSignal(object)
 
-    def setup(self):
-        super().setup()
-        self.app.appIsLaunched.connect(
-            self.setViewDefaultMode
-        )
-
     def setMode(self, *args, **kwargs) -> str:
+        mode=self.mode()
         super().setMode(*args, **kwargs)
-        self.modeChanged.emit(self) #lookup: should it not be mode here instead of self
+        if mode!=self.mode():
+            self.modeChanged.emit(self.m_mode)
         return self.m_mode
 
-    def setSubmode(self, submode: str = None, **kwargs) -> str:
-        super().setSubmode(submode=submode, **kwargs)
-        self.submodeChanged.emit(submode)
+    def setSubmode(self, *args, **kwargs) -> str:
+        submode=self.submode()
+        super().setSubmode(*args, **kwargs)
+        if submode!=self.submode():
+            self.submodeChanged.emit(self.m_submode)
         return self.m_submode
 
-    def setView(self, *args, view=None, **kwargs):
-        super().setView(*args, view=view, **kwargs)
-        if view:
-            self.viewChanged.emit(view)
+    def setView(self, *args, **kwargs):
+        view=self.view()
+        super().setView(*args, **kwargs)
+        if view!=self.view():
+            self.viewChanged.emit(self.view())
 
-    def setSubview(self, view=None, **kwargs):
-        ctype = self.m_subview
-        super().setSubview(view, **kwargs)
-        if ctype != self.m_subview:
-            self.subviewChanged.emit(view)
+    def setSubview(self, *args, **kwargs):
+        subview=self.subview()
+        super().setSubview(*args, **kwargs)
+        if subview!=self.subview():
+            self.subviewChanged.emit(self.subview())

@@ -264,14 +264,8 @@ class View:
             self.show()
             self.setFocus()
 
-    def betView(
-        self,
-        view,
-        recursive_octivate=False,
-        **kwargs,
-    ):
-        if recursive_octivate:
-            self.octivate(recursive_octivate=True, **kwargs)
+    def betView(self, view, recursive=False, **kwargs):
+        self.octivate(recursive=recursive, **kwargs)
 
     def setFiles(self):
         f = inspect.getfile(self.__class__)

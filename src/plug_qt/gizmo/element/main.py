@@ -47,12 +47,12 @@ class ElementView(View, QtWidgets.QWidget):
         return self.m_element
 
     def setupLayout(self):
-        l = QtWidgets.QGridLayout(self)
-        self.setLayout(l)
-        self.m_layout = l
-        l.setSpacing(self.m_space)
-        l.setVerticalSpacing(self.m_vspace)
-        l.setHorizontalSpacing(self.m_hspace)
+        layout = QtWidgets.QGridLayout(self)
+        self.setLayout(layout)
+        self.m_layout = layout
+        layout.setSpacing(self.m_space)
+        layout.setVerticalSpacing(self.m_vspace)
+        layout.setHorizontalSpacing(self.m_hspace)
 
     def setView(self, view):
         self.m_view = view

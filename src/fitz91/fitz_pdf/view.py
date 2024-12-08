@@ -9,6 +9,7 @@ class FitzView(
     vimo.View,
     QtWidgets.QGraphicsView,
 ):
+    isSubview=True
     canFollow = True
     scene_color = "black"
     position = {"FitzView": "C|x"}

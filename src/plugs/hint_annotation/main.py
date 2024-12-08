@@ -19,8 +19,8 @@ class AnnotationHint(Plug):
         view=self.app.stateman.view()
         hinter=self.agent(view=view)
         if hinter:
-            self.app.stateman.toggleSubmode(
-                    submode='annotation')
+            self.app.stateman.activate(
+                    submode='annotation', toggle_submode=True)
             hinter.activate(view)
 
     @tag("<c-a>/<c-[>(hint[annotation])")
@@ -29,4 +29,4 @@ class AnnotationHint(Plug):
         hinter=self.agent(view=view)
         if hinter:
             hinter.octivate(view)
-            self.app.stateman.toggle()
+            self.app.stateman.activate()

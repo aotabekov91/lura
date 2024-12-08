@@ -1,15 +1,14 @@
 import os
 import inspect
 
-
 class View:
-    isView = True
+
     name = None
     kind = None
     position = {}
     prefix_keys = []
+    isSubview = False
     activated = False
-    default_mode = "normal"
 
     def __init__(
         self,
@@ -242,34 +241,31 @@ class View:
         else:
             self.activate(*args, **kwargs)
 
-    def octivate(self, *args, **kwargs):
-        manager = self.manager()
+    def octivate(self, *args, restore=True, **kwargs):
         self.activated = False
-        if self.app:
-            self.app.stateman.betView(self)
+        manager = self.manager()
+        kwargs['view']=self
+        if restore and self.app:
+            self.app.stateman.betView(*args, **kwargs)
         if manager:
             manager.betView(self, *args, **kwargs)
 
     def activate(self, *args, recursive=False, **kwargs):
         self.activated = True
         manager = self.manager()
+        kwargs['view']=self
         if manager:
-            manager.setView(*args, view=self, **kwargs)
+            manager.setView(*args, **kwargs)
             if recursive and not manager.activated:
                 manager.activate(recursive=recursive, **kwargs)
-        self.app.stateman.setView(view=self, **kwargs)
+        if self.app:
+            self.app.stateman.setView(*args, **kwargs)
         if self.checkProp("setFocus"):
             self.show()
             self.setFocus()
 
-    def betView(
-        self,
-        view,
-        recursive_octivate=False,
-        **kwargs,
-    ):
-        if recursive_octivate:
-            self.octivate(recursive_octivate=True, **kwargs)
+    def betView(self, *args, recursive=False, **kwargs):
+        self.octivate(recursive=recursive, **kwargs)
 
     def setFiles(self):
         f = inspect.getfile(self.__class__)

@@ -62,7 +62,7 @@ class Highlight(Plug):
             agent.activate(view=view, data=selection)
         else:
             raise # todo activate word hinting
-        self.app.stateman.toggle()
+        self.app.stateman.activate()
 
     @tag("<c-H>(annotate)")
     def rehighlight(self, xrange=[1]):

@@ -48,7 +48,8 @@ class InputHint(BaseHint):
     @tag("<c-i>(hint)[^]")
     def toggleInputHintSubmode(self):
         if self.checkProp("hasInput"):
-            sm = self.app.stateman.toggleSubmode("input")
+            sm = self.app.stateman.activate(
+                    submode="input", toggle_submode=True)
             if sm != "input":
                 self.octivateInputHints()
             else:

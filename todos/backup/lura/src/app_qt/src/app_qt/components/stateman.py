@@ -28,7 +28,7 @@ class Stateman(
     ) -> str:
         super().setSubmode(submode, **kwargs)
         self.submodeChanged.emit(submode)
-        return self.m_submode
+        return self.submode
 
     def setView(
             self, 

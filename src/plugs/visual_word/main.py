@@ -19,15 +19,15 @@ class WordVisual(Plug):
         view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            submode=self.app.stateman.toggleSubmode(
-                    "word")
+            submode=self.app.stateman.activate(
+                    submode="word", toggle_submode=True)
             if submode=='word':
                 if self.check('visualize', agent):
                     agent.visualize(view)
             else:
                 if self.check('unvisualize', agent):
                     agent.unvisualize(view)
-                self.app.stateman.toggle()
+                self.app.stateman.activate()
 
     @tag("<c-j>(visual[word])")
     def jump(self):

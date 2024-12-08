@@ -44,7 +44,7 @@ class Input(Plug):
     def octivateNVim(self, **kwargs):
         self.m_nvim.setAgent()
         self.app.stateman.setKeyer()
-        self.app.stateman.toggle()
+        self.app.stateman.activate()
 
     @tag('e(edit)')
     def activateNVim(self, view=None, action='populate', mode='n', **kwargs):
@@ -58,5 +58,5 @@ class Input(Plug):
             agent.activate(view=view, action=action, nvim=self.m_nvim, **kwargs)
 
     @tag(['<c-e>(normal/edit)', '<escape>/<c-[>(edit)'])
-    def toggle(self, xrange=[1], **kwargs):
-        self.app.stateman.toggle('edit')
+    def toggle(self):
+        self.app.stateman.activate(mode='edit', toggle_mode=True)

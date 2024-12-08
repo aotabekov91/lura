@@ -108,7 +108,7 @@ class FitzWordHint(Plug):
             word_hinter.toggle()
             word_visual=self.app.plugman.getPlug('FitzWordVisual')
             if word_visual:
-                self.app.stateman.toggle(
+                self.app.stateman.activate(
                         mode='visual', submode='word')
             view.redraw()
             return True

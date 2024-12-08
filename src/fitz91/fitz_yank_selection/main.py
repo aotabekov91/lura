@@ -20,7 +20,7 @@ class FitzYankSelection(Plug):
         if text:
             clipboard = view.app.qapp.clipboard()
             clipboard.setText(text)
-        view.app.stateman.toggle()
+        view.app.stateman.activate()
         view.cleanUp()
         return text
 

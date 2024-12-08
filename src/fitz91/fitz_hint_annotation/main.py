@@ -48,7 +48,7 @@ class FitzAnnotationHint(Plug):
 
     def activate(self, view):
         self.assignHints(view)
-        self.app.stateman.setFunctor(self.functor)
+        self.app.stateman.setFunctor(functor=self.functor)
         view.itemPainted.connect(self.paint)
         view.redraw()
 

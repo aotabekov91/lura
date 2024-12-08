@@ -19,9 +19,9 @@ class LinkHint(Plug):
         view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            submode=self.app.stateman.toggleSubmode(
-                    submode='link')
+            submode=self.app.stateman.activate(
+                    submode='link', toggle_submode=True)
             if submode=='link':
-                agent.hint(view)
+                agent.hint(view=view)
             else:
-                agent.unhint(view)
+                agent.unhint(view=view)

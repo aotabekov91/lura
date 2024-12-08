@@ -25,7 +25,8 @@ class BoxHint(Plug):
         name=view.__class__.__name__
         hinter=self.hinter(name)
         if hinter:
-            submode = self.app.stateman.toggleSubmode("box")
+            submode = self.app.stateman.activate(
+                    submode="box", toggle_submode=True)
             if submode == "box":
                 hinter.activate(view, xrange=xrange)
             else:

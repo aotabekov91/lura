@@ -19,11 +19,12 @@ class BandVisual(Plug):
         view=self.app.stateman.view()
         agent=self.getAgent(view)
         if agent:
-            submode = self.app.stateman.toggleSubmode("band")
+            submode = self.app.stateman.activate(
+                    submode="band", toggle_submode=True)
             if submode == "band":
-                agent.activate(view)
+                agent.activate(view=view)
             else:
-                agent.octivate(view)
+                agent.octivate(view=view)
 
     @tag("G(visual[band])")
     def setCorner(self, xrange=None):

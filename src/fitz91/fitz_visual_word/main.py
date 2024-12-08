@@ -32,7 +32,7 @@ class FitzWordVisual(Plug):
         selector=self.app.plugman.getPlug('Selection')
         selection=selector.selection(view)
         if not selection and hinter:
-            self.app.stateman.toggle('hint')
+            self.app.stateman.activate(mode='hint')
             hinter.toggle(view=view, **kwargs)
 
     def go(self, view, xrange=[1], kind='last'):

@@ -47,7 +47,7 @@ class AnnotationEdit(Plug):
 
     def checkViewChange(self, view):
         if self.m_view!=view:
-            self.m_view.octivate()
+            self.m_view.octivate(restore=False)
 
     @tag("<c-a>(edit)")
     def activate(

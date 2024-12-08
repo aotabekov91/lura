@@ -8,7 +8,6 @@ class Model:
     kind = None
     name = None
     wantView = []
-    isType = False
     pattern = None
     isLoaded = False
     wantUniqView = False

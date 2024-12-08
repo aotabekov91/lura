@@ -31,11 +31,11 @@ class Buffman(Plug):
         if model:
             self.m_models[idx] = model
 
-    def create(
-        self, klass: tp.Callable[[...], tp.Any], **kwargs
-    ) -> tp.Any:
+    def create(self, klass, view_model=None, **kwargs) -> tp.Any:
         if klass:
             view=klass(**kwargs)
+            if view_model:
+                view.setModel(model=view_model)
             self.saveView(view)
             return view
 
@@ -128,8 +128,7 @@ class Buffman(Plug):
         gen_conf.update(spec_conf)
         kwargs["app"] = self.app
         kwargs["config"] = gen_conf
-        view = self.create(klass, **kwargs)
-        view.setModel(model=model)
+        view = self.create(klass, view_model=model, **kwargs)
         view.resetConfigure(model=model, **kwargs)
         loc, manager=self.locate(view=view, **kwargs)
         if manager:

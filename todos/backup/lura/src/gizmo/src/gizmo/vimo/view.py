@@ -267,11 +267,11 @@ class View:
     def betView(
         self,
         view,
-        recursive_octivate=False,
+        recursive=False,
         **kwargs,
     ):
-        if recursive_octivate:
-            self.octivate(recursive_octivate=True, **kwargs)
+        if recursive:
+            self.octivate(recursive=True, **kwargs)
 
     def setFiles(self):
         f = inspect.getfile(self.__class__)

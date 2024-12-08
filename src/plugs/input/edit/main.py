@@ -5,6 +5,7 @@ class Edit(Plug):
     def setup(self):
         super().setup()
         self.m_agents={}
+        raise
 
     def addAgent(self, action, kind, name):
         if not action in self.m_agents:
@@ -26,8 +27,8 @@ class Edit(Plug):
             agent.activate(view=view, action=action, **kwargs)
         
     @tag(['<c-e>(normal/edit)', '<escape>/<c-[>(edit)'])
-    def toggle(self, **kwargs):
-        self.app.stateman.toggle('edit')
+    def toggle(self, *args, **kwargs):
+        self.app.stateman.toggle(mode='edit')
 
     @tag('i(edit)')
     def insert(self, xrange=[1], **kwargs):

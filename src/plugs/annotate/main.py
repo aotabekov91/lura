@@ -39,7 +39,8 @@ class Annotate(Plug, QtCore.QObject):
         model=view.model()
         annotator=self.getAgent(model=model)
         if annotator:
-            self.app.stateman.toggle("annotate")
+            self.app.stateman.activate(
+                    mode="annotate", toggle_mode=True)
 
     def activate(self, action=None, model=None, selection=None, **kwargs):
         annotation_model=self.getModel(model)

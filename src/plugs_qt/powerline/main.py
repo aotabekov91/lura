@@ -8,6 +8,17 @@ class Powerline(Plug):
         super().setup()
         self.setupPowerline()
         self.connectPowerline()
+        self.app.appSoonStarts.connect(self.updateStatus)
+
+    def updateStatus(self):
+        mode=self.app.stateman.mode()
+        submode=self.app.stateman.submode()
+        view=self.app.stateman.view()
+        subview=self.app.stateman.subview()
+        self.setMode(mode)
+        self.setSubmode(submode)
+        self.setView(view)
+        self.setSubview(subview)
 
     def setupPowerline(self):
         bar=self.app.view.bar
@@ -29,14 +40,14 @@ class Powerline(Plug):
         self.app.stateman.submodeChanged.connect(
             self.setSubmode)
 
-    def setSubview(self, v):
-        m = None
-        self.setKind(v)
-        if v:
-            m = v.model()
+    def setSubview(self, view):
+        mode = None
+        self.setKind(view)
+        if view:
+            mode = view.model()
         self.reconnectModel()
-        self.m_subview = v
-        self.setModel(m)
+        self.m_subview = view
+        self.setModel(mode)
         self.reconnectModel("connect")
 
     def updateView(self, view):
@@ -68,17 +79,15 @@ class Powerline(Plug):
                     signal = getattr(signal, kind)
                     signal(getattr(self, name))
 
-    def setMode(self, m=None):
-        if m:
-            m = m.mode()
-            m = m.title()
-        self.status.setText("mode", m)
+    def setMode(self, mode=None):
+        if mode:
+            mode = mode.title()
+        self.status.setText("mode", mode)
 
-    def setSubmode(self, m=None):
-        if m:
-            s = self.app.stateman.submode()
-            m = s.title()
-        self.status.setText("submode", m)
+    def setSubmode(self, submode=None):
+        if submode:
+            submode = submode.title()
+        self.status.setText("submode", submode)
 
     def setModel(self, model=None):
         if model:
@@ -95,9 +104,7 @@ class Powerline(Plug):
 
     def setKind(self, view=None):
         if view:
-            k = view.kind
-            if k:
-                view = k.title()
+            view = view.kind
         self.status.setText("type", view)
 
     def setView(
@@ -107,9 +114,9 @@ class Powerline(Plug):
             )->None:
         if view:
             if hasattr(view, "currentIndex"):
-                c = view.currentIndex()
-                if type(c) == int:
-                    idx = c
+                cidx = view.currentIndex()
+                if type(cidx) == int:
+                    idx = cidx
             view = view.name
             self.setIndex(idx)
         self.status.setText("view", view)

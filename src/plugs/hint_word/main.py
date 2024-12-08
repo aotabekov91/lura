@@ -23,8 +23,8 @@ class WordHint(Plug):
             view=self.app.stateman.view()
         hinter=self.getAgent(view=view)
         if hinter:
-            submode=self.app.stateman.toggleSubmode(
-                    submode='word')
+            submode=self.app.stateman.activate(
+                    submode='word', toggle_submode=True)
             if submode=='word':
                 self.activate(view=view, **kwargs)
             else:
@@ -43,4 +43,4 @@ class WordHint(Plug):
         hinter=self.getAgent(view=view)
         if hinter:
             hinter.unhint(view=view, **kwargs)
-        self.app.stateman.toggle()
+        self.app.stateman.activate()

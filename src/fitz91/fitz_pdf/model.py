@@ -18,8 +18,7 @@ class FitzModel(
     plug_qt.vimo.model.Model,
     QtCore.QObject,
 ):
-    isType = True
-    kind = "document"
+    kind = "PDF"
     pattern = ".*pdf$"
     wantView = ["FitzView"]
     element_class = FitzElement
