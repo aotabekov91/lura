@@ -17,16 +17,16 @@ class AnnotationHint(Plug):
     @tag("<c-a>(hint)")
     def activate(self):
         view=self.app.stateman.view()
-        hinter=self.agent(view=view)
-        if hinter:
-            self.app.stateman.activate(
+        agent=self.agent(view=view)
+        if agent:
+            self.app.stateman.setSubmode(
                     submode='annotation', toggle_submode=True)
-            hinter.activate(view)
+            agent.activate(view=view)
 
     @tag("<c-a>/<c-[>(hint[annotation])")
     def octivate(self):
         view=self.app.stateman.view()
-        hinter=self.agent(view=view)
-        if hinter:
-            hinter.octivate(view)
+        agent=self.agent(view=view)
+        if agent:
+            agent.octivate(view=view)
             self.app.stateman.activate()

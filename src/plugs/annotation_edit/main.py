@@ -58,14 +58,13 @@ class AnnotationEdit(Plug):
             height=200,
             **kwargs
             ):
+        selector=self.app.plugman.getPlug('Selection')
         if not view:
             view=self.app.stateman.view()
-        if not annotation:
-            selector=self.app.plugman.getPlug('Selection')
-            if selector:
-                selection=selector.selection(view=view)
-                if selection.__class__.__name__=='AnnotateElement':
-                    annotation=selection
+        if not annotation and selector:
+            selection=selector.selection(view=view)
+            if selection.__class__.__name__=='AnnotateElement':
+                annotation=selection
         agent=self.getAgent(view=view)
         if agent and annotation:
             top_left=agent.getGeometry(
@@ -78,7 +77,6 @@ class AnnotationEdit(Plug):
                 self.m_view.activate()
         self.app.stateman.viewChanged.connect(
                 self.checkViewChange)
-
 
     def updateViewGeometry(self, top_left, width, height):
         self.m_view.move(top_left)
