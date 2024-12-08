@@ -2,8 +2,8 @@ from PyQt6 import QtCore
 
 from .leaf import TileLeaf
 
-
 class TileLayout(QtCore.QObject):
+
     geometryChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):

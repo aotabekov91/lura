@@ -5,6 +5,7 @@ from PyQt6 import QtCore, QtWidgets
 from plug_qt.vimo import View
 
 from . import widgets
+from .layout import Layout
 
 class ElementView(View, QtWidgets.QWidget):
 
@@ -47,7 +48,7 @@ class ElementView(View, QtWidgets.QWidget):
         return self.m_element
 
     def setupLayout(self):
-        layout = QtWidgets.QGridLayout(self)
+        layout = Layout(parent=self)
         self.setLayout(layout)
         self.m_layout = layout
         layout.setSpacing(self.m_space)
@@ -84,11 +85,7 @@ class ElementView(View, QtWidgets.QWidget):
                 widgets = self.createWidgets()
             self.setWidgets(widgets)
 
-    def createWidgets(
-        self,
-        element=None,
-        widget_map=None,
-    ):
+    def createWidgets(self, element=None, widget_map=None):
         widgets = OrderedDict()
         wmap = widget_map or self.m_wmap
         elem = element or self.m_element
@@ -103,35 +100,35 @@ class ElementView(View, QtWidgets.QWidget):
             pos = (p[0], p[1])
             if type(klass) == str:
                 klass = self.wmap.get(klass)
-            widget = klass(
-                data=item_data,
-                text=text,
-                index=item_idx,
-                parent=self,
-                position=pos,
-                element=self.m_element,
-            )
-            object_name = item_idx
-            widgets[item_idx] = (widget, p)
-            field_name = item_data.get("n", None)
-            if field_name:
-                field_name = field_name.split("_")
-                item_data = self.m_element.data()
-                field_text = []
-                for field in field_name:
-                    field_text += [item_data.get(field, "")]
-                object_name = "_".join(field_text)
-            widget.setObjectName(object_name)
+            if klass:
+                widget = klass(
+                    data=item_data,
+                    text=text,
+                    index=item_idx,
+                    parent=self,
+                    position=pos,
+                    element=self.m_element,
+                )
+                object_name = item_idx
+                widgets[item_idx] = (widget, p)
+                field_name = item_data.get("n", None)
+                if field_name:
+                    field_name = field_name.split("_")
+                    item_data = self.m_element.data()
+                    field_text = []
+                    for field in field_name:
+                        field_text += [item_data.get(field, "")]
+                    object_name = "_".join(field_text)
+                widget.setObjectName(object_name)
         return widgets
 
     def delWidgets(self, widgets):
-        for w, p in widgets.values():
-            self.m_layout.removeWidget(w)
-            w.geometryChanged.disconnect(
-                self.adjustSizeHint
-            )
-            w.focusGained.disconnect(self.selectToCenter)
-            w.hide()
+        for widget, _ in widgets.values():
+            self.m_layout.removeWidget(widget)
+            widget.geometryChanged.disconnect(
+                self.adjustSizeHint)
+            widget.focusGained.disconnect(self.selectToCenter)
+            widget.hide()
         self.m_widgets = OrderedDict()
 
     def setWidgets(self, widgets):
@@ -142,8 +139,14 @@ class ElementView(View, QtWidgets.QWidget):
             w.show()
         self.m_widgets = widgets
 
-    def widget(self, key):
-        return self.m_widgets.get(key)
+    def widget(self, key=None, idx=None):
+        if key:
+            return self.m_widgets.get(key)
+        elif idx:
+            widgets=self.m_widgets.values()
+            for num, data in enumerate(widgets):
+                if idx==num+1:
+                    return data[0]
 
     def widgets(self):
         return self.m_widgets
@@ -153,11 +156,11 @@ class ElementView(View, QtWidgets.QWidget):
         for n in self.m_widgets.keys():
             self.set(n, str(d[n]).strip())
 
-    def set(self, n, t):
-        w, p = self.m_widgets[n]
-        w.m_reporting = False
-        w.setText(str(t))
-        w.m_reporting = True
+    def set(self, key, text):
+        widget, _ = self.m_widgets[key]
+        widget.m_reporting = False
+        widget.setText(str(text))
+        widget.m_reporting = True
 
     def sizeHint(self):
         v = self.size()
@@ -182,3 +185,6 @@ class ElementView(View, QtWidgets.QWidget):
         if self.m_view:
             self.m_view.setCurrentItem(self.m_item)
             self.m_view.scrollToItem(self.m_item)
+
+    def goTo(self, *args, **kwargs):
+        return self.m_layout.goTo(*args, **kwargs)

@@ -21,13 +21,19 @@ class Normal(Plug, QtCore.QObject):
         holder=self.m_agents.get(action, {})
         return holder.get(name, None)
 
-    def activate(self, view=None, action=None, kind='goTo', **kwargs):
+    def activate(
+            self, 
+            view=None, 
+            action=None, 
+            kind='goTo', 
+            **kwargs):
         if not view:
             view=self.app.stateman.view()
         func=getattr(view, action, None)
         agent=self.getAgent(action=action, view=view)
         if agent:
-            agent.activate(view=view, kind=kind, **kwargs)
+            agent.activate(
+                    action=action, view=view, kind=kind, **kwargs)
             data=agent.currentPosition(view=view)
             self.positionChanged.emit(view, data)
         elif func:
