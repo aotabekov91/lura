@@ -62,19 +62,21 @@ class FitzWordHint(Plug):
         for hint, word in hints.items():
             word['hint']=hint
 
-    def hint(self, view):
-        model=view.model()
-        self.cacheModel(model)
-        self.assignHints(view)
-        self.app.stateman.setFunctor(self.functor)
-        view.itemPainted.connect(self.paint)
-        view.redraw()
+    def activate(self, view=None, **kwargs):
+        if view:
+            model=view.model()
+            self.cacheModel(model)
+            self.assignHints(view)
+            self.app.stateman.setFunctor(functor=self.functor)
+            view.itemPainted.connect(self.paint)
+            view.redraw()
 
-    def unhint(self, view):
-        self.m_hint=''
-        self.app.stateman.setFunctor()
-        view.itemPainted.disconnect(self.paint)
-        view.redraw()
+    def octivate(self, view=None, **kwargs):
+        if view:
+            self.m_hint=''
+            self.app.stateman.setFunctor()
+            view.itemPainted.disconnect(self.paint)
+            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         painter.save()

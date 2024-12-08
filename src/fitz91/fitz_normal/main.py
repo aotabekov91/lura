@@ -69,7 +69,7 @@ class FitzNormal(Plug):
             kwargs['xrange']=[view.count()]
             self.goTo(view=view, **kwargs)
 
-    def moveScreen(self, kind, view=None, xrange=[1]):
+    def moveScreen(self, kind, view=None, xrange=[1], **kwargs):
         if view:
             size = view.size()
             height, width = size.height(), size.width()
@@ -93,7 +93,7 @@ class FitzNormal(Plug):
             view.viewport().update()
             view.setVisibleItem()
 
-    def moveLine(self, kind, view=None, xrange=[1]):
+    def moveLine(self, kind, view=None, xrange=[1], **kwargs):
         if view:
             size = view.size()
             height, width = size.height(), size.width()

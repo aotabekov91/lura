@@ -23,24 +23,25 @@ class WordHint(Plug):
             view=self.app.stateman.view()
         hinter=self.getAgent(view=view)
         if hinter:
-            submode=self.app.stateman.activate(
+            self.app.stateman.setSubmode(
                     submode='word', toggle_submode=True)
+            submode=self.app.stateman.submode()
             if submode=='word':
                 self.activate(view=view, **kwargs)
             else:
-                self.deactivate(view=view, **kwargs)
+                self.octivate(view=view, **kwargs)
 
     def activate(self, view=None, **kwargs):
         if not view:
             self.app.stateman.view()
-        hinter=self.getAgent(view=view)
-        if hinter:
-            hinter.hint(view=view, **kwargs)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.activate(view=view, **kwargs)
 
-    def deactivate(self, view=None, **kwargs):
+    def octivate(self, view=None, **kwargs):
         if not view:
             self.app.stateman.view()
-        hinter=self.getAgent(view=view)
-        if hinter:
-            hinter.unhint(view=view, **kwargs)
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.octivate(view=view, **kwargs)
         self.app.stateman.activate()
