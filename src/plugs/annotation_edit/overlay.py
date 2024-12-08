@@ -53,14 +53,11 @@ class OverlayView(
         view.setParent(None)
         self.m_blur = self.blur
 
-    def betView(self, view, **kwargs):
-        view.hide()
-        self.m_blur = False
-        self.m_dark = False
-        self.app.view.update()
-        rec = kwargs.get("recursive")
-        if rec:
-            self.octivate()
+    def betView(self, *args, view=None, recursive=True, **kwargs):
+        if view:
+            view.hide()
+            self.m_blur = False
+            self.m_dark = False
 
     def setView(
         self,
