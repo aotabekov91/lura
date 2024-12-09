@@ -8,4 +8,4 @@
 ## Tasks
 
 * [x] [NVim edit/input plugin](../tasks/nvim.md)
-* [ ] [ElementListView input mode support](../tasks/element_list_input.md)
+* [x] [ElementListView input mode support](../tasks/element_list_input.md)

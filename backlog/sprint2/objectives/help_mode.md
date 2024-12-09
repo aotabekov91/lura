@@ -5,3 +5,5 @@
 * a la vim's help
 
 ## Tasks
+
+* [ ] Markdown reader
