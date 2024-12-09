@@ -3,7 +3,7 @@ from plug import Plug, tag
 
 from .nvim import NVim
 
-class Input(Plug):
+class Edit(Plug):
 
     deactivator=['<escape>', '<c-[>', '<c-q>']
 
@@ -34,28 +34,24 @@ class Input(Plug):
             mode=self.m_nvim.mode()
             pressed=self.app.earman.letters()
             if mode=='n' and pressed in self.deactivator: 
-                self.octivateNVim()
+                self.octivate()
             else:
                 self.m_nvim.update(event.text())
             self.app.earman.clearKeys()
             return True
         return False
 
-    def octivateNVim(self, **kwargs):
-        self.m_nvim.setAgent()
-        self.app.stateman.activate()
-
-    @tag('e(edit)')
-    def activateNVim(self, view=None, action='populate', mode='n', **kwargs):
+    @tag('<c-e>(normal)')
+    def activate(self, view=None, action='populate', **kwargs):
         if not view:
             view=self.app.stateman.view()
         agent=self.getAgent(action=action, view=view)
         if agent:
             self.m_nvim.setAgent(agent)
-            self.app.stateman.setSubmode(submode=mode)
-            self.app.stateman.setKeyer(keyer=self.keyer)
             agent.activate(view=view, action=action, nvim=self.m_nvim, **kwargs)
+            self.app.stateman.activate(mode='edit', submode='normal', keyer=self.keyer)
 
-    @tag(['<c-e>(normal/edit)', '<escape>/<c-[>(edit)'])
-    def toggle(self):
-        self.app.stateman.activate(mode='edit', toggle_mode=True)
+    @tag(['<c-e>(edit)', '<escape>/<c-[>(edit)'])
+    def octivate(self, **kwargs):
+        self.m_nvim.setAgent()
+        self.app.stateman.activate()

@@ -2,7 +2,7 @@ from PyQt6 import QtGui, QtCore, QtWidgets
 
 from plug import Plug
 
-class EditorInputMode(Plug):
+class ElementEdit(Plug):
 
     def setup(self):
         super().setup()
@@ -13,7 +13,7 @@ class EditorInputMode(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        mode=self.app.plugman.getPlug('Input')
+        mode=self.app.plugman.getPlug('Edit')
         if mode:
             mode.addAgent('update', 'ElementView', self)
             mode.addAgent('populate', 'ElementView', self)
@@ -49,12 +49,7 @@ class EditorInputMode(Plug):
             document=widget.document()
             widget.setPlainText(nvim.text())
             row, col = nvim.cursorPosition()
-            byte_count=nvim.byte(row)
-            # todo
-            position=byte_count+col-1
-            if col==0: position+=1
-            print(row, col, position)
-            print('bute: ', byte_count)
+            position=nvim.byte(row, col)
             cursor = QtGui.QTextCursor(document)
             cursor.setPosition(position)
             widget.setTextCursor(cursor)

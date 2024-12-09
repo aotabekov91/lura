@@ -2,7 +2,7 @@ from PyQt6 import QtGui
 
 from plug import Plug
 
-class ElementListViewInputMode(Plug):
+class ElementListEdit(Plug):
 
     def setup(self):
         super().setup()

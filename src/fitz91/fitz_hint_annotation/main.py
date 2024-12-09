@@ -46,19 +46,21 @@ class FitzAnnotationHint(Plug):
                 self.m_element_hints[idx]=[]
             self.m_element_hints[idx]+=[data]
 
-    def activate(self, view):
-        self.assignHints(view)
-        self.app.stateman.setFunctor(functor=self.functor)
-        view.itemPainted.connect(self.paint)
-        view.redraw()
+    def activate(self, view=None, **kwargs):
+        if view:
+            self.assignHints(view)
+            self.app.stateman.setFunctor(functor=self.functor)
+            view.itemPainted.connect(self.paint)
+            view.redraw()
 
-    def octivate(self, view):
-        self.m_hint=''
-        self.m_element_hints={}
-        self.app.stateman.setFunctor()
-        view.itemPainted.disconnect(
-                self.paint)
-        view.redraw()
+    def octivate(self, view=None, **kwargs):
+        if view:
+            self.m_hint=''
+            self.m_element_hints={}
+            self.app.stateman.setFunctor()
+            view.itemPainted.disconnect(
+                    self.paint)
+            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         painter.save()
@@ -87,9 +89,7 @@ class FitzAnnotationHint(Plug):
         if key in self.m_hints:
             annotation=self.m_hints.get(key)
             self.select(annotation, view)
-            annotation_hinter=self.app.plugman.getPlug(
-                    'AnnotationHint')
-            annotation_hinter.octivate()
+            self.edit(annotation, view)
             view.redraw()
             return True
         for hint in self.m_hints:
@@ -99,6 +99,13 @@ class FitzAnnotationHint(Plug):
         self.m_hint=''
         view.redraw()
         return False
+
+    def edit(self, annotation, view, **kwargs):
+        agent=self.app.plugman.getPlug('AnnotationHint')
+        agent.octivate()
+        agent=self.app.plugman.getPlug('AnnotationEdit')
+        if agent:
+            agent.activate(view=view, annotation=annotation, **kwargs)
 
     def select(self, annotation, view):
         data=annotation.data()

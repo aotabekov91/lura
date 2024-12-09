@@ -97,9 +97,9 @@ class NVim(Plug, QtCore.QObject):
     def commandLineType(self):
         return self.eval("getcmdtype()")
 
-    def byte(self, row):
+    def byte(self, row, col):
         cmd = f"line2byte({row})".format(str(row))
-        return self.eval(cmd)
+        return self.eval(cmd)+col-1
 
     def eval(self, expr):
         return self.nvim.eval(expr)
