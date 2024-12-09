@@ -28,7 +28,7 @@ class Layout(QtWidgets.QGridLayout):
         return self.m_current
 
     def goTo(self, kind=None, xrange=[1], **kwargs):
-        if not self.m_current:
+        if self.m_current[0] is None:
             self.setCurrentIndex(0, 0)
         else:
             idx=None
