@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from plug import Plug, tag
+from plug import Plug
 
 from .model import SelectionModel
 
@@ -41,7 +41,6 @@ class Selection(Plug, QtCore.QObject):
         if model:
             return model.getSelection(**kwargs)
 
-    @tag('<c-[>/<escape>(normal)')
     def cleanUpSelection(self, view=None):
         if not view:
             view=self.app.stateman.view()

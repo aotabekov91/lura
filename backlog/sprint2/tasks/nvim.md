@@ -1,9 +1,9 @@
 [Index](../index.md)
 
-Status:
-Work done:
-Actual time:
-Estimated time:
+Status: done
+Work done: 1/1
+Actual time: 24h
+Estimated time: 2h
 
 # Task
 

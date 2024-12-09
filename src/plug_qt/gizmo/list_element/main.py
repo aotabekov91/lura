@@ -30,7 +30,6 @@ class ElementListView(vimo.View, QtWidgets.QListWidget):
         self.setAttribute(
             QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
-
     def setCurrentRow(self, row):
         super().setCurrentRow(row)
         self.indexChanged.emit(row + 1)
@@ -41,9 +40,7 @@ class ElementListView(vimo.View, QtWidgets.QListWidget):
         self.include = inc.copy()
         exc = self.m_kwargs.get("exclude", self.exclude)
         self.exclude = exc.copy()
-        wm = self.m_kwargs.get(
-            "widget_map", self.widget_map
-        )
+        wm = self.m_kwargs.get("widget_map", self.widget_map)
         self.widget_map = wm.copy()
 
     def setModel(self, model=None, **kwargs):
@@ -64,7 +61,7 @@ class ElementListView(vimo.View, QtWidgets.QListWidget):
                 else:
                     self.addElement(element)
             self.reconnectModel()
-            # self.goToFirst()
+            self.goTo(kind='first')
 
     def cleanUp(self):
         super().clear()
@@ -89,11 +86,13 @@ class ElementListView(vimo.View, QtWidgets.QListWidget):
         list_item = self.list_item_class()
         list_item.setElement(element)
         widget = self.widget_class(
-            item=list_item,
-            view=self,
-            element=element,
+            view=self, 
             wmap=wmap,
-        )
+            app=self.app,
+            manager=self,
+            item=list_item, 
+            element=element, 
+            )
         self.addItem(list_item)
         self.setItemWidget(list_item, widget)
         self.resized.emit(self)

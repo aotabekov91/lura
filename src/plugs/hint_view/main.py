@@ -33,8 +33,8 @@ class ViewHint(Plug):
         return True
 
     @tag("v(hint)")
-    def toggleViewHintSubmode(self):
-        submode = self.app.stateman.activate(
+    def toggle(self):
+        submode=self.app.stateman.setSubmode(
                 submode="view", toggle_submode=True)
         if submode == "view":
             self.activate()
@@ -42,7 +42,7 @@ class ViewHint(Plug):
             self.octivate()
 
     def activate(self):
-        self.app.stateman.setFunctor(self.viewFunctor)
+        self.app.stateman.setFunctor(functor=self.viewFunctor)
         self.app.view.painted.connect(self.paint)
         self.app.view.update()
 

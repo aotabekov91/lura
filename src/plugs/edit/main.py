@@ -48,8 +48,8 @@ class Edit(Plug):
         agent=self.getAgent(action=action, view=view)
         if agent:
             self.m_nvim.setAgent(agent)
-            agent.activate(view=view, action=action, nvim=self.m_nvim, **kwargs)
             self.app.stateman.activate(mode='edit', submode='normal', keyer=self.keyer)
+            agent.activate(view=view, action=action, nvim=self.m_nvim, **kwargs)
 
     @tag(['<c-e>(edit)', '<escape>/<c-[>(edit)'])
     def octivate(self, **kwargs):

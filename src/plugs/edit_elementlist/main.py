@@ -1,6 +1,4 @@
-from PyQt6 import QtGui
-
-from plug import Plug
+from plug import Plug, tag
 
 class ElementListEdit(Plug):
 
@@ -13,45 +11,34 @@ class ElementListEdit(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        input_mode=self.app.plugman.getPlug('InputMode')
-        if input_mode:
-            input_mode.addAgent('insert', 'ElementListView', self)
-            input_mode.addAgent('append', 'ElementListView', self)
+        holder=self.app.plugman.getPlug('Edit')
+        if holder:
+            holder.addAgent('update', 'ElementListView', self)
+            holder.addAgent('populate', 'ElementListView', self)
 
-    def activate(self, view=None, kind=None, **kwargs):
-        if view and kind:
-            functor=getattr(self, kind, None)
+    def activate(self, view=None, action=None, **kwargs):
+        if view and action:
+            functor=getattr(self, action, None)
             if functor:
                 functor(view=view, **kwargs)
 
+    @tag('<c-[>(normal)[ElementView]')
     def octivate(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
         if view:
-            view.setFocus()
+            manager=view.manager()
+            if manager:
+                manager.activate()
 
-    def insert(self, view=None, xrange=[1], widget=None, **kwargs):
-        if not widget and view:
-            item=view.currentItem()
-            if item:
-                view_widget=view.itemWidget(item)
-                data=view_widget.widget('text')
-                if data:
-                    widget, _ = data
-        if widget:
-            widget.setReadOnly(False)
+    def populate(self, view=None, **kwargs):
+        item=view.currentItem()
+        element_view=view.itemWidget(item)
+        element_view.activate(mode='normal')
+        idx=element_view.currentIndex()
+        if idx[0] is None:
+            element_view.goTo(kind='first')
+        else:
+            widget=element_view.widget(idx=idx)
             widget.setFocus()
-
-    def append(self, view=None, xrange=[1], widget=None, **kwargs):
-        if not widget and view:
-            item=view.currentItem()
-            if item:
-                view_widget=view.itemWidget(item)
-                data=view_widget.widget('text')
-                if data:
-                    widget, _ = data
-        if widget:
-            widget.setReadOnly(False)
-            position = QtGui.QTextCursor.MoveOperation.End
-            cursor = widget.textCursor()
-            cursor.movePosition(position)
-            widget.setTextCursor(cursor)
-            widget.setFocus()
+        self.app.stateman.activate()

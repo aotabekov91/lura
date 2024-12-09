@@ -95,3 +95,9 @@ class Normal(Plug, QtCore.QObject):
     @tag("p(normal)")
     def goPrev(self, xrange=[1], **kwargs):
         self.activate(action='goTo', kind="prev", xrange=xrange)
+
+    @tag('<c-[>/<escape>(normal)')
+    def octivate(self):
+        selection=self.app.plugman.getPlug('Selection')
+        if selection:
+            selection.cleanUpSelection()

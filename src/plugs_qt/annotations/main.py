@@ -4,7 +4,7 @@ from plug_qt.gizmo import ElementListView
 class Annotations(Plug):
 
     default_mode='normal'
-    position = {"AnnotationView": "D|L"}
+    position = {"AnnotationsView": "D|L"}
     widget_map={
             'id': {'w':  'Label', 'p': '0x0x1x1'},
             'text': {'w': 'TextEdit', 'p': '1x0x1x1'}}
@@ -23,7 +23,7 @@ class Annotations(Plug):
         if self.m_annotate:
             self.view=self.app.buffman.createView(
                     ElementListView, 
-                    name='AnnotationView',
+                    name='AnnotationsView',
                     position=self.position,
                     widget_map=self.widget_map,
                     )
@@ -40,11 +40,11 @@ class Annotations(Plug):
     def toggleAnnotations(self):
         self.view.toggle()
 
-    @tag('O(normal)[AnnotationView]')
+    @tag('O(normal)[AnnotationsView]')
     def openAndFocus(self):
         self.open(focus=True)
 
-    @tag('o(normal)[AnnotationView]')
+    @tag('o(normal)[AnnotationsView]')
     def open(self, focus=False, select=True, **kwargs):
         item=self.view.currentItem()
         normal=self.app.plugman.getPlug('Normal')
@@ -67,8 +67,7 @@ class Annotations(Plug):
             if focus:
                 view.activate()
 
-
-    @tag('d(normal)[AnnotationView]')
+    @tag('d(normal)[AnnotationsView]')
     def delete(self):
         item=self.view.currentItem()
         if item:
