@@ -15,10 +15,8 @@ class EditorInputMode(Plug):
     def addAgent(self):
         mode=self.app.plugman.getPlug('Input')
         if mode:
-            mode.addAgent('insert', 'EditorView', self)
-            mode.addAgent('append', 'EditorView', self)
-            mode.addAgent('update', 'EditorView', self)
-            mode.addAgent('populate', 'EditorView', self)
+            mode.addAgent('update', 'ElementView', self)
+            mode.addAgent('populate', 'ElementView', self)
 
     def octivate(self, view=None, **kwargs):
         if view:
@@ -30,42 +28,14 @@ class EditorInputMode(Plug):
             if func:
                 func(**kwargs)
 
-    def insert(self, view=None, xrange=[1], widget=None, **kwargs):
-        if not widget:
-            data=view.widget('text')
-            if data:
-                widget, _ = data
-        if widget:
-            widget.setReadOnly(False)
-            widget.setFocus()
-
-    def append(self, view=None, xrange=[1], widget=None, **kwargs):
-        if not view:
-            view=self.app.stateman.view()
-        if view and not widget:
-            data=view.widget('text')
-            if data:
-                widget, _ = data
-        if widget:
-            widget.setReadOnly(False)
-            position = QtGui.QTextCursor.MoveOperation.End
-            cursor = widget.textCursor()
-            cursor.movePosition(position)
-            widget.setTextCursor(cursor)
-            widget.setFocus()
-
-    def populate(self, view=None, xrange=[1], nvim=None, widget=None, **kwargs):
-        if not view:
-            view=self.app.stateman.view()
-        if view and not widget:
-            data=view.widget('text')
-            if data:
-                widget, _ = data
-        if widget and nvim:
-            widget.setReadOnly(False)
-            text=widget.toPlainText()
-            nvim.setText(text)
-            widget.setFocus()
+    def populate(self, view=None, idx=None, nvim=None, **kwargs):
+        if view:
+            idx = idx or view.currentIndex()
+            widget=view.widget(idx=idx)
+            if widget and nvim:
+                widget.setReadOnly(False)
+                text=widget.toPlainText()
+                nvim.setText(text)
 
     def update(self, view=None, nvim=None, widget=None, **kwargs):
         if not view:
@@ -79,8 +49,14 @@ class EditorInputMode(Plug):
             document=widget.document()
             widget.setPlainText(nvim.text())
             row, col = nvim.cursorPosition()
+            byte_count=nvim.byte(row)
+            # todo
+            position=byte_count+col-1
+            if col==0: position+=1
+            print(row, col, position)
+            print('bute: ', byte_count)
             cursor = QtGui.QTextCursor(document)
-            cursor.setPosition(nvim.byte(row, col))
+            cursor.setPosition(position)
             widget.setTextCursor(cursor)
             cond = mode != "i"
             cond = cond and mode != "v"

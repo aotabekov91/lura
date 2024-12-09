@@ -29,6 +29,7 @@ class Stateman(Plug):
     def setKeyer(self, *args, keyer=None, **kwargs):
         self.app.earman.clearKeys(True)
         self.m_keyer = keyer
+        return keyer
 
     def passive(self):
         return self.m_passive
@@ -104,6 +105,7 @@ class Stateman(Plug):
 
     def activate(self, *args, **kwargs):
         self.setMode(*args, **kwargs)
+        self.setKeyer(*args, **kwargs)
         self.setPassive(*args, **kwargs)
         self.setSubmode(*args, **kwargs)
         self.setFunctor(*args, **kwargs)

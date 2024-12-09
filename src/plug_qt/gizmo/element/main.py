@@ -188,3 +188,9 @@ class ElementView(View, QtWidgets.QWidget):
 
     def goTo(self, *args, **kwargs):
         return self.m_layout.goTo(*args, **kwargs)
+
+    def currentIndex(self):
+        return self.m_layout.currentIndex()
+
+    def setCurrentIndex(self, *args, **kwargs):
+        self.m_layout.setCurrentIndex(*args, **kwargs)

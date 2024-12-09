@@ -58,7 +58,7 @@ class NVim(Plug, QtCore.QObject):
         if self.m_mode != mode:
             self.m_mode = mode
             mode=self.mode_mapping.get(mode, mode)
-            self.app.stateman.setSubmode(mode)
+            self.app.stateman.setSubmode(submode=mode)
 
     def setText(self, text):
         self.buffer()[:] = text.split("\n")
@@ -97,9 +97,9 @@ class NVim(Plug, QtCore.QObject):
     def commandLineType(self):
         return self.eval("getcmdtype()")
 
-    def byte(self, row, col):
-        cmd = "line2byte(" + str(row) + ")"
-        return self.eval(cmd) + col - 1
+    def byte(self, row):
+        cmd = f"line2byte({row})".format(str(row))
+        return self.eval(cmd)
 
     def eval(self, expr):
         return self.nvim.eval(expr)
@@ -108,4 +108,3 @@ class NVim(Plug, QtCore.QObject):
         with open(self.m_file.name, "r") as f:
             data = f.read().strip()
             return data != str(self.m_idx)
-        return False
