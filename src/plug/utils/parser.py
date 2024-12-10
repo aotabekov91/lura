@@ -1,8 +1,8 @@
 import shlex
 import argparse
 
-
 class Parser:
+
     def __init__(self, *args, **kwargs):
         self.setup()
 
@@ -36,12 +36,12 @@ class Parser:
         pref=None,
         only_known=True,
     ):
-        f = self.parser.parse_args
+        functor = self.parser.parse_args
         if only_known:
-            f = self.parser.parse_known_args
+            functor = self.parser.parse_known_args
         if text:
-            t = shlex.split(text)
+            text = shlex.split(text)
             if pref:
-                t.insert(0, pref)
-            return f(t)
-        return f()
+                text.insert(0, pref)
+            return functor(text)
+        return functor()
