@@ -26,8 +26,8 @@ class TileLayout(QtCore.QObject):
         pass  # todo
 
     def clear(self):
-        for w in self.root.views():
-            self.removeView(w)
+        for view in self.root.views():
+            self.removeView(view=view)
 
     def count(self):
         return self.m_count
@@ -104,27 +104,27 @@ class TileLayout(QtCore.QObject):
             if not self.current:
                 self.setView(view)
 
-    def removeView(self, v=None, **kwargs):
-        v = v or self.current
-        v.setManager()
-        v.setParent(None)
-        leaf = self.getLeaf(v)
+    def removeView(self, view=None, **kwargs):
+        view = view or self.current
+        view.setManager()
+        view.setParent(None)
+        leaf = self.getLeaf(view)
         if leaf:
-            p = leaf.m_parent
-            if p:
-                ort = p.horizontal
-                idx = p.leaves.index(leaf)
+            parent_leaf = leaf.m_parent
+            if parent_leaf:
+                ort = parent_leaf.horizontal
+                idx = parent_leaf.leaves.index(leaf)
                 leaf = leaf.m_parent.remove(leaf)
-                nv = next(leaf.views(), None)
-                if nv is None:
+                next_view = next(leaf.views(), None)
+                if next_view is None:
                     self.current_leaf = self.root
                 else:
-                    self.setView(nv)
+                    self.setView(next_view)
                 if leaf.m_parent:
                     leaf.m_parent.update()
                 else:
                     self.root.update()
-                return nv, (idx, ort, p)
+                return next_view, (idx, ort, parent_leaf)
             leaf.view = None
             self.current_leaf = self.root
         self.m_count -= 1
@@ -258,14 +258,14 @@ class TileLayout(QtCore.QObject):
         **kwargs,
     ):
         view = view or self.current_leaf.view
-        leaf = self.getLeaf(view)
+        cleaf = self.getLeaf(view)
         if kind:
-            l = self.findLeaf(kind)
-            if l:
-                self.flipTo(l, leaf)
+            nleaf = self.findLeaf(kind)
+            if nleaf and cleaf:
+                self.flipTo(nleaf.view, cleaf.view, focus=False)
             else:
-                leaf = self.current_leaf
-                self.removeView(leaf.view)
+                cleaf = self.current_leaf
+                self.removeView(view=cleaf.view)
                 newroot = TileLeaf()
                 if kind in ["up", "down"]:
                     newroot.horizontal = True
@@ -273,28 +273,28 @@ class TileLayout(QtCore.QObject):
                     newroot.horizontal = False
                 if kind in ["up", "left"]:
                     newroot.leaves = [
-                        leaf,
+                        cleaf,
                         self.root,
                     ]
                 elif kind in ["down", "right"]:
                     newroot.leaves = [
                         self.root,
-                        leaf,
+                        cleaf,
                     ]
                 self.root.m_parent = newroot
-                leaf.m_parent = newroot
+                cleaf.m_parent = newroot
                 self.root = newroot
-                leaf.view.setManager(self.parent)
-                leaf.view.setParent(self.parent)
-                leaf.view.activate()
+                cleaf.view.setManager(self.parent)
+                cleaf.view.setParent(self.parent)
+                cleaf.view.activate()
         else:
             xrange = xrange or self.count()
             xrange[-1] -= 1
             views = list(self.root.views())
             if 0 <= xrange < len(views):
                 v = views[xrange]
-                l = self.getLeaf(v)
-                self.flipTo(l, leaf)
+                nleaf = self.getLeaf(v)
+                self.flipTo(nleaf, cleaf)
 
     def flipTo(self, new=None, old=None, focus=True, **kwargs):
         old=old or self.current
@@ -347,7 +347,7 @@ class TileLayout(QtCore.QObject):
         if view:
             prev_view = self.findSibling(kind="prev")
             next_view = self.findSibling(kind="next")
-            self.removeView(view)
+            self.removeView(view=view)
             if prev_view and view != prev_view:
                 prev_view.activate()
                 return prev_view
