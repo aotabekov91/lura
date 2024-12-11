@@ -69,6 +69,7 @@ class Exec(Plug):
         text=edit.text()
         text = shlex.split(text)
         data=self.m_agents.get(text[0], None)
+        self.toggle()
         if data:
             func, parser=data
             if parser:
@@ -77,4 +78,3 @@ class Exec(Plug):
                 func(**args_dict)
             else:
                 func()
-        self.toggle()

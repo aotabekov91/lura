@@ -39,8 +39,8 @@ class View(plug.View):
         self.identifierChanged.emit(idx, o, self)
 
     def setBars(self):
-        t = "horizontalScrollBarPolicy"
-        if not hasattr(self, t):
+        func = "horizontalScrollBarPolicy"
+        if not hasattr(self, func):
             return
         self.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)

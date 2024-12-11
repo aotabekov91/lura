@@ -103,6 +103,9 @@ class Plug:
         p = os.path.dirname(a)
         self.path = p.replace("\\", "/")
 
+    def getFile(self, name):
+        return self.files.get(name, None)
+
     def setFiles(self) -> None:
         for f in os.listdir(self.path):
             p = f"{self.path}/{f}"
