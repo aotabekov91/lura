@@ -5,4 +5,4 @@
 ## Tasks
 
 * Tiling
-	* [ ] Moving is not working partially <c-w>H
+	* [x] Moving is not working partially <c-w>H
