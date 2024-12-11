@@ -15,23 +15,24 @@ class BandVisual(Plug):
         return self.m_agent.get(name, None)
 
     @tag(["<c-b>(visual)", "<c-b>/<c-[>(visual[band])"])
-    def toggle(self):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view)
+    def toggle(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        agent=self.getAgent(view=view)
         if agent:
-            submode = self.app.stateman.activate(
+            submode = self.app.stateman.setSubmode(
                     submode="band", toggle_submode=True)
             if submode == "band":
-                agent.activate(view=view)
+                agent.activate(view=view, **kwargs)
             else:
-                agent.octivate(view=view)
+                agent.octivate(view=view, **kwargs)
 
     @tag("G(visual[band])")
     def setCorner(self, xrange=None):
         view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            agent.go(view=view, kind='corner', xrange=xrange)
+            agent.activate(action='goTo', view=view, kind='corner', xrange=xrange)
 
     @tag("l(visual[band])")
     def right(self, xrange=[1]):

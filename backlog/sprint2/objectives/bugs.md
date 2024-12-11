@@ -4,5 +4,5 @@
  
 ## Tasks
 
-* Tiling
-	* [x] Moving is not working partially <c-w>H
+* [x] Moving is not working partially <c-w>H
+* [ ] Links goTo throws an error

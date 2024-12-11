@@ -6,21 +6,21 @@ class Hint(Plug):
 
     def setup(self):
         super().setup()
-        self.m_hinters={}
+        self.m_agents={}
 
-    def addHinter(self, name, hinter):
-        self.m_hinters[name]=hinter
+    def addAgent(self, name, hinter):
+        self.m_agents[name]=hinter
 
-    def hinter(self, name):
-        return self.m_hinters.get(name, None)
+    def getAgents(self, name):
+        return self.m_agents.get(name, None)
 
     @tag(["<c-f>(normal)", "<c-f>/<c-[>(hint)"])
-    def toggleHint(self):
+    def toggle(self):
         self.app.stateman.activate(
                 mode="hint", delisten=True, toggle_mode=True)
 
     @tag("<escape>(hint[any])")
-    def finishHintMode(self):
+    def octivate(self):
         self.app.stateman.activate()
 
     def generateHints(self, alist, kind="letter"):

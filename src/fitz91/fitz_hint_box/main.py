@@ -11,26 +11,27 @@ class FitzBoxHint(Plug):
         self.m_boxes={}
         self.m_hint_scale = None
         if self.app.running:
-            self.addToHinter()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToHinter)
+                    self.addAgent)
 
-    def addToHinter(self):
-        hinter=self.app.plugman.getPlug('BoxHint')
-        if hinter:
-            hinter.addHinter('FitzView', self)
+    def addAgent(self):
+        holder=self.app.plugman.getPlug('BoxHint')
+        if holder:
+            holder.addAgent('FitzView', self)
 
-    def boxFunctor(self, key, earman):
+    def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
         hints=self.m_hints
         if self.m_hint in hints:
             box=hints.get(self.m_hint)
             self.select(view, box)
-            box_hinter=self.app.plugman.getPlug(
-                    'BoxHint')
-            box_hinter.toggle()
+            hinter=self.app.plugman.getPlug('BoxHint')
+            hinter.toggle()
+            hinter=self.app.plugman.getPlug( 'Hint')
+            hinter.toggle()
             view.redraw()
             return True
         for hint in hints:
@@ -46,7 +47,7 @@ class FitzBoxHint(Plug):
         self.assignHints(view)
         view.itemPainted.connect(self.paint)
         self.app.stateman.setFunctor(
-                self.boxFunctor)
+                functor=self.functor)
         view.redraw()
 
     def octivate(self, view, xrange=[1]):
@@ -70,6 +71,7 @@ class FitzBoxHint(Plug):
         plugs=self.app.plugman.plugs
         hinter=plugs.get('Hint')
         items=view.visibleItems()
+        items=sorted(items, key=lambda x: x.index())
         for item in items: 
             boxes=self.getBoxes(
                     item, xrange=xrange, inc=inc)

@@ -4,4 +4,4 @@
 
 ## Tasks
 
-* [ ] [Visual band support](../tasks/visual_band.md)
+* [.] [Visual band support](../tasks/visual_band.md)

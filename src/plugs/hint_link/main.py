@@ -15,13 +15,14 @@ class LinkHint(Plug):
         return self.m_hinters.get(name, None)
 
     @tag(["<c-l>(hint/hint[link])", "<c-[>/<escape>(hint[link])"])
-    def toggleHint(self):
-        view=self.app.stateman.view()
+    def toggleHint(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            submode=self.app.stateman.activate(
+            submode=self.app.stateman.setSubmode(
                     submode='link', toggle_submode=True)
             if submode=='link':
-                agent.hint(view=view)
+                agent.activate(view=view, **kwargs)
             else:
-                agent.unhint(view=view)
+                agent.octivate(view=view, **kwargs)
