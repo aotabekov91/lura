@@ -54,9 +54,9 @@ class Stateman(Plug):
         mode = self.mode() or "any"
         submode = self.submode() or "any"
         subview = self.app.stateman.subview() or 'any'
-        if view:
+        if not type(view) in [str, None]:
             view = view.name
-        if subview:
+        if not type(subview) in [str, None]:
             subview = subview.kind
         return  (mode, submode, view, subview)
 

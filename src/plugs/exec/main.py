@@ -1,4 +1,5 @@
 import shlex
+import inspect
 import argparse
 
 from plug import Plug, tag
@@ -9,6 +10,40 @@ class Exec(Plug):
         super().setup()
         self.m_agents={}
         self.setParser()
+        if self.app.running:
+            self.gatherCommands()
+        else:
+            self.app.appSoonStarts.connect(
+                    self.gatherCommands)
+
+    def gatherCommands(self):
+        keys=self.app.earman.keys()
+        objects=self.app.earman.objects()
+        state=('exec', 'any', 'any', 'any')
+        exec_keys=self.app.earman.getStateKeys(
+                state, keys)
+        commands=exec_keys['']
+        for oname, fname in commands:
+            objs=objects.get(oname, [])
+            for obj in objs:
+                func=getattr(obj, fname, None)
+                if func:
+                    signiture = inspect.signature(func)
+                    parser=self.getParser(signiture)
+                    self.m_agents[fname]=(func, parser)
+
+    def getParser(self, signiture):
+        prmts=signiture.parameters
+        if prmts:
+            parser=argparse.ArgumentParser()
+            for (name, prmt) in prmts.items():
+                if name in ['kwargs']:
+                    continue
+                if prmt.default==inspect.Parameter.empty:
+                    parser.add_argument(name)
+                else:
+                    parser.add_argument(name, default=prmt.default)
+            return parser
 
     def setParser(self):
         self.m_parser=argparse.ArgumentParser()
@@ -33,5 +68,13 @@ class Exec(Plug):
         edit=self.app.plugman.getPlug('Editline')
         text=edit.text()
         text = shlex.split(text)
-        print(text)
+        data=self.m_agents.get(text[0], None)
+        if data:
+            func, parser=data
+            if parser:
+                args=parser.parse_args(text[1:])
+                args_dict=vars(args)
+                func(**args_dict)
+            else:
+                func()
         self.toggle()

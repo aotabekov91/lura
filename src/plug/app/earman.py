@@ -27,6 +27,12 @@ class Earman(Plug):
     def addEventHandler(self, kind, handler):
         self.m_event_handlers[kind]=handler
 
+    def keys(self):
+        return self.m_keys
+
+    def objects(self):
+        return self.m_objects
+
     def letters(self) -> str:
         return self.m_letters
 
@@ -335,28 +341,14 @@ class Earman(Plug):
                         continue
                     if key == skey:
                         match.add(func)
-                        # if obj == cview:
-                        #     current.add(func)
                         tmp_view=cview
-                        while not tmp_view is None:# and not current:
+                        while not tmp_view is None:
                             if tmp_view==obj:
                                 current.add(func)
                                 break
                             elif current:
                                 break
                             tmp_view=tmp_view.manager()
-
-
-                            # children=obj.findChildren(
-                            #         cview.__class__)
-                            # if cview in children:
-
-                        # if obj.name == view:
-                        #     current.add(func)
-                        # elif hasattr(obj, "children"):
-                        #     if view in obj.children():
-                        #         current.add(func)
-
                     else:
                         partial.add(func)
         return current or match, partial
