@@ -7,14 +7,13 @@ import fitz
 
 from PyQt6 import QtCore
 
-import plug
 import plug_qt
+from plug import Cache
 
 from .utils import Task
 from .element import FitzElement
 
 class FitzModel(
-    plug.utils.Cache,
     plug_qt.vimo.model.Model,
     QtCore.QObject,
 ):
@@ -58,7 +57,8 @@ class FitzModel(
 
     def setup(self):
         super().setup()
-        self.addCache("pixmap")
+        self.m_cache=Cache()
+        self.m_cache.addCache("pixmap")
         self.m_pixmap_queue = Queue()
         self.m_pixmap_thread = QtCore.QThread()
         self.m_pixmap_task = Task(self.m_pixmap_queue)
@@ -96,19 +96,19 @@ class FitzModel(
 
     def clearPixmapCache(self, idx=None):
         if idx is None:
-            self.clearCache('pixmap')
+            self.m_cache.clearCache('pixmap')
         else:
-            cache = self.getCache(name='pixmap')
+            cache = self.m_cache.getCache(name='pixmap')
             for key in cache.keys():
                 if idx == key[0]:
-                    self.dropCache(key, 'pixmap')
+                    self.m_cache.dropCache(key, 'pixmap')
                     break
         # self.modelUpdated.emit()
 
     def getPixmap(self, element, key):
         idx=element.index()
         cache_key=(idx, hash(key))
-        pixmap = self.getCache(cache_key, "pixmap")
+        pixmap = self.m_cache.getCache(cache_key, "pixmap")
         if pixmap:
             return idx, key, pixmap
         self.m_pixmap_queue.put((element, key))
@@ -116,5 +116,5 @@ class FitzModel(
     def setPixmap(self, element, key, pixmap):
         idx=element.index()
         cache_key=(idx, hash(key))
-        self.setCache(cache_key, pixmap, "pixmap")
+        self.m_cache.setCache(cache_key, pixmap, "pixmap")
         self.pixmapReady.emit(idx, key, pixmap)

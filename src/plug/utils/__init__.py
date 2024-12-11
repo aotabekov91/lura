@@ -1,5 +1,5 @@
-from .dicts import dotdict, hashdict
-from .factory import Factory
+from .cache import Cache
 from .parser import Parser
 from .tag import parse, tag
-from .cache import Cache
+from .factory import Factory
+from .dicts import dotdict, hashdict
