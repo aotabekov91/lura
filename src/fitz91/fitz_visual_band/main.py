@@ -23,7 +23,7 @@ class FitzBandVisual(Plug):
         if holder:
             holder.addAgent('FitzView', self)
 
-    def activate(self, view=None, **kwargs):
+    def activate(self, action=None, view=None, **kwargs):
         if view:
             self.m_band = None
             self.m_band_end = None
@@ -60,7 +60,7 @@ class FitzBandVisual(Plug):
     def setVisualBand(self, band):
         if self.m_band:
             i = self.m_band["item"]
-            i.selectionPainteddisconnect(self.paint)
+            i.selectionPainted.disconnect(self.paint)
         self.m_band = band
         self.m_band_corner = "topLeft"
         if self.m_band:

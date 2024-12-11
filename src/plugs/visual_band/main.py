@@ -19,45 +19,38 @@ class BandVisual(Plug):
         if not view:
             view=self.app.stateman.view()
         agent=self.getAgent(view=view)
-        if agent:
-            submode = self.app.stateman.setSubmode(
+        # selector=self.app.plugman.getPlug('Selection')
+        # selection=selector.selection(view=view)
+        if agent:# and selection:
+            self.app.stateman.setSubmode(
                     submode="band", toggle_submode=True)
-            if submode == "band":
-                agent.activate(view=view, **kwargs)
-            else:
-                agent.octivate(view=view, **kwargs)
+
+    def activate(self, view=None, **kwargs):
+        if view is None:
+            view=self.app.stateman.view()
+        agent=self.getAgent(view=view)
+        if agent:
+            agent.activate(view=view, **kwargs)
+
+    def octivate(self, view=None, **kwargs):
+        raise
 
     @tag("G(visual[band])")
-    def setCorner(self, xrange=None):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.activate(action='goTo', view=view, kind='corner', xrange=xrange)
+    def setCorner(self, xrange=None, **kwargs):
+        self.activate(action='goTo', kind='corner', xrange=xrange, **kwargs)
 
     @tag("l(visual[band])")
-    def right(self, xrange=[1]):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.go(view=view, kind='right', xrange=xrange)
+    def right(self, xrange=[1], **kwargs):
+        self.activate(action='goTo', kind='right', xrange=xrange, **kwargs)
 
     @tag("h(visual[band])")
-    def left(self, xrange=[1]):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.go(view=view, kind='left', xrange=xrange)
+    def left(self, xrange=[1], **kwargs):
+        self.activate(action='goTo', kind='left', xrange=xrange, **kwargs)
 
     @tag("k(visual[band])")
-    def up(self, xrange=[1]): 
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.go(view=view, kind='up', xrange=xrange)
+    def up(self, xrange=[1], **kwargs): 
+        self.activate(action='goTo', kind='up', xrange=xrange, **kwargs)
 
     @tag("j(visual[band])")
-    def down(self, xrange=[1]):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
-        if agent:
-            agent.go(view=view, kind='down', xrange=xrange)
+    def down(self, xrange=[1], **kwargs):
+        self.activate(action='goTo', kind='down', xrange=xrange, **kwargs)
