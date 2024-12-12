@@ -6,3 +6,4 @@
 
 * [x] Moving is not working partially <c-w>H
 * [ ] Links goTo throws an error
+* [ ] Powerline index (e.g., outline)
