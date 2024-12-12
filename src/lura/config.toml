@@ -58,14 +58,9 @@ tileSize =  1024 #todo
 paperColor = 'gray' #todo
 useTiling =  false #todo
 trimMargins = false #todo
-invertColors = false
-decorateLinks = true
-decoratePages = false
 devicePixelRatio = 1.0
 drawMode = 'DefaultMode'
-annotationOverlay = true
 keepObsoletePixmaps = true
-copyToClipboardModifiers = 1 #todo
 
 [FitzView.Layout]
 pageSpacing = 5

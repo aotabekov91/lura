@@ -22,40 +22,21 @@ class Picky(Plug):
         modules=[]
         picks=picks or self.getPicks()
         for pick in picks:
-            repo=pick['repo']
-            path=os.path.join(self.folder, repo)
-            if os.path.exists(path):
-                modules+=[repo]
-                git_repo=git.Repo(path)
+            folder=pick['folder']
+            pick_path=os.path.join(self.folder, folder)
+            if os.path.exists(pick_path):
+                modules+=[folder]
+                git_repo=git.Repo(pick_path)
                 pick['git_repo']=git_repo
                 if not git_repo.bare:
-                    self.checkoutToBranch(pick)
-                    self.checkoutToCommit(pick)
+                    branch=pick.get('branch', None)
+                    if branch:
+                        self.setBranch(branch, git_repo)
+                    commit=pick.get('commit', None)
+                    if commit:
+                        self.setCommit(commit, git_repo)
         self.app.plugman.loadPlugs(
                 folder=self.folder, modules=modules)
-
-    def checkoutToBranch(self, pick):
-        git_repo=pick['git_repo']
-        branch=pick.get('branch', None)
-        if not branch:
-            git_repo.heads[0].checkout()
-            return
-        for head in git_repo.branches:
-            if head.name!=branch:
-                continue
-            head.checkout()
-            return
-
-    def checkoutToCommit(self, pick):
-        git_repo=pick['git_repo']
-        commit=pick.get('commit', None)
-        if not commit:
-            return
-        for head in git_repo.iter_commits():
-            if head.hexsha!=commit:
-                continue
-            git_repo.git.checkout(head)
-            return
 
     def getPicks(self):
         plugs=[]
@@ -66,27 +47,39 @@ class Picky(Plug):
             if not 'base' in pick:
                 pick['base']=self.base
             plug=pick.get('plug')
-            _, repo = tuple(plug.split("/"))
-            pick['repo']=repo
+            pick['folder']=plug.split("/")[1]
             plugs.append(pick)
         return plugs
+
+    def setBranch(self, branch, git_repo):
+        if branch:
+            for head in git_repo.branches:
+                if head.name==branch:
+                    return head.checkout()
+
+    def setCommit(self, commit, git_repo):
+        if commit:
+            for head in git_repo.iter_commits():
+                if head.hexsha==commit:
+                    return git_repo.git.checkout(head)
 
     @tag("(exec)")
     def installPicks(self):
         modules=[]
         picks=self.getPicks()
         for pick in picks:
-            repo=pick['repo']
             plug=pick['plug']
-            base = os.path.expanduser(pick["base"])
-            path=os.path.join(self.folder, repo)
+            base=pick['base']
+            folder=pick['folder']
+            pick_base = os.path.expanduser(base)
+            path=os.path.join(self.folder, folder)
             if os.path.exists(path):
                 continue
-            if os.path.exists(base):
-                repo_path=os.path.join(base, repo)
+            if os.path.exists(pick_base):
+                repo_path=os.path.join(pick_base, folder)
                 shutil.copy(repo_path, path)
             else:
-                url = f"{base}/{plug}"
+                url = f"{pick_base}/{plug}"
                 git.Repo.clone_from(url, path)
             modules+=[pick]
         self.loadPicks(modules)
@@ -96,20 +89,19 @@ class Picky(Plug):
         for repo in os.listdir(self.folder):
             path = os.path.join(self.folder, repo)
             git_repo = git.Repo(path)
-            if git_repo.bare:
-                continue
-            for remote in git_repo.remotes:
-                remote.pull()
+            if not git_repo.bare:
+                for remote in git_repo.remotes:
+                    remote.pull()
         self.loadPicks()
 
     @tag("(exec)")
     def cleanupPicks(self):
         picks=self.getPicks()
-        repos=[p['repo'] for p in picks]
+        repos=[pick['repo'] for pick in picks]
         for repo in os.listdir(self.folder):
-            if repo in repos: continue
-            path = os.path.join(self.folder, repo)
-            if os.path.islink(path):
-                os.unlink(path)
-            else:
-                shutil.rmtree(path)
+            if not repo in repos: 
+                pick_path = os.path.join(self.folder, repo)
+                if os.path.islink(pick_path):
+                    os.unlink(pick_path)
+                else:
+                    shutil.rmtree(pick_path)

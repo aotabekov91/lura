@@ -7,3 +7,7 @@
 ## Tasks
 
 * [ ] [Enable installing plugin specific python packages](../tasks/picky_requirements.md)
+
+## Bugs
+
+* [ ] Handle no internet/not found

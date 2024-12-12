@@ -24,31 +24,21 @@ class Plugman(Plug):
     def addPlugs(self, plugs=[]):
         self.added+=plugs
 
-    def loadPlugs(
-            self, 
-            params={}, 
-            folder=None, 
-            modules=[]
-            ):
+    def loadPlugs(self, params={}, folder=None, modules=[]):
         folder=folder or self.autorun
         plugs=self.getAutoPlugs(folder, modules)
         plugs=plugs.union(set(self.added))
         for plug in plugs: 
             self.loadPlug(plug, params)
 
-    def loadPlug(
-        self,
-        klass: tp.Callable[[...], tp.Any],
-        params: tp.Dict[str, str] = {},
-    ) -> bool:
+    def isLoaded(self, plug_class):
+        for plug in self.plugs.values():
+            if plug.__class__ == plug_class:
+                return True
+        return False
 
-        def isLoaded(plug_class):
-            for plug in self.plugs.values():
-                if plug.__class__ == plug_class:
-                    return True
-            return False
-
-        if not isLoaded(klass):
+    def loadPlug(self, klass, params= {}) -> bool:
+        if not self.isLoaded(klass):
             name = klass.__name__
             args = params.get(name, {})
             config = self.app.m_config.get(name, {})
@@ -59,8 +49,8 @@ class Plugman(Plug):
                         **args)
                 self.plugs[name] = plug
                 return plug
-            except Exception as e:
-                print("Error in plug loading: ", name, e)
+            except Exception as error:
+                print("Error in plug loading: ", name, error)
                 raise
 
     def getAutoPlugs(self, folder, modules=None):
