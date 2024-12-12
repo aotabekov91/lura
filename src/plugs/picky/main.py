@@ -26,15 +26,18 @@ class Picky(Plug):
             pick_path=os.path.join(self.folder, folder)
             if os.path.exists(pick_path):
                 modules+=[folder]
-                git_repo=git.Repo(pick_path)
-                pick['git_repo']=git_repo
-                if not git_repo.bare:
-                    branch=pick.get('branch', None)
-                    if branch:
-                        self.setBranch(branch, git_repo)
-                    commit=pick.get('commit', None)
-                    if commit:
-                        self.setCommit(commit, git_repo)
+                try:
+                    git_repo=git.Repo(pick_path)
+                    pick['git_repo']=git_repo
+                    if not git_repo.bare:
+                        branch=pick.get('branch', None)
+                        if branch:
+                            self.setBranch(branch, git_repo)
+                        commit=pick.get('commit', None)
+                        if commit:
+                            self.setCommit(commit, git_repo)
+                except git.exc.InvalidGitRepositoryError:
+                    pick['git_repo']=None
         self.app.plugman.loadPlugs(
                 folder=self.folder, modules=modules)
 
@@ -76,22 +79,30 @@ class Picky(Plug):
             if os.path.exists(path):
                 continue
             if os.path.exists(pick_base):
-                repo_path=os.path.join(pick_base, folder)
-                shutil.copy(repo_path, path)
+                pick_path=os.path.join(pick_base, plug)
+                if os.path.exists(pick_path):
+                    kind=pick.get('kind', 'copy')
+                    if kind=='copy':
+                        shutil.copytree(pick_path, path)
+                    elif kind=='link':
+                        os.symlink(pick_path, path)
             else:
                 url = f"{pick_base}/{plug}"
                 git.Repo.clone_from(url, path)
             modules+=[pick]
+        print(modules)
         self.loadPicks(modules)
 
     @tag("(exec)")
     def updatePicks(self):
         for repo in os.listdir(self.folder):
             path = os.path.join(self.folder, repo)
-            git_repo = git.Repo(path)
-            if not git_repo.bare:
+            try:
+                git_repo = git.Repo(path)
                 for remote in git_repo.remotes:
                     remote.pull()
+            except git.exc.InvalidGitRepositoryError:
+                pass
         self.loadPicks()
 
     @tag("(exec)")

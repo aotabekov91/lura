@@ -47,7 +47,6 @@ class App(Plug):
             [...], tp.Any 
         ] = Stateman,
     ) -> None:
-
          self.earman: Earman = earman(self)
          self.stateman: Stateman = stateman(self)
          self.buffman: Buffman = buffman(self)
