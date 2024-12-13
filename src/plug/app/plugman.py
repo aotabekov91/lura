@@ -117,3 +117,14 @@ class Plugman(Plug):
             return self.plugs.get(name, None)
         elif path:
             return self.path_plugs.get(path, [])
+
+    def delPlug(self, name=None, path=None):
+        plug=self.getPlug(name=name, path=path)
+        if plug:
+            name=plug.__class__.__name__
+            self.plugs.pop(name, None)
+            pick=None
+            for path, pick in self.path_plugs.items():
+                if pick==plug: break
+            if pick:
+                self.path_plugs.pop(path, None)

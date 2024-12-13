@@ -1,5 +1,9 @@
+import os
 import sys
+import tomli
 import typing as tp
+
+import time
 
 from PyQt6 import QtCore, QtWidgets
 
@@ -22,13 +26,36 @@ class App(
     appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
+    appConfigChanged: QtCore.pyqtSignal = QtCore.pyqtSignal()
 
     def setupApp(self):
          self.setupParser()
          self.setupQApp()
          self.setupParts()
          self.setupView()
+         self.setupWatcher()
+
+    def setupWatcher(self):
+        self.watcher=QtCore.QFileSystemWatcher()
+        self.setupConfigWatcher()
+
+    def setupConfigWatcher(self):
+        config=self.files.get('config.toml', None)
+        if config:
+            self.watcher.addPath(config)
+            self.watcher.fileChanged.connect(self.resetConfig)
     
+    def resetConfig(self, path) -> None:
+        n=0
+        while not os.path.exists(path):
+            time.sleep(0.5)
+            n+=1
+            if n>5: return
+        with open(path, "rb") as y:
+            self.m_config = tomli.load(y)
+        self.appConfigChanged.emit()
+        self.setupConfigWatcher()
+
     def setupQApp(self) -> None:
          self.qapp: QtWidgets.QApplication = (
              QtWidgets.QApplication(sys.argv)

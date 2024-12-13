@@ -43,7 +43,8 @@ class Picky(Plug):
 
     def getPicks(self):
         plugs=[]
-        picks = self.m_config.get("Picks", [])
+        picks = self.m_config.get('Picks', [])
+        picks = picks or []
         for pick in picks:
             if type(pick)==str:
                 pick=dict(plug=pick)
@@ -107,14 +108,14 @@ class Picky(Plug):
     @tag("(exec)")
     def cleanupPicks(self):
         picks=self.getPicks()
-        repos=[pick['repo'] for pick in picks]
+        repos=[pick['folder'] for pick in picks]
         for repo in os.listdir(self.folder):
             if not repo in repos: 
                 pick_path = os.path.join(self.folder, repo)
                 plugs=self.app.plugman.getPlug(path=pick_path)
                 for plug in plugs:
                     plug.tearup()
-                # if os.path.islink(pick_path):
-                #     os.unlink(pick_path)
-                # else:
-                #     shutil.rmtree(pick_path)
+                if os.path.islink(pick_path):
+                    os.unlink(pick_path)
+                else:
+                    shutil.rmtree(pick_path)

@@ -42,19 +42,23 @@ class Plug:
         self.setSettings()
         self.updateArgs()
         self.setActions()
-        if self.app and self.check('earman', self.app):
-            self.app.earman.add(self)
+        if self.app:
+            if self.check('earman', self.app):
+                self.app.earman.add(self)
+            if self.check('appConfigChanged', self.app):
+                self.app.appConfigChanged.connect(self.updateConf)
 
     def tearup(self) -> None:
         if self.app and self.check('earman', self.app):
             self.app.earman.sub(self)
+        if self.app and self.check('plugman', self.app):
+            name=self.__class__.__name__
+            self.app.plugman.delPlug(name=name)
 
     def updateConf(self) -> None:
         if self.app:
-            p = self.m_config
-            c = self.app.m_config
-            self.m_config = c.get(self.name, {})
-            self.m_config.update(p)
+            config = self.app.m_config.get(self.name, {})
+            self.m_config.update(config)
 
     def updateArgs(self) -> None:
         st = self.m_config.get("Settings", {})
