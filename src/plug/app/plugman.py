@@ -37,8 +37,9 @@ class Plugman(Plug):
                 self.path_plugs[path]=[]
             name = klass.__name__
             plug=self.loadPlug(klass, params)
-            self.plugs[name] = plug
-            self.path_plugs[path]+=[plug]
+            if plug:
+                self.plugs[name] = plug
+                self.path_plugs[path]+=[plug]
 
     def isLoaded(self, plug_class):
         for plug in self.plugs.values():

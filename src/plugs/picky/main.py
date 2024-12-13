@@ -89,7 +89,10 @@ class Picky(Plug):
                         os.symlink(pick_path, path)
             else:
                 url = f"{pick_base}/{plug}"
-                git.Repo.clone_from(url, path)
+                try:
+                    git.Repo.clone_from(url, path)
+                except:
+                    continue
             modules+=[pick]
         self.loadPicks(modules)
 
@@ -114,7 +117,7 @@ class Picky(Plug):
                 pick_path = os.path.join(self.folder, repo)
                 plugs=self.app.plugman.getPlug(path=pick_path)
                 for plug in plugs:
-                    plug.tearup()
+                    if plug: plug.tearup()
                 if os.path.islink(pick_path):
                     os.unlink(pick_path)
                 else:
