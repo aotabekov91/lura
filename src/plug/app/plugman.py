@@ -11,6 +11,7 @@ from ..utils import dotdict
 class Plugman(Plug):
 
     folder: str = "~"
+    path_plugs={}
     added: tp.List[tp.Any]=[]
     plugs: tp.Dict[tp.Any, tp.Any] = dotdict()
 
@@ -28,10 +29,16 @@ class Plugman(Plug):
 
     def loadPlugs(self, params={}, folder=None, modules=[]):
         folder=folder or self.autorun
-        plugs=self.getPlugs(folder, modules)
-        plugs=plugs.union(set(self.added))
-        for plug in plugs: 
-            self.loadPlug(plug, params)
+        klasses, paths=self.getPlugs(folder, modules)
+        klasses=klasses.union(set(self.added))
+        for klass in klasses: 
+            path=paths.get(klass)
+            if not path in self.path_plugs:
+                self.path_plugs[path]=[]
+            name = klass.__name__
+            plug=self.loadPlug(klass, params)
+            self.plugs[name] = plug
+            self.path_plugs[path]+=[plug]
 
     def isLoaded(self, plug_class):
         for plug in self.plugs.values():
@@ -49,14 +56,14 @@ class Plugman(Plug):
                         app=self.app, 
                         config=config, 
                         **args)
-                self.plugs[name] = plug
                 return plug
             except Exception as error:
                 print("Error in plug loading: ", name, error)
                 raise
 
     def getPlugs(self, folder, modules=None):
-        plugs=set()
+        paths={}
+        klasses=set()
         folder=str(folder)
         sys.path.insert(0, folder)
         modules=modules or os.listdir(folder)
@@ -66,22 +73,19 @@ class Plugman(Plug):
             try:
                 plug_path=os.path.join(folder, name)
                 module = importlib.import_module(name)
-                klasser = getattr(module, "get_plug_class", None)
-                if not klasser:
-                    continue
-                plugger = klasser()
-                if type(plugger) != list:
-                    plugger = [plugger]
-                for plug in plugger:
-                    plugs.add(plug)
+                functor = getattr(module, "get_plug_class", None)
+                if functor:
+                    plugger = functor()
+                    if type(plugger) != list:
+                        plugger = [plugger]
+                    for klass in plugger:
+                        klasses.add(klass)
+                        paths[klass]=plug_path
             except Exception as e:
                 msg = "Error in plug importing: "
                 print(msg, name, e)
                 raise
-        return plugs
-
-    def getPlug(self, name):
-        return self.plugs.get(name)
+        return klasses, paths
 
     def installRequirements(self, requirements):
         packages=self.getPackages()
@@ -107,3 +111,9 @@ class Plugman(Plug):
             packages+=[f"{i.key}"]
             packages+=[f"{i.key}=={i.version}"]
         return set(packages)
+
+    def getPlug(self, name=None, path=None):
+        if name:
+            return self.plugs.get(name, None)
+        elif path:
+            return self.path_plugs.get(path, [])

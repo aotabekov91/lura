@@ -45,6 +45,10 @@ class Plug:
         if self.app and self.check('earman', self.app):
             self.app.earman.add(self)
 
+    def tearup(self) -> None:
+        if self.app and self.check('earman', self.app):
+            self.app.earman.sub(self)
+
     def updateConf(self) -> None:
         if self.app:
             p = self.m_config

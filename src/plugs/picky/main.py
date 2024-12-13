@@ -90,7 +90,6 @@ class Picky(Plug):
                 url = f"{pick_base}/{plug}"
                 git.Repo.clone_from(url, path)
             modules+=[pick]
-        print(modules)
         self.loadPicks(modules)
 
     @tag("(exec)")
@@ -112,7 +111,10 @@ class Picky(Plug):
         for repo in os.listdir(self.folder):
             if not repo in repos: 
                 pick_path = os.path.join(self.folder, repo)
-                if os.path.islink(pick_path):
-                    os.unlink(pick_path)
-                else:
-                    shutil.rmtree(pick_path)
+                plugs=self.app.plugman.getPlug(path=pick_path)
+                for plug in plugs:
+                    plug.tearup()
+                # if os.path.islink(pick_path):
+                #     os.unlink(pick_path)
+                # else:
+                #     shutil.rmtree(pick_path)

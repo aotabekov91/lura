@@ -45,19 +45,32 @@ class Earman(Plug):
             return [int(d) for d in self.m_digits]
 
     def add(self, obj) -> None:
-        if not obj:
-            return
-        view = self.check("isView", obj)
+        if obj:
+            is_view = self.check("isView", obj)
+            ldr = getattr(obj, "listen_leader", None)
+            if ldr:
+                self.m_leaders[ldr] = obj
+            if not obj.name in self.m_objects:
+                self.m_objects[obj.name] = set()
+            self.m_objects[obj.name].add(obj)
+            self.setObjKeys(obj, is_view)
+
+    def sub(self, obj) -> None:
+        is_view = self.check("isView", obj)
         ldr = getattr(obj, "listen_leader", None)
         if ldr:
-            self.m_leaders[ldr] = obj
-        if not obj.name in self.m_objects:
-            self.m_objects[obj.name] = set()
-        self.m_objects[obj.name].add(obj)
-        self.setObjKeys(obj, view)
+            self.m_leaders.pop(ldr)
+        objects=self.m_objects[obj.name]
+        objects.discard(obj)
+        self.subObjKeys(obj, is_view)
+
+    def subObjKeys(self, obj, view):
+        keys = self.getObjKeys(obj, view)
+        for key, data, state in keys:
+            self.m_func_objects[data].discard(obj)
+            self.m_keys[state][key].discard(data)
 
     def setObjKeys(self, obj, view):
-        states = set()
         keys = self.getObjKeys(obj, view)
         for key, data, state in keys:
             if not data in self.m_func_objects:
@@ -68,7 +81,6 @@ class Earman(Plug):
             if not key in self.m_keys[state]:
                 self.m_keys[state][key] = set()
             self.m_keys[state][key].add(data)
-            states.add(state)
 
     def clearKeys(self) -> None:
         """Clear the earman's state"""

@@ -10,8 +10,8 @@ Picks = [
 	# 'plugs/search',
 	# 'plugs/grayscale',
 	# {plug='fitz91/fitz_search', base='http://192.168.178.10'}
-	{plug='plugs/search', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
+	# {plug='plugs/search', base='~/code/lura/src', kind='link'},
+	# {plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
 ]
 
 # [[Plugman.Picks]]
