@@ -1,9 +1,8 @@
 import os
 from PyQt6 import QtGui
 
-from plug import Plug, tag, Model, Factory
-
-from .view import FilesView
+from plug_qt import gizmo
+from plug import tag, Plug, Model, Factory
 
 class FilesTree(Plug):
 
@@ -22,8 +21,7 @@ class FilesTree(Plug):
                 return path
 
     def setPath(self, path=None):
-        klass=Factory(Model, QtGui.QFileSystemModel)
-        model=klass()
+        model=Factory(Model, QtGui.QFileSystemModel)()
         self.view.setModel(model)
         if path is None: 
             path = os.path.abspath('.')
@@ -34,20 +32,18 @@ class FilesTree(Plug):
             self.view.hideColumn(row)
 
     def setupView(self):
+        attributes=[{
+            'key':'position', 
+            'value':{"FilesView":"D|L"}
+            }]
         self.view=self.app.buffman.createView(
-                FilesView, None)
-
-    def updateOutline(self, view):
-        model=view.model()
-        name=model.__class__.__name__
-        outliner=self.outliner(name)
-        if outliner:
-            outline=outliner.getOutline(model)
-            if outline:
-                self.view.setModel(outline)
+                gizmo.TreeView, 
+                name='FilesView', 
+                attributes=attributes
+                )
 
     @tag('<c-F>(normal/filestree)')
-    def toggleOutline(self):
+    def toggle(self):
         self.view.toggle()
 
     @tag('t(normal)[FilesView]')
