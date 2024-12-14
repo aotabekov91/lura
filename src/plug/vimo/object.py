@@ -36,7 +36,6 @@ class Object:
     def setup(self):
         if self.m_app_config:
             self.setAppConfig()
-        self.updateKlass()
         self.setAttributes()
         self.setConf()
         self.setName()
@@ -49,14 +48,22 @@ class Object:
 
     def setAttributes(self):
         for attribute in self.m_attributes:
-            print(attribute)
-            #todo
+            key=attribute.get('key')
+            value=attribute.get('value')
+            kind=attribute.get('kind', None)
+            attr=getattr(self, key, None)
+            if not kind:
+                setattr(self, key, value)
+            elif kind=='update' and attr:
+                attr.update(value)
+            elif kind=='append' and attr:
+                attr.append(value)
+            else:
+                raise
+                #todo
 
     def getAttr(self, name, kind=None):
         return getattr(self, name, None)
-
-    def updateKlass(self):
-        pass
 
     def setManager(self, manager=None):
         if self.m_manager:

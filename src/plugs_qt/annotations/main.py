@@ -24,8 +24,13 @@ class Annotations(Plug):
             self.view=self.app.buffman.createView(
                     ElementListView, 
                     name='AnnotationsView',
-                    position=self.position,
+                    # position=self.position,
                     widget_map=self.widget_map,
+                    attribute=[{
+                        'key': 'position', 
+                        'value': self.position, 
+                        'kind':'update'
+                        }]
                     )
             self.app.stateman.viewChanged.connect(
                     self.updateView)

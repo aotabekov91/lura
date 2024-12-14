@@ -31,15 +31,6 @@ class View(Object):
         if self.app:
             self.app.earman.add(self)
 
-    def updateKlass(self):
-        super().updateKlass()
-        pos = self.m_kwargs.get("position")
-        if pos:
-            self.position.update(pos)
-        prefixes = self.m_kwargs.get("prefix_keys")
-        if prefixes:
-            self.prefix_keys += prefixes
-
     def addToAppUI(self):
         if not self.checkProp("app", self):
             return

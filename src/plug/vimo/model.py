@@ -29,13 +29,6 @@ class Model(Object):
         self.m_elements = elements.copy()
         super().__init__(**kwargs)
 
-    def updateKlass(self):
-        print(self)
-        super().updateKlass()
-        ek = self.m_kwargs.get("element_class")
-        if ek:
-            self.element_class = ek
-
     def count(self):
         return len(self.m_elements)
 

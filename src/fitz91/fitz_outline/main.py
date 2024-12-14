@@ -32,7 +32,9 @@ class FitzOutline(Plug):
         mklass = Factory(
                 QtGui.QStandardItemModel, Model)
         outline = mklass(
-            name="outline", element_class=eklass)
+            name="outline", 
+            attribute=[{'key':'element_class', 'value': eklass}]
+            )
         data=model.modelData()
         raw_outline = data.outline
         root = outline.invisibleRootItem()
