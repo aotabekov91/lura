@@ -19,7 +19,6 @@ class Object:
             **kwargs,
             ):
 
-        self.m_files = {}
         self.app = app
         self.m_name = name
         self.m_config = config
@@ -39,7 +38,6 @@ class Object:
         self.setAttributes()
         self.setConf()
         self.setName()
-        self.setFiles()
         self.setKind()
         if self.m_manager:
             self.setManager(self.m_manager)
@@ -131,15 +129,6 @@ class Object:
 
     def __bool__(self):
         return True
-
-    def setFiles(self):
-        f = inspect.getfile(self.__class__)
-        a = os.path.abspath(f)
-        p = os.path.dirname(a)
-        self.path = p.replace("\\", "/")
-        for f in os.listdir(self.path):
-            p = f"{self.path}/{f}"
-            self.m_files[f] = p
 
     def setKind(self):
         name = self.__class__.__name__
