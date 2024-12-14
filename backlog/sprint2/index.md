@@ -24,3 +24,9 @@ Date: 2.12.2024-31.12.2024
 * [x] [Input mode](objectives/input_mode.md)
 * [x] [Plugin system](objectives/plugin_system.md)
 * [x] [Factoring out](objectives/factoring_out.md)
+
+
+## Todos
+
+* pure python standard events
+* non-blocking pure python timer

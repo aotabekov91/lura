@@ -23,7 +23,7 @@ class Lookup(Plug):
     def toggle(self):
         self.view.toggle()
 
-    @tag('<c-d>(normal)')
+    @tag('<c-d>(hint)')
     def lookUp(self, selection=None, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()

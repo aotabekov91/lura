@@ -11,28 +11,27 @@ class DockNormal(Plug):
     def addAgent(self, action, agent):
         self.m_agents[action]=agent
 
-    def getAgent(self, action=None, **kwargs):
+    def getAgent(self, action=None):
         return self.m_agents.get(action, {})
 
-    def activate(self, view=None, action=None, kind='goTo', **kwargs):
+    def activate(self, action=None, kind='goTo', **kwargs):
         manager=self.app.view.docks
-        # if not view:
-        #     view=self.app.stateman.view()
-        agent=self.getAgent(action=action)
-        func=getattr(manager, action, None)
-        if agent:
-            agent.activate(
-                    kind=kind, 
-                    action=action, 
-                    window=manager, 
-                    **kwargs)
-        elif func:
-            func(
-                    window=manager, 
-                    kind=kind, 
-                    action=action, 
-                    **kwargs
-                    )
+        if manager:
+            agent=self.getAgent(action=action)
+            func=getattr(manager, action, None)
+            if agent:
+                agent.activate(
+                        kind=kind, 
+                        action=action, 
+                        window=manager, 
+                        **kwargs)
+            elif func:
+                func(
+                        window=manager, 
+                        kind=kind, 
+                        action=action, 
+                        **kwargs
+                        )
 
     @tag("k(normal)")
     def goUp(self, xrange=[1], **kwargs):
@@ -76,7 +75,6 @@ class DockNormal(Plug):
 
     @tag("<c-h>(normal)")
     def hide(self, xrange=None, **kwargs):
-        print(kwargs)
         self.activate(action='hide', xrange=xrange, **kwargs)
 
     @tag("<c-H>(normal)")

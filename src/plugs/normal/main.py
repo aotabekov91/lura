@@ -29,15 +29,16 @@ class Normal(Plug, QtCore.QObject):
             **kwargs):
         if not view:
             view=self.app.stateman.view()
-        func=getattr(view, action, None)
-        agent=self.getAgent(action=action, view=view)
-        if agent:
-            agent.activate(
-                    action=action, view=view, kind=kind, **kwargs)
-            data=agent.currentPosition(view=view)
-            self.positionChanged.emit(view, data)
-        elif func:
-            func(kind=kind, **kwargs)
+        if view:
+            func=getattr(view, action, None)
+            agent=self.getAgent(action=action, view=view)
+            if agent:
+                agent.activate(
+                        action=action, view=view, kind=kind, **kwargs)
+                data=agent.currentPosition(view=view)
+                self.positionChanged.emit(view, data)
+            elif func:
+                func(kind=kind, **kwargs)
 
     def currentPosition(self, view):
         agent=self.getAgent(action='goTo', view=view)
@@ -105,3 +106,9 @@ class Normal(Plug, QtCore.QObject):
     @tag('ts(normal)')
     def toggleStatusbar(self):
         self.app.view.bar.toggle()
+
+    @tag('@(normal)')
+    def activateSubview(self):
+        subview=self.app.stateman.subview()
+        if subview:
+            subview.activate()

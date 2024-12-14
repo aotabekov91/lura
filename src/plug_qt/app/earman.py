@@ -3,10 +3,6 @@ from PyQt6 import QtCore, QtGui
 
 import plug
 
-# todos
-# non-blocking pure python timer
-# pure python standard events
-
 mouse_mapping={
         QtCore.Qt.MouseButton.LeftButton: "<mouse_left>",
         QtCore.Qt.MouseButton.RightButton: "<mouse_right>",
@@ -43,6 +39,7 @@ key_mapping = {
     0x3F: "?",
     0x3a: ":",
     0x3b: ";",
+    0x40: "@",
     0x5B: "[",
     0x5C: "\\",
     0x5D: "]",
