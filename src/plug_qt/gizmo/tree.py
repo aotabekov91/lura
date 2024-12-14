@@ -5,103 +5,71 @@ from plug_qt import vimo
 class TreeViewWidget(QtWidgets.QTreeView):
 
     itemChanged = QtCore.pyqtSignal(object)
-    indexChanged = QtCore.pyqtSignal(object)
 
-    # todo it does not work here with a separate TreeView (see below)
+    # todo it does not work here with a separate TreeView 
+    # (see the following class)
     # def setModel(self, model):
     #     if model:
     #         super(Tree, self).setModel(model)
     #         super(TreeView, self).setModel(model)
 
-    def expand(self, idx=None, **kwargs):
+    def expand(self, idx=None, select=True, **kwargs):
         idx = idx or self.currentIndex()
-        self.setCurrentIndex(idx)
         super().expand(idx)
+        if select:
+            self.setCurrentIndex(idx)
 
-    def expandAll(self, idx=None, **kwargs):
-        if idx is None:
-            super().expandAll()
-        elif idx.isValid():
-            if not self.isExpanded(idx):
-                self.expand(idx)
-            for row in range(self.model().rowCount()):
-                self.expandAll(idx.child(row, 0))
-
-    def expandAbove(self, child, **kwargs):
-        index = child.parent()
-        while index.isValid():
-            index = index.parent()
-            self.expand(index)
-
-    def collapseAll(self, idx=None, **kwargs):
-        if idx is not None and idx.isValid():
-            if not self.isExpanded(idx):
-                self.collapse(idx)
-            for row in range(self.model().rowCount()):
-                self.collapseAll(idx.child(row, 0))
-        else:
-            super().collapseAll()
-
-    def collapseAllInside(self, item=None, **kwargs):
+    def expandAll(self, item=None, **kwargs):
         item = item or self.currentItem()
         if item:
-            super().collapse(item.index())
-            for i in range(item.rowCount()):
-                self.collapseAllInside(item.child(i))
+            self.expand(idx=item.index(), select=False)
+            for row in range(item.rowCount()):
+                self.expandAll(item.child(row))
 
     def collapse(self, idx=None, **kwargs):
         idx = idx or self.currentIndex()
         super().collapse(idx)
 
+    def collapseAll(self, item=None, **kwargs):
+        item = item or self.currentItem()
+        if item:
+            super().collapse(item.index())
+            for i in range(item.rowCount()):
+                self.collapseAll(item.child(i))
+
     def rootDown(self, xrange=[1], **kwargs):
-        for d in range(xrange):
+        model=self.model()
+        for row in range(xrange[-1]):
             idx = self.currentIndex()
-            if idx:
+            if idx and model:
                 self.setRootIndex(idx)
-                child = idx.child(0, 0)
+                child=model.index(0, 0, idx)
                 self.setCurrentIndex(child)
 
     def rootUp(self, xrange=[1], **kwargs):
-        for d in range(xrange):
+        for row in range(xrange[-1]):
             idx = self.rootIndex()
-            p = idx.parent()
-            if p.isValid():
-                self.setRootIndex(p)
+            parent = idx.parent()
+            if parent.isValid():
+                self.setRootIndex(parent)
                 self.setCurrentIndex(idx)
 
     def parentUp(self, xrange=[1], **kwargs):
-        for i in range(xrange):
+        for row in range(xrange[-1]):
             idx = self.currentIndex()
-            p = idx.parent()
-            if p.isValid():
-                self.setCurrentIndex(p)
+            pidx = idx.parent()
+            if pidx.isValid():
+                self.setCurrentIndex(pidx)
             else:
-                f = self.m_model.index(0, 0)
-                return self.setCurrentIndex(f)
+                nidx = self.m_model.index(0, 0, pidx)
+                self.setCurrentIndex(nidx)
 
-    def siblingDown(self, xrange=[1], **kwargs):
-        for row in range(xrange):
-            self.goToSibling(kind="down")
-
-    def siblingUp(self, xrange=[1], **kwargs):
-        for row in range(xrange):
-            self.goToSibling(kind="up")
-
-    def goToSibling(self, kind="up", **kwargs):
-        idx = self.currentIndex()
-        if not idx:
-            return
-        s_idx = idx.row() + 1
-        if kind == "up":
-            s_idx = idx.row() - 1
-        elif kind == "down":
-            s_idx = idx.row() + 1
-        p = idx.parent()
-        if p.isValid():
-            n_idx = p.child(s_idx, 0)
-        else:
-            n_idx = self.m_model.index(s_idx, 0)
-        self.setCurrentIndex(n_idx)
+    def parentDown(self, xrange=[1], **kwargs):
+        for row in range(xrange[-1]):
+            idx = self.currentIndex()
+            nidx = self.m_model.index(0, 0, idx)
+            if nidx.isValid():
+                self.setCurrentIndex(nidx)
 
     def first(self, **kwargs):
         kwargs['xrange']=[1]
@@ -114,14 +82,6 @@ class TreeViewWidget(QtWidgets.QTreeView):
             last_row = index.model().rowCount(parent) - 1
             last = self.m_model.index(last_row, 0, parent)
             self.setCurrentIndex(last)
-
-    def goToLast(self, **kwargs):
-        m = self.m_model
-        if self.checkProp("rowCount", m):
-            xrange = [m.rowCount()]
-        else:
-            xrange = [m.count()]
-        self.goTo(xrange)
 
     def right(self, **kwargs):
         self.expand()
@@ -136,21 +96,6 @@ class TreeViewWidget(QtWidgets.QTreeView):
     def down(self, xrange=[1], **kwargs):
         for row in range(xrange[-1]):
             self.move("MoveDown")
-
-    def firstSibling(self, **kwargs):
-        idx = self.currentIndex()
-        if idx:
-            p = idx.parent()
-            f = p.child(0, 0)
-            self.setCurrentIndex(f)
-
-    def lastSibling(self, **kwags):
-        index = self.currentIndex()
-        if index:
-            parent = index.parent()
-            last_row = index.model().rowCount(parent) - 1
-            last = parent.child(last_row, 0)
-            self.setCurrentIndex(last)
 
     def goTo(self, kind=None, xrange=None, **kwargs):
         if kind:
@@ -167,6 +112,21 @@ class TreeViewWidget(QtWidgets.QTreeView):
                 parent=QtCore.QModelIndex()
             child = self.m_model.index(row, 0, parent)
             self.setCurrentIndex(child)
+
+    def siblingGoTo(self, xrange=[1], kind="up", **kwargs):
+        idx = self.currentIndex()
+        if idx:
+            pidx = idx.parent()
+            if pidx:
+                if kind == "up":
+                    sidx = idx.row() - xrange[-1] 
+                elif kind == "down":
+                    sidx = idx.row() + xrange[-1] 
+                if pidx.isValid():
+                    nidx = self.m_model.index(sidx, 0, pidx)
+                else:
+                    nidx = self.m_model.index(sidx, 0, pidx)
+                self.setCurrentIndex(nidx)
 
     def move(self, arg, **kwargs):
         cursor=QtWidgets.QAbstractItemView.CursorAction

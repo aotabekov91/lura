@@ -9,7 +9,7 @@ class Earman(Plug):
     """The class listens to/acts on key presses"""
 
     wait_run: int = 5
-    wait_time: int = 50
+    wait_time: int = 500
     delisten_key: tp.List[tp.Any] = []
 
     def setup(self):
@@ -135,36 +135,32 @@ class Earman(Plug):
             return True
         return False
 
-    def getViewParentStates(self, state, view=None):
-        states=[state]
-        if view is None:
-            view=self.app.stateman.view()
-        if view:
-            view_klasses=view.__class__.__mro__
-            for klass in view_klasses:
-                view_name=klass.__name__
-                states+=[(state[0], state[1], view_name, state[3])]
-        return states
+    def getViewMRO(self, view):
+        views=[]
+        view_klasses=view.__class__.__mro__
+        for klass in view_klasses:
+            views+=[klass.__name__]
+        return views[::-1]
 
     def checkMatch(self, event) -> bool:
         key = self.letters()
         xrange = self.digits(convert=True)
         if not key and xrange:
             return True
-        state = self.app.stateman.state()
         view=self.app.stateman.view()
-        states=self.getViewParentStates(state)
-        for state in states:
-            match, partial = self.match(
-                key,
-                xrange,
-                state,
-                self.m_keys,
-                self.m_objects,
-                view)
-            if match or partial:
-                self.run(match, partial, xrange)
-                return True
+        views=self.getViewMRO(view)
+        state = self.app.stateman.state()
+        match, partial = self.match(
+            key,
+            xrange,
+            state,
+            self.m_keys,
+            self.m_objects,
+            view,
+            views,)
+        if match or partial:
+            self.run(match, partial, xrange)
+            return True
         return False
 
     def run(self, match, partial, xrange):
@@ -315,22 +311,26 @@ class Earman(Plug):
         return cls.getParentManagers(manager, parent_managers)
 
     @classmethod
-    def getStateKeys(cls, state, keys):
+    def getStateKeys(cls, state, keys, views=[]):
         state_keys = {}
         modes = ["any", state[0]]
         submodes = ["any", state[1]]
-        views = ["any", state[2]]
+        views.insert(0, "any")
+        views.append(state[2])
         subviews = ["any", state[3]]
+        states=[]
         for superstate in itertools.product(
             modes, submodes, views, subviews
         ):
-            super_keys = keys.get(superstate, {})
-            state_keys.update(super_keys)
+            if not superstate in states:
+                states.append(superstate)
+                super_keys = keys.get(superstate, {})
+                state_keys.update(super_keys)
         return state_keys
 
     @classmethod
-    def match(cls, key, xrange, state, keys, objects, cview):
-        state_keys = cls.getStateKeys(state, keys)
+    def match(cls, key, xrange, state, keys, objects, view, views):
+        state_keys = cls.getStateKeys(state, keys, views)
         match, current, partial = set(), set(), set()
         for skey, data in state_keys.items():
             if key != skey[: len(key)]:
@@ -347,7 +347,7 @@ class Earman(Plug):
                         continue
                     if key == skey:
                         match.add(func)
-                        tmp_view=cview
+                        tmp_view=view
                         while not tmp_view is None:
                             if tmp_view==obj:
                                 current.add(func)
