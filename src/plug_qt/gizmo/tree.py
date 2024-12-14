@@ -7,7 +7,7 @@ class TreeViewWidget(QtWidgets.QTreeView):
     itemChanged = QtCore.pyqtSignal(object)
     indexChanged = QtCore.pyqtSignal(object)
 
-    # todo
+    # todo it does not work here with a separate TreeView (see below)
     # def setModel(self, model):
     #     if model:
     #         super(Tree, self).setModel(model)

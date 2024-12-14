@@ -135,23 +135,36 @@ class Earman(Plug):
             return True
         return False
 
+    def getViewParentStates(self, state, view=None):
+        states=[state]
+        if view is None:
+            view=self.app.stateman.view()
+        if view:
+            view_klasses=view.__class__.__mro__
+            for klass in view_klasses:
+                view_name=klass.__name__
+                states+=[(state[0], state[1], view_name, state[3])]
+        return states
+
     def checkMatch(self, event) -> bool:
         key = self.letters()
-        state = self.app.stateman.state()
         xrange = self.digits(convert=True)
         if not key and xrange:
             return True
+        state = self.app.stateman.state()
         view=self.app.stateman.view()
-        match, partial = self.match(
-            key,
-            xrange,
-            state,
-            self.m_keys,
-            self.m_objects,
-            view)
-        if match or partial:
-            self.run(match, partial, xrange)
-            return True
+        states=self.getViewParentStates(state)
+        for state in states:
+            match, partial = self.match(
+                key,
+                xrange,
+                state,
+                self.m_keys,
+                self.m_objects,
+                view)
+            if match or partial:
+                self.run(match, partial, xrange)
+                return True
         return False
 
     def run(self, match, partial, xrange):
@@ -230,16 +243,11 @@ class Earman(Plug):
         funcs = cls.getObjFuncs(obj)
         pref = cls.getObjPrefixes(obj)
         for fname, func in funcs:
-            alist += cls.getFuncTags(
-                func, oname, pref, view
-            )
+            alist += cls.getFuncTags(func, oname, pref)
         return alist
 
     @classmethod
-    def getObjPrefixes(
-        cls,
-        obj: tp.Any,
-    ) -> tp.Dict[tp.Tuple[str], str]:
+    def getObjPrefixes(cls, obj: tp.Any) -> tp.Dict[tp.Tuple[str], str]:
         opref = []
         for i in obj.__class__.__mro__:
             pkey = getattr(i, "prefix_keys", [])
@@ -260,13 +268,7 @@ class Earman(Plug):
         return mpref
 
     @classmethod
-    def getFuncTags(
-        cls,
-        func,
-        obj_name: str,
-        pref: tp.Dict[tp.Tuple[str], str] = {},
-        view: bool = False,
-    ) -> tp.List[tp.Tuple[tp.Any]]:
+    def getFuncTags(cls, func, obj_name, pref = {}):
         tags = []
         key = getattr(func, "key", "")
         ptags = parse.parse_tag(key)
@@ -327,15 +329,7 @@ class Earman(Plug):
         return state_keys
 
     @classmethod
-    def match(
-        cls,
-        key,
-        xrange,
-        state,
-        keys,
-        objects,
-        cview,
-    ):
+    def match(cls, key, xrange, state, keys, objects, cview):
         state_keys = cls.getStateKeys(state, keys)
         match, current, partial = set(), set(), set()
         for skey, data in state_keys.items():
