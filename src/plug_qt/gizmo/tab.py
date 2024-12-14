@@ -26,16 +26,6 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
         self.setAttribute(
             QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
-    def updateKlass(self):
-        super().updateKlass()
-        self.hasTabs = self.m_kwargs.get(
-                "has_tabs", self.hasTabs)
-        self.initial_create = self.m_kwargs.get(
-                "initial_create", self.initial_create)
-        tab_classes = self.m_kwargs.get("tab_classes", {})
-        if tab_classes:
-            self.tab_classes.update(tab_classes.copy())
-
     def flipTo(self, view=None, **kwargs):
         if not view:
             view=self.previous

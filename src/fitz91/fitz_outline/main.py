@@ -33,7 +33,7 @@ class FitzOutline(Plug):
                 QtGui.QStandardItemModel, Model)
         outline = mklass(
             name="outline", 
-            attribute=[{'key':'element_class', 'value': eklass}]
+            attributes=[{'key':'element_class', 'value': eklass}]
             )
         data=model.modelData()
         raw_outline = data.outline

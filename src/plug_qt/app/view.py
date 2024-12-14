@@ -4,9 +4,8 @@ from PyQt6 import QtCore
 
 from plug_qt import gizmo
 
-class View(
-    gizmo.WindowView,
-):
+class View(gizmo.WindowView):
+
     activated: bool = True
     isAppView: bool = True
     windowResized: QtCore.pyqtSignal = QtCore.pyqtSignal()
@@ -32,7 +31,13 @@ class View(
             manager=self,
             name='Center',
             identifier="C",
-            tab_classes={"default": gizmo.TileView})
+            attributes=[{
+                'key':'tab_classes',
+                'value': {"default": gizmo.TileView},
+                'copy': True,
+                'kind': 'update',
+                }]
+            )
         self.docks: gizmo.Docks = gizmo.Docks(
             label="D",
             parent=self,

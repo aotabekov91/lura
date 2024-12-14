@@ -51,12 +51,15 @@ class Object:
             key=attribute.get('key')
             value=attribute.get('value')
             kind=attribute.get('kind', None)
+            copy=attribute.get('copy', False)
             attr=getattr(self, key, None)
+            if copy:
+                value=value.copy()
             if not kind:
                 setattr(self, key, value)
-            elif kind=='update' and attr:
+            elif kind=='update' and not attr is None:
                 attr.update(value)
-            elif kind=='append' and attr:
+            elif kind=='append' and not attr is None:
                 attr.append(value)
             else:
                 raise

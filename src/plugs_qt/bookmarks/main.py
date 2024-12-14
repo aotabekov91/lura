@@ -25,14 +25,16 @@ class Bookmarks(Plug):
             self.view=self.app.buffman.createView(
                     ElementListView, 
                     name='BookmarkView',
-                    # position=self.position,
-                    widget_map=self.widget_map,
-                    attribute=[{
+                    attributes=[
+                        {
                         'key': 'position', 
                         'value': self.position, 
-                        'kind':'update'
-                        }]
-                    )
+                        },
+                        {
+                        'key': 'widget_map', 
+                        'value': self.widget_map, 
+                        'copy':True,
+                        }])
             self.app.stateman.viewChanged.connect(
                     self.updateView)
 

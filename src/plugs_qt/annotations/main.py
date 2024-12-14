@@ -25,13 +25,17 @@ class Annotations(Plug):
                     ElementListView, 
                     name='AnnotationsView',
                     # position=self.position,
-                    widget_map=self.widget_map,
-                    attribute=[{
+                    # widget_map=self.widget_map,
+                    attributes=[
+                        {
                         'key': 'position', 
                         'value': self.position, 
-                        'kind':'update'
-                        }]
-                    )
+                        },
+                        {
+                        'key': 'widget_map', 
+                        'value': self.widget_map, 
+                        'copy': True,
+                        }])
             self.app.stateman.viewChanged.connect(
                     self.updateView)
 

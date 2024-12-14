@@ -34,15 +34,6 @@ class ElementListView(vimo.View, QtWidgets.QListWidget):
         super().setCurrentRow(row)
         self.indexChanged.emit(row + 1)
 
-    def updateKlass(self):
-        super().updateKlass()
-        inc = self.m_kwargs.get("include", self.include)
-        self.include = inc.copy()
-        exc = self.m_kwargs.get("exclude", self.exclude)
-        self.exclude = exc.copy()
-        wm = self.m_kwargs.get("widget_map", self.widget_map)
-        self.widget_map = wm.copy()
-
     def setModel(self, model=None, **kwargs):
         if id(self.m_model) != id(model):
             self.reconnectModel("disconnect")
