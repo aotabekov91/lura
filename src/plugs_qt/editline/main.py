@@ -12,6 +12,7 @@ class Editline(Plug, QtCore.QObject):
         super().setup()
         self.m_previous=None
         self.m_activated=False
+        self.m_bar_visible=None
         self.setupEditline()
 
     def setupEditline(self):
@@ -33,14 +34,18 @@ class Editline(Plug, QtCore.QObject):
         self.m_activated=False
         bar=self.app.view.bar
         bar.stack.setCurrentIndex(self.m_previous)
-        return self.edit.octivate(*args, **kwargs)
+        self.edit.octivate(*args, **kwargs)
+        if not self.m_bar_visible:
+            bar.octivate()
 
     def activate(self, *args, **kwargs):
         self.m_activated=True
         bar=self.app.view.bar
         self.m_previous=bar.stack.currentIndex()
         bar.stack.setCurrentIndex(self.edit.m_idx)
-        return self.edit.activate(*args, **kwargs)
+        self.m_bar_visible=bar.isVisible()
+        bar.activate()
+        self.edit.activate(*args, **kwargs)
 
     def text(self):
         return self.edit.text()

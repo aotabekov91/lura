@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 
 class PowerlineWidget(QtWidgets.QWidget):
+
     def __init__(self):
         super().__init__(objectName="Powerline")
         self.setupUI()
@@ -89,3 +90,15 @@ class PowerlineWidget(QtWidgets.QWidget):
             if text is None:
                 return f.hide()
             return f.show()
+
+    def toggle(self):
+        if self.isVisible():
+            self.octivate()
+        else:
+            self.activate()
+
+    def octivate(self):
+        self.hide()
+
+    def activate(self):
+        self.show()

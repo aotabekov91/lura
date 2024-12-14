@@ -101,3 +101,7 @@ class Normal(Plug, QtCore.QObject):
         selection=self.app.plugman.getPlug('Selection')
         if selection:
             selection.cleanUpSelection()
+
+    @tag('ts(normal)')
+    def toggleStatusbar(self):
+        self.app.view.bar.toggle()

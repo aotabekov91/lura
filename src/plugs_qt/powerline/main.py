@@ -1,4 +1,4 @@
-from plug import Plug
+from plug import Plug, tag
 
 from .view import PowerlineWidget
 
@@ -24,9 +24,9 @@ class Powerline(Plug):
         bar=self.app.view.bar
         self.m_view = None
         self.m_subview = None
-        self.status = PowerlineWidget()
-        bar.m_layout.insertWidget(0, self.status)
-        self.status.show()
+        self.view = PowerlineWidget()
+        bar.m_layout.insertWidget(0, self.view)
+        self.view.show()
 
     def connectPowerline(self):
         self.app.earman.keysChanged.connect(
@@ -82,30 +82,30 @@ class Powerline(Plug):
     def setMode(self, mode=None):
         if mode:
             mode = mode.title()
-        self.status.setText("mode", mode)
+        self.view.setText("mode", mode)
 
     def setSubmode(self, submode=None):
         if submode:
             submode = submode.title()
-        self.status.setText("submode", submode)
+        self.view.setText("submode", submode)
 
     def setModel(self, model=None):
         if model:
             model = model.id()
-        self.status.setText("model", model)
+        self.view.setText("model", model)
 
     def setDetail(self, name):
         if name:
             name = name.title()
-        self.status.setText("detail", name)
+        self.view.setText("detail", name)
 
     def setKeys(self, keys=None):
-        self.status.setText("keys", keys)
+        self.view.setText("keys", keys)
 
     def setKind(self, view=None):
         if view:
             view = view.kind
-        self.status.setText("type", view)
+        self.view.setText("type", view)
 
     def setView(
             self, 
@@ -119,7 +119,7 @@ class Powerline(Plug):
                     idx = cidx
             view = view.name
             self.setIndex(idx)
-        self.status.setText("view", view)
+        self.view.setText("view", view)
 
     def setIndex(self, idx=None):
         if hasattr(self.m_view, "currentIndex"):
@@ -130,7 +130,11 @@ class Powerline(Plug):
                 count = self.m_view.count()
                 if count:
                     idx = f"{idx}/{count}"
-        self.status.setText("index", idx)
+        self.view.setText("index", idx)
 
     def setInfo(self, info=None):
-        self.status.setText("info", info)
+        self.view.setText("info", info)
+
+    @tag('tp')
+    def toggle(self):
+        self.view.toggle()
