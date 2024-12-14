@@ -13,7 +13,6 @@ class FitzView(
     canFollow = True
     scene_color = "black"
     position = {"FitzView": "C|x"}
-    indexChanged = QtCore.pyqtSignal(object)
     pixmapReady = QtCore.pyqtSignal(object, object, object)
     itemPainted = QtCore.pyqtSignal(object, object, object, object)
 
