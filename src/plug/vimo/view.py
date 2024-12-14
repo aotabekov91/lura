@@ -19,24 +19,8 @@ class View(Object):
         self.m_pid = pindex
         self.m_children = {}
         self.m_model = model
-        self.m_kwargs = kwargs
         self.m_vid = identifier
         super().__init__(**kwargs)
-
-    def setup(self):
-        super().setup()
-        self.addToAppUI()
-        if self.m_manager:
-            self.setManager(self.m_manager)
-        if self.app:
-            self.app.earman.add(self)
-
-    def addToAppUI(self):
-        if not self.checkProp("app", self):
-            return
-        if not self.checkProp("buffman", self.app):
-            return
-        self.app.buffman.addView(self)
 
     def setIdentifier(self, idx):
         self.m_vid = idx
@@ -136,14 +120,13 @@ class View(Object):
     def setModel(self, model):
         if id(self.m_model) != id(model):
             self.m_model = model
-            self.kind = getattr(
-                    model, 'kind', None)
+            self.kind = getattr(model, 'kind', None)
 
     @classmethod
     def isCompatible(cls, model, **kwargs):
         name = cls.name or cls.__name__
-        return name in getattr(
-                model, "wantView", [])
+        wanted=getattr(model, "wantView", [])
+        return name in wanted 
 
     def toggle(self, *args, **kwargs):
         if self.activated and self.isVisible():
@@ -151,66 +134,40 @@ class View(Object):
         else:
             self.activate(*args, **kwargs)
 
-    def octivate(
-            self, *args, restore=True, **kwargs):
+    def octivate(self, *args, restore=True, **kwargs):
         self.activated = False
         manager = self.manager()
         kwargs['view']=self
         if restore and self.app:
-            self.app.stateman.betView(
-                    *args, **kwargs)
+            self.app.stateman.betView(*args, **kwargs)
         if manager:
-            manager.betView(
-                    self, *args, **kwargs)
+            manager.betView(self, *args, **kwargs)
 
-    def activate(
-            self, 
-            *args, 
-            recursive=False, 
-            **kwargs
-            ):
+    def activate(self, *args, recursive=False, **kwargs):
         self.activated = True
         manager = self.manager()
         kwargs['view']=self
         if manager:
             manager.setView(*args, **kwargs)
             if recursive and not manager.activated:
-                manager.activate(
-                        recursive=recursive, 
-                        **kwargs)
+                manager.activate(recursive=recursive, **kwargs)
         if self.app:
-            self.app.stateman.setView(
-                    *args, **kwargs)
+            self.app.stateman.setView(*args, **kwargs)
         if self.checkProp("setFocus"):
             self.show()
             self.setFocus()
 
-    def betView(
-            self, 
-            *args, 
-            recursive=False, 
-            **kwargs):
-        self.octivate(
-                recursive=recursive, **kwargs)
+    def betView(self, *args, recursive=False, **kwargs):
+        self.octivate(recursive=recursive, **kwargs)
 
-    def addView(
-            self, 
-            *args,
-            view=None, 
-            **kwargs
-            )->None:
-        if not view: return
-        view.setManager(self)
-        if self.checkProp("setParent", view):
-            view.setParent(self)
+    def addView(self, *args, view=None, **kwargs)->None:
+        if view:
+            view.setManager(self)
+            if self.checkProp("setParent", view):
+                view.setParent(self)
 
-    def setView(
-            self, 
-            *args,
-            view=None, 
-            **kwargs
-            )->None:
-        if not view: return
-        self.m_view = view
-        if self.checkProp("setFocus", view):
-            view.setFocus()
+    def setView(self, *args, view=None, **kwargs)->None:
+        if view:
+            self.m_view = view
+            if self.checkProp("setFocus", view):
+                view.setFocus()

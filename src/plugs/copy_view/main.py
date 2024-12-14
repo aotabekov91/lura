@@ -16,6 +16,5 @@ class ViewCopy(Plug):
 
     def copy(self, obj):
         copier=self.getAgent(obj=obj)
-        print(copier)
         if copier:
             return copier.copy(obj)

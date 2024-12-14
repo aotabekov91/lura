@@ -3,10 +3,7 @@ from PyQt6 import QtCore
 
 import plug
 
-class Buffman(
-        plug.Buffman, 
-        QtCore.QObject
-):
+class Buffman(plug.Buffman, QtCore.QObject):
 
     modelCreated: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
     viewAdded = QtCore.pyqtSignal(object)

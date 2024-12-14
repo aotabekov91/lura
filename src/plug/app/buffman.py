@@ -17,11 +17,7 @@ class Buffman(Plug):
     def views(self) -> tp.Set[tp.Any]:
         return self.m_views
 
-    def setFiller(
-        self,
-        name: str,
-        func: tp.Callable[[...], tp.Any],
-    ) -> None:
+    def setFiller(self, name, func) -> None:
         self.m_fillers[name] = func
 
     def getFiller(self, name: str) -> tp.Any:

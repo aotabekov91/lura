@@ -29,11 +29,6 @@ class Plug:
         self.m_kwargs = kwargs
         self.setup()
 
-    def setName(self) -> None:
-        if self.name is None:
-            c = self.__class__
-            self.name = c.__name__
-
     def setup(self) -> None:
         self.setName()
         self.updateConf()
@@ -41,7 +36,6 @@ class Plug:
         self.setFiles()
         self.setSettings()
         self.updateArgs()
-        self.setActions()
         if self.app:
             if self.check('earman', self.app):
                 self.app.earman.add(self)
@@ -55,98 +49,57 @@ class Plug:
             name=self.__class__.__name__
             self.app.plugman.delPlug(name=name)
 
+    def setName(self) -> None:
+        if self.name is None:
+            c = self.__class__
+            self.name = c.__name__
+
     def updateConf(self) -> None:
         if self.app:
             config = self.app.m_config.get(self.name, {})
             self.m_config.update(config)
 
     def updateArgs(self) -> None:
-        st = self.m_config.get("Settings", {})
-        for n, s in st.items():
-            kw = self.m_kwargs.get(n, {})
-            if type(s) != dict:
-                continue
-            kw.update(s)
-            st[n] = kw
-        self.m_kwargs.update(st)
-
-    def setActions(self) -> None:
-        def setKeys(
-            obj: tp.Any,
-            keys: tp.Any,
-        ) -> tp.Dict[tp.Tuple[str, str], tp.Any]:
-            actions = {}
-            for f, k in keys.items():
-                m = getattr(obj, f, None)
-                if m and hasattr(m, "__func__"):
-                    func = m.__func__
-                    fname = func.__name__
-                    n = getattr(m, "name", fname)
-                    setattr(func, "name", n)
-                    if type(k) == str:
-                        k = {"key": k}
-                    for a, v in k.items():
-                        setattr(func, a, v)
-                    actions[(obj.name, m.name)] = m
-            return actions
-
-        def saveOwnKeys() -> None:
-            for f in self.__dir__():
-                m = getattr(self, f, None)
-                if not f.startswith("__"):
-                    self.functions[f] = m
-                if hasattr(m, "modes"):
-                    d = (self.name, m.name)
-                    if not d in self.actions:
-                        self.actions[d] = m
-
-        keys = self.m_config.get("Keys", {})
-        actions = setKeys(self, keys)
-        self.actions.update(actions)
-        saveOwnKeys()
+        setting = self.m_config.get("Settings", {})
+        for key, value in setting.items():
+            key_word = self.m_kwargs.get(key, {})
+            if type(value) == dict:
+                key_word.update(value)
+                setting[key] = key_word
+        self.m_kwargs.update(setting)
 
     def setBasePath(self) -> None:
-        f = getfile(self.__class__)
-        a = os.path.abspath(f)
-        p = os.path.dirname(a)
-        self.path = p.replace("\\", "/")
+        file = getfile(self.__class__)
+        abs_path = os.path.abspath(file)
+        path = os.path.dirname(abs_path)
+        self.path = path.replace("\\", "/")
 
     def getFile(self, name):
         return self.files.get(name, None)
 
     def setFiles(self) -> None:
-        for f in os.listdir(self.path):
-            p = f"{self.path}/{f}"
-            self.files[f] = p
-            if f == "config.toml":
-                with open(p, "rb") as y:
+        for file in os.listdir(self.path):
+            path = f"{self.path}/{file}"
+            self.files[file] = path
+            if file == "config.toml":
+                with open(path, "rb") as y:
                     config = tomli.load(y)
                     config.update(self.m_config)
                     self.m_config = config
 
     def setSettings(self) -> None:
-        s = self.m_config.get("Settings", {})
-        for n, v in s.items():
-            setattr(self, n, v)
+        setting = self.m_config.get("Settings", {})
+        for key, value in setting.items():
+            setattr(self, key, value)
 
-    def check(
-        self,
-        prop: str | tp.List[str] | tp.Any,
-        # todo::typing: str|tp.List[str] w/o tp.Any does not work
-        obj: tp.Any | None,
-    ) -> bool:
+    def check(self, prop, obj=None) -> bool:
         if type(prop) != list:
             prop = [prop]
         for p in prop:
-            c = getattr(obj, p, False)
-            if not c:
+            attr = getattr(obj, p, False)
+            if not attr:
                 return False
         return True
-
-    def activate(self):
-        self.plugman.load()
-        if self.ui:
-            self.ui.show()
 
     def createFolder(
         self,
@@ -160,12 +113,3 @@ class Plug:
         if not os.path.exists(f):
             path.mkdir(parents=parents, exist_ok=exist_ok)
         return path
-
-    def wait(self, delta: int) -> None:
-        self.waiting_to_finish += delta
-
-    def run(self) -> None:
-        if self.ui:
-            self.ui.activate()
-        self.timer.start(self.app_wait)
-        sys.exit(self.qapp.exec())

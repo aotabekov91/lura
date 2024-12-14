@@ -10,9 +10,7 @@ class View(gizmo.WindowView):
     isAppView: bool = True
     windowResized: QtCore.pyqtSignal = QtCore.pyqtSignal()
 
-    def __init__(
-        self, app: tp.Any = None, **kwargs
-    ) -> None:
+    def __init__(self, app: tp.Any = None, **kwargs) -> None:
         super().__init__(app=app, **kwargs)
         self.setPosIndex(0)
 

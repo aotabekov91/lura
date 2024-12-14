@@ -28,10 +28,8 @@ class View(plug.View):
         if hasattr(super(), "setParent"):
             self.setParent(self.m_parent)
         if hasattr(super(), "setObjectName"):
-            o = self.m_objectName or self.name
-            self.setObjectName(o)
-        if hasattr(super(), "setup"):
-            super().setup()
+            oname = self.m_objectName or self.name
+            self.setObjectName(oname)
 
     def setIdentifier(self, idx):
         o = self.m_vid

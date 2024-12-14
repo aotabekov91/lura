@@ -13,7 +13,6 @@ from .stateman import Stateman
 from ..plug import Plug
 from ..utils import Parser, tag
 
-
 class App(Plug):
     """The main application construct"""
 
@@ -52,7 +51,6 @@ class App(Plug):
          self.buffman: Buffman = buffman(self)
          self.plugman: Plugman = plugman(self)
          self.styleman: Styleman = styleman(self)
-         self.earman.add(self.earman)
          self.earman.add(self)
 
     def setupParser(self, parser=Parser):

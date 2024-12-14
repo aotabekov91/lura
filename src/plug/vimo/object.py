@@ -1,6 +1,3 @@
-import os
-import inspect
-
 class Object:
 
     name = None
@@ -24,10 +21,9 @@ class Object:
         self.m_config = config
         self.m_parent = parent
         self.m_manager = manager
+        self.m_attributes=attributes
         self.m_app_config = appConfig
         self.m_objectName = objectName
-        self.m_parent = parent
-        self.m_attributes=attributes
         self.m_kwargs = kwargs
         super().__init__()
         self.setup()
@@ -39,10 +35,15 @@ class Object:
         self.setConf()
         self.setName()
         self.setKind()
+        self.addToAppUI()
         if self.m_manager:
             self.setManager(self.m_manager)
         if self.app:
             self.app.earman.add(self)
+            
+    def addToAppUI(self):
+        if self.app and self.checkProp("buffman", self.app):
+            self.app.buffman.addView(self)
 
     def setAttributes(self):
         for attribute in self.m_attributes:
