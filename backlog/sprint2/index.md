@@ -15,7 +15,6 @@ Date: 2.12.2024-31.12.2024
 * [x] [Sprint 1: Bugs](objectives/s1_bugs.md)
 * [x] [Sprint 1: Separate mixins](objectives/s1_mixins.md)
 
-* [.] [Factoring out](objectives/factoring_out.md)
 * [ ] [Plugins](objectives/plugins.md)
 * [ ] [Bugs](objectives/bugs.md)
 * [ ] [Exec mode](objectives/exec_mode.md)
@@ -24,3 +23,4 @@ Date: 2.12.2024-31.12.2024
 * [ ] [View layout](objectives/view_layout.md)
 * [x] [Input mode](objectives/input_mode.md)
 * [x] [Plugin system](objectives/plugin_system.md)
+* [x] [Factoring out](objectives/factoring_out.md)
