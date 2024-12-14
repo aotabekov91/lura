@@ -29,23 +29,26 @@ class Object:
         self.setup()
 
     def setup(self):
-        if self.m_app_config:
-            self.setAppConfig()
-        self.setAttributes()
+        self.setAttr()
         self.setConf()
         self.setName()
         self.setKind()
-        self.addToAppUI()
+        self.setApp()
         if self.m_manager:
             self.setManager(self.m_manager)
-        if self.app:
-            self.app.earman.add(self)
-            
-    def addToAppUI(self):
-        if self.app and self.checkProp("buffman", self.app):
-            self.app.buffman.addView(self)
 
-    def setAttributes(self):
+    def setApp(self):
+        if self.app:
+            if self.checkProp("earman", self.app):
+                self.app.earman.add(self)
+            if self.checkProp("buffman", self.app):
+                self.app.buffman.addView(self)
+            if self.m_app_config:
+                app_config = self.app.m_config
+                klass_config = self.klassConfig(app_config)
+                self.m_config.update(klass_config)
+
+    def setAttr(self):
         for attribute in self.m_attributes:
             key=attribute.get('key')
             value=attribute.get('value')
@@ -91,19 +94,14 @@ class Object:
         for k, v in data.items():
             setattr(self, k, v)
 
-    def getConfig(self, config):
+    def klassConfig(self, config):
         conf = {}
-        for i in self.__class__.__mro__[::-1]:
-            n = i.__name__
-            conf.update(config.get(n, {}))
+        klass_mro=self.__class__.__mro__
+        for klass in klass_mro[::-1]:
+            name = klass.__name__
+            conf.update(config.get(name, {}))
         conf.update(config.get(self.name, {}))
         return conf
-
-    def setAppConfig(self):
-        if self.app:
-            aconfig = self.app.m_config
-            conf = self.getConfig(aconfig)
-            self.m_config.update(conf)
 
     def config(self):
         return self.m_config
@@ -128,12 +126,12 @@ class Object:
                 return False
         return True
 
-    def __bool__(self):
-        return True
-
     def setKind(self):
         name = self.__class__.__name__
         self.kind = self.kind or name
 
     def resetConfigure(self, **kwargs):
         pass
+
+    def __bool__(self):
+        return True
