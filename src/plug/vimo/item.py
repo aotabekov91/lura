@@ -1,26 +1,25 @@
-class Item:
+from .object import Object
+
+class Item(Object):
+
     def __init__(
         self,
-        config={},
-        app=None,
         view=None,
         index=None,
-        parent=None,
         element=None,
         identifier=None,
         **kwargs,
     ):
-        self.app = app
         self.m_id = index
         self.m_view = view
-        self.m_config = config
         self.m_element = element
         self.m_identifier = identifier
-        self.m_kwargs = kwargs
-        super().__init__(parent=parent)
-        self.setup()
-        self.setView(view)
-        self.setElement(element)
+        super().__init__(**kwargs)
+
+    def setup(self):
+        super().setup()
+        self.setView(self.m_view)
+        self.setElement(self.m_element)
 
     def identifier(self):
         return self.m_identifier
@@ -33,9 +32,6 @@ class Item:
 
     def setView(self, view):
         self.m_view = view
-
-    def setup(self):
-        pass
 
     def element(self):
         return self.m_element

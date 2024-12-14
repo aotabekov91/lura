@@ -12,19 +12,23 @@ class FitzItem(Item, QtWidgets.QGraphicsObject):
         object, object, object, object)
 
     def setup(self):
-        super().setup()
-        config = self.m_kwargs
         self.m_key = hashdict()
         self.m_rect = QtCore.QRectF()
         self.m_brect = QtCore.QRectF()
         self.m_size = self.m_rect.size()
         self.m_trans = QtGui.QTransform()
-        self.m_scale = config.get("scale", 1.0)
-        self.xresol = config.get("xresol", 72.0)
-        self.yresol = config.get("yresol", 72.0)
-        self.tileSize = config.get("tileSize", 1024)
-        self.devicePixelRatio = config.get("devicePixelRatio", 1)
+        self.m_scale = self.m_kwargs.get(
+                "scale", 1.0)
+        self.xresol = self.m_kwargs.get(
+                "xresol", 72.0)
+        self.yresol = self.m_kwargs.get(
+                "yresol", 72.0)
+        self.tileSize = self.m_kwargs.get(
+                "tileSize", 1024)
+        self.devicePixelRatio = self.m_kwargs.get(
+                "devicePixelRatio", 1)
         self.prepareGeometry()
+        super().setup()
 
     def setElement(self, elem):
         super().setElement(elem)

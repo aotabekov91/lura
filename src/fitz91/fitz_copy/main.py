@@ -5,15 +5,15 @@ class FitzCopy(Plug):
     def setup(self):
         super().setup()
         if self.app.running:
-            self.addToCopier()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToCopier)
+                    self.addAgent)
 
-    def addToCopier(self):
-        copier=self.app.plugman.getPlug('Copy')
+    def addAgent(self):
+        copier=self.app.plugman.getPlug('ViewCopy')
         if copier:
-            copier.addCopier('FitzView', self)
+            copier.addAgent('FitzView', self)
 
     def copy(self, view):
         zoom=None

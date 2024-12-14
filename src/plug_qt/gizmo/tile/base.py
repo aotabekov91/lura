@@ -42,7 +42,7 @@ class TileView(
         kind="vertical",
         **kwargs,
     ):
-        copier=self.app.plugman.getPlug('Copy')
+        copier=self.app.plugman.getPlug('ViewCopy')
         if copier:
             view = view or self.current
             copy=copier.copy(view)

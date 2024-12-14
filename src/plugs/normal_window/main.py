@@ -28,12 +28,21 @@ class WindowNormal(Plug):
             view=manager
         return None, None 
 
-    def activate(self, view=None, action=None, kind='goTo', **kwargs):
+    def activate(
+            self, 
+            view=None, 
+            action=None, 
+            kind='goTo', 
+            **kwargs):
         if not view:
             view=self.app.stateman.view()
         agent, window=self.findAgent(action, view)
         if agent:
-            return agent.activate(window=window, kind=kind, action=action, **kwargs)
+            return agent.activate(
+                    window=window, 
+                    kind=kind, 
+                    action=action, 
+                    **kwargs)
 
     @tag("gg(normal)")
     def goFirst(self, **kwargs):

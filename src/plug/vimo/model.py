@@ -1,12 +1,11 @@
 import re
 from collections import OrderedDict
 
+from .object import Object
 from .element import Element
 
-class Model:
+class Model(Object):
 
-    kind = None
-    name = None
     wantView = []
     pattern = None
     isLoaded = False
@@ -15,55 +14,27 @@ class Model:
 
     def __init__(
         self,
-        app=None,
-        config={},
-        name=None,
         index=None,
         source=None,
         render=None,
         elements=OrderedDict(),
         **kwargs,
     ):
-        self.app = app
         self.m_id = index
         self.m_data = None
-        self.m_name = name
         self.m_loaded = False
         self.m_source = source
-        self.m_config = config
         self.m_render = render
         self.m_base_model = None
         self.m_elements = elements.copy()
-        self.m_kwargs = kwargs
-        super().__init__()
-        self.setup()
-
-    def setup(self):
-        self.updateKlass()
-        self.setConf()
-        self.setKind()
-        self.setName()
+        super().__init__(**kwargs)
 
     def updateKlass(self):
+        print(self)
+        super().updateKlass()
         ek = self.m_kwargs.get("element_class")
         if ek:
             self.element_class = ek
-
-    def setConf(self):
-        for k, v in self.m_config.items():
-            setattr(self, k, v)
-
-    def setName(self):
-        name = self.__class__.__name__
-        name = self.m_name or name
-        self.name = self.name or name
-
-    def setKind(self):
-        name = self.__class__.__name__
-        self.kind = self.kind or name
-
-    def config(self):
-        return self.m_config
 
     def count(self):
         return len(self.m_elements)
@@ -98,9 +69,6 @@ class Model:
     def source(self):
         return self.m_source
 
-    def resetConfigure(self, **kwargs):
-        pass
-
     def load(self):
         self.isLoaded = True
 
@@ -115,22 +83,6 @@ class Model:
     @classmethod
     def getSourceName(cls, source, **kwargs):
         return source
-
-    def setProp(self, what, value=True, view=None):
-        view=view or self
-        setattr(self, what, value)
-
-    def delProp(self, what):
-        delattr(self, what)
-
-    def checkProp(self, what, m=None):
-        m = m or self
-        if type(what) != list:
-            what = [what]
-        for w in what:
-            if not getattr(m, w, False):
-                return False
-        return True
 
     def createElement(self, data={}, idx=None):
         if not idx:
@@ -160,7 +112,8 @@ class Model:
         element.updateData(data)
         return element
 
-    def getElement(self, value, by="id", only_one=True):
+    def getElement(
+            self, value, by="id", only_one=True):
         found=[]
         elements=self.m_elements.values()
         for element in elements: 

@@ -1,4 +1,7 @@
-class Element:
+from .object import Object
+
+class Element(Object):
+
     def __init__(
         self,
         id=None,
@@ -14,10 +17,9 @@ class Element:
         self.m_model = model
         self.m_kwargs = kwargs
         self.m_identifier = identifier
-        super().__init__()
+        super().__init__(**kwargs)
         if data:
             self.setData(data)
-        self.setup()
 
     def id(self):
         return self.m_id
@@ -30,12 +32,6 @@ class Element:
 
     def setIdentifier(self, idx):
         self.m_identifier = idx
-
-    def setup(self):
-        self.updateKlass()
-
-    def updateKlass(self):
-        pass
 
     def data(self, idx=None):
         if not idx:
