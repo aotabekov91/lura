@@ -4,7 +4,7 @@ from plug_qt import vimo
 
 class TreeViewWidget(QtWidgets.QTreeView):
 
-    itemChanged = QtCore.pyqtSignal(object)
+    # itemChanged = QtCore.pyqtSignal(object)
 
     # todo it does not work here with a separate TreeView 
     # (see the following class)
@@ -12,6 +12,13 @@ class TreeViewWidget(QtWidgets.QTreeView):
     #     if model:
     #         super(Tree, self).setModel(model)
     #         super(TreeView, self).setModel(model)
+
+    def count(self, idx=None):
+        idx=idx or self.currentIndex()
+        pidx=idx.parent()
+        if pidx.isValid():
+            return self.m_model.rowCount(pidx)
+        return self.m_model.rowCount()
 
     def expand(self, idx=None, select=True, **kwargs):
         idx = idx or self.currentIndex()
@@ -140,24 +147,9 @@ class TreeViewWidget(QtWidgets.QTreeView):
             self.scrollTo(idx, ensure) 
 
     def setCurrentIndex(self, idx):
-        if idx is None:
-            return
-        if not idx.isValid():
-            return
-        if self.model() is None:
-            return
-        super().setCurrentIndex(idx)
-        if self.currentItem() is None:
-            return
-        self.indexChanged.emit(idx)
-        self.itemChanged.emit(self.currentItem())
-        self.selectionModel().select(
-            idx,
-            QtCore.QItemSelectionModel.SelectionFlag.Current,
-        )
-        if hasattr(self.model(), "itemChanged"):
-            item=self.currentItem()
-            self.model().itemChanged.emit(item)
+        if idx and idx.isValid():
+            super().setCurrentIndex(idx)
+            self.indexChanged.emit(idx)
 
     def currentItem(self, idx=None):
         m = self.model()

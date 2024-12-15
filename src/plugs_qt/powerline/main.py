@@ -124,11 +124,13 @@ class Powerline(Plug):
     def setIndex(self, idx=None):
         if hasattr(self.m_view, "currentIndex"):
             cidx = self.m_view.currentIndex()
-            if type(cidx) == int:
+            if type(cidx) in [int, str]:
                 idx = idx or cidx
+            elif idx and idx.isValid():
+                idx=cidx.row()+1
             if hasattr(self.m_view, "count"):
                 count = self.m_view.count()
-                if count:
+                if idx and count:
                     idx = f"{idx}/{count}"
         self.view.setText("index", idx)
 
