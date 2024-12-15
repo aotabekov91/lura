@@ -11,16 +11,28 @@ class Hint(Plug):
     def addAgent(self, name, hinter):
         self.m_agents[name]=hinter
 
-    def getAgents(self, name):
+    def getAgents(self, name=None, view=None):
+        if name is None and view:
+            name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    @tag(["<c-f>(normal)", "<c-f>/<c-[>(hint)"])
-    def toggle(self):
-        self.app.stateman.activate(
-                mode="hint", delisten=True, toggle_mode=True)
+    def searchAgent(self, view=None):
+        if not view:
+            view=self.app.stateman.view()
+        return self.getAgents(view=view), view
 
-    @tag("<escape>(hint[any])")
-    def octivate(self):
+    def activate(self, view=None, **kwargs):
+        super().activate()
+        _, view=self.searchAgent(view=view)
+        self.app.stateman.activate(
+                mode="hint", delisten=True)
+
+    def octivate(self, view=None, **kwargs):
+        super().octivate()
+        _, view=self.searchAgent(view=view)
+        submoder=self.app.stateman.submoder()
+        if submoder:
+            submoder.octivate(view=view, **kwargs)
         self.app.stateman.activate()
 
     def generateHints(self, alist, kind="letter"):
@@ -44,3 +56,7 @@ class Hint(Plug):
             hint.append(self.alpha[num % len(self.alpha)])
             num = num // len(self.alpha)
         return "".join(reversed(hint))
+
+    @tag(["<c-f>(normal)", "<escape>/<c-f>/<c-[>(hint)"])
+    def toggle(self):
+        super().toggle()

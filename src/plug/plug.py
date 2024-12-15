@@ -1,5 +1,4 @@
 import os
-import sys
 import tomli
 import pathlib
 import typing as tp
@@ -10,6 +9,7 @@ class Plug:
     name: str = None
     isMode: bool = False
     shortname: str = None
+    activated: bool = False
 
     def __init__(
         self,
@@ -113,3 +113,15 @@ class Plug:
         if not os.path.exists(f):
             path.mkdir(parents=parents, exist_ok=exist_ok)
         return path
+
+    def activate(self, *args, **kwargs):
+        self.activated=True
+
+    def octivate(self, *args, **kwargs):
+        self.activated=False
+
+    def toggle(self, *args, **kwargs):
+        if self.activated:
+            self.octivate(*args, **kwargs)
+        else:
+            self.activate(*args, **kwargs)

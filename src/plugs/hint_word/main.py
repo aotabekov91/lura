@@ -6,9 +6,6 @@ class WordHint(Plug):
         super().setup()
         self.m_hinters={}
 
-    def setExitSubmode(self, submode=None):
-        self.m_submode=submode
-
     def addAgent(self, name, hinter):
         self.m_hinters[name]=hinter
 
@@ -17,31 +14,26 @@ class WordHint(Plug):
             name=view.__class__.__name__
         return self.m_hinters.get(name, None)
 
-    @tag(["<c-w>(hint)", "<c-w>/<c-[>(hint[word])"])
-    def toggle(self, view=None, **kwargs):
+    def searchAgent(self, view=None):
         if not view:
             view=self.app.stateman.view()
-        hinter=self.getAgent(view=view)
-        if hinter:
-            self.app.stateman.setSubmode(
-                    submode='word', toggle_submode=True)
-            submode=self.app.stateman.submode()
-            if submode=='word':
-                self.activate(view=view, **kwargs)
-            else:
-                self.octivate(view=view, **kwargs)
+        return self.getAgent(view=view), view
 
     def activate(self, view=None, **kwargs):
-        if not view:
-            self.app.stateman.view()
-        agent=self.getAgent(view=view)
+        agent, view=self.searchAgent(view=view)
         if agent:
+            super().activate()
+            self.app.stateman.setSubmode(
+                    submoder=self, submode='word')
             agent.activate(view=view, **kwargs)
 
     def octivate(self, view=None, **kwargs):
-        if not view:
-            self.app.stateman.view()
-        agent=self.getAgent(view=view)
+        agent, view=self.searchAgent(view=view)
         if agent:
+            super().octivate()
+            self.app.stateman.setSubmode()
             agent.octivate(view=view, **kwargs)
-        self.app.stateman.activate()
+
+    @tag(["<c-w>(hint)", "<c-w>/<c-[>(hint[word])"])
+    def toggle(self, **kwargs):
+        super().toggle(**kwargs)

@@ -48,12 +48,8 @@ class FitzLinkHint(Plug):
         if self.m_hint in hints:
             link=hints.get(self.m_hint)
             self.goTo(link, model, view)
-            link_hinter=self.app.plugman.getPlug(
-                    'LinkHint')
-            link_hinter.toggleHint()
-            hinter=self.app.plugman.getPlug(
-                    'Hint')
-            hinter.toggleHint()
+            hinter=self.app.plugman.getPlug('Hint')
+            hinter.toggle()
         for hint in hints:
             if self.checkHint(hint):
                 view.redraw()
@@ -112,7 +108,14 @@ class FitzLinkHint(Plug):
             if math.isnan(ypos): 
                 ypos=0.
             point = element.unify((xpos, ypos))
-            view.goTo(page + 1, point.x(), point.y())
+            normal=self.app.plugman.getPlug('Normal')
+            if normal:
+                normal.activate(
+                        action='goTo', 
+                        xrange=[page + 1], 
+                        x=point.x(), 
+                        y=point.y())
+            # view.goTo(page + 1, point.x(), point.y())
 
     def getLinks(self, model):
         links={}

@@ -6,8 +6,10 @@ class Stateman(Plug):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.m_moder=None
         self.m_mode = None 
         self.m_keyer = None
+        self.m_submoder=None
         self.m_functor = None
         self.m_passive = False
         self.m_submode = None
@@ -63,21 +65,43 @@ class Stateman(Plug):
     def mode(self):
         return self.m_mode
 
-    def setMode(self, *args, mode='normal', toggle_mode=False, **kwargs) -> str:
+    def moder(self):
+        return self.m_moder
+
+    def setMode(
+            self, 
+            moder=None,
+            mode='normal', 
+            toggle_mode=False, 
+            **kwargs
+            ) -> str:
         if toggle_mode and mode==self.m_mode:
+            self.m_moder=None
             self.m_mode='normal'
         else:
             self.m_mode = mode
+            self.m_moder=moder
         return self.m_mode
 
     def submode(self) -> str:
         return self.m_submode
 
-    def setSubmode(self, *args, submode=None, toggle_submode=False, **kwargs):
+    def submoder(self):
+        return self.m_submoder
+
+    def setSubmode(
+            self, 
+            submode=None, 
+            submoder=None,
+            toggle_submode=False, 
+            **kwargs
+            )->str:
         if toggle_submode and submode==self.m_submode:
             self.m_submode=None
+            self.m_submoder=None
         else:
             self.m_submode = submode
+            self.m_submoder=submoder
         return self.m_submode
 
     def view(self) -> tp.Any:
