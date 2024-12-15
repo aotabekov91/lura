@@ -5,51 +5,53 @@ class FitzRotate(plug.Plug):
     def setup(self):
         super().setup()
         if self.app.running:
-            self.addToRotator()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addToRotator)
+                    self.addAgent)
 
-    def addToRotator(self):
-        rotator=self.app.plugman.getPlug('Rotate')
-        if not rotator:
-            return
-        rotator.addRotator('FitzView', self)
-        modeller=self.app.buffman.modeller('FitzModel')
-        if not modeller:
-            return
-        element_klass=modeller.element_class
-        element_klass.addFunctor(
-                'renderMatrix', self.renderMatrix)
+    def addAgent(self):
+        holder=self.app.plugman.getPlug('Rotate')
+        if holder:
+            holder.addAgent('FitzView', self)
+            modeller=self.app.buffman.modeller('FitzModel')
+            if modeller:
+                element_klass=modeller.element_class
+                element_klass.addFunctor(
+                        'renderMatrix', self.renderMatrix)
 
     def renderMatrix(self, keys, matrix):
         rotation=keys.get('rotation', False)
-        if not rotation:
+        if rotation:
             matrix.prerotate(rotation % 360)
-        return matrix
 
-    def setRotation(self, view, xrange):
-        rotation=0
-        if xrange:
-            rotation=xrange[-1]
-        for item in view.items():
-            item.setKey('rotation', rotation)
-            # todo: problem with view items
-            # only loaded items are being rotated
-            # maybe: load all items in view without rendering them
-        view.setProp('rotation', rotation)
+    def activate(self, view=None, xrange=None, only_item=False, **kwargs):
+        if view:
+            item=None
+            if only_item:
+                item=view.currentItem()
+                rotation=item.key('rotation') or 0
+            else:
+                rotation = self.rotation(view) or 0
+            if xrange:
+                rotation = (rotation + xrange[-1]) % 360
+            else:
+                rotation = (rotation + 90) % 360
+            self.setRotation(view, rotation, item=item)
+
+    def setRotation(self, view, rotation, item=None):
+        if item:
+            self.setItemRotation(item, rotation)
+        else:
+            for idx, item in view.getItems():
+                self.setItemRotation(item, rotation)
+            view.setProp('rotation', rotation)
         view.redraw()
 
-    def setItemRotation(self, view, rotation):
-        item = view.currentItem()
+    def setItemRotation(self, item, rotation):
         if item:
             item.setKey('rotation', rotation)
-        view.redraw()
+            item.redraw()
 
     def rotation(self, view):
         return view.getProp('rotation')
-
-    def rotate(self, view, by=90):
-        rotation = self.rotation(view) or 0
-        rotation = (rotation + by) % 360
-        self.setRotation(view, [rotation])

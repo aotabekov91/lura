@@ -7,7 +7,6 @@ from plug_qt.vimo.item import Item
 
 class FitzItem(Item, QtWidgets.QGraphicsObject):
 
-    canRender = True
     painted = QtCore.pyqtSignal(
         object, object, object, object)
 

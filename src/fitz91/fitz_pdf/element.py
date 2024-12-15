@@ -35,11 +35,11 @@ class FitzElement(
             elif len(point) == 4:
                 point = QtCore.QRectF(*point)
         if type(point) in [QtCore.QPoint, QtCore.QPointF]:
-            u = norm.map(point)
+            unified = norm.map(point)
         else:
-            p = point.normalized()
-            u = norm.mapRect(p)
-        return u
+            point = point.normalized()
+            unified = norm.mapRect(point)
+        return unified
 
     def unity(self, point):
         norm = self.m_norm
@@ -49,16 +49,16 @@ class FitzElement(
             elif len(point) == 4:
                 point = QtCore.QRectF(*point)
         if type(point) in [QtCore.QPoint, QtCore.QPointF]:
-            u = norm.map(point)
+            unified = norm.map(point)
         else:
-            p = point.normalized()
-            u = norm.mapRect(p)
-        return u
+            point = point.normalized()
+            unified = norm.mapRect(point)
+        return unified
 
     def setSize(self):
-        b = self.m_data.bound()
-        w, h = b.width, b.height
-        self.m_size = QtCore.QSizeF(w, h)
+        bound = self.m_data.bound()
+        width, height = bound.width, bound.height
+        self.m_size = QtCore.QSizeF(width, height)
 
     def size(self):
         return self.m_size
@@ -68,7 +68,7 @@ class FitzElement(
         ypos=data.get('xpos', None)
         matrix = fitz.Matrix(xpos, ypos)
         for functor in self.getFunctor('renderMatrix'):
-            matrix=functor(data, matrix)
+            functor(data, matrix)
         return matrix
 
     def renderImage(self, data):
