@@ -8,27 +8,13 @@ class Tabline(Plug):
 
     def setup(self):
         super().setup()
+        self.m_tabs = {}
         self.setupTabline()
         self.app.appIsLaunched.connect(
                 self.connectTabline)
-        self.app.appIsLaunched.connect(
-                self.updateTabline)
-
-    def updateTabline(self):
-        self.updateTabLabels()
-        self.updateLabels()
-
-    def updateLabels(self, *args, **kwargs):
-        v = self.app.stateman.view()
-        if v:
-            label = v.fullPosIndex()
-            alabel = f"[{self.app.view.posIndex()}]"
-            self.tabline.index.setText(label)
-            self.tabline.andex.setText(alabel)
 
     def setupTabline(self):
         bar=self.app.view.bar
-        self.m_tabs = {}
         self.rename_widget = None
         self.tabline = TablineWidget()
         idx = bar.stack.addWidget(self.tabline)
@@ -41,17 +27,18 @@ class Tabline(Plug):
         self.app.buffman.viewCreated.connect(
             self.updateTabsOnCreate)
         self.app.buffman.viewClosed.connect(
-            self.updateTabsOnClose)
+            self.updateTabLabels)
         self.app.stateman.viewChanged.connect(
             self.updateTabLabels)
         self.app.stateman.viewChanged.connect(
             self.updateLabels)
         self.app.buffman.posIndexChanged.connect(
             self.updateLabels)
+        self.updateTabline()
 
-    def updateTabsOnClose(self, view):
-        manager=view.manager()
-        self.updateTabLabels(view=view)
+    def updateTabline(self):
+        self.updateTabLabels()
+        self.updateLabels()
 
     def clearLayout(self, layout):
         item = layout.takeAt(0)
@@ -62,59 +49,24 @@ class Tabline(Plug):
                 widget.hide()
             item = layout.takeAt(0)
 
-    def updateTabIndexLabel(self, *args, **kwargs):
-        self.updateTabLabels(tab=self.current)
+    def searchTabber(self, view):
+        if view:
+            manager=view.manager()
+            klass=view.__class__.__name__
+            if klass=='TabView':
+                return view
+            return self.searchTabber(manager)
 
-    def updateTabLabels(self, view=None, tab=None):
-        if view and hasattr(view, "hasTabs"):
-            tab = view
-        if not tab:
-            tab = getattr(view, "m_tabber", None)
-        self.current = tab
-        if not tab:
-            return
-        if not tab.hasTabs:
-            return
-        layout = self.tabline.tabs.layout()
-        self.clearLayout(layout)
-        self.tabline.tabs.hide()
-        widget = self.m_tabs.get(tab)
-        if not widget:
-            self.updateTabsOnCreate(tab)
-        widget = self.m_tabs.get(tab)
-        widget_layout = widget.layout()
-        idx = tab.currentIndex()
-        self.clearLayout(widget_layout)
-        for page in range(tab.count()):
-            oname = "Tab"
-            w = tab.widget(page)
-            widx = w.posIndex()
-            idx = w.identifier()
-            name = f"[{widx}]"
-            if idx:
-                name = f"{idx} {name}"
-            if tab.current == w:
-                name = f"{name}*"
-                oname = "CurrentTab"
-            l = QtWidgets.QLabel(str(name))
-            l.setObjectName(oname)
-            l.setContentsMargins(0, 0, 0, 0)
-            l.setAlignment(
-                QtCore.Qt.AlignmentFlag.AlignCenter
-                | QtCore.Qt.AlignmentFlag.AlignVCenter)
-            widget_layout.addWidget(l, QtCore.Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(widget)
-        widget.show()
-        self.tabline.tabs.show()
+    def updateLabels(self, *args, **kwargs):
+        view = self.app.stateman.view()
+        if view:
+            label = view.fullPosIndex()
+            alabel = f"[{self.app.view.posIndex()}]"
+            self.tabline.index.setText(label)
+            self.tabline.andex.setText(alabel)
 
     def updateTabsOnCreate(self, view):
-        tab = None
-        if not view:
-            return
-        if view.checkProp("hasTabs", view):
-            tab = view
-        elif view.checkProp("m_tabber", view):
-            tab = view.m_tabber
+        tab=self.searchTabber(view)
         if tab:
             widget = QtWidgets.QWidget()
             layout = QtWidgets.QHBoxLayout(widget)
@@ -123,4 +75,43 @@ class Tabline(Plug):
             widget.setLayout(layout)
             self.m_tabs[tab] = widget
             tab.currentChanged.connect(
-                self.updateTabIndexLabel)
+                self.updateTabLabels)
+
+    def updateTabLabels(self, *args, **kwargs):
+        self.tabline.tabs.hide()
+        view=self.app.stateman.view()
+        tab=self.searchTabber(view)
+        if tab:
+            self.current = tab
+            layout = self.tabline.tabs.layout()
+            self.clearLayout(layout)
+            self.tabline.tabs.hide()
+            widget = self.m_tabs.get(tab)
+            if not widget:
+                self.updateTabsOnCreate(tab)
+            widget = self.m_tabs.get(tab)
+            widget_layout = widget.layout()
+            idx = tab.currentIndex()
+            self.clearLayout(widget_layout)
+            for page in range(tab.count()):
+                oname = "Tab"
+                w = tab.widget(page)
+                widx = w.posIndex()
+                idx = w.identifier()
+                name = f"[{widx}]"
+                if idx:
+                    name = f"{idx} {name}"
+                if tab.current == w:
+                    name = f"{name}*"
+                    oname = "CurrentTab"
+                page_layout = QtWidgets.QLabel(str(name))
+                page_layout.setObjectName(oname)
+                page_layout.setContentsMargins(0, 0, 0, 0)
+                page_layout.setAlignment(
+                    QtCore.Qt.AlignmentFlag.AlignCenter
+                    | QtCore.Qt.AlignmentFlag.AlignVCenter)
+                flag=QtCore.Qt.AlignmentFlag
+                widget_layout.addWidget(page_layout, flag.AlignCenter)
+            layout.addWidget(widget)
+            widget.show()
+            self.tabline.tabs.show()

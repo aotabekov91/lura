@@ -1,6 +1,5 @@
 from PyQt6 import QtCore, QtWidgets
 
-
 class TablineWidget(QtWidgets.QWidget):
 
     def __init__(self):
@@ -21,9 +20,9 @@ class TablineWidget(QtWidgets.QWidget):
                 objectName="TabIndex")
         self.tabs = QtWidgets.QWidget(
                 objectName="Tabs")
-        tl = QtWidgets.QHBoxLayout(self.tabs)
-        self.tabs.setLayout(tl)
-        tl.setContentsMargins(0, 0, 0, 0)
+        top_left = QtWidgets.QHBoxLayout(self.tabs)
+        self.tabs.setLayout(top_left)
+        top_left.setContentsMargins(0, 0, 0, 0)
         self.clock = QtWidgets.QLabel(
                 objectName="Clock")
         self.andex.setAlignment(
@@ -44,12 +43,12 @@ class TablineWidget(QtWidgets.QWidget):
         layout.addWidget(self.clock)
 
     def setText(self, kind, text):
-        f = getattr(self, kind, None)
-        if f:
-            f.setText(str(text))
+        functor = getattr(self, kind, None)
+        if functor:
+            functor.setText(str(text))
             if text is None:
-                return f.hide()
-            return f.show()
+                return functor.hide()
+            return functor.show()
 
     def setClock(self):
         self.timer = QtCore.QTimer(self)

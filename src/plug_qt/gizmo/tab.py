@@ -145,7 +145,6 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
             return view
 
     def tabAdd(self, tab, **kwargs):
-        tab.m_tabber = self
         idx = self.addWidget(tab)
         tab.setPosIndex(idx + 1)
         tab.m_tab_name = idx
@@ -153,19 +152,11 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
     def addView(self, view, **kwargs):
         self.tabAdd(view, **kwargs)
         view.setManager(self)
-        view.hasTabber = True
-        view.m_tabber = self
         self.viewAdded.emit(view)
         self.updateIndex()
         return view
 
-    def setView(
-        self,
-        *args,
-        view=None,
-        recursive_activate=False,
-        **kwargs,
-    ):
+    def setView(self, view=None, recursive_activate=False, **kwargs):
         if view:
             self.previous=self.current
             self.current=view
@@ -179,8 +170,6 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
         view.setPosIndex(idx)
         view.setManager(self)
         view.m_tab_name = idx
-        view.hasTabber = True
-        view.m_tabber = self
         self.viewAdded.emit(view)
         self.updateIndex()
         return view
@@ -202,8 +191,6 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
             self.goTo(kind='prev')
             self.removeView(view)
             view.closeWanted.emit(view)
-            view.m_tabber = None
-            delattr(view, "m_tabber")
 
     def updateIndex(self):
         for i in range(self.count()):
