@@ -1,4 +1,4 @@
-from .main import ZMQServer
+from .main import Server
 
 def get_plug_class():
-    return ZMQServer
+    return Server
