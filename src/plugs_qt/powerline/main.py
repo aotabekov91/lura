@@ -127,7 +127,7 @@ class Powerline(Plug):
             if type(cidx) in [int, str]:
                 idx = idx or cidx
             elif type(idx)==int:
-                idx+=1
+                idx=idx
             elif idx and idx.isValid():
                 idx=cidx.row()+1
             if hasattr(self.m_view, "count"):

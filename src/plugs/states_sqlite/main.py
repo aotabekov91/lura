@@ -16,7 +16,7 @@ class StatesTable(Plug, QtCore.QObject):
 
     def setup(self):
         super().setup()
-        self.m_table=None
+        self.table=None
         self.setParent(self.app.qapp)
         if self.app.running:
             self.addTable()
@@ -27,16 +27,18 @@ class StatesTable(Plug, QtCore.QObject):
     def addTable(self):
         table=self.app.plugman.getPlug('SQLiteTable')
         if table:
-            self.m_table=table.createTable(
+            self.table=table.createTable(
                     uniq=self.uniq,
                     fields=self.fields,
                     table_name=self.table_name,
                     database_name=self.database_name)
 
     def getState(self, obj, state):
-        query={'object': obj, 'state': state}
-        return self.m_table.getRow(query)
+        criteria={'object': obj, 'state': state}
+        return self.table.activate(
+                action='getRow', criteria=criteria)
 
     def setState(self, obj, state, value):
         data={'object': obj, 'state': state, 'value': value}
-        self.m_table.writeRow(data)
+        self.table.activate(
+                action='writeRow', data=data)

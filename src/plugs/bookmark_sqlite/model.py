@@ -31,7 +31,7 @@ class Model(vimo.Model, QtCore.QObject):
         if upd: upd.connect(self.updateRow)
 
     def populateModel(self, model):
-        rows=self.getRow({'source_id': self.source_id})
+        rows=self.getRow(criteria={'source_id': self.source_id})
         for row in rows: 
             self.decodeMetadata(row)
             model.createElement(row)
@@ -49,14 +49,14 @@ class Model(vimo.Model, QtCore.QObject):
     def addRow(self, element):
         data=element.data()
         self.encodeMetadata(data)
-        idx=self.table.writeRow(data)
+        idx=self.table.activate(action='writeRow', data=data)
         data={self.uniq_field: idx}
         element.updateData(data)
 
     def removeRow(self, element):
         idx=element.data(self.uniq_field)
         data={self.uniq_field: idx} 
-        self.table.removeRow(data)
+        self.table.activate(action='removeRow', data=data)
 
     def updateRow(self, element, field=None):
         data=element.data().copy()
@@ -64,10 +64,10 @@ class Model(vimo.Model, QtCore.QObject):
         if field: 
             data={field: data.get(field)}
         self.encodeMetadata(data)
-        self.table.updateRow(criteria, data) 
+        self.table.activate(action='updateRow', criteria=criteria, data=data) 
 
     def getAllRows(self):
-        return self.table.getRows()
+        return self.table.activate(action='getRows')
 
     def getRows(self, idx):
         rows=[]
@@ -77,12 +77,12 @@ class Model(vimo.Model, QtCore.QObject):
             if not self.autocreate: 
                 return rows
             data={self.uniq_field: idx}
-            idx=self.table.writeRow(data)
+            idx=self.table.activate(action='writeRow', data=data)
             if idx: 
                 return self.getRows(idx)
         return rows
 
-    def getRow(self, data):
+    def getRow(self, criteria):
         if self.table:
-            return self.table.getRow(data)
+            return self.table.activate(action='getRow', criteria=criteria)
         return []

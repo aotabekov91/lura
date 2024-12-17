@@ -29,7 +29,7 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
         if upd: upd.connect(self.updateRow)
 
     def populateModel(self, source_model):
-        rows=self.getRow({'source_id': self.source_id})
+        rows=self.getRow(criteria={'source_id': self.source_id})
         annotator=self.app.plugman.getPlug('Annotate')
         if rows and annotator:
             annotation_model=self.source()
@@ -41,14 +41,14 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
     def addRow(self, element):
         data=element.data()
         self.updateMetadata(data)
-        idx=self.table.writeRow(data)
+        idx=self.table.activate(action='writeRow', data=data)
         data={self.uniq_field: idx}
         element.updateData(data)
 
     def removeRow(self, element):
         idx=element.data(self.uniq_field)
         data={self.uniq_field: idx} 
-        self.table.removeRow(data)
+        self.table.activate(action='removeRow', data=data)
 
     def updateRow(self, element, field=None):
         data=element.data()
@@ -57,15 +57,18 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
         criteria={self.uniq_field: data_copy[self.uniq_field]}
         if field: 
             data_copy={field: data_copy.get(field)}
-        self.table.updateRow(criteria, data_copy) 
+        self.table.activate(
+                action='updateRow', 
+                criteria=criteria, 
+                data=data_copy) 
 
     def getAllRows(self):
-        return self.table.getRows()
+        return self.table.activate(action='getRows')
 
     def getRows(self, idx):
         rows=[]
         if self.table:
-            rows=self.table.getRow(idx)
+            rows=self.table.activate(action='getRow', criteria=idx)
             if rows: return rows
             if not self.autocreate: 
                 return rows
@@ -75,9 +78,10 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
                 return self.getRows(idx)
         return rows
 
-    def getRow(self, data):
+    def getRow(self, criteria):
         if self.table:
-            return self.table.getRow(data)
+            return self.table.activate(
+                    action='getRow', criteria=criteria)
         return []
 
     def updateMetadata(self, data):

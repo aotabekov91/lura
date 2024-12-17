@@ -32,6 +32,13 @@ class Table:
         self.setFields()
         self.createTable() 
 
+    def activate(self, action=None, **kwargs):
+        if action:
+            functor=getattr(self, action, None)
+            if functor:
+                result=functor(**kwargs)
+                return result
+
     def addUniq(self):
         for n, c in self.uniq.items():
             f=f'constraint {n} unique {str(c)}'
@@ -71,8 +78,8 @@ class Table:
         sql= sql.format(self.table_name, flds) 
         self.exec(sql)
 
-    def updateRow(self, cond, udict):
-        udict=self.filterDict(udict)
+    def updateRow(self, criteria, data):
+        udict=self.filterDict(data)
         upd=[]
         sql='update {} set {} where {}'
         for k, v in udict.items():
@@ -82,45 +89,45 @@ class Table:
         sql=sql.format(
                 self.table_name, 
                 ', '.join(upd),
-                self.getCond(cond))
+                self.getCond(criteria))
         self.exec(sql)
 
-    def filterDict(self, adict):
-        d={}
-        for k, v in adict.items():
-            if k in self.cfields:
-                d[k]=v
-        return d
+    def filterDict(self, data):
+        adata={}
+        for key, value in data.items():
+            if key in self.cfields:
+                adata[key]=value
+        return adata
 
-    def writeRow(self, rowDic=None, uid=None):
-        rowDic=self.filterDict(rowDic)
+    def writeRow(self, data=None, uid=None):
         cond={}
-        for k, c in self.uniq.items():
+        rowDic=self.filterDict(data)
+        for key, name in self.uniq.items():
             cond={}
-            for i in c:
+            for i in name:
                 if not i in rowDic: break
                 cond[i]=rowDic[i]
-        rs=self.getRow(cond)
-        if rs:
-            d=rs[0]
+        rows=self.getRow(cond)
+        if rows:
+            row_data=rows[0]
             uid = uid or self.idField
             rc=rowDic.copy()
             rc.pop(uid, None)
-            idx=d.get(uid, None)
+            idx=row_data.get(uid, None)
             self.updateRow({uid: idx}, rc)
             return idx
-        f=[]
-        for k in rowDic.keys():
-            if k in self.cfields:
-                f+=['"{}"'.format(k)]
-        v=[]
-        for j, k in rowDic.items(): 
+        field=[]
+        for key in rowDic.keys():
+            if key in self.cfields:
+                field+=['"{}"'.format(key)]
+        value=[]
+        for j, key in rowDic.items(): 
             if j in self.cfields:
-                k=str(k).replace('"', '\'')
-                v+=['"{}"'.format(k)]
+                key=str(key).replace('"', '\'')
+                value+=['"{}"'.format(key)]
         sql = 'insert into {} ({}) values ({})'
-        v, f=','.join(v), ','.join(f)
-        sql = sql.format(self.table_name, f, v)
+        value, field=','.join(value), ','.join(field)
+        sql = sql.format(self.table_name, field, value)
         return self.exec(sql)
 
     def removeRow(self, criteria):
@@ -164,14 +171,15 @@ class Table:
                     ctr+=[f"{f}='{v}'"]
         return ' and '.join(ctr)
 
-    def getRow(self, cond):
-        criteria={}
-        for k, v in cond.items():
-            if k in self.cfields:
-                criteria[k]=v
-        condition=self.getCond(criteria)
+    def getRow(self, criteria={}):
+        acriteria={}
+        for key, value in criteria.items():
+            if key in self.cfields:
+                acriteria[key]=value
+        condition=self.getCond(acriteria)
         sql = 'select * from {} where {}'
-        sql = sql.format(self.table_name, condition)
+        sql = sql.format(
+                self.table_name, condition)
         return self.exec(sql, fetch=True)
 
     def getRows(self):
@@ -179,12 +187,12 @@ class Table:
         sql=sql.format(self.table_name)
         return self.exec(sql, fetch=True)
 
-    def getField(self, field, name, value):
-        data={'field':name, 'value':value}
+    def getField(self, field, key, value):
+        data={'field':key, 'value':value}
         row=self.getRow(data)
         if row and field in row[0].keys(): 
             return row[0][field]
 
-    def setField(self, fname, fvalue, name, value):
-        data={'field':name, 'value':value}
-        self.updateRow(data, {fname:fvalue})
+    def setField(self, fkey, fvalue, key, value):
+        data={'field':key, 'value':value}
+        self.updateRow(data, {fkey:fvalue})
