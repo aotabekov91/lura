@@ -4,10 +4,12 @@ from zmq_server import BroadcastServer
 
 from table import Table
 
-class Handler:
+class SQLiteServer(BroadcastServer):
 
-    def __init__(self):
+    def setup(self):
+        super().setup()
         self.m_tables={}
+        self.setHandler(self)
 
     def act(
             self, 
@@ -24,8 +26,23 @@ class Handler:
               'connector_idx': connector_idx,
               }
         if table:
-            reply['result']=table.activate(*args, **kwargs)
+            result=table.activate(*args, **kwargs)
+            reply['result']=result
+            self.checkBroadcast(result, args, kwargs, connector_id, connector_idx)
         return reply 
+
+    def checkBroadcast(self, result, args, kwargs, connector_id, connector_idx):
+        action=kwargs.get('action', None)
+        if action in ['updateRow', 'writeRow', 'removeRow']:
+            data={
+                    'action': action,
+                    'connector_id': connector_id,
+                    'connector_idx': connector_idx,
+                    'args': args,
+                    'kwargs': kwargs,
+                    'result': result,
+                    }
+            self.broadcast(data)
 
     def createTable(
             self, 
@@ -77,7 +94,7 @@ class Handler:
                     )
 
 def create(ip_addr):
-    server=BroadcastServer(handler=Handler(), sip_addr=ip_addr)
+    server=SQLiteServer(sip_addr=ip_addr)
     server.run()
 
 if __name__=='__main__':

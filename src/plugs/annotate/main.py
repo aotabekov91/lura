@@ -31,7 +31,7 @@ class Annotate(Plug, QtCore.QObject):
                 self, source=model)
         self.modelCreated.emit(annotation_model)
         self.m_models[model]=annotation_model
-        return model
+        return annotation_model
 
     @tag(["<c-a>(normal/visual[any])", "<c-a>/<c-[>/<escape>(annotate)"])
     def toggle(self):

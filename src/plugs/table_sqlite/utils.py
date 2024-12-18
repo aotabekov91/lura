@@ -1,17 +1,26 @@
+from PyQt6 import QtCore
+
 from zmq_server import BroadcastServer
 
 def ping(ip_addr):
     return BroadcastServer.query(
             ip_addr, {'action': 'pong'})
 
-class Shell:
+class Shell(QtCore.QObject):
+
+    tableChanged=QtCore.pyqtSignal(object)
 
     def __init__(self, agent, name, database, fields):
+        super().__init__()
         self.m_fields=[]
         self.m_agent=agent
         self.m_idx=id(self)
-        self.m_name=f'{database}_{name}'
         self.setFields(fields)
+        self.setName(database, name)
+
+    def setName(self, database, name):
+        database=database or name
+        self.m_name=f'{database}_{name}'
 
     def setFields(self, fields):
         for field in fields:

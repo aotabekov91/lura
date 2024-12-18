@@ -24,10 +24,10 @@ class Buffman(plug.Buffman, QtCore.QObject):
         self.setParent(self.app)
         self.app.appIsLaunched.connect(self.checkParser)
 
-    def setModel(self, idx: tp.Any, model: tp.Any) -> None:
-        super().setModel(idx, model)
-        if model:
-            self.modelCreated.emit(model)
+    # def setModel(self, idx: tp.Any, model: tp.Any) -> None:
+    #     super().setModel(idx, model)
+    #     if model:
+    #         self.modelCreated.emit(model)
 
     def saveView(self, view: tp.Any) -> None:
         super().saveView(view)

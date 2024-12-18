@@ -63,12 +63,21 @@ class BroadcastServer:
     def setHandler(self, handler):
         self.m_handler=handler
 
+    def info(self):
+        return {
+                'status': 'ok',
+                'server_ip': self.serverIP(),
+                'broadcast_ip': self.broadcastIP(),
+                }
+
     def handle(self, request):
         action=request.get('action', None)
         if action=='pong':
             return self.pong()
         elif action=='stop':
             return self.stop()
+        elif action=='info':
+            return self.info()
         elif self.m_handler:
             return self.m_handler(request)
         return {'status': 'nok', 'info': 'not understood'}

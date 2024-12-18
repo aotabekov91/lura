@@ -19,7 +19,7 @@ class WordVisual(Plug):
         view=self.app.stateman.view()
         agent=self.getAgent(view=view)
         if agent:
-            submode=self.app.stateman.activate(
+            submode=self.app.stateman.setSubmode(
                     submode="word", toggle_submode=True)
             if submode=='word':
                 if self.check('visualize', agent):

@@ -111,14 +111,11 @@ class Model(Object):
         elements=self.m_elements.values()
         for element in elements: 
             data = element.data()
-            if not by in data:
-                continue
-            if value != data.get(by, None):
-                continue
-            if only_one: 
-                return element
-            else:
-                found+=[element]
+            if value == data.get(by, None):
+                if only_one: 
+                    return element
+                else:
+                    found+=[element]
         return found
 
     def clearAll(self):

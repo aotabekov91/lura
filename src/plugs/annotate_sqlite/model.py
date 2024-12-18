@@ -19,16 +19,49 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
         self.attachSource()
 
     def attachSource(self):
+        self.populateModel()
+        self.connectTable(kind='connect')
+        if self.table:
+            self.table.tableChanged.connect(self.updateModel)
+
+    def updateModel(self, data):
         annotation_model=self.source()
-        self.populateModel(annotation_model)
+        if annotation_model:
+            action=data.get('action')
+            self.connectTable('disconnect')
+            kwargs=data.get('kwargs', {})
+            source_model=annotation_model.source()
+            if action=='writeRow':
+                row=kwargs.get('data', {})
+                idx=data.get('result', None)
+                self.parseMetadata(source_model, row)
+                if not idx is None:
+                    row[self.uniq_field]=idx
+                    annotation_model.addAnnotate(data=row)
+            elif action=='removeRow':
+                criteria=kwargs.get('criteria', {})
+                idx=criteria.get('id', None)
+                element=annotation_model.getElement(
+                        idx, by='id')
+                annotation_model.delAnnotate(
+                        element=element)
+            self.connectTable('connect')
+
+    def connectTable(self, kind='connect'):
+        annotation_model=self.source()
         add=getattr(annotation_model, 'elementAdded', None)
         rem=getattr(annotation_model, 'elementRemoved', None)
         upd=getattr(annotation_model, 'elementUpdated', None)
-        if add: add.connect(self.addRow)
-        if rem: rem.connect(self.removeRow)
-        if upd: upd.connect(self.updateRow)
+        if kind=='connect':
+            if add: add.connect(self.addRow)
+            if rem: rem.connect(self.removeRow)
+            if upd: upd.connect(self.updateRow)
+        elif kind=='disconnect':
+            if add: add.disconnect(self.addRow)
+            if rem: rem.disconnect(self.removeRow)
+            if upd: upd.disconnect(self.updateRow)
 
-    def populateModel(self, source_model):
+    def populateModel(self):
         rows=self.getRow(criteria={'source_id': self.source_id})
         annotator=self.app.plugman.getPlug('Annotate')
         if rows and annotator:
@@ -48,7 +81,7 @@ class AnnotateSqliteModel(vimo.Model, QtCore.QObject):
     def removeRow(self, element):
         idx=element.data(self.uniq_field)
         data={self.uniq_field: idx} 
-        self.table.activate(action='removeRow', data=data)
+        self.table.activate(action='removeRow', criteria=data)
 
     def updateRow(self, element, field=None):
         data=element.data()

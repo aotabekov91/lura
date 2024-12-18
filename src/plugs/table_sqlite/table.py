@@ -36,8 +36,7 @@ class Table:
         if action:
             functor=getattr(self, action, None)
             if functor:
-                result=functor(**kwargs)
-                return result
+                return functor(**kwargs)
 
     def addUniq(self):
         for n, c in self.uniq.items():
