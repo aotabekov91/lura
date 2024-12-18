@@ -139,6 +139,6 @@ class Powerline(Plug):
     def setInfo(self, info=None):
         self.view.setText("info", info)
 
-    @tag('tp')
+    @tag('tp(normal)')
     def toggle(self):
         self.view.toggle()

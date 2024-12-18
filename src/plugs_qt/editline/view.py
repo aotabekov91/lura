@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 
 class EditlineWidget(QtWidgets.QWidget):
+
     textChanged = QtCore.pyqtSignal()
     editWanted = QtCore.pyqtSignal(bool)
 
