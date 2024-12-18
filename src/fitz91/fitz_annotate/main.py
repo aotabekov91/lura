@@ -49,7 +49,6 @@ class FitzAnnotate(Plug):
             page_data=element.data()
             page_data.delete_annot(annotation)
             model.clearPixmapCache(idx=element.index())
-            model.modelUpdated.emit()
             return annotation
 
     def annotate(self, model, data):
@@ -81,7 +80,6 @@ class FitzAnnotate(Plug):
                 data['annotation_object']=annotation
                 annotation.update()
                 model.clearPixmapCache(idx=element.index())
-                model.modelUpdated.emit()
             return data
 
     def getQuads(self, data):

@@ -97,13 +97,14 @@ class FitzModel(
     def clearPixmapCache(self, idx=None):
         if idx is None:
             self.m_cache.clearCache('pixmap')
+            self.modelUpdated.emit()
         else:
             cache = self.m_cache.getCache(name='pixmap')
             for key in cache.keys():
                 if idx == key[0]:
                     self.m_cache.dropCache(key, 'pixmap')
+                    self.modelUpdated.emit()
                     break
-        # self.modelUpdated.emit()
 
     def getPixmap(self, element, key):
         idx=element.index()
