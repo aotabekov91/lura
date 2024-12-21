@@ -1,3 +1,5 @@
+import zmq
+
 from PyQt6 import QtCore
 
 from zmq_server import BroadcastServer
@@ -58,3 +60,24 @@ class Shell(QtCore.QObject):
                 connector_id=self.m_name, 
                 connector_idx=self.m_idx)
         return result
+
+class Broadcast(QtCore.QObject):
+
+    broadcastReceived=QtCore.pyqtSignal(object)
+
+    def __init__(self, ip):
+        super().__init__()
+        self.activated=False
+        self.setBroadcast(ip)
+
+    def setBroadcast(self, ip):
+        self.m_socket=zmq.Context().socket(zmq.SUB)
+        self.m_socket.connect(ip)
+        self.m_socket.subscribe('')
+
+    def startListen(self):
+        self.activated=True
+        while self.activated:
+            data=self.m_socket.recv_json()
+            self.broadcastReceived.emit(data)
+

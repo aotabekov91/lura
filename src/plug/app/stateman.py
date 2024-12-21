@@ -36,7 +36,11 @@ class Stateman(Plug):
     def passive(self):
         return self.m_passive
 
-    def setPassive(self, *args, passive = [], **kwargs) -> tp.List[tp.Any]:
+    def setPassive(
+            self, 
+            *args, 
+            passive = [], 
+            **kwargs) -> tp.List[tp.Any]:
         cond = False
         if passive:
             cond = True

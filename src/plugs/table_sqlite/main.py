@@ -1,6 +1,5 @@
 import os
 import sys
-import zmq
 import subprocess
 
 from PyQt6 import QtCore
@@ -9,27 +8,7 @@ from plug import Plug
 from zmq_server import BroadcastServer
 
 from .table import Table
-from .utils import Shell, ping
-
-class Broadcast(QtCore.QObject):
-
-    broadcastReceived=QtCore.pyqtSignal(object)
-
-    def __init__(self, ip):
-        super().__init__()
-        self.activated=False
-        self.setBroadcast(ip)
-
-    def setBroadcast(self, ip):
-        self.m_socket=zmq.Context().socket(zmq.SUB)
-        self.m_socket.connect(ip)
-        self.m_socket.subscribe('')
-
-    def startListen(self):
-        self.activated=True
-        while self.activated:
-            data=self.m_socket.recv_json()
-            self.broadcastReceived.emit(data)
+from .utils import Shell, Broadcast, ping
 
 class SQLiteTable(Plug, QtCore.QObject):
 

@@ -84,12 +84,14 @@ class View(plug.View):
         pass
 
     def event(self, event):
-        r = super().event(event)
-        if event.type() == QtCore.QEvent.Type.Resize:
-            self.resized.emit(self)
-        if event.type() == QtCore.QEvent.Type.Paint:
-            self.painted.emit(self, event)
-        return r
+        if hasattr(super(), 'event'):
+            result = super().event(event)
+            if event.type() == QtCore.QEvent.Type.Resize:
+                self.resized.emit(self)
+            if event.type() == QtCore.QEvent.Type.Paint:
+                self.painted.emit(self, event)
+            return result
+        return False
 
     def show(self, *args, **kwargs):
         super().show()

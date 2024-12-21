@@ -145,23 +145,28 @@ class Earman(Plug):
     def checkMatch(self, event) -> bool:
         key = self.letters()
         xrange = self.digits(convert=True)
-        if not key and xrange:
-            return True
-        view=self.app.stateman.view()
-        views=self.getViewMRO(view)
-        state = self.app.stateman.state()
-        match, partial = self.match(
-            key,
-            xrange,
-            state,
-            self.m_keys,
-            self.m_objects,
-            view,
-            views,)
-        print(match, partial)
-        if match or partial:
-            self.run(match, partial, xrange)
-            return True
+        if key:
+            view=self.app.stateman.view()
+            views=self.getViewMRO(view)
+            state = self.app.stateman.state()
+            match, partial = self.match(
+                key,
+                xrange,
+                state,
+                self.m_keys,
+                self.m_objects,
+                view,
+                views,)
+            if match or partial:
+                self.run(match, partial, xrange)
+                return True
+        else:
+            if self.app.stateman.passive():
+                return False
+            if xrange:
+                return True
+            # and xrange and passive:
+            # return True
         return False
 
     def run(self, match, partial, xrange):
@@ -221,11 +226,11 @@ class Earman(Plug):
             elif self.checkFunctor(pressed):
                 return True
             # elif self.checkDelisten(pressed):
-            # return True
-            # elif self.checkPassive(pressed):
-            #     return False
+            #   return True
             elif self.checkMatch(pressed):
                 return True
+            elif self.checkPassive(pressed):
+                return False
             self.clearKeys()
         return False
 

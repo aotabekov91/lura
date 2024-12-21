@@ -137,7 +137,7 @@ class Styleman(Plug):
             self.colorscheme(self.style)
 
     @tag("(exec)", filler={"colorscheme": "colorscheme"})
-    def colorscheme(self, colorscheme: str) -> None:
+    def colorscheme(self, colorscheme='default') -> None:
         style = self.styles.get(colorscheme, None)
         default = self.styles.get("default", None)
         if style:

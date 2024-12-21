@@ -26,12 +26,9 @@ class TreeViewWidget(QtWidgets.QTreeView):
         if select:
             self.setCurrentIndex(idx)
 
-    def expandAll(self, item=None, **kwargs):
-        item = item or self.currentItem()
-        if item:
-            self.expand(idx=item.index(), select=False)
-            for row in range(item.rowCount()):
-                self.expandAll(item.child(row))
+    def expandAll(self, idx=None, **kwargs):
+        idx = idx or self.currentIndex()
+        self.expandRecursively(idx)
 
     def collapse(self, idx=None, **kwargs):
         idx = idx or self.currentIndex()
@@ -152,13 +149,13 @@ class TreeViewWidget(QtWidgets.QTreeView):
             self.indexChanged.emit(idx)
 
     def currentItem(self, idx=None):
-        m = self.model()
-        if m:
+        model = self.model()
+        if model:
             idx = idx or self.currentIndex()
-            if type(m) == QtCore.QSortFilterProxyModel:
-                idx = m.mapToSource(idx)
-            if idx and hasattr(m, "itemFromIndex"):
-                return m.itemFromIndex(idx)
+            if type(model) == QtCore.QSortFilterProxyModel:
+                idx = model.mapToSource(idx)
+            if idx and hasattr(model, "itemFromIndex"):
+                return model.itemFromIndex(idx)
 
 class TreeView(vimo.View, TreeViewWidget):
 
