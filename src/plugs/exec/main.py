@@ -4,9 +4,9 @@ from collections import OrderedDict
 
 from plug import Plug, tag
 
-from PyQt6 import QtGui
-
-from .model import Model, ListView
+from .model import Model
+from .view import ListView
+from .overlay import OverlayView
 
 class Exec(Plug):
 
@@ -14,7 +14,6 @@ class Exec(Plug):
         super().setup()
         self.m_agents={}
         self.m_model=Model()
-        self.setParser()
         if self.app.running:
             self.gatherCommands()
         else:
@@ -22,25 +21,27 @@ class Exec(Plug):
                     self.gatherCommands)
 
     def setupView(self):
-        # self.m_view=self.app.buffman.createView(
-        #         ListView,
-        #         app=self.app,
-        #         name='ExecView',
-        #         attributes=[
-        #                 {
-        #                 'key': 'position', 
-        #                 'value': {'ExecView': 'D|L'},
-        #                 },])
-        self.m_view=ListView()
+        self.m_overlay=OverlayView(
+                app=self.app,
+                view=self.app.view.main,
+                identifier='O',
+                objectName='ExecOverlay',
+                )
+        self.m_view=self.app.buffman.createView(
+                ListView,
+                app=self.app,
+                name='ExecView',
+                manager=self.m_overlay,
+                parent=self.m_overlay,
+                )
         self.m_view.setModel(self.m_model)
-        self.m_model.rowsRemoved.connect(self.updateView)
-        self.m_model.rowsInserted.connect(self.updateView)
+        self.m_model.rowsRemoved.connect(
+                self.updateView)
+        self.m_model.rowsInserted.connect(
+                self.updateView)
 
     def updateView(self):
-        # self.m_view.first()
-        # idx=self.m_view.currentIndex()
-        # self.m_view.expand(idx)
-        print(self.m_view.currentIndex())
+        self.m_view.first()
 
     def gatherCommands(self):
         keys=self.app.earman.keys()
@@ -56,51 +57,25 @@ class Exec(Plug):
                 func=getattr(obj, fname, None)
                 if func:
                     signiture = inspect.signature(func)
-                    parser, data=self.getParser(signiture)
-                    self.m_agents[fname]=(func, parser)
+                    data=self.getOptions(fname, signiture)
+                    self.m_agents[fname]=func
                     func_data[fname]=data
         self.m_model.populateModel(func_data)
-        self.updateModel()
         self.setupView()
+        self.updateModel()
 
-    def getParser(self, signiture):
+    def getOptions(self, name, signiture):
         data=OrderedDict()
+        filler=self.app.buffman.getFiller(name, {})
         prmts=signiture.parameters
-        parser=argparse.ArgumentParser()
         for (name, prmt) in prmts.items():
             if name in ['args', 'kwargs']:
                 continue
-            if prmt.default==inspect.Parameter.empty:
-                parser.add_argument(name)
-                data[name]=[]
-            else:
-                data[name]=[prmt.default]
-                parser.add_argument(name, default=prmt.default)
-        return parser, data
-
-    @tag('(exec)')
-    def test(self, arg1, arg2='new'):
-        pass
-
-    @tag('<return>(exec)')
-    def act(self):
-        pass
-
-    @tag('<c-j>(exec)')
-    def down(self, xrange=[1]):
-        self.m_view.goTo(kind='down', xrange=xrange)
-
-    @tag('<c-k>(exec)')
-    def up(self, xrange=[1]):
-        self.m_view.goTo(kind='up', xrange=xrange)
-
-    @tag('<c-l>(exec)')
-    def right(self, xrange=[1]):
-        self.m_view.goTo(kind='right', xrange=xrange)
-
-    @tag('<c-h>(exec)')
-    def left(self, xrange=[1]):
-        self.m_view.goTo(kind='left', xrange=xrange)
+            options= filler.get(name, [])
+            if prmt.default!=inspect.Parameter.empty:
+                options.insert(0, prmt.default)
+            data[name]=options
+        return data
 
     def connectEditline(self, kind='connect'):
         edit=self.app.plugman.getPlug('Editline')
@@ -113,23 +88,17 @@ class Exec(Plug):
         edit=self.app.plugman.getPlug('Editline')
         text=edit.text()
         self.m_model.applyFilter(text)
+        self.updateViewGeometry()
 
-    def setCompleter(self):
-        model=QtGui.QStandardItemModel()
-        for func in self.m_agents.keys():
-            item=QtGui.QStandardItem(func)
-            model.appendRow(item)
-            if func=='installPicks':
-                i=QtGui.QStandardItem('installPicks text 1')
-                ii=QtGui.QStandardItem('installPicks text 2')
-                item.appendRow(i)
-                item.appendRow(ii)
-        self.m_completer=Completer()
-        self.m_completer.setModel(model)
-
-    def setParser(self):
-        self.m_parser=argparse.ArgumentParser()
-        self.m_parser.add_argument('command')
+    def updateViewGeometry(self):
+        hint=self.m_view.sizeHint()
+        geometry=self.m_view.geometry()
+        overlay=self.m_view.manager().geometry()
+        y=max(0, overlay.height()-hint.height())
+        geometry.setX(0)
+        geometry.setY(y)
+        geometry.setSize(hint)
+        self.m_view.setGeometry(geometry)
 
     def addAgent(self, name, data):
         self.m_agents[name]=data
@@ -141,39 +110,52 @@ class Exec(Plug):
     def toggle(self):
         editline=self.app.plugman.getPlug('Editline')
         if editline:
-            self.m_view.show()
-            editline.toggle()
             mode=self.app.stateman.activate(
                     mode='exec', toggle_mode=True)
-
             if mode=='exec':
+                self.m_view.activate(mode='exec')
+                self.updateViewGeometry()
                 self.connectEditline('connect')
                 self.app.stateman.setPassive(
                         passive=['exec', 'any'])
+                editline.activate(mode='exec')
             else:
                 self.connectEditline('disconnect')
                 self.app.stateman.setPassive()
+                self.m_view.octivate()
+                editline.octivate()
 
-    @tag('<tab>(exec)')
+    @tag('<c-l>/<tab>(exec)')
     def select(self):
-        completion=self.m_completer.currentCompletion()
-        if completion:
-            editline=self.app.plugman.getPlug('Editline')
-            editline.edit.setText(f'{completion} ')
+        idx=self.m_view.currentIndex()
+        item=self.m_model.itemFromIndex(idx)
+        editline=self.app.plugman.getPlug('Editline')
+        if item and editline:
+            option=item.text()
+            text=editline.edit.text()
+            text=text.split(' ')[:-1]+[option]
+            text=' '.join(text)
+            editline.edit.setText(f'{text}')
 
-    # @tag('<return>(exec)')
-    # def act(self, command=None):
-    #     if not command:
-    #         edit=self.app.plugman.getPlug('Editline')
-    #         command=edit.text()
-    #     command = shlex.split(command)
-    #     data=self.m_agents.get(command[0], None)
-    #     self.toggle()
-    #     if data:
-    #         func, parser=data
-    #         if parser:
-    #             args=parser.parse_args(command[1:])
-    #             args_dict=vars(args)
-    #             func(**args_dict)
-    #         else:
-    #             func()
+    @tag('<c-j>(exec)')
+    def down(self, xrange=[1]):
+        self.m_view.goTo(kind='down', xrange=xrange)
+
+    @tag('<c-k>(exec)')
+    def up(self, xrange=[1]):
+        self.m_view.goTo(kind='up', xrange=xrange)
+
+    @tag('<c-m>/<return>(exec)')
+    def act(self, command=None):
+        if not command:
+            edit=self.app.plugman.getPlug('Editline')
+            command=edit.text().strip()
+        if command:
+            command = tuple(command.split(' '))
+            func=self.m_agents.get(command[0], None)
+            if func:
+                # try:
+                func(*command[1:])
+                # except:
+                    # pass
+        self.toggle()

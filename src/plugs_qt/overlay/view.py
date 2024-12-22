@@ -121,7 +121,6 @@ class OverlayView(
         view.setFocus()
         self.app.view.update()
 
-
     def activate(self, *args, **kwargs):
         pass
 

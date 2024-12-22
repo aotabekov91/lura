@@ -93,7 +93,7 @@ class App(Plug):
     def standardEvent(self, event):
          return event
 
-    @tag("<c-q>(any)")
+    @tag(["<c-q>(any)", "(exec)"])
     def quit(self) -> None:
         self.appSoonQuits.emit()
         time.sleep(0.1)

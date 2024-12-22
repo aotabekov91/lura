@@ -2,7 +2,7 @@ from PyQt6 import QtCore
 
 from plug import Plug
 
-from .view import EditlineWidget
+from .view import EditlineView
 
 class Editline(Plug, QtCore.QObject):
 
@@ -17,7 +17,10 @@ class Editline(Plug, QtCore.QObject):
 
     def setupEditline(self):
         bar=self.app.view.bar
-        self.edit = EditlineWidget(objectName="Editline")
+        self.edit = EditlineView(
+                app=self.app,
+                objectName="Editline",
+                )
         self.edit.textChanged.connect(self.textChanged)
         self.edit.m_idx = bar.stack.addWidget(self.edit)
 

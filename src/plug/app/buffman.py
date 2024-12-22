@@ -3,6 +3,7 @@ import typing as tp
 from ..plug import Plug
 
 class Buffman(Plug):
+
     def __init__(self, app: tp.Any) -> None:
         super().__init__(app)
         self.m_views: tp.Set[tp.Any] = set()
@@ -17,11 +18,11 @@ class Buffman(Plug):
     def views(self) -> tp.Set[tp.Any]:
         return self.m_views
 
-    def setFiller(self, name, func) -> None:
+    def addFiller(self, name, func) -> None:
         self.m_fillers[name] = func
 
-    def getFiller(self, name: str) -> tp.Any:
-        return self.m_fillers.get(name)
+    def getFiller(self, name: str, default=None) -> tp.Any:
+        return self.m_fillers.get(name, default)
 
     def setModel(self, idx: tp.Any, model: tp.Any) -> None:
         if model:

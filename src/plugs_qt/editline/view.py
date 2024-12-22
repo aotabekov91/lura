@@ -1,7 +1,8 @@
 from PyQt6 import QtCore, QtWidgets
 
+from plug_qt import vimo
 
-class EditlineWidget(QtWidgets.QWidget):
+class EditlineView(vimo.View, QtWidgets.QWidget):
 
     textChanged = QtCore.pyqtSignal()
     editWanted = QtCore.pyqtSignal(bool)
@@ -42,19 +43,22 @@ class EditlineWidget(QtWidgets.QWidget):
     def setText(self, text):
         self.m_text.setText(text)
 
-    def octivate(self, label=":", edit=""):
+    def octivate(self, label=":", edit="", **kwargs):
         self.m_text.clear()
         self.m_text.hide()
         self.m_text.setText(str(edit))
         self.m_label.setText(str(label))
         self.editWanted.emit(False)
+        super().octivate(**kwargs)
 
     def activate(
         self,
         label=":",
         edit="",
         keep=False,
+        **kwargs,
     ):
+        super().activate(**kwargs)
         self.show()
         self.m_text.show()
         self.m_text.setFocus()

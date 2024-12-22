@@ -4,5 +4,5 @@
 
 ## Tasks 
 
-* [ ] Autocomplete
-* [ ] Option suggestion
+* [x] Autocomplete
+* [x] Option suggestion

@@ -1,11 +1,8 @@
 from plug_qt import vimo
 
-from PyQt6 import QtGui, QtCore, QtWidgets
+from PyQt6 import QtGui
 
-class ListView(QtWidgets.QListView):
-    pass
-
-class Model(QtGui.QStandardItemModel, vimo.Model):
+class Model(vimo.Model, QtGui.QStandardItemModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -13,20 +10,17 @@ class Model(QtGui.QStandardItemModel, vimo.Model):
         self.m_source=QtGui.QStandardItemModel()
 
     def applyFilter(self, pattern):
-        self.splitPrefix(pattern)
         self.clear()
-        for matched in self.getMatched():
-            item=QtGui.QStandardItem(matched.text())
-            print(matched.text())
-            self.appendRow(item)
-        # self.dataChanged.emit()
-        print(self.rowCount())
+        self.splitPrefix(pattern)
+        matched=self.getMatched()
+        for matched in matched:
+            text=matched.text()
+            self.appendRow(QtGui.QStandardItem(text))
 
     def splitPrefix(self, text):
+        self.m_command=['']
         if text:
             self.m_command=text.split(' ')
-        else:
-            self.m_command=['']
 
     def command(self):
         return self.m_command
@@ -51,10 +45,10 @@ class Model(QtGui.QStandardItemModel, vimo.Model):
         return functions
 
     def getOptions(self, func_item):
-        options=[]
         option_val=self.m_command[-1]
         option_pos=len(self.m_command)-2
         option_item=func_item.child(option_pos, 0)
+        options=[]
         if option_item:
             for row in range(option_item.rowCount()):
                 child=option_item.child(row, 0)

@@ -14,22 +14,17 @@ class Styleman(Plug):
 
     def setup(self):
         super().setup()
-        self.setColorschemeFiller()
+        if self.app.running:
+            self.setColorschemeFiller()
+        else:
+            self.app.appSoonStarts.connect(
+                    self.setColorschemeFiller)
 
     def setColorschemeFiller(self) -> None:
-        self.app.buffman.setFiller(
-            "colorscheme", self.colorschemeFiller)
-
-    def colorschemeFiller(self, name) -> tp.List[str]:
-        alist = []
-        keys = self.styles.keys()
-        if not name:
-            return keys
-        for n in keys:
-            l = len(name)
-            if n[:l] == name:
-                alist += [n]
-        return alist
+        colorschemes = self.styles.keys()
+        filler={'colorscheme': list(colorschemes)}
+        self.app.buffman.addFiller(
+                "colorscheme", filler)
 
     def cssToDict(self, css) -> tp.Dict[str, str]:
         settings = {}

@@ -8,15 +8,6 @@ class ItemListView(vimo.View, QtWidgets.QListView):
         super().setup()
         self.setProperties()
 
-    def currentItem(self, idx=None):
-        model = self.model()
-        if model:
-            idx = idx or self.currentIndex()
-            if type(model) == QtCore.QSortFilterProxyModel:
-                idx = model.mapToSource(idx)
-            if hasattr(model, "itemFromIndex"):
-                return model.itemFromIndex(idx)
-
     def setProperties(self):
         self.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -26,7 +17,7 @@ class ItemListView(vimo.View, QtWidgets.QListView):
     def setModel(self, model):
         if model:
             super().setModel(model)
-            super(ListViewWidget, self).setModel(model)
+            super(QtWidgets.QListView, self).setModel(model)
 
     def goTo(self, kind=None, xrange=None, **kwargs):
         if kind:

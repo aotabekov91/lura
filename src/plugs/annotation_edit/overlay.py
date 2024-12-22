@@ -87,4 +87,3 @@ class OverlayView(
 
     def insertView(self, idx, view, **kwargs):
         pass
-
