@@ -110,6 +110,7 @@ class Exec(Plug):
     def toggle(self):
         editline=self.app.plugman.getPlug('Editline')
         if editline:
+            editline.toggle()
             mode=self.app.stateman.activate(
                     mode='exec', toggle_mode=True)
             if mode=='exec':
@@ -123,7 +124,6 @@ class Exec(Plug):
                 self.connectEditline('disconnect')
                 self.app.stateman.setPassive()
                 self.m_view.octivate()
-                editline.octivate()
 
     @tag('<c-l>/<tab>(exec)')
     def select(self):
@@ -147,6 +147,7 @@ class Exec(Plug):
 
     @tag('<c-m>/<return>(exec)')
     def act(self, command=None):
+        self.toggle()
         if not command:
             edit=self.app.plugman.getPlug('Editline')
             command=edit.text().strip()
@@ -158,4 +159,3 @@ class Exec(Plug):
                 func(*command[1:])
                 # except:
                     # pass
-        self.toggle()

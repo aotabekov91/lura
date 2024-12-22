@@ -9,11 +9,11 @@ from ..utils import tag
 class Styleman(Plug):
 
     current: str = None
-    style: str = "default"
-    styles: tp.Dict[str, tp.Any] = {}
 
     def setup(self):
         super().setup()
+        self.m_styles={}
+        self.m_style = "default"
         if self.app.running:
             self.setColorschemeFiller()
         else:
@@ -21,7 +21,7 @@ class Styleman(Plug):
                     self.setColorschemeFiller)
 
     def setColorschemeFiller(self) -> None:
-        colorschemes = self.styles.keys()
+        colorschemes = self.m_styles.keys()
         filler={'colorscheme': list(colorschemes)}
         self.app.buffman.addFiller(
                 "colorscheme", filler)
@@ -66,36 +66,24 @@ class Styleman(Plug):
 
     def updateDefault(self) -> None:
         self.setDefault(self.app.plugman.plugs)
-        self.colorscheme(self.style)
+        self.colorscheme(self.m_style)
 
-    def updateColorscheme(
-        self,
-        css: str,
-    ) -> tp.Dict[str, str]:
-        ddict, dcss = self.styles.get("default")
-        tmp = ddict.copy()
+    def updateColorscheme(self, css: str) -> tp.Dict[str, str]:
+        data, css = self.m_styles.get("default")
+        tmp = data.copy()
         return self.updateStyle(tmp, css)
 
-    def updateStyle(
-        self,
-        base: tp.Dict[str, str],
-        append: tp.Dict[str, str],
-    ) -> tp.Dict[str, str]:
-        for n, a in append.items():
-            v = base.pop(n, {})
-            v.update(a)
-            base[n] = v
+    def updateStyle(self, base, append) -> tp.Dict[str, str]:
+        for key, value in append.items():
+            data = base.pop(key, {})
+            data.update(value)
+            base[key] = data
         return base
 
     def setDefault(self, plugs):
-        # todo model_view css rewrites default
         default = collections.OrderedDict()
-        for name, plug in plugs.items():
-            if hasattr(plug, "ui"):
-                style = plug.ui.styleSheet()
-                if style:
-                    style = self.cssToDict(style)
-                    self.updateStyle(default, style)
+        style={}
+        for plug in plugs.values():
             file = plug.files.get("style.css", None)
             if file:
                 style = self.read(file)
@@ -105,7 +93,7 @@ class Styleman(Plug):
             style = self.read(file)
             self.updateStyle(default, style)
         css = self.dictToCSS(default)
-        self.styles["default"] = (default, css)
+        self.m_styles["default"] = (default, css)
 
     def read(
         self,
@@ -124,20 +112,31 @@ class Styleman(Plug):
         if update:
             css = self.updateColorscheme(css)
         css = self.dictToCSS(css)
-        self.styles[name] = (css, css)
+        self.m_styles[name] = (css, css)
         self.reloadColorscheme()
 
     def reloadColorscheme(self) -> None:
-        if self.current != self.style:
-            self.colorscheme(self.style)
+        if self.current != self.m_style:
+            self.colorscheme(self.m_style)
+
+    def currentStyle(self):
+        return self.current or self.m_style
+
+    def styles(self):
+        return self.m_styles
+
+    def style(self, style=None):
+        style=style or self.currentStyle() 
+        return self.m_styles.get(style, None)
 
     @tag("(exec)", filler={"colorscheme": "colorscheme"})
     def colorscheme(self, colorscheme='default') -> None:
-        style = self.styles.get(colorscheme, None)
-        default = self.styles.get("default", None)
+        self.current = None
+        style = self.m_styles.get(colorscheme, None)
+        default = self.m_styles.get("default", None)
         if style:
-            cdict, css = style
-            self.current = self.style = colorscheme
+            data, css = style
+            self.current = self.m_style = colorscheme
             if default:
                 _, dcss = default
                 css = dcss + css
@@ -146,5 +145,3 @@ class Styleman(Plug):
             _, css = default
             self.app.qapp.setStyleSheet(css)
             self.current = "default"
-        else:
-            self.current = None

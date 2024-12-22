@@ -32,3 +32,5 @@ Date: 2.12.2024-31.12.2024
 * non-blocking pure python timer
 * app indexing
 * app keyer
+* terminal view 
+  * direct all stdout/stdin to a terminal in app

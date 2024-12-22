@@ -7,9 +7,10 @@ class Styleman(
     QtCore.QObject,
 ):
 
+    styleChanged=QtCore.pyqtSignal(object)
+
     def setup(self) -> None:
         super().setup()
         self.setParent(self.app)
-        self.app.appIsLaunched.connect(
-            self.updateDefault
-        )
+        self.app.appSoonStarts.connect(
+            self.updateDefault)
