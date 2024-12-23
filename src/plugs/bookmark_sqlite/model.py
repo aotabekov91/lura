@@ -56,7 +56,7 @@ class Model(vimo.Model, QtCore.QObject):
     def removeRow(self, element):
         idx=element.data(self.uniq_field)
         data={self.uniq_field: idx} 
-        self.table.activate(action='removeRow', data=data)
+        self.table.activate(action='removeRow', criteria=data)
 
     def updateRow(self, element, field=None):
         data=element.data().copy()
