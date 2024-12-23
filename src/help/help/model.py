@@ -48,7 +48,6 @@ class HelpModel(
             ]
             md = markdown.Markdown(extensions=extensions)
             md = markdown.Markdown()
-            md.convert(contents)
             return md, md.convert(contents)
 
     def assignId(self, source):

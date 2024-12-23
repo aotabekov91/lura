@@ -42,10 +42,6 @@ QListWidget::item:selected {
 	background-color: transparent;
 }
 
-QTreeView::branch:selected {
-	background-color: green;
-}
-
 QTreeView::item:selected {
 	color: white;
 	background-color: green;
@@ -120,6 +116,15 @@ QLabel#HintBoxLabel:focus{
 	color: #90ee90;
 }
 
+QWebEngineView{
+	border: 10px solid red;
+}
+
+QWebEngineView:active{
+	border: 10px solid green;
+}
+
+
 #HelpView body {
 	background-color: #202020; 
 	color: #E4E4E4; 
@@ -129,11 +134,7 @@ QLabel#HintBoxLabel:focus{
 	font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-#HelpView img {
-	height: auto;
-	max-width: 100%; 
-}
-
+#HelpView img {height: auto; max-width: 100%}
 #HelpView h1 { color: #F8F8F8; padding-bottom: 0.3em; font-size: 2.25em; line-height: 1.2; border-bottom: 1px solid #444; margin-bottom: 16px; font-weight: bold; }
 #HelpView h2 { padding-bottom: 0.3em; font-size: 1.75em; line-height: 1.225; border-bottom: 1px solid #444; }
 #HelpView h3 { font-size: 1.5em; line-height: 1.43; margin-top: 1em; margin-bottom: 16px; font-weight: bold; }
