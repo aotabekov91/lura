@@ -19,32 +19,37 @@ class Lookup(Plug):
         self.view=self.app.buffman.createView(
                 LookupView, None)
 
+    @tag('(exec)')
+    def definition(self, text):
+        self.lookUp(text=text)
+
     @tag(['<c-D>(normal)', '<c-D>/<c-[>/<escape>(normal)[LookupView]'])
     def toggle(self):
         self.view.toggle()
 
     @tag('<c-d>(hint)')
-    def lookUp(self, selection=None, view=None, **kwargs):
-        if not view:
-            view=self.app.stateman.view()
-        if not selection and view:
-            selector=self.app.plugman.getPlug('Selection')
-            if selector:
-                selection=selector.selection(view=view)
-        if selection:
-            text=selection['text']
-            if text:
-                model=self.getFromCache(text)
-                if model is None:
-                    definition=get_json(text)
-                    if definition:
-                        json_data=json.loads(definition)
-                        model=self.setDefinition(text, json_data)
-                    else:
-                        model=self.setDefinition(text, {})
-                if model:
-                    self.view.setModel(model)
-                    self.view.activate()
+    def lookUp(self, text=None, selection=None, view=None, **kwargs):
+        if not text:
+            if not view:
+                view=self.app.stateman.view()
+            if not selection and view:
+                selector=self.app.plugman.getPlug('Selection')
+                if selector:
+                    selection=selector.selection(view=view)
+            if selection:
+                text=selection['text']
+        if text:
+            model=self.getFromCache(text)
+            if model is None:
+                definition=get_json(text)
+                if definition:
+                    json_data=json.loads(definition)
+                    model=self.setDefinition(text, json_data)
+                else:
+                    model=self.setDefinition(text, {})
+            if model:
+                self.view.setModel(model)
+                self.view.activate()
 
     def setDefinition(self, word, definition):
         if definition:
