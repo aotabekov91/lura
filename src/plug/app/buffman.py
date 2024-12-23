@@ -104,11 +104,7 @@ class Buffman(Plug):
         gen_conf = kwargs.get("config", {})
         gen_conf.update(spec_conf)
         kwargs["config"] = gen_conf
-        model = klass(
-            app=self.app,
-            source=source,
-            **kwargs,
-        )
+        model = klass(app=self.app, source=source, **kwargs)
         self.setModel(name, model)
         model.load()
         return model
@@ -140,8 +136,7 @@ class Buffman(Plug):
             model = self.m_models.get(name, None)
             if not model:
                 model = self.createModel(
-                    klass, name, source, **kwargs
-                )
+                    klass, name, source, **kwargs)
             model.resetConfigure(source=source, **kwargs)
             return model
 
@@ -155,8 +150,7 @@ class Buffman(Plug):
         for name, klass in self.m_viewers.items():
             if klass.isCompatible(model, **kwargs):
                 return self.createView(
-                    klass, model, **kwargs
-                )
+                    klass, model, **kwargs)
 
     def initiate(self, source: str, **kwargs) -> tp.Any:
         model = self.getModel(source, **kwargs)
@@ -169,15 +163,14 @@ class Buffman(Plug):
             view.activate(**kwargs)
         return view
 
-    def setParser(self) -> tp.Any:
-        self.app.parser.addArgument(
-            "source", nargs="?", default=None
-        )
-
     def checkParser(self) -> tp.Any:
         args, unkwn = self.app.parser.parse()
         if args.source:
             self.open(source=args.source)
+
+    def setParser(self) -> tp.Any:
+        self.app.parser.addArgument(
+            "source", nargs="?", default=None)
 
     def getConfig(
         self,

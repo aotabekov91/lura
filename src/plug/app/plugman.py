@@ -1,9 +1,9 @@
 import os
 import sys
-import pip
 import importlib
 import typing as tp
 import pkg_resources
+from pip._internal.cli.main import main
 
 from ..plug import Plug
 from ..utils import dotdict
@@ -12,6 +12,7 @@ class Plugman(Plug):
 
     folder: str = "~"
     path_plugs={}
+    pip_command='install -q'
     added: tp.List[tp.Any]=[]
     plugs: tp.Dict[tp.Any, tp.Any] = dotdict()
 
@@ -60,7 +61,7 @@ class Plugman(Plug):
                 return plug
             except Exception as error:
                 print("Error in plug loading: ", name, error)
-                raise
+                # raise
 
     def getPlugs(self, folder, modules=None):
         paths={}
@@ -90,9 +91,10 @@ class Plugman(Plug):
 
     def installRequirements(self, requirements):
         packages=self.getPackages()
+        cmd=self.pip_command.split(' ')
         for req in requirements:
             if not req in packages:
-                pip.main(['install', req])
+                main(cmd+[req])
 
     def getRequirements(self, folder, modules):
         reqs = []

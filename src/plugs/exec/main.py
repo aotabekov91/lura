@@ -1,5 +1,4 @@
 import inspect
-import argparse
 from collections import OrderedDict
 
 from plug import Plug, tag
@@ -109,21 +108,28 @@ class Exec(Plug):
     @tag([":(normal)", "<escape>/<c-[>(exec)"])
     def toggle(self):
         editline=self.app.plugman.getPlug('Editline')
+        if editline and not self.activated:
+            self.activate()
+        elif editline and self.activated:
+            self.octivate()
+
+    def activate(self):
+        editline=self.app.plugman.getPlug('Editline')
         if editline:
-            editline.toggle()
-            mode=self.app.stateman.activate(
-                    mode='exec', toggle_mode=True)
-            if mode=='exec':
-                self.m_view.activate(mode='exec')
-                self.updateViewGeometry()
-                self.connectEditline('connect')
-                self.app.stateman.setPassive(
-                        passive=['exec', 'any'])
-                editline.activate(mode='exec')
-            else:
-                self.connectEditline('disconnect')
-                self.app.stateman.setPassive()
-                self.m_view.octivate()
+            super().activate()
+            self.m_view.activate()
+            self.connectEditline('connect')
+            self.updateViewGeometry()
+            editline.activate(
+                    mode='exec',passive=['exec', 'any'])
+
+    def octivate(self):
+        editline=self.app.plugman.getPlug('Editline')
+        if editline:
+            super().octivate()
+            editline.octivate()
+            self.connectEditline('disconnect')
+            self.m_view.octivate()
 
     @tag('<c-l>/<tab>(exec)')
     def select(self):
@@ -147,15 +153,16 @@ class Exec(Plug):
 
     @tag('<c-m>/<return>(exec)')
     def act(self, command=None):
-        self.toggle()
         if not command:
             edit=self.app.plugman.getPlug('Editline')
             command=edit.text().strip()
+        self.toggle()
         if command:
             command = tuple(command.split(' '))
             func=self.m_agents.get(command[0], None)
             if func:
-                # try:
-                func(*command[1:])
-                # except:
-                    # pass
+                try:
+                    func(*command[1:])
+                except:
+                    if command[0]=='quit':
+                        raise

@@ -23,7 +23,7 @@ class HelpStyle(Plug):
 
     def checkView(self, view):
         if view.name=='HelpView':
-            raise
+            self.setViewCSS(view)
 
     def setDefaultStyles(self):
         pass
@@ -47,21 +47,17 @@ class HelpStyle(Plug):
                 return self.m_css
         return self.setDefaultCSS()
 
-    def loadCSS(self, view):
+    def setViewCSS(self, view):
         css_script = """
         (function() {
         css = document.createElement('style');
         css.type = 'text/css';
-        css.id = {name};
         document.head.appendChild(css);
-        css.innerText = {css};
-        })()
-        """.format(name=self.m_style, css=self.m_css)
+        css.innerText = '%s';
+        })()""" %(self.m_css)
         page=view.page()
         klass=QtWebEngineCore.QWebEngineScript
         script = klass() 
-        page.runJavaScript(
-                script, klass.ScriptWorldId.ApplicationWorld)
         script.setName(self.name)
         script.setSourceCode(css_script)
         script.setInjectionPoint(
