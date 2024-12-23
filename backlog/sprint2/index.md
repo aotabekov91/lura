@@ -15,9 +15,9 @@ Date: 2.12.2024-31.12.2024
 * [x] [Sprint 1: Bugs](objectives/s1_bugs.md)
 * [x] [Sprint 1: Separate mixins](objectives/s1_mixins.md)
 
-* [ ] [Help mode](objectives/help_mode.md)
 * [ ] [Visual mode](objectives/visual.md)
 * [ ] [View layout](objectives/view_layout.md)
+* [x] [Help mode](objectives/help_mode.md)
 * [x] [Bugs](objectives/bugs.md)
 * [x] [Input mode](objectives/input_mode.md)
 * [x] [Plugin system](objectives/plugin_system.md)
@@ -34,3 +34,4 @@ Date: 2.12.2024-31.12.2024
 * app keyer
 * terminal view 
   * direct all stdout/stdin to a terminal in app
+* QWebView -> WebView full features as View (e.g., goto, split, copy, etc)

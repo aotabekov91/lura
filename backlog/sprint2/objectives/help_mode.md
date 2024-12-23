@@ -6,4 +6,4 @@
 
 ## Tasks
 
-* [ ] Markdown reader
+* [x] Markdown reader
