@@ -1,12 +1,10 @@
 import os
-from PyQt6 import QtWebEngineWidgets, QtCore
+from PyQt6 import QtCore
 
-from plug_qt import vimo
+from plug_qt import gizmo
 
-class HelpView(
-    vimo.View,
-    QtWebEngineWidgets.QWebEngineView,
-):
+class HelpView(gizmo.BrowserView):
+
     isSubview=True
     canFollow = True
     position = {"HelpView": "C|x"}
@@ -15,19 +13,13 @@ class HelpView(
         super().setup()
         self.m_model=None
         self.m_current=None
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_StyledBackground)
-        self.setContentsMargins(3, 3, 3, 3)
-        self.app.appIsLaunched.connect(self.text)
 
     def setModel(self, model):
         if id(self.m_model) != id(model):
             html=model.modelData()
             base=QtCore.QUrl.fromLocalFile(os.getcwd()+os.path.sep)
-            self.setHtml(html, baseUrl=base)
-
-    def text(self):
-        page=self.page()
-        print(page.toHtml())
+            browser=self.browser()
+            browser.setHtml(html, baseUrl=base)
 
     def count(self):
         return 100

@@ -116,12 +116,9 @@ QLabel#HintBoxLabel:focus{
 	color: #90ee90;
 }
 
-QWebEngineView{
-	border: 10px solid red;
-}
-
-QWebEngineView:active{
-	border: 10px solid green;
+QWidget{
+	padding: 40 40 40 40;
+	background-color: red;
 }
 
 

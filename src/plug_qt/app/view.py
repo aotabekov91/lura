@@ -36,6 +36,7 @@ class View(gizmo.WindowView):
                 'kind': 'update',
                 }]
             )
+        self.main.setStyleSheet('background-color: blue;')
         self.docks: gizmo.Docks = gizmo.Docks(
             label="D",
             parent=self,

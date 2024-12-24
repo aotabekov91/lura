@@ -6,6 +6,7 @@ from .tool import ToolView
 from .tree import TreeView
 from .window import WindowView
 from .bar import StatusBarView
+from .browser import BrowserView
 from .element import ElementView
 from .list_item import ItemListView
 from .list_element import ElementListView

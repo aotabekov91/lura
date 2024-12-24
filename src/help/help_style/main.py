@@ -71,7 +71,8 @@ class HelpStyle(Plug):
         document.head.appendChild(css);
         css.innerText = '%s';
         })()""" %(self.m_css)
-        page=view.page()
+        browser=view.browser()
+        page=browser.page()
         klass=QtWebEngineCore.QWebEngineScript
         script = klass() 
         script.setName(self.name)
