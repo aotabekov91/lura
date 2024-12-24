@@ -116,11 +116,13 @@ QLabel#HintBoxLabel:focus{
 	color: #90ee90;
 }
 
-QWidget{
-	padding: 40 40 40 40;
-	background-color: red;
+QWidget#HelpView{
+	border: 3px solid transparent;
 }
 
+QWidget#HelpView:focus{
+	border: 3px solid green;
+}
 
 #HelpView body {
 	background-color: #202020; 

@@ -4,7 +4,7 @@ from plug_qt import vimo
 
 class BrowserView(
         vimo.View,
-        QtWidgets.QWidget,
+        QtWidgets.QFrame,
 ):
 
     def setup(self):
@@ -16,11 +16,15 @@ class BrowserView(
         return self.m_browser
 
     def setupBrowser(self):
+
+        self.m_browser=QtWebEngineWidgets.QWebEngineView()
+        self.m_browser.setAttribute(QtCore.Qt.WidgetAttribute.WA_StyledBackground)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_StyledBackground)
         self.m_layout=QtWidgets.QHBoxLayout(self)
         self.m_layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.m_layout)
-        self.m_browser=QtWebEngineWidgets.QWebEngineView()
         self.m_layout.setSpacing(0)
+        self.setLayout(self.m_layout)
         self.m_layout.addWidget(self.m_browser)
-        self.m_layout.addWidget(QtWidgets.QLabel('test'))
-        self.m_browser.setAttribute(QtCore.Qt.WidgetAttribute.WA_StyledBackground)
+
+        # self.setStyleSheet('background-color: blue; padding: 20 20 20 20; border: 10px solid red;')
+
