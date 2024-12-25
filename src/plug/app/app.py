@@ -57,8 +57,8 @@ class App(Plug):
         if parser:
             self.parser: tp.Any = parser()
 
-    def activate(self):
-        self.plugman.loadPlugs()
+    def activate(self, *args, **kwargs):
+        self.plugman.loadPlugs(*args, **kwargs)
         if self.ui:
             self.ui.show()
 

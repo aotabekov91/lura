@@ -1,19 +1,21 @@
 [Plugman.Settings]
-base = 'https://github.com'
 folder = '~/.config/lura'
 
 # [Styleman.Settings]
 # style = 'GreenElf'
 
 [Picky]
+base = 'https://github.com'
 Picks = [
 	# 'plugs/search',
 	# 'plugs/grayscale',
-	# {plug='fitz91/fitz_search', base='http://192.168.178.11'},
 	# {plug='fitz91/fitz_search', base='http://192.168.178.10'},
 	{plug='plugs/search', base='~/code/lura/src', kind='link'},
 	{plug='plugs/zmq_server', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
+	{plug='fitz91/fitz_pdf', base='~/code/lura/src', kind='link'},
+	{plug='fitz91/fitz_normal', base='~/code/lura/src', kind='link'},
+	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
 ]
 
 # [[Plugman.Picks]]
@@ -21,6 +23,10 @@ Picks = [
 # subdir = [
 # 	'src/sainan/plugs/client/czmq',
 # 	]
+# [ZMQClient.Settings]
+# router_port=22223
+# publisher_port=22224
+# host='tcp://192.168.178.25'
 
 # [ModelView.Metadata]
 # want='attach'
@@ -33,11 +39,6 @@ Picks = [
 # [ModelView.Metadata.widget_map]
 # field = {w = 'Label', p = '0x0x1x1', title=true}
 # value = {w = 'TextEdit', p = '1x0x1x1'}
-
-# [ZMQClient.Settings]
-# router_port=22223
-# publisher_port=22224
-# host='tcp://192.168.178.25'
 
 [View]
 zoomFactor = 0.1

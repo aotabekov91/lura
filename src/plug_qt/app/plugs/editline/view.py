@@ -21,18 +21,17 @@ class EditlineView(vimo.View, QtWidgets.QWidget):
         self.setupUI()
 
     def setupUI(self):
-        l = QtWidgets.QHBoxLayout(self)
+        layout = QtWidgets.QHBoxLayout(self)
         self.m_label = QtWidgets.QLabel(
-            ":", objectName="Mode"
-        )
+            ":", objectName="Mode")
         self.m_text = QtWidgets.QLineEdit(objectName="Edit")
         self.m_text.textChanged.connect(self.textChanged)
-        l.addWidget(self.m_label)
-        l.addWidget(self.m_text)
+        layout.addWidget(self.m_label)
+        layout.addWidget(self.m_text)
         self.setContentsMargins(0, 0, 0, 0)
-        l.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(l)
-        l.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        layout.setSpacing(0)
 
     def clear(self):
         self.m_text.clear()
@@ -58,11 +57,12 @@ class EditlineView(vimo.View, QtWidgets.QWidget):
         keep=False,
         **kwargs,
     ):
+        if not keep:
+            self.m_text.setText(str(edit))
+        self.m_label.setText(str(label))
         super().activate(**kwargs)
         self.show()
         self.m_text.show()
         self.m_text.setFocus()
-        if not keep:
-            self.m_text.setText(str(edit))
-        self.m_label.setText(str(label))
+        self.parent().show()
         self.editWanted.emit(True)

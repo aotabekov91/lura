@@ -32,8 +32,11 @@ class Plugman(Plug):
         folder=folder or self.autorun
         klasses, paths=self.getPlugs(folder, modules)
         klasses=klasses.union(set(self.added))
+        self.loadKlasses(klasses, paths, params)
+
+    def loadKlasses(self, klasses, paths={}, params={}):
         for klass in klasses: 
-            path=paths.get(klass)
+            path=paths.get(klass, None)
             if not path in self.path_plugs:
                 self.path_plugs[path]=[]
             name = klass.__name__
@@ -83,9 +86,12 @@ class Plugman(Plug):
                     for klass in plugger:
                         klasses.add(klass)
                         paths[klass]=plug_path
-            except Exception as e:
+            except ModuleNotFoundError as error:
                 msg = "Error in plug importing: "
-                print(msg, name, e)
+                print(msg, name, error)
+            except Exception as error:
+                msg = "Error in plug importing: "
+                print(msg, name, error)
                 raise
         return klasses, paths
 

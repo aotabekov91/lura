@@ -9,6 +9,7 @@ from PyQt6 import QtCore, QtWidgets
 
 import plug
 
+from . import plugs
 from .view import View
 from .earman import Earman
 from .buffman import Buffman
@@ -81,6 +82,10 @@ class App(
                  buffman=buffman,
                  styleman=styleman,
                  stateman=stateman)
+
+    def activate(self, *args, **kwargs):
+        super().activate(*args, **kwargs)
+        self.plugman.loadKlasses(plugs.get_base_plugs())
 
     def run(self) -> None:
          self.appSoonStarts.emit()

@@ -92,7 +92,7 @@ class Exec(Plug):
     def updateViewGeometry(self):
         hint=self.m_view.sizeHint()
         geometry=self.m_view.geometry()
-        overlay=self.m_view.manager().geometry()
+        overlay=self.m_overlay.geometry()
         y=max(0, overlay.height()-hint.height())
         geometry.setX(0)
         geometry.setY(y)
@@ -119,9 +119,8 @@ class Exec(Plug):
             super().activate()
             self.m_view.activate()
             self.connectEditline('connect')
+            editline.activate(mode='exec',passive=['exec', 'any'])
             self.updateViewGeometry()
-            editline.activate(
-                    mode='exec',passive=['exec', 'any'])
 
     def octivate(self):
         editline=self.app.plugman.getPlug('Editline')
