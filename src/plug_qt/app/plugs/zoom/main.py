@@ -16,30 +16,25 @@ class Zoom(Plug, QtCore.QObject):
     def addAgent(self, name, agent):
         self.m_agents[name]=agent
 
-    def getAgent(self, name=None, view=None):
-        if view and not name:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
+    def getAgent(self, view=None):
+        if view:
+            for klass in view.__class__.__mro__:
+                name=klass.__name__
+                agent=self.m_agents.get(name, None)
+                if agent:
+                    return agent
 
-    @tag("zi(normal)")
-    def zoomIn(self, xrange=[1,], **kwargs):
-        self.zoomTo(kind="in", xrange=xrange, **kwargs)
-
-    @tag("zo(normal)")
-    def zoomOut(self, xrange=[1,], **kwargs):
-        self.zoomTo(kind="out", xrange=xrange, **kwargs)
-
-    @tag("zw(normal)")
-    def zoomToWidth(self, **kwargs):
-        self.zoomTo(kind="width", **kwargs)
-
-    @tag("za(normal)")
-    def zoomToAdjust(self, **kwargs):
-        self.zoomTo(kind="adjust", **kwargs)
-
-    @tag("zh(normal)")
-    def zoomToHeight(self, **kwargs):
-        self.zoomTo(kind="height", **kwargs)
+    def activate(self, view=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        data=self.currentZoom(view)
+        zoomer=self.getAgent(view=view)
+        functor=getattr(view, 'zoomTo', None)
+        if zoomer:
+            zoomer.activate(view=view, data=data, **kwargs)
+            self.zoomChanged.emit(view, data)
+        elif functor:
+            functor(data=data, **kwargs)
 
     def currentZoom(self, view):
         if not view in self.m_data:
@@ -50,20 +45,31 @@ class Zoom(Plug, QtCore.QObject):
             zoomer=self.getAgent(view=view)
             if zoomer:
                 view.resized.connect(self.updateZoom)
-        return self.m_data.get(view)
+        return self.m_data.get(view, {})
 
     def updateZoom(self, view):
         zoom=self.currentZoom(view)
         mode=zoom.get('mode')
-        if mode in ['width', 'height']:
+        if zoom and mode in ['width', 'height']:
             zoom['kind']=mode
-            self.zoomTo(view=view, **zoom)
+            self.activate(view=view, **zoom)
 
-    def zoomTo(self, view=None, **kwargs):
-        if not view:
-            view=self.app.stateman.view()
-        zoomer=self.getAgent(view=view)
-        if zoomer:
-            data=self.currentZoom(view)
-            zoomer.activate(view=view, data=data, **kwargs)
-            self.zoomChanged.emit(view, data)
+    @tag("zi(normal)")
+    def zoomIn(self, xrange=[1,], **kwargs):
+        self.activate(kind="in", xrange=xrange, **kwargs)
+
+    @tag("zo(normal)")
+    def zoomOut(self, xrange=[1,], **kwargs):
+        self.activate(kind="out", xrange=xrange, **kwargs)
+
+    @tag("zw(normal)")
+    def zoomToWidth(self, **kwargs):
+        self.activate(kind="width", **kwargs)
+
+    @tag("za(normal)")
+    def zoomToAdjust(self, **kwargs):
+        self.activate(kind="adjust", **kwargs)
+
+    @tag("zh(normal)")
+    def zoomToHeight(self, **kwargs):
+        self.activate(kind="height", **kwargs)

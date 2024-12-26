@@ -15,11 +15,14 @@ class Normal(Plug, QtCore.QObject):
             self.m_agents[action]={}
         self.m_agents[action][name]=agent
 
-    def getAgent(self, action=None, name=None, view=None):
-        if view and not name:
-            name=view.__class__.__name__
-        holder=self.m_agents.get(action, {})
-        return holder.get(name, None)
+    def getAgent(self, action=None, view=None):
+        if view:
+            holder=self.m_agents.get(action, {})
+            for klass in view.__class__.__mro__:
+                name=klass.__name__
+                agent=holder.get(name, None)
+                if agent:
+                    return agent
 
     def activate(
             self, 
