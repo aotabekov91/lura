@@ -14,6 +14,7 @@ Picks = [
 	{plug='plugs/search', base='~/code/lura/src', kind='link'},
 	{plug='plugs/zmq_server', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
+	{plug='fitz91/fitz_zoom', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_pdf', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_normal', base='~/code/lura/src', kind='link'},
 	{plug='help/help', base='~/code/lura/src', kind='link'},
