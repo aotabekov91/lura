@@ -114,7 +114,8 @@ class Stateman(Plug):
     def setView(self, view=None, **kwargs) -> None:
         if view:
             self.m_view = view
-            self.setMode(**kwargs)
+            self.activate(**kwargs)
+            # self.setMode(**kwargs)
             self.setSubview(view=view)
 
     def subview(self) -> tp.Any:

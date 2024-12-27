@@ -135,34 +135,31 @@ class FitzItem(Item, QtWidgets.QGraphicsObject):
         rect.setHeight(floor(rect.height()))
         self.setBoundingRect(rect)
 
-    def mapToElement(self, p, unify=True):
-        e = self.m_element
-        t = self.m_trans.inverted()[0]
-        p = self.getPolygon(p)
-        if type(p) in [
+    def mapToElement(self, polygon, unify=True):
+        inv_trans = self.m_trans.inverted()[0]
+        polygon = self.getPolygon(polygon)
+        if type(polygon) in [
             QtCore.QPoint,
             QtCore.QPointF,
         ]:
-            p = t.map(p)
+            polygon = inv_trans.map(polygon)
         else:
-            p = t.mapRect(p)
+            polygon = inv_trans.mapRect(polygon)
         if unify:
-            p = e.unify(p)
-        return p
+            polygon = self.m_element.unify(polygon)
+        return polygon
 
-    def mapToItem(self, p, unified=False):
-        t = self.m_trans
-        e = self.m_element
-        p = self.getPolygon(p)
+    def mapToItem(self, polygon, unified=False):
+        polygon = self.getPolygon(polygon)
         if unified:
-            p = e.unity(p)
-        if type(p) in [
+            polygon = self.m_element.unity(polygon)
+        if type(polygon) in [
             QtCore.QPoint,
             QtCore.QPointF,
         ]:
-            return t.map(p)
+            return self.m_trans.map(polygon)
         else:
-            return t.mapRect(p)
+            return self.m_trans.mapRect(polygon)
 
     def getPolygon(self, p):
         if type(p) == tuple:

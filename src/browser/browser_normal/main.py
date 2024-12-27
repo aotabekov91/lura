@@ -22,7 +22,6 @@ class BrowserNormal(Plug):
         elif kind=='pixel':
             raise
 
-
     def activate(
             self, 
             view=None, 

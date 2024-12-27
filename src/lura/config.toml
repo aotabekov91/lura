@@ -20,6 +20,7 @@ Picks = [
 	{plug='help/help_style', base='~/code/lura/src', kind='link'},
 	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
+	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_normal', base='~/code/lura/src', kind='link'},
 ]
 

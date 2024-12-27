@@ -15,7 +15,13 @@ class BrowserZoom(Plug):
         if holder:
             holder.addAgent('BrowserView', self)
 
-    def activate(self, view=None, kind=None, data={}, xrange=[1], **kwargs):
+    def activate(
+            self, 
+            view=None, 
+            kind=None, 
+            data={}, 
+            xrange=[1], 
+            **kwargs):
         if view:
             page=view.page()
             value=data.get('factor', 0.05)
