@@ -16,6 +16,7 @@ class Help(Plug):
                     self.gatherHelpFiles)
 
     def addAgents(self):
+        HelpView.files=self.files #todo temp solution
         self.app.buffman.addViewer(
                 'HelpView', HelpView)
         self.app.buffman.addModeller(

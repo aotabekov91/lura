@@ -10,7 +10,8 @@ Picks = [
 	# 'plugs/search',
 	# 'plugs/grayscale',
 	# {plug='fitz91/fitz_search', base='http://192.168.178.10'},
-	{plug='plugs/search', base='~/code/lura/src', kind='link'},
+	{plug='plugs/hint', base='~/code/lura/src', kind='link'},
+	{plug='plugs/hint_link', base='~/code/lura/src', kind='link'},
 	{plug='plugs/search', base='~/code/lura/src', kind='link'},
 	{plug='plugs/zmq_server', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
@@ -23,6 +24,8 @@ Picks = [
 	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_normal', base='~/code/lura/src', kind='link'},
+	{plug='browser/browser_link_hint', base='~/code/lura/src', kind='link'},
+	{plug='browser/browser_js_elements', base='~/code/lura/src', kind='link'},
 ]
 
 # [[Plugman.Picks]]

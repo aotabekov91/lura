@@ -1,3 +1,4 @@
+from PyQt6.QtWebEngineCore import QWebEngineScript
 from PyQt6 import QtWebEngineWidgets, QtWidgets, QtCore, QtGui
 
 from plug_qt import vimo
@@ -11,7 +12,6 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
 
     def updateTransformation(self, size):
         self.m_trans.reset()
-        print(size)
         self.m_trans.scale(size.width(), size.height())
 
     def unify(self, polygon):
@@ -66,11 +66,15 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
     @classmethod
     def assemble(cls, module, function, *args) -> str:
         js_args = ', '.join(cls.toJS(arg) for arg in args)
-        if module == 'window':
+        if module=='':
+            return '"use strict";\n{}({});'.format(
+                    function, js_args)
+        elif module == 'window':
             parts = ['window', function]
-            code = '"use strict";\n{}({});'.format(
-                    '.'.join(parts), js_args)
-            return code
+        else:
+            parts = ['window', '_qutebrowser', module, function]
+        return '"use strict";\n{}({});'.format(
+                '.'.join(parts), js_args)
 
     @classmethod
     def toJS(cls, arg) -> str:
@@ -101,6 +105,29 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
             ('\u2028', r'\u2028'),
             ('\u2029', r'\u2029'),
         )
-        for text, rep in replacements:
-            text = text.replace(text, rep)
+        for match, rep in replacements:
+            text = text.replace(match, rep)
         return text
+
+    def injectJSCode(
+            self, 
+            name, 
+            code, *, 
+            subframes=False,
+            world=QWebEngineScript.ScriptWorldId.ApplicationWorld, 
+            injection_point=QWebEngineScript.InjectionPoint.DocumentCreation, 
+            ):
+        script = QWebEngineScript()
+        script.setInjectionPoint(injection_point)
+        script.setSourceCode(code)
+        script.setWorldId(world)
+        script.setRunsOnSubFrames(subframes)
+        script.setName(f'browserview_{name}')
+        self.page().scripts().insert(script)
+
+    def runJSCode(
+            self, 
+            *args, 
+            world=QWebEngineScript.ScriptWorldId.ApplicationWorld, 
+            **kwargs):
+        return self.page().runJavaScript(*args, worldId=world, **kwargs)

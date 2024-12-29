@@ -83,11 +83,11 @@ class FitzHint(Plug, QtCore.QObject):
             self.disconnectHint()
             return True, match
         elif len(match) == 1:
-            d = match[list(match.keys())[0]]
-            self.hintSelected.emit(d)
+            selection = match[list(match.keys())[0]]
+            self.hintSelected.emit(selection)
             self.cleanUpHinting()
             self.disconnectHint()
-            return d, match
+            return selection, match
         return False, match
 
     def updateHint(self, key=""):
@@ -103,9 +103,9 @@ class FitzHint(Plug, QtCore.QObject):
             self.m_hint_remap = match
             self.updateHintItems()
 
-    def selectHint(self, sel):
-        m = self.app.stateman.submode()
-        self.hintSelectWanted.emit(m, sel)
+    def selectHint(self, selection):
+        submode = self.app.stateman.submode()
+        self.hintSelectWanted.emit(submode, selection)
 
     def finishHint(self):
         self.app.stateman.setSubmode()

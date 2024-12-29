@@ -32,7 +32,7 @@ class Buffman(plug.Buffman, QtCore.QObject):
     def saveView(self, view: tp.Any) -> None:
         super().saveView(view)
         if view:
-            self.viewCreated.emit(view)
+            # self.viewCreated.emit(view)
             view.closeWanted.connect(self.removeView)
 
     def removeView(self, view=None, **kwargs):

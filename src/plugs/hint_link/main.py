@@ -9,10 +9,13 @@ class LinkHint(Plug):
     def addAgent(self, name, hinter):
         self.m_agents[name]=hinter
 
-    def getAgent(self, name=None, view=None):
-        if not name and view:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
+    def getAgent(self, view=None):
+        if view:
+            for klass in view.__class__.__mro__:
+                name=klass.__name__
+                agent=self.m_agents.get(name, None)
+                if agent:
+                    return agent
 
     def searchAgent(self, view=None):
         if view is None:

@@ -115,7 +115,6 @@ class FitzLinkHint(Plug):
                         xrange=[page + 1], 
                         x=point.x(), 
                         y=point.y())
-            # view.goTo(page + 1, point.x(), point.y())
 
     def getLinks(self, model):
         links={}

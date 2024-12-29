@@ -1,0 +1,8 @@
+[Selectors]
+
+Links=[
+  'a[href]',
+  'area[href]',
+  'link[href]',
+  '[role="link"][href]',
+]

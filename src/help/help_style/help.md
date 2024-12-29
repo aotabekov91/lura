@@ -22,6 +22,8 @@ user@my_computer_name:~$ sudo
 
 ## apt-get
 
+[Link](https://google.com)
+
 This command is used to install, update, upgrade, and remove any package. Examples below will show how to use in different ways:
 
 - **sudo apt-get update**

@@ -64,7 +64,7 @@ class Plugman(Plug):
                 return plug
             except Exception as error:
                 print("Error in plug loading: ", name, error)
-                # raise
+                raise
 
     def getPlugs(self, folder, modules=None):
         paths={}

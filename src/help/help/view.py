@@ -1,5 +1,6 @@
 import os
 from PyQt6 import QtCore
+from PyQt6 import QtWebEngineCore
 
 from plug_qt import gizmo
 
