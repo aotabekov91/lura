@@ -134,7 +134,6 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
         })();
         """
         if path and os.path.exists(path):
-            print(path, name)
             path=pathlib.Path(path)
             js_code=path.read_text(encoding='utf-8')
             return script%(js_code, name)

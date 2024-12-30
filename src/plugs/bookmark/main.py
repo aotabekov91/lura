@@ -79,5 +79,4 @@ class Bookmark(Plug, QtCore.QObject):
                     'position': normal.currentPosition(view=view),
                  }
             bookmark_model.addBookmark(data)
-            print(data)
         self.octivate()

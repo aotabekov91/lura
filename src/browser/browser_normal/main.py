@@ -37,7 +37,6 @@ class BrowserNormal(Plug):
 
     def currentPosition(self, view=None):
         data=self.m_data.get(view, {})
-        print(data)
         return data.get('position', {})
 
     def updateCurrentPosition(self, data, *, view):
