@@ -1,8 +1,6 @@
-import math
 import functools
-import subprocess
 
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtWidgets, QtCore
 
 from plug import Plug
 
@@ -25,7 +23,7 @@ class BrowserLinkHint(Plug):
     def activate(self, view=None, **kwargs):
         if view:
             selectors=self.getSelectors()
-            code=view.assemble('webelem', 'find_css', selectors, False)
+            code=view.scriptize('elements', 'find_css', selectors, False)
             callback=functools.partial(self.setLinks, view=view)
             view.runJSCode(code, resultCallback=callback)
 
@@ -36,8 +34,14 @@ class BrowserLinkHint(Plug):
             label.setParent(None)
         self.m_hints={}
 
-    def goTo(self, link):
-        print(link)
+    def goTo(self, link, *args):
+        view=link['view']
+        label=link['label']
+        pos=label.geometry().center()
+        position= QtCore.QPointF(pos)
+        view.fakeMouseEvent('move', position=position)
+        view.fakeMouseEvent('press', position=position, button='LeftButton')
+        view.fakeMouseEvent('release', position=position, button='LeftButton')
 
     def functor(self, key, earman):
         partial=False
@@ -56,12 +60,13 @@ class BrowserLinkHint(Plug):
                 label.hide()
         return partial
 
-    def assignHints(self, links, model, view):
+    def assignHints(self, links, view):
         hinter=self.app.plugman.getPlug('Hint')
         _, hints=hinter.generateHints(links)
         for hint, link in hints.items():
             link['hint']=hint
-            label=QtWidgets.QLabel(hint)
+            link['view']=view
+            label=QtWidgets.QLabel(hint, objectName='HintLabel')
             label.setParent(view)
             rects=link.get('rects')
             link['label']=label
@@ -84,12 +89,8 @@ class BrowserLinkHint(Plug):
         return ','.join(link_selectors)
 
     def setLinks(self, elems, *, view):
-        model=view.model()
         links=elems.get('result', [])
-        self.assignHints(links, model, view)
-
+        self.assignHints(links, view)
 
     def checkHint(self, key, hint):
-        if key:
-            return key==hint[:len(key)]
-        return False
+        return key and key==hint[:len(key)]

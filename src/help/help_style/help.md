@@ -20,9 +20,10 @@ Here are some words that we use and some meanings that you may associate them wi
 user@my_computer_name:~$ sudo
 ```
 
-## apt-get
 
 [Link](https://google.com)
+[link2](#heading)
+
 
 This command is used to install, update, upgrade, and remove any package. Examples below will show how to use in different ways:
 
@@ -579,8 +580,7 @@ def hello():
 
 
 
-
-
+Heading <a name='heading'></a>
 
 
 
@@ -620,4 +620,3 @@ As we see in this example. In order to save our info in the editor we must use t
 | Ctrl + Shift + V or Shift + Insert |                                                           Paste the contents of the clipboard to the active line |
 | Up/Down Arrow Keys                 | Scrolls through your command history, This can allow you to quickly execute your previous command multiple times |
 | TAB                                |                 Can complete the command you are typing. Can also be use to complete mulitple commands in a row. |
-

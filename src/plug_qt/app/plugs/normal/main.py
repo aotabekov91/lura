@@ -41,7 +41,7 @@ class Normal(Plug, QtCore.QObject):
                 data=agent.currentPosition(view=view)
                 self.positionChanged.emit(view, data)
             elif func:
-                func(kind=kind, **kwargs)
+                func(action=action, kind=kind, **kwargs)
 
     def currentPosition(self, view):
         agent=self.getAgent(action='goTo', view=view)

@@ -29,7 +29,7 @@ class Bookmark(Plug, QtCore.QObject):
 
     @tag(["b(normal)" ,"<escape>/<c-[>(bookmark[any])"])
     def toggle(self):
-        view=self.app.stateman.view()
+        view=self.app.stateman.subview()
         editor=self.app.plugman.getPlug('Editline')
         if view and editor:
             model=self.getModel(view.model())
@@ -41,7 +41,6 @@ class Bookmark(Plug, QtCore.QObject):
                 if mode=='bookmark':
                     self.activate()
                 else:
-                    editor.octivate()
                     self.octivate()
 
     def activate(self):
@@ -61,7 +60,8 @@ class Bookmark(Plug, QtCore.QObject):
 
     def octivate(self):
         editor=self.app.plugman.getPlug('Editline')
-        editor.octivate()
+        if editor:
+            editor.octivate()
         self.app.stateman.activate()
 
     @tag("<enter>/<return>(bookmark)")
@@ -79,4 +79,5 @@ class Bookmark(Plug, QtCore.QObject):
                     'position': normal.currentPosition(view=view),
                  }
             bookmark_model.addBookmark(data)
+            print(data)
         self.octivate()
