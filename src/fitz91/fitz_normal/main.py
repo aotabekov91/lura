@@ -23,7 +23,7 @@ class FitzNormal(Plug):
         if func:
             func(view=view, **kwargs)
             if normal:
-                data=self.currentPosition(view)
+                data=self.getState(view=view)
                 normal.stateChanged.emit('goTo', view, data)
 
     def blockleft(self, *args, **kwargs):
@@ -146,25 +146,26 @@ class FitzNormal(Plug):
                 view.setCurrentIndex(xrange[-1])
                 view.viewport().update()
 
-    def currentPosition(self, view):
+    def getState(self, view, **kwargs):
         data={}
-        idx=view.currentIndex()
-        item = view.item(idx)
-        if item:
-            pos=item.pos()
-            brect = item.boundingRect()
-            size = brect.translated(pos).size()
-            top_left = brect.translated(pos).topLeft()
-            ver=float(view.verticalScrollBar().value())
-            hor=float(view.horizontalScrollBar().value())
-            x = (hor -top_left.x())/size.width()
-            y = (ver - top_left.y())/size.height()
-            data['x'] = x 
-            data['y'] = y
-            data['xrange']=[idx]
+        if view:
+            idx=view.currentIndex()
+            item = view.item(idx)
+            if item:
+                pos=item.pos()
+                brect = item.boundingRect()
+                size = brect.translated(pos).size()
+                top_left = brect.translated(pos).topLeft()
+                ver=float(view.verticalScrollBar().value())
+                hor=float(view.horizontalScrollBar().value())
+                x = (hor -top_left.x())/size.width()
+                y = (ver - top_left.y())/size.height()
+                data['x'] = x 
+                data['y'] = y
+                data['xrange']=[idx]
         return data
 
     def restorePosition(self, view):
-        position=self.currentPosition(view)
+        position=self.getState(view)
         view.setVisibleItem()
         self.goTo(view=view, **position)

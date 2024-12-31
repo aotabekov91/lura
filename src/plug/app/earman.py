@@ -348,9 +348,12 @@ class Earman(Plug):
                     if not func:
                         continue
                     prm = inspect.signature(func).parameters
-                    c1 = prm.get("xrange", None)
-                    if xrange and not c1:
+                    xrange_arg = prm.get("xrange", None)
+                    if xrange and not xrange_arg:
                         continue
+                    elif not xrange and xrange_arg:
+                        if xrange_arg.default==None:
+                            continue
                     if key == skey:
                         match.add(func)
                         tmp_view=view

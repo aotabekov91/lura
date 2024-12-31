@@ -10,6 +10,12 @@ class Normal(Plug, QtCore.QObject):
         super().setup()
         self.m_agents={}
 
+    def getState(self, view, state, **kwargs):
+        if view and state:
+            agent=self.getAgent(action=state, view=view)
+            if agent:
+                return agent.activate(view=view, kind='getState', **kwargs)
+
     def addAgent(self, action, name, agent):
         if not action in self.m_agents:
             self.m_agents[action]={}
@@ -41,24 +47,13 @@ class Normal(Plug, QtCore.QObject):
             elif func:
                 func(action=action, kind=kind, **kwargs)
 
-    def currentPosition(self, view):
-        agent=self.getAgent(action='goTo', view=view)
-        if agent:
-            return agent.currentPosition(view=view)
-        return {}
-
-    def currentZoom(self, view):
-        agent=self.getAgent(action='zoom', view=view)
-        if agent:
-            return agent.currentZoom(view=view)
-        return {}
-
     @tag("G(normal)")
     def go(self, xrange=None, **kwargs):
-        kind='goTo'
-        if not xrange:
-            kind='last'
-        self.activate(action='goTo', xrange=xrange, kind=kind, **kwargs)
+        self.activate(action='goTo', kind='goTo', xrange=xrange, **kwargs)
+
+    @tag("G(normal)")
+    def goLast(self, **kwargs):
+        self.activate(action='goTo', kind='last', **kwargs)
 
     @tag("gg(normal)")
     def goFirst(self):
