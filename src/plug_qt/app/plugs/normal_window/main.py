@@ -39,7 +39,6 @@ class WindowNormal(Plug):
         if view:
             manager=view.manager()
             agent, window=self.findAgent(action, manager)
-            print(action, view, kind, agent, manager, window)
             if agent:
                 return agent.activate(
                         window=window, 

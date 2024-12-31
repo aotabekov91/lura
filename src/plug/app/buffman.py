@@ -65,6 +65,7 @@ class Buffman(Plug):
             loc = pos.get(view.name, None)
             if loc:
                 manager=self.app.view.child(loc)
+                print(view, manager)
                 return loc, manager
         return None, None
 
