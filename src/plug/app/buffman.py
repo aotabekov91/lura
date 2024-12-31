@@ -65,7 +65,7 @@ class Buffman(Plug):
             loc = pos.get(view.name, None)
             if loc:
                 manager=self.app.view.child(loc)
-                print(view, manager)
+                print(pos, view, manager)
                 return loc, manager
         return None, None
 
@@ -143,7 +143,6 @@ class Buffman(Plug):
         loc, manager=self.locate(view=view, **kwargs)
         if manager:
             manager.addView(view=view, loc=loc, **kwargs)
-            print(view, manager, view.manager())
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:

@@ -30,23 +30,23 @@ class View(Object):
 
     def child(self, pos, recursive=True):
         if pos.startswith("!"):
-            child = self.m_children.get(pos[1:])
-            if child:
-                return child
+            child_view = self.m_children.get(pos[1:])
+            if child_view:
+                return child_view
             elif recursive:
                 for i in self.m_children.values():
-                    child = i.child(pos, recursive)
-                    if child:
-                        return child
+                    child_view = i.child(pos, recursive)
+                    if child_view:
+                        return child_view
         elif pos:
-            p = pos.split("|", 1)
-            child = self.m_children.get(p[0])
-            if not child:
+            pos_data = pos.split("|", 1)
+            child_view = self.m_children.get(pos_data[0])
+            if not child_view:
                 return self
-            elif len(p) == 1:
-                return child
-            elif not child is None and recursive:
-                return child.child(p[1], recursive)
+            elif len(pos_data) == 1:
+                return child_view
+            elif not child_view is None and recursive:
+                return child_view.child(pos_data[1], recursive)
 
     def setChild(self, obj):
         pidx = obj.posIndex()
