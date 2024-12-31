@@ -45,6 +45,8 @@ class TileView(
         if self.app:
             view = view or self.current
             copy=self.app.buffman.copy(view)
+            print(copy)
+            raise
             if copy:
                 orientation = kind == "horizontal"
                 self.addView(copy, horizontal=orientation)

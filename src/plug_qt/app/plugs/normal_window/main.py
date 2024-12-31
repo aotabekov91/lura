@@ -36,13 +36,16 @@ class WindowNormal(Plug):
             **kwargs):
         if not view:
             view=self.app.stateman.view()
-        agent, window=self.findAgent(action, view)
-        if agent:
-            return agent.activate(
-                    window=window, 
-                    kind=kind, 
-                    action=action, 
-                    **kwargs)
+        if view:
+            manager=view.manager()
+            agent, window=self.findAgent(action, manager)
+            print(action, view, kind, agent, manager, window)
+            if agent:
+                return agent.activate(
+                        window=window, 
+                        kind=kind, 
+                        action=action, 
+                        **kwargs)
 
     @tag("gg(normal)")
     def goFirst(self, **kwargs):
