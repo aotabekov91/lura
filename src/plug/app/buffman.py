@@ -143,6 +143,7 @@ class Buffman(Plug):
         loc, manager=self.locate(view=view, **kwargs)
         if manager:
             manager.addView(view=view, loc=loc, **kwargs)
+            print(view, manager, view.manager())
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:
