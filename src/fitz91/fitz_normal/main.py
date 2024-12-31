@@ -19,12 +19,12 @@ class FitzNormal(Plug):
 
     def activate(self, view=None, kind=None, **kwargs):
         func = getattr(self, kind, None)
+        normal=self.app.plugman.getPlug('Normal')
         if func:
             func(view=view, **kwargs)
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            position=self.currentPosition(view)
-            normal.positionChanged.emit(view, position)
+            if normal:
+                data=self.currentPosition(view)
+                normal.stateChanged.emit('goTo', view, data)
 
     def blockleft(self, *args, **kwargs):
         self.moveScreen("left", *args, **kwargs)
@@ -133,26 +133,18 @@ class FitzNormal(Plug):
             ):
 
         if view and xrange:
-            xrange = xrange[-1]
-            item = view.item(xrange)
+            item = view.item(xrange[-1])
             if item:
-                rect = item.boundingRect()
-                pos = rect.translated(item.pos())
-                hor = int(pos.left() + x * pos.width())
-                ver = int(pos.top() + y * pos.height())
-                if center:
-                    vr = view.viewport().rect()
-                    ver = int(ver - vr.height() / 2.0)
-                view.verticalScrollBar().setValue(ver)
-                view.horizontalScrollBar().setValue(hor)
-                # if center:
-                #     point=QtCore.QPointF(x, y)
-                #     point=item.mapToItem(point, unified=True)
-                #     point=item.mapToScene(point)
-                #     point=view.mapFromScene(point)
-                #     view.centerOn(point.x(), point.y())
+                pos=item.pos()
+                brect = item.boundingRect()
+                size = brect.translated(pos).size()
+                top_left = brect.translated(pos).topLeft()
+                hor =top_left.x() + x * size.width()
+                ver =top_left.y() + y * size.height()
+                view.verticalScrollBar().setValue(int(ver))
+                view.horizontalScrollBar().setValue(int(hor))
+                view.setCurrentIndex(xrange[-1])
                 view.viewport().update()
-                view.setVisibleItem()
 
     def currentPosition(self, view):
         data={}
@@ -160,11 +152,15 @@ class FitzNormal(Plug):
         item = view.item(idx)
         if item:
             pos=item.pos()
-            rect = item.boundingRect().translated(pos)
-            top_left = view.viewport().rect().topLeft()
-            top_left = view.mapToScene(top_left)
-            data['x'] = (top_left.x() - rect.x()) / rect.width()
-            data['y'] = (top_left.y() - rect.y()) / rect.height()
+            brect = item.boundingRect()
+            size = brect.translated(pos).size()
+            top_left = brect.translated(pos).topLeft()
+            ver=float(view.verticalScrollBar().value())
+            hor=float(view.horizontalScrollBar().value())
+            x = (hor -top_left.x())/size.width()
+            y = (ver - top_left.y())/size.height()
+            data['x'] = x 
+            data['y'] = y
             data['xrange']=[idx]
         return data
 

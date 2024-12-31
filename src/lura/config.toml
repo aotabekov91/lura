@@ -10,8 +10,8 @@ Picks = [
 	# 'plugs/search',
 	# 'plugs/grayscale',
 	# {plug='fitz91/fitz_search', base='http://192.168.178.10'},
-	{plug='plugs/state_zoom', base='~/code/lura/src', kind='link'},
-	{plug='plugs/state_position', base='~/code/lura/src', kind='link'},
+	# {plug='plugs/state_zoom', base='~/code/lura/src', kind='link'},
+	{plug='plugs/states', base='~/code/lura/src', kind='link'},
 	{plug='plugs/states_sqlite', base='~/code/lura/src', kind='link'},
 
 	{plug='plugs/hint', base='~/code/lura/src', kind='link'},

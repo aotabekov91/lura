@@ -91,8 +91,12 @@ class BrowserNormal(Plug):
             view.page().runJavaScript(script)
 
     def activate(self, *args, view=None, kind=None, **kwargs):
+        normal=self.app.plugman.getPlug('Normal')
         if kind and view:
             functor=getattr(self, kind, None)
             if functor:
                 functor(*args, view=view, **kwargs)
                 self.updatePositionScript(view)
+            if normal:
+                data=self.currentPosition(view)
+                normal.positionChanged.emit('goTo', view, data)

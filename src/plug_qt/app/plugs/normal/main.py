@@ -4,8 +4,7 @@ from plug import Plug, tag
 
 class Normal(Plug, QtCore.QObject):
 
-    zoomChanged = QtCore.pyqtSignal(object, object)
-    positionChanged = QtCore.pyqtSignal(object, object)
+    stateChanged=QtCore.pyqtSignal(str, object, object)
 
     def setup(self):
         super().setup()
