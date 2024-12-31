@@ -17,10 +17,14 @@ class FitzNormal(Plug):
             normal.addAgent('goTo', 'FitzView', self)
             self.app.buffman.viewIsDrawn.connect(self.restorePosition)
 
-    def activate(self, kind=None, **kwargs):
+    def activate(self, view=None, kind=None, **kwargs):
         func = getattr(self, kind, None)
         if func:
-            func(**kwargs)
+            func(view=view, **kwargs)
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            position=self.currentPosition(view)
+            normal.positionChanged.emit(view, position)
 
     def blockleft(self, *args, **kwargs):
         self.moveScreen("left", *args, **kwargs)

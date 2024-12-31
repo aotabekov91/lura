@@ -1,5 +1,4 @@
 from .exec import Exec
-from .zoom import Zoom
 from .search import Search
 from .editline import Editline
 from .powerline import Powerline
@@ -14,7 +13,6 @@ from .normal_window_tile import TileWindowNormal
 def get_base_plugs():
     return [
             Exec,
-            Zoom,
             Editline,
             Powerline,
             Search,

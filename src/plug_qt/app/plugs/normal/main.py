@@ -4,6 +4,7 @@ from plug import Plug, tag
 
 class Normal(Plug, QtCore.QObject):
 
+    zoomChanged = QtCore.pyqtSignal(object, object)
     positionChanged = QtCore.pyqtSignal(object, object)
 
     def setup(self):
@@ -38,8 +39,6 @@ class Normal(Plug, QtCore.QObject):
             if agent:
                 agent.activate(
                         action=action, view=view, kind=kind, **kwargs)
-                data=agent.currentPosition(view=view)
-                self.positionChanged.emit(view, data)
             elif func:
                 func(action=action, kind=kind, **kwargs)
 
@@ -47,6 +46,12 @@ class Normal(Plug, QtCore.QObject):
         agent=self.getAgent(action='goTo', view=view)
         if agent:
             return agent.currentPosition(view=view)
+        return {}
+
+    def currentZoom(self, view):
+        agent=self.getAgent(action='zoom', view=view)
+        if agent:
+            return agent.currentZoom(view=view)
         return {}
 
     @tag("G(normal)")
@@ -115,3 +120,23 @@ class Normal(Plug, QtCore.QObject):
         subview=self.app.stateman.subview()
         if subview:
             subview.activate()
+
+    @tag("zi(normal)")
+    def zoomIn(self, xrange=[1,], **kwargs):
+        self.activate(action='zoom', kind="in", xrange=xrange, **kwargs)
+
+    @tag("zo(normal)")
+    def zoomOut(self, xrange=[1,], **kwargs):
+        self.activate(action='zoom', kind="out", xrange=xrange, **kwargs)
+
+    @tag("zw(normal)")
+    def zoomToWidth(self, **kwargs):
+        self.activate(action='zoom', kind="width", **kwargs)
+
+    @tag("za(normal)")
+    def zoomToAdjust(self, **kwargs):
+        self.activate(action='zoom',kind="adjust", **kwargs)
+
+    @tag("zh(normal)")
+    def zoomToHeight(self, **kwargs):
+        self.activate(action='zoom', kind="height", **kwargs)

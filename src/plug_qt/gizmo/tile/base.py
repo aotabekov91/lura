@@ -42,10 +42,9 @@ class TileView(
         kind="vertical",
         **kwargs,
     ):
-        copier=self.app.plugman.getPlug('ViewCopy')
-        if copier:
+        if self.app:
             view = view or self.current
-            copy=copier.copy(view)
+            copy=self.app.buffman.copy(view)
             if copy:
                 orientation = kind == "horizontal"
                 self.addView(copy, horizontal=orientation)

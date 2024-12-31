@@ -25,11 +25,12 @@ class Object:
         self.m_app_config = appConfig
         self.m_objectName = objectName
         self.m_kwargs = kwargs
+        self.m_attributes={}
         super().__init__()
         self.setup()
 
     def setup(self):
-        self.setAttr()
+        self.updateAttribute()
         self.setConf()
         self.setName()
         self.setKind()
@@ -48,7 +49,7 @@ class Object:
                 klass_config = self.klassConfig(app_config)
                 self.m_config.update(klass_config)
 
-    def setAttr(self):
+    def updateAttribute(self):
         for attribute in self.m_attributes:
             key=attribute.get('key')
             value=attribute.get('value')
@@ -67,8 +68,17 @@ class Object:
                 raise
                 #todo
 
-    def getAttr(self, name, kind=None):
-        return getattr(self, name, None)
+    def setAttr(self, name, value, custom=False):
+        if not custom:
+            setattr(self, name, value)
+        else:
+            self.m_attributes[name]=value
+
+    def getAttr(self, name, default=None, custom=False):
+        if not custom:
+            return getattr(self, name, default)
+        else:
+            return self.m_attributes.get(name)
 
     def setManager(self, manager=None):
         if self.m_manager:

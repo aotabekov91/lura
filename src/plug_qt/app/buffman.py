@@ -46,7 +46,7 @@ class Buffman(plug.Buffman, QtCore.QObject):
         return view
 
     def addView(self, view):
-        signal = view.getAttr("posIndexChanged", "signal")
+        signal = view.getAttr("posIndexChanged")
         if signal:
             signal.connect(self.posIndexChanged)
         self.viewAdded.emit(view)

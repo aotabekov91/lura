@@ -6,11 +6,27 @@ class Buffman(Plug):
 
     def __init__(self, app: tp.Any) -> None:
         super().__init__(app)
+        self.m_copier={}
         self.m_views: tp.Set[tp.Any] = set()
         self.m_viewers: tp.Dict[str, tp.Any] = {} 
         self.m_modellers: tp.Dict[str, tp.Any] = {} 
         self.m_models: tp.Dict[tp.Any, tp.Any] = {}
         self.m_fillers: tp.Dict[tp.Any, tp.Any] = {}
+
+    def addCopier(self, name, agent):
+        self.m_copier[name]=agent
+
+    def getCopier(self, obj):
+        for klass in obj.__class__.__mro__:
+            name=klass.__name__
+            copier=self.m_copier.get(name, None)
+            if copier:
+                return copier
+
+    def copy(self, obj, **kwargs):
+        copier=self.getCopier(obj)
+        if copier:
+            return copier.activate(obj, **kwargs)
 
     def models(self) -> tp.Dict[tp.Any, tp.Any]:
         return self.m_models

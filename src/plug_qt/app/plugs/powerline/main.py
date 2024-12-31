@@ -72,7 +72,7 @@ class Powerline(Plug):
                 "indexChanged",
                 "detailChanged",
             ]:
-                signal = self.m_view.getAttr(func, "signal")
+                signal = self.m_view.getAttr(func)
                 name = func.replace("Changed", "")
                 name = "set" + name.title()
                 if signal:
