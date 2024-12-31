@@ -46,6 +46,7 @@ class Buffman(Plug):
 
     def create(self, klass, view_model=None, **kwargs) -> tp.Any:
         if klass:
+            kwargs["app"] = self.app
             view=klass(**kwargs)
             if view_model:
                 view.setModel(model=view_model)
@@ -64,11 +65,8 @@ class Buffman(Plug):
             pos.update(view_pos)
             loc = pos.get(view.name, None)
             if loc:
-                manager=self.app.view.child(loc)
-                print(pos, view, manager)
-                return loc, manager
+                return loc, self.app.view.child(loc)
         return None, None
-
 
     def setup(self) -> None:
         super().setup()
@@ -127,22 +125,25 @@ class Buffman(Plug):
         return model
 
     def createView(
-        self,
-        klass: tp.Any,
-        model: tp.Any=None,
-        **kwargs,
-    ) -> tp.Any:
+            self,
+            klass,
+            model=None,
+            manager=None,
+            location=None,
+            **kwargs,
+            ) -> tp.Any:
         conf = self.app.m_config
         spec_conf = self.getConfig(klass, conf)
         gen_conf = kwargs.get("config", {})
         gen_conf.update(spec_conf)
-        kwargs["app"] = self.app
         kwargs["config"] = gen_conf
         view = self.create(klass, view_model=model, **kwargs)
         view.resetConfigure(model=model, **kwargs)
-        loc, manager=self.locate(view=view, **kwargs)
+        xlocation, xmanager=self.locate(view=view, **kwargs)
+        manager=manager or xmanager
+        location=location or xlocation
         if manager:
-            manager.addView(view=view, loc=loc, **kwargs)
+            manager.addView(view=view, loc=location, **kwargs)
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:

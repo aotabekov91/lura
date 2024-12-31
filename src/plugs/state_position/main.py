@@ -23,8 +23,8 @@ class StatePosition(Plug):
         stater=self.app.plugman.getPlug('StatesTable')
         model=view.model()
         if model:
-            obj=model.id()
-            stater.setState(obj, 'position', position)
+            midx=model.id()
+            stater.setState(midx, 'position', position)
 
     def setPosition(self):
         views=self.app.buffman.views()
@@ -32,11 +32,11 @@ class StatePosition(Plug):
         stater=self.app.plugman.getPlug('StatesTable')
         for view in views:
             model=view.model()
-            if not model: continue
-            obj=model.id()
-            data=stater.getState(obj, 'position')
-            if not data: continue
-            data=data[0]
-            position_text=data['value'].replace("'", '"')
-            position=json.loads(position_text)
-            normal.activate(action='goTo', view=view, **position)
+            if model: 
+                midx=model.id()
+                data=stater.getState(midx, 'position')
+                if data: 
+                    data=data[0]
+                    position_text=data['value'].replace("'", '"')
+                    position=json.loads(position_text)
+                    normal.activate(action='goTo', view=view, **position)

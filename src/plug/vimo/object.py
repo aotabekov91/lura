@@ -25,7 +25,7 @@ class Object:
         self.m_app_config = appConfig
         self.m_objectName = objectName
         self.m_kwargs = kwargs
-        self.m_attributes={}
+        self.m_custom_attrs={}
         super().__init__()
         self.setup()
 
@@ -72,13 +72,13 @@ class Object:
         if not custom:
             setattr(self, name, value)
         else:
-            self.m_attributes[name]=value
+            self.m_custom_attrs[name]=value
 
     def getAttr(self, name, default=None, custom=False):
         if not custom:
             return getattr(self, name, default)
         else:
-            return self.m_attributes.get(name)
+            return self.m_custom_attrs.get(name)
 
     def setManager(self, manager=None):
         if self.m_manager:

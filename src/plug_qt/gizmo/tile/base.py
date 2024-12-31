@@ -45,25 +45,11 @@ class TileView(
         if self.app:
             view = view or self.current
             copy=self.app.buffman.copy(view)
-            print(copy)
-            raise
             if copy:
                 orientation = kind == "horizontal"
                 self.addView(copy, horizontal=orientation)
                 if focus:
                     copy.activate()
-
-
-    def copy(self, full=False):
-        new_tile=self.__class__(app=self.app)
-        if not self.current:
-            return new_tile
-        if not self.checkProp('canCopy', self.current):
-            return new_tile
-        current_copy=self.current.copy()
-        new_tile.addView(view=current_copy)
-        current_copy.activate()
-        return new_tile
 
     def horizontal(self, view):
         return self.m_layout.horizontal(view)

@@ -26,45 +26,45 @@ class FitzZoom(Plug):
 
     def updateZoom(self, view):
         data=self.currentZoom(view)
-        mode=data.get('mode', None)
-        if mode in ['width', 'height']:
-            data['kind']=mode
+        kind=data.get('kind', None)
+        if kind in ['width', 'height']:
             self.activate(view=view, **data)
 
     def currentZoom(self, view):
-        return {
-             'round': self.zoom_round,
-             'factor': self.zoom_factor,
-             'mode': view.getAttr('zoom_mode', custom=True)}
+        return {'kind': view.getAttr('zoom_scale', custom=True)}
 
-    def activate(self, view=None, **kwargs):
-        self.updateItemScale(view, **kwargs)
-        view.redraw()
-
-    def updateItemScale(self, view, kind, xrange=[1], **kwargs):
-        scales={}
-        size = view.size()
-        weight = size.width()
-        height = size.height()
-        items=view.getItems()
-        for idx, item in items:
-            scale=item.getScale()
-            dw, dh = item.displayedSize()
-            if kind == "width":
-                scale = weight / float(dw)
-            elif kind == "height":
-                scale = height / float(dh)
-            elif kind == "adjust":
-                scale = min(weight / float(dw), height / float(dh))
-            elif kind == "out":
-                scale = scale - self.zoom_factor * xrange[0]
-            elif kind == "in":
-                scale = scale + self.zoom_factor * xrange[0]
-            elif type(kind)==float:
-                scale=kind
-            if scale:
-                scale=round(scale, self.zoom_round)
-                scales[item]=scale
-                view.setAttr('zoom_mode', kind, custom=True)
-        for item, scale in scales.items():
-            item.setScale(scale)
+    def activate(self, view=None, kind=None, xrange=[1], **kwargs):
+        if view:
+            scales={}
+            size = view.size()
+            weight = size.width()
+            height = size.height()
+            items=view.getItems()
+            for idx, item in items:
+                scale=item.getScale()
+                dw, dh = item.displayedSize()
+                if kind == "width":
+                    scale = weight / float(dw)
+                elif kind == "height":
+                    scale = height / float(dh)
+                elif kind == "adjust":
+                    scale = min(weight / float(dw), height / float(dh))
+                elif kind == "out":
+                    scale = scale - self.zoom_factor * xrange[0]
+                elif kind == "in":
+                    scale = scale + self.zoom_factor * xrange[0]
+                elif type(kind)==float:
+                    scale=kind
+                else:
+                    return
+                if scale:
+                    scale=round(scale, self.zoom_round)
+                    scales[item]=scale
+                    view.setAttr('zoom_scale', kind, custom=True)
+            for item, scale in scales.items():
+                item.setScale(scale)
+            view.redraw()
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            zoom=self.currentZoom(view)
+            normal.zoomChanged.emit(view, zoom)
