@@ -70,7 +70,7 @@ class FitzRotate(plug.Plug):
             if func:
                 func(view=view, **kwargs)
 
-    def rotateView(self, view, rotate, item=None):
+    def rotateView(self, view, rotate):
         for idx, item in view.getItems():
             self.rotateItem(item, rotate)
         view.setAttr('rotate', rotate, custom=True)

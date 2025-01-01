@@ -1,4 +1,5 @@
 import plug
+import functools
 
 class BrowserRotate(plug.Plug):
 
@@ -11,47 +12,58 @@ class BrowserRotate(plug.Plug):
                     self.addAgent)
 
     def addAgent(self):
-        holder=self.app.plugman.getPlug('Normal')
-        if holder:
-            holder.addAgent('rotate', 'BrowserView', self)
-            modeller=self.app.buffman.modeller('FitzModel')
-            if modeller:
-                element_klass=modeller.element_class
-                element_klass.addFunctor(
-                        'renderMatrix', self.renderMatrix)
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            normal.addAgent('rotate', 'BrowserView', self)
+            normal.addAgent('rotateState', 'BrowserView', self)
 
-    def renderMatrix(self, keys, matrix):
-        rotation=keys.get('rotation', False)
-        if rotation:
-            matrix.prerotate(rotation % 360)
-
-    def activate(self, view=None, xrange=None, only_item=False, **kwargs):
+    def rotateState(self, view=None, **kwargs):
         if view:
-            item=None
-            if only_item:
-                item=view.currentItem()
-                rotation=item.key('rotation') or 0
-            else:
-                rotation = self.rotation(view) or 0
-            if xrange:
-                rotation = (rotation + xrange[-1]) % 360
-            else:
-                rotation = (rotation + 90) % 360
-            self.setRotation(view, rotation, item=item)
+            rotation=view.getAttr('rotate', custom=True, default=0)
+            return {'rotate': rotation} 
+        return {}
 
-    def setRotation(self, view, rotation, item=None):
-        if item:
-            self.setItemRotation(item, rotation)
-        else:
-            for idx, item in view.getItems():
-                self.setItemRotation(item, rotation)
-            view.setProp('rotation', rotation)
-        view.redraw()
+    def rotate(self, view=None, kind=None, xrange=[1], rotate=None, **kwargs):
+        if view:
+            if rotate is None:
+                item=None
+                if kind=='view':
+                    data = self.rotateState(view=view)
+                    rotate=data.get('rotate', 0)
+                elif kind=='item':
+                    item=view.currentItem()
+                    rotate=item.key('rotate') or 0
+                if xrange:
+                    rotate = (rotate + 90*xrange[-1]) % 360
+                else:
+                    rotate = (rotate + 90) % 360
+            if kind=='view':
+                self.rotateView(view, rotate, **kwargs)
+            elif kind=='item' and item:
+                self.rotateItem(item, rotate, **kwargs)
+            view.redraw()
+            self.reportStateChange(view)
 
-    def setItemRotation(self, item, rotation):
-        if item:
-            item.setKey('rotation', rotation)
-            item.redraw()
+    def reportStateChange(self, view):
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            data=self.rotateState(view=view)
+            normal.stateChanged.emit('rotate', view, data)
 
-    def rotation(self, view):
-        return view.getProp('rotation')
+    def activate(self, action=None, view=None, **kwargs):
+        if action and view:
+            func=getattr(self, action, None)
+            if func:
+                func(view=view, **kwargs)
+                    
+    def updateRotate(self, result, *, view, rotate):
+        view.setAttr('rotate', rotate, custom=True)
+
+    def rotateView(self, view, rotate, **kwargs):
+        script=f"document.body.style.setProperty('-webkit-transform', 'rotate({rotate}deg)', null);"
+        functor=functools.partial(self.updateRotate, view=view, rotate=rotate)
+        view.runJSCode(script, resultCallback=functor)
+
+    def rotateItem(self, item, rotate, **kwargs):
+        # todo: rotate invididual elements, e.g., images
+        pass

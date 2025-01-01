@@ -36,6 +36,7 @@ Picks = [
 	{plug='help/help', base='~/code/lura/src', kind='link'},
 	{plug='help/help_style', base='~/code/lura/src', kind='link'},
 
+	{plug='browser/browser_rotate', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_copy', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
