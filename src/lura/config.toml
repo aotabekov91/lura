@@ -10,28 +10,32 @@ Picks = [
 	# 'plugs/search',
 	# 'plugs/grayscale',
 	# {plug='fitz91/fitz_search', base='http://192.168.178.10'},
-	# {plug='plugs/state_zoom', base='~/code/lura/src', kind='link'},
+
 	{plug='plugs/states', base='~/code/lura/src', kind='link'},
 	{plug='plugs/states_sqlite', base='~/code/lura/src', kind='link'},
-
 	{plug='plugs/hint', base='~/code/lura/src', kind='link'},
 	{plug='plugs/bookmark', base='~/code/lura/src', kind='link'},
 	{plug='plugs/quickmark', base='~/code/lura/src', kind='link'},
 	{plug='plugs/copy_view', base='~/code/lura/src', kind='link'},
 	{plug='plugs/bookmark_sqlite', base='~/code/lura/src', kind='link'},
 	{plug='plugs/table_sqlite', base='~/code/lura/src', kind='link'},
-	{plug='plugs_qt/bookmarks', base='~/code/lura/src', kind='link'},
 	{plug='plugs/hint_link', base='~/code/lura/src', kind='link'},
 	{plug='plugs/search', base='~/code/lura/src', kind='link'},
 	{plug='plugs/zmq_server', base='~/code/lura/src', kind='link'},
+
+	{plug='plugs_qt/bookmarks', base='~/code/lura/src', kind='link'},
+	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
+
 	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_zoom', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_copy', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_pdf', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_goto', base='~/code/lura/src', kind='link'},
+
 	{plug='help/help', base='~/code/lura/src', kind='link'},
 	{plug='help/help_style', base='~/code/lura/src', kind='link'},
-	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
+
+	{plug='browser/browser_copy', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_goto', base='~/code/lura/src', kind='link'},
