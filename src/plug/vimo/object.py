@@ -78,7 +78,7 @@ class Object:
         if not custom:
             return getattr(self, name, default)
         else:
-            return self.m_custom_attrs.get(name)
+            return self.m_custom_attrs.get(name, default)
 
     def setManager(self, manager=None):
         if self.m_manager:

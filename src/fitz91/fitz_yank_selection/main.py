@@ -4,14 +4,13 @@ class FitzYankSelection(Plug):
 
     def setup(self):
         if self.app.running:
-            self.addAGent()
+            self.addAgent()
         else:
             self.app.appSoonStarts.connect(
-                    self.addAGent)
+                    self.addAgent)
 
-    def addAGent(self):
-        holder=self.app.plugman.getPlug(
-                'YankSelection')
+    def addAgent(self):
+        holder=self.app.plugman.getPlug('YankSelection')
         if holder:
             holder.addAgent('FitzView', self)
 

@@ -135,3 +135,11 @@ class Normal(Plug, QtCore.QObject):
     @tag("zh(normal)")
     def zoomToHeight(self, **kwargs):
         self.activate(action='zoom', kind="height", **kwargs)
+
+    @tag("r(normal)")
+    def rotateView(self, xrange=[1], **kwargs):
+        self.activate(action='rotate', kind='view', xrange=xrange, **kwargs)
+
+    @tag("R(normal)")
+    def rotateItem(self, xrange=[1], **kwargs):
+        self.activate(action='rotate', kind='item', xrange=xrange, **kwargs)
