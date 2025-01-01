@@ -65,7 +65,7 @@ class Quickmark(Plug):
 
     def add(self, text, view):
         normal=self.app.plugman.getPlug('Normal')
-        position=normal.currentPosition(view=view)
+        position=normal.getState(state='goTo', view=view)
         self.saveQuickmark(view, text, position)
 
     def jump(self, text, view):

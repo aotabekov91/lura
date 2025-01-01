@@ -10,11 +10,12 @@ class Normal(Plug, QtCore.QObject):
         super().setup()
         self.m_agents={}
 
-    def getState(self, view, state, **kwargs):
+    def getState(self, view=None, state=None, **kwargs):
         if view and state:
-            agent=self.getAgent(action=state, view=view)
+            action=f'{state}State'
+            agent=self.getAgent(action=action, view=view)
             if agent:
-                return agent.activate(view=view, kind='getState', **kwargs)
+                return agent.activate(action=action, view=view, **kwargs)
 
     def addAgent(self, action, name, agent):
         if not action in self.m_agents:
@@ -49,7 +50,7 @@ class Normal(Plug, QtCore.QObject):
 
     @tag("G(normal)")
     def go(self, xrange=None, **kwargs):
-        self.activate(action='goTo', kind='goTo', xrange=xrange, **kwargs)
+        self.activate(action='goTo', kind='xrange', xrange=xrange, **kwargs)
 
     @tag("G(normal)")
     def goLast(self, **kwargs):

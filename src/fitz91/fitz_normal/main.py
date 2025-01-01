@@ -15,63 +15,72 @@ class FitzNormal(Plug):
         normal=self.app.plugman.getPlug('Normal')
         if normal:
             normal.addAgent('goTo', 'FitzView', self)
+            normal.addAgent('goToState', 'FitzView', self)
             self.app.buffman.viewIsDrawn.connect(self.restorePosition)
 
-    def activate(self, view=None, kind=None, **kwargs):
-        func = getattr(self, kind, None)
-        normal=self.app.plugman.getPlug('Normal')
-        if func:
-            func(view=view, **kwargs)
-            if normal:
-                data=self.getState(view=view)
-                normal.stateChanged.emit('goTo', view, data)
+    def activate(self, action=None, view=None, **kwargs):
+        func = getattr(self, action, None)
+        if view and func:
+            return func(view=view, **kwargs)
 
-    def blockleft(self, *args, **kwargs):
-        self.moveScreen("left", *args, **kwargs)
+    def goToState(self, view=None, **kwargs):
+        data={}
+        if view:
+            idx=view.currentIndex()
+            item = view.item(idx)
+            if item:
+                pos=item.pos()
+                brect = item.boundingRect()
+                size = brect.translated(pos).size()
+                top_left = brect.translated(pos).topLeft()
+                ver=float(view.verticalScrollBar().value())
+                hor=float(view.horizontalScrollBar().value())
+                x = (hor -top_left.x())/size.width()
+                y = (ver - top_left.y())/size.height()
+                data['x'] = x 
+                data['y'] = y
+                data['xrange']=[idx]
+        return data
 
-    def blockright(self, *args, **kwargs):
-        self.moveScreen("right", *args, **kwargs)
-
-    def blockup(self, *args, **kwargs):
-        self.moveScreen("up", *args, **kwargs)
-
-    def blockdown(self, *args, **kwargs):
-        self.moveScreen("down", *args, **kwargs)
-
-    def down(self, *args, **kwargs):
-        self.moveLine("down", *args, **kwargs)
-
-    def up(self, *args, **kwargs):
-        self.moveLine("up", *args, **kwargs)
-
-    def left(self, *args, **kwargs):
-        self.moveLine("left", *args, **kwargs)
-
-    def right(self, *args,  **kwargs):
-        self.moveLine("right", *args, **kwargs)
-
-    def next(self, view=None, xrange=[1], **kwargs):
+    def goTo(self, view=None, kind=None, xrange=[1], **kwargs):
         if view:
             count=view.count()
             idx=view.currentIndex()
-            idx = min(idx + xrange[-1], count)
-            self.goTo(view=view, xrange=[idx])
+            if kind=='blockLeft':
+                self.moveScreen("left", view=view, xrange=xrange, **kwargs)
+            elif kind=='blockRight':
+                self.moveScreen("right", view=view, xrange=xrange, **kwargs)
+            elif kind=='blockUp':
+                self.moveScreen("up", view=view, xrange=xrange, **kwargs)
+            elif kind=='blockDown':
+                self.moveScreen("down", view=view, xrange=xrange, **kwargs)
+            elif kind=='down':
+                self.moveLine("down", view=view, xrange=xrange, **kwargs)
+            elif kind=='up':
+                self.moveLine("up", view=view, xrange=xrange, **kwargs)
+            elif kind=='left':
+                self.moveLine("left", view=view, xrange=xrange, **kwargs)
+            elif kind=='right':
+                self.moveLine("right", view=view, xrange=xrange, **kwargs)
+            elif kind=='next':
+                idx = min(idx + xrange[-1], count)
+                self.goToRange(view=view, xrange=[idx], **kwargs)
+            elif kind=='prev':
+                idx = max(1, idx - xrange[-1])
+                self.goToRange(view=view, xrange=[idx], **kwargs)
+            elif kind=='first':
+                self.goToRange(view=view, xrange=[1], **kwargs)
+            elif kind=='last':
+                self.goToRange(view=view, xrange=[count], **kwargs)
+            elif kind=='xrange' or xrange:
+                self.goToRange(view=view, xrange=xrange, **kwargs)
+            self.reportStateChange(view)
 
-    def prev(self, view=None, xrange=[1], **kwargs):
-        if view:
-            idx=view.currentIndex()
-            idx = max(1, idx - xrange[-1])
-            self.goTo(view=view, xrange=[idx])
-
-    def first(self, view=None, **kwargs):
-        if view:
-            kwargs['xrange']=[1]
-            self.goTo(view=view, **kwargs)
-
-    def last(self, view=None, **kwargs):
-        if view:
-            kwargs['xrange']=[view.count()]
-            self.goTo(view=view, **kwargs)
+    def reportStateChange(self, view):
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            data=self.goToState(view=view)
+            normal.stateChanged.emit('goTo', view, data)
 
     def moveScreen(self, kind, view=None, xrange=[1], **kwargs):
         if view:
@@ -93,7 +102,6 @@ class FitzNormal(Plug):
             elif kind == "right":
                 deltay = horbar.value() + width * xrange[-1]
                 horbar.setValue(int(deltay))
-            # self.positionChanged.emit()
             view.viewport().update()
             view.setVisibleItem()
 
@@ -122,13 +130,12 @@ class FitzNormal(Plug):
             view.viewport().update()
             view.setVisibleItem()
 
-    def goTo(
+    def goToRange(
             self, 
             view=None, 
             xrange=[1], 
             x=0,
             y=0,
-            center=False,
             **kwargs
             ):
 
@@ -146,26 +153,8 @@ class FitzNormal(Plug):
                 view.setCurrentIndex(xrange[-1])
                 view.viewport().update()
 
-    def getState(self, view, **kwargs):
-        data={}
-        if view:
-            idx=view.currentIndex()
-            item = view.item(idx)
-            if item:
-                pos=item.pos()
-                brect = item.boundingRect()
-                size = brect.translated(pos).size()
-                top_left = brect.translated(pos).topLeft()
-                ver=float(view.verticalScrollBar().value())
-                hor=float(view.horizontalScrollBar().value())
-                x = (hor -top_left.x())/size.width()
-                y = (ver - top_left.y())/size.height()
-                data['x'] = x 
-                data['y'] = y
-                data['xrange']=[idx]
-        return data
-
     def restorePosition(self, view):
-        position=self.getState(view)
-        view.setVisibleItem()
-        self.goTo(view=view, **position)
+        state=self.goToState(view)
+        if state:
+            view.setVisibleItem()
+            self.goToRange(view=view, **state)

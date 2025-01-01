@@ -19,29 +19,28 @@ class FitzZoom(Plug):
         normal=self.app.plugman.getPlug('Normal')
         if normal:
             normal.addAgent('zoom', 'FitzView', self)
+            normal.addAgent('zoomState', 'FitzView', self)
+
+    def activate(self, action=None, view=None, **kwargs):
+        func = getattr(self, action, None)
+        if view and func:
+            return func(view=view, **kwargs)
+
+    def zoomState(self, view, **kwargs):
+        return {
+                'kind': view.getAttr('zoom_kind', custom=True),
+                'scale': view.getAttr('zoom_scale', custom=True),
+                }
 
     def connectView(self, view):
         if view and view.__class__.__name__=='FitzView':
             view.resized.connect(self.updateZoom)
 
     def updateZoom(self, view):
-        data=self.getState(view)
-        kind=data.get('kind', None)
+        state=self.zoomState(view)
+        kind=state.get('kind', None)
         if kind in ['width', 'height']:
             self.activate(view=view, kind=kind)
-
-    def getState(self, view, **kwargs):
-        return {
-                'kind': view.getAttr('zoom_kind', custom=True),
-                'scale': view.getAttr('zoom_scale', custom=True),
-                }
-
-    def activate(self, view=None, **kwargs):
-        normal=self.app.plugman.getPlug('Normal')
-        self.zoom(view=view, **kwargs)
-        if normal:
-            data=self.getState(view=view)
-            normal.stateChanged.emit('zoom', view, data)
 
     def zoom(self, view=None, kind=None, xrange=[1], scale=None, **kwargs):
         if view:
@@ -75,3 +74,10 @@ class FitzZoom(Plug):
                     view.setAttr('zoom_scale', item_scale, custom=True)
                     item.setScale(item_scale)
             view.redraw()
+            self.reportStateChange(view)
+
+    def reportStateChange(self, view):
+        normal=self.app.plugman.getPlug('Normal')
+        if normal:
+            data=self.zoomState(view=view)
+            normal.stateChanged.emit('zoom', view, data)

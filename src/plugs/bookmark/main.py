@@ -51,7 +51,7 @@ class Bookmark(Plug, QtCore.QObject):
         editor=self.app.plugman.getPlug('Editline')
         text=''
         if normal:
-            position=normal.currentPosition(view=view)
+            position=normal.getState(state='goTo', view=view)
             bookmark=bookmark_model.getBookmark(
                     position, by="position")
             if bookmark:
@@ -72,11 +72,12 @@ class Bookmark(Plug, QtCore.QObject):
         editline=self.app.plugman.getPlug('Editline')
         bookmark=editline.text()
         normal=self.app.plugman.getPlug('Normal')
+        position=normal.getState(view=view, state='goTo')
         if normal and bookmark_model:
             data={
                     'text': bookmark,
+                    'position': position,
                     'source_id': model.id(),
-                    'position': normal.currentPosition(view=view),
                  }
             bookmark_model.addBookmark(data)
         self.octivate()

@@ -20,8 +20,8 @@ class FitzCopy(Plug):
             copy.setModel(view.model())
             copy.setManager(view.manager())
             if normal:
-                zoom=normal.currentZoom(view=view)
-                position=normal.currentPosition(view=view)
+                zoom=normal.getState(state='zoom', view=view)
+                position=normal.getState(state='goTo', view=view)
                 normal.activate(action='goTo', view=copy, **position)
                 normal.activate(action='zoom', view=copy, **zoom)
             return copy

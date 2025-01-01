@@ -52,7 +52,8 @@ class Bookmarks(Plug):
     def openAndFocus(self):
         self.open()
         view=self.app.stateman.subview()
-        view.activate()
+        if view:
+            view.activate()
 
     @tag('o(normal)[BookmarkView]')
     def open(self):
