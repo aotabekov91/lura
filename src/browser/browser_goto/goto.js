@@ -1,6 +1,6 @@
 "use strict";
 
-window.browserviewscripts.normal = (function() {
+window.browserviewscripts.goTo = (function() {
     const funcs = {};
 
     funcs.current_position = () => {

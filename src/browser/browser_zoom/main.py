@@ -12,30 +12,38 @@ class BrowserZoom(Plug):
             self.app.appSoonStarts.connect(
                     self.addAgent)
 
+    def zoomState(self, view=None, **kwargs):
+        if view:
+            page=view.page()
+            return {'scale': page.zoomFactor()}
+
     def addAgent(self):
         normal=self.app.plugman.getPlug('Normal')
         if normal:
             normal.addAgent('zoom', 'BrowserView', self)
+            normal.addAgent('zoomState', 'BrowserView', self)
 
-    def currentZoom(self, view):
-        page=view.page()
-        return page.zoomFactor()
+    def activate(self, action=None, view=None, **kwargs):
+        func = getattr(self, action, None)
+        if view and func:
+            return func(view=view, **kwargs)
 
-    def activate(
-            self, 
-            view=None, 
-            kind=None, 
-            xrange=[1], 
-            **kwargs):
+    def zoom(self, view=None, kind=None, scale=None, xrange=[1], **kwargs):
         if view:
             page=view.page()
-            factor=self.currentZoom(view)
-            if kind=='in':
-                factor=factor+self.zoom_factor*xrange[-1]
-            elif kind=='out':
-                factor=factor-self.zoom_factor*xrange[-1]
-            page.setZoomFactor(factor)
+            data=self.zoomState(view)
+            if not scale and data:
+                current_scale=data['scale']
+                if kind=='in':
+                    scale=current_scale+self.zoom_factor*xrange[-1]
+                elif kind=='out':
+                    scale=current_scale-self.zoom_factor*xrange[-1]
+            if scale:
+                page.setZoomFactor(scale)
+                self.reportStateChange(view)
+
+    def reportStateChange(self, view):
+        data=self.zoomState(view)
         normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            data=self.currentZoom(view)
-            normal.stateChanged('zoom', view, data)
+        if data and normal:
+            normal.stateChanged.emit('zoom', view, data)

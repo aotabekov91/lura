@@ -78,7 +78,7 @@ class App(Plug):
     def wait(self, delta: int=1) -> None:
          self.wants_to_wait += delta
 
-    def startUI(self):
+    def startView(self):
          time.sleep(0.1)
          while self.wants_to_wait:
              time.sleep(0.01)
@@ -86,7 +86,7 @@ class App(Plug):
              self.ui.activate()
 
     def run(self) -> None:
-         self.startUI()
+         self.startView()
          self.running=True
          sys.exit(self.qapp.exec())
 

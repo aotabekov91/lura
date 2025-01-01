@@ -1,8 +1,12 @@
 import json
+
+from PyQt6 import QtCore
+
 from plug import Plug
 
 class States(Plug):
 
+    wait_time=500
     states=['zoom', 'goTo']
 
     def setup(self):
@@ -13,7 +17,7 @@ class States(Plug):
             self.app.appIsLaunched.connect(
                     self.setStates)
 
-    def connectStater(self):
+    def connectStates(self):
         normal=self.app.plugman.getPlug('Normal')
         stater=self.app.plugman.getPlug('StatesTable')
         if normal and stater:
@@ -29,6 +33,10 @@ class States(Plug):
                 stater.setState(midx, state, data)
 
     def setStates(self):
+        timer=QtCore.QTimer(parent=self.app.qapp)
+        timer.singleShot(self.wait_time, self.waitAndSet)
+
+    def waitAndSet(self):
         views=self.app.buffman.views()
         normal=self.app.plugman.getPlug('Normal')
         stater=self.app.plugman.getPlug('StatesTable')
@@ -46,4 +54,4 @@ class States(Plug):
                                 action=state, view=view, **value)
         if not self.activated:
             self.activate()
-            self.connectStater()
+            self.connectStates()
