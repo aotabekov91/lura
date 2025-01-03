@@ -3,6 +3,10 @@
 window.browserviewscripts.goTo = (function() {
     const funcs = {};
 
+	funcs.go_to_id = (id) => {
+		document.getElementById(id).scrollIntoView();
+	};
+
     funcs.current_position = () => {
         let x_px = window.scrollX;
         let y_px = window.scrollY;

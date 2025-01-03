@@ -42,6 +42,7 @@ class BrowserNormal(Plug):
             xrange=[1], 
             x=None, 
             y=None, 
+            id=None,
             xdelta=100, 
             ydelta=100, 
             **kwargs):
@@ -74,7 +75,14 @@ class BrowserNormal(Plug):
                 page.runJavaScript(script)
             elif not None in [x, y]:
                 self.goToXrange(view=view, x=x, y=y, **kwargs)
+            elif id is not None:
+                self.goToId(view=view, id=id, **kwargs)
             self.updatePositionScript(view)
+
+    def goToId(self, view=None, id=None, **kwargs):
+        if view:
+            script=view.scriptize('goTo', 'go_to_id', id)
+            view.runJSCode(script)
 
     def goToXrange(self, view=None, x=0, y=0, **kwargs):
         if view:

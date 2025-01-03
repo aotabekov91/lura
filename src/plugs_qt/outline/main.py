@@ -74,7 +74,7 @@ class Outline(Plug):
         self.view.resized.connect(
                 self.updateHeaderRatio)
 
-    @tag('<c-o>(normal/outline)')
+    @tag('<c-O>(normal/outline)')
     def toggleOutline(self):
         self.view.toggle()
 

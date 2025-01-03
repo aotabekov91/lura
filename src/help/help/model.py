@@ -35,6 +35,9 @@ class HelpModel(
             self.m_converter = md
             self.isLoaded = True
 
+    def converter(self):
+        return self.m_converter
+
     def loadMD(self, source):
         with open(source, 'r') as file:
             contents = file.read()
@@ -47,7 +50,6 @@ class HelpModel(
                 UrlizeExtension(),
             ]
             md = markdown.Markdown(extensions=extensions)
-            md = markdown.Markdown()
             return md, md.convert(contents)
 
     def assignId(self, source):
