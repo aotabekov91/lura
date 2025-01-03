@@ -27,10 +27,11 @@ class FitzZoom(Plug):
             return func(view=view, **kwargs)
 
     def zoomState(self, view, **kwargs):
-        return {
-                'kind': view.getAttr('zoom_kind', custom=True),
-                'scale': view.getAttr('zoom_scale', custom=True),
-                }
+        zoom_kind=view.getAttr('zoom_kind', custom=True)
+        zoom_scale=view.getAttr('zoom_scale', custom=True)
+        if zoom_kind:
+            return {'kind': zoom_kind, 'scale': zoom_scale}
+        return {}
 
     def connectView(self, view):
         if view and view.__class__.__name__=='FitzView':
@@ -40,7 +41,7 @@ class FitzZoom(Plug):
         state=self.zoomState(view)
         kind=state.get('kind', None)
         if kind in ['width', 'height']:
-            self.activate(view=view, kind=kind)
+            self.activate(action='zoom', view=view, kind=kind)
 
     def zoom(self, view=None, kind=None, xrange=[1], scale=None, **kwargs):
         if view:

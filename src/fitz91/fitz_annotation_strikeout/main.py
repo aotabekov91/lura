@@ -26,7 +26,7 @@ class FitzStrikeout(Plug):
             annotation_model=annotator.getModel(model)
             data=selection.data()
             annotation_model.addAnnotate(data=data)
-            selector.cleanUpSelection(view)
+            selector.clear(view)
         return selection
 
     def octivate(self):

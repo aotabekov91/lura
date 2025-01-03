@@ -66,5 +66,5 @@ class Annotate(Plug, QtCore.QObject):
             model=view.model()
             self.activate(action='del', model=model, selection=selection)
             if selector:
-                selector.cleanUpSelection(view)
+                selector.clear(view)
         self.toggle()

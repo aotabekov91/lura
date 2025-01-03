@@ -16,9 +16,9 @@ class FitzWordHint(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        hodler=self.app.plugman.getPlug('WordHint')
-        if hodler:
-            hodler.addAgent('FitzView', self)
+        holder=self.app.plugman.getPlug('Hint')
+        if holder:
+            holder.addAgent('hintWord', 'FitzView', self)
 
     def words(self, model):
         return self.m_cache.get(model, None)
@@ -94,28 +94,32 @@ class FitzWordHint(Plug):
         painter.restore()
 
     def checkHint(self, hint):
-        partial=hint[:len(self.m_hint)]
-        return self.m_hint==partial
+        return self.m_hint==hint[:len(self.m_hint)]
+
+    def select(self, view, data):
+        selector=self.app.plugman.getPlug('Selection')
+        if selector:
+            selection=selector.create(
+                    view=view, data=data)
+            selector.select(view, selection=selection) 
+        hinter=self.app.plugman.getPlug('Hint')
+        hinter.octivate(view=view)
+        visual=self.app.plugman.getPlug('Visual')
+        if visual:
+            agent=visual.getAgent(view=view)
+            if agent:
+                self.app.stateman.activate(
+                        mode='visual', submode='word')
 
     def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
-        hints=self.m_hints
-        if self.m_hint in hints:
-            data=hints.get(self.m_hint)
-            selector=self.app.plugman.getPlug('Selection')
-            selection=selector.createSelection(
-                    view=view, data=data)
-            selector.select(view, selection=selection) 
-            hinter=self.app.plugman.getPlug('Hint')
-            hinter.toggle()
-            word_visual=self.app.plugman.getPlug('FitzWordVisual')
-            if word_visual:
-                self.app.stateman.activate(
-                        mode='visual', submode='word')
+        if self.m_hint in self.m_hints:
+            data=self.m_hints.get(self.m_hint)
+            self.select(view, data)
             view.redraw()
             return True
-        for hint in hints:
+        for hint in self.m_hints:
             if self.checkHint(hint):
                 view.redraw()
                 return True

@@ -21,24 +21,23 @@ class FitzLinkHint(Plug):
                     self.addAgent)
 
     def addAgent(self):
-        holder=self.app.plugman.getPlug('LinkHint')
+        holder=self.app.plugman.getPlug('Hint')
         if holder:
-            holder.addAgent('FitzView', self)
+            holder.addAgent('hintLink', 'FitzView', self)
 
     def activate(self, view=None, **kwargs):
         if view:
             self.cacheLinks(view)
+            self.app.stateman.setFunctor(functor=self.functor)
             view.itemPainted.connect(self.paint)
-            self.app.stateman.setFunctor(
-                    functor=self.functor)
             view.redraw()
 
     def octivate(self, view=None, **kwargs):
         if view:
             self.m_hint=''
             view.itemPainted.disconnect(self.paint)
-            view.redraw()
             self.app.stateman.setFunctor()
+            view.redraw()
 
     def functor(self, key, earman):
         self.m_hint=key
@@ -47,9 +46,9 @@ class FitzLinkHint(Plug):
         hints=self.hints(model)
         if self.m_hint in hints:
             link=hints.get(self.m_hint)
-            self.goTo(link, model, view)
+            self.select(link, model, view)
             hinter=self.app.plugman.getPlug('Hint')
-            hinter.toggle()
+            hinter.octivate(view=view)
         for hint in hints:
             if self.checkHint(hint):
                 view.redraw()
@@ -90,7 +89,7 @@ class FitzLinkHint(Plug):
         for hint, link in hints.items():
             link['hint']=hint
 
-    def goTo(self, link, model, view):
+    def select(self, link, model, view):
         idx=link.get('index')
         element=model.element(idx)
         destination = link["link"].dest

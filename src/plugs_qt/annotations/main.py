@@ -88,4 +88,4 @@ class Annotations(Plug):
             annotation_model=annotator.getModel(model)
             annotation_model.delAnnotate(element)
             if selector:
-                selector.cleanUpSelection(view)
+                selector.clear(view)

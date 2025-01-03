@@ -12,7 +12,7 @@ class ViewHint(Plug):
         self.m_hint=None
         self.m_hinting=False
 
-    def viewFunctor(self, key, earman):
+    def functor(self, key, earman):
         digits=self.app.earman.digits()
         if digits:
             digits=digits[-1]
@@ -42,7 +42,7 @@ class ViewHint(Plug):
             self.octivate()
 
     def activate(self):
-        self.app.stateman.setFunctor(functor=self.viewFunctor)
+        self.app.stateman.setFunctor(functor=self.functor)
         self.app.view.painted.connect(self.paint)
         self.app.view.update()
 

@@ -10,13 +10,6 @@ class Normal(Plug, QtCore.QObject):
         super().setup()
         self.m_agents={}
 
-    def getState(self, view=None, state=None, **kwargs):
-        if view and state:
-            action=f'{state}State'
-            agent=self.getAgent(action=action, view=view)
-            if agent:
-                return agent.activate(action=action, view=view, **kwargs)
-
     def addAgent(self, action, name, agent):
         if not action in self.m_agents:
             self.m_agents[action]={}
@@ -104,7 +97,7 @@ class Normal(Plug, QtCore.QObject):
     def octivate(self):
         selection=self.app.plugman.getPlug('Selection')
         if selection:
-            selection.cleanUpSelection()
+            selection.clear()
 
     @tag('ts(normal)')
     def toggleStatusbar(self):
@@ -143,3 +136,14 @@ class Normal(Plug, QtCore.QObject):
     @tag("R(normal)")
     def rotateItem(self, xrange=[1], **kwargs):
         self.activate(action='rotate', kind='item', xrange=xrange, **kwargs)
+
+    @tag("yy(normal)")
+    def yankSelection(self, **kwargs):
+        self.activate(action='yank', kind='selection', **kwargs)
+
+    def getState(self, view=None, state=None, **kwargs):
+        if view and state:
+            action=f'{state}State'
+            agent=self.getAgent(action=action, view=view)
+            if agent:
+                return agent.activate(action=action, view=view, **kwargs)

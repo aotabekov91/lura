@@ -4,7 +4,7 @@ class Select:
     def setup(self):
         super().setup()
         self.m_selection = None
-        self.cleanUpWanted.connect(self.cleanUpSelection)
+        self.cleanUpWanted.connect(self.clear)
         self.app.earman.delistenWanted.connect(
             self.normalCleanUpSelection
         )
@@ -12,7 +12,7 @@ class Select:
     def normalCleanUpSelection(self):
         m = self.app.stateman.mode()
         if m == "normal":
-            self.cleanUpSelection()
+            self.clear()
 
     def select(self, i, s, **kwargs):
         if self.checkProp("canSelect", i):
@@ -22,11 +22,11 @@ class Select:
     def selection(self):
         return self.m_selection
 
-    def clearSelection(self):
+    def clear(self):
         for i in self.m_items.values():
             if self.checkProp("canSelect", i):
                 i.select()
 
-    def cleanUpSelection(self):
-        self.clearSelection()
+    def clear(self):
+        self.clear()
         self.m_selection = None
