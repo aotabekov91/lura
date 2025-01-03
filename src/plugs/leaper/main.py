@@ -50,7 +50,7 @@ class Leaper(Plug):
     def createNode(self, *args, **kwargs):
         return self.node_class(*args, **kwargs)
 
-    @tag('<c-I>(normal)')
+    @tag('<c-i>(normal)')
     def next(self, view=None, xrange=[1], **kwargs):
         if not view:
             view=self.app.stateman.view()
@@ -64,7 +64,7 @@ class Leaper(Plug):
                     xrange=xrange)
             self.connectLeaper()
 
-    @tag('<c-O>(normal)')
+    @tag('<c-o>(normal)')
     def prev(self, view=None, xrange=[1], **kwargs):
         if not view:
             view=self.app.stateman.view()
