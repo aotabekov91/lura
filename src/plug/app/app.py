@@ -9,6 +9,7 @@ from .plugman import Plugman
 from .buffman import Buffman
 from .styleman import Styleman
 from .stateman import Stateman
+from .delegman import Delegman
 
 from ..plug import Plug
 from ..utils import Parser, tag
@@ -31,26 +32,20 @@ class App(Plug):
         self.setupParts()
 
     def setupParts(
-        self,
-        plugman: tp.Callable[
-            [...], tp.Any 
-        ] = Plugman,
-        earman: tp.Callable[[...], tp.Any] = Earman,
-        buffman: tp.Callable[
-            [...], tp.Any 
-        ] = Buffman,
-        styleman: tp.Callable[
-            [...], tp.Any 
-        ] = Styleman,
-        stateman: tp.Callable[
-            [...], tp.Any 
-        ] = Stateman,
-    ) -> None:
-         self.earman: Earman = earman(self)
-         self.stateman: Stateman = stateman(self)
-         self.buffman: Buffman = buffman(self)
-         self.plugman: Plugman = plugman(self)
-         self.styleman: Styleman = styleman(self)
+            self, 
+            plugman=Plugman, 
+            earman=Earman, 
+            buffman=Buffman, 
+            styleman=Styleman, 
+            stateman=Stateman, 
+            delegman=Delegman,
+            ) -> None:
+         self.earman: Earman = earman(app=self)
+         self.stateman: Stateman = stateman(app=self)
+         self.buffman: Buffman = buffman(app=self)
+         self.plugman: Plugman = plugman(app=self)
+         self.styleman: Styleman = styleman(app=self)
+         self.delegman: Delegman = delegman(app=self)
          self.earman.add(self)
 
     def setupParser(self, parser=Parser):

@@ -9,16 +9,13 @@ class FitzWordHint(Plug):
         self.m_hint=''
         self.m_cache={}
         self.m_hints={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        holder=self.app.plugman.getPlug('Hint')
-        if holder:
-            holder.addAgent('hintWord', 'FitzView', self)
+        self.app.delegman.addAgent(
+                'hint', 'word', 'FitzView', 'start', self.start)
+        self.app.delegman.addAgent(
+                'hint', 'word', 'FitzView', 'finish', self.finish)
 
     def words(self, model):
         return self.m_cache.get(model, None)
@@ -48,8 +45,7 @@ class FitzWordHint(Plug):
         return alist
 
     def assignHints(self, view):
-        plugs=self.app.plugman.plugs
-        hinter=plugs.get('Hint')
+        moder=self.app.stateman.moder()
         items=view.visibleItems()
         all_words=[]
         for item in items: 
@@ -57,12 +53,12 @@ class FitzWordHint(Plug):
             for word in words:
                 word['item']=item
             all_words+=words
-        _, hints=hinter.generateHints(all_words)
+        _, hints=moder.generateHints(all_words)
         self.m_hints=hints
         for hint, word in hints.items():
             word['hint']=hint
 
-    def activate(self, view=None, **kwargs):
+    def start(self, view=None, **kwargs):
         if view:
             model=view.model()
             self.cacheModel(model)
@@ -71,7 +67,7 @@ class FitzWordHint(Plug):
             view.itemPainted.connect(self.paint)
             view.redraw()
 
-    def octivate(self, view=None, **kwargs):
+    def finish(self, view=None, **kwargs):
         if view:
             self.m_hint=''
             self.app.stateman.setFunctor()
@@ -87,10 +83,9 @@ class FitzWordHint(Plug):
         for word in words:
             hint=word.get("hint")
             box = word.get("box")[0]
-            if not self.checkHint(hint):
-                continue
-            rect =item.mapToItem(box, unified=True)
-            painter.drawText(rect.topLeft(), hint)
+            if self.checkHint(hint):
+                rect =item.mapToItem(box, unified=True)
+                painter.drawText(rect.topLeft(), hint)
         painter.restore()
 
     def checkHint(self, hint):
@@ -102,14 +97,11 @@ class FitzWordHint(Plug):
             selection=selector.create(
                     view=view, data=data)
             selector.select(view, selection=selection) 
-        hinter=self.app.plugman.getPlug('Hint')
-        hinter.octivate(view=view)
+        moder=self.app.stateman.moder()
+        moder.octivate(view=view)
         visual=self.app.plugman.getPlug('Visual')
         if visual:
-            agent=visual.getAgent(view=view)
-            if agent:
-                self.app.stateman.activate(
-                        mode='visual', submode='word')
+            visual.activate(view=view, submode='word')
 
     def functor(self, key, earman):
         self.m_hint=key

@@ -14,25 +14,22 @@ class FitzLinkHint(Plug):
         self.m_links={}
         self.m_hints={}
         self.m_length={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        holder=self.app.plugman.getPlug('Hint')
-        if holder:
-            holder.addAgent('hintLink', 'FitzView', self)
+        self.app.delegman.addAgent(
+                'hint', 'link', 'FitzView', 'start', self.start)
+        self.app.delegman.addAgent(
+                'hint', 'link', 'FitzView', 'finish', self.finish)
 
-    def activate(self, view=None, **kwargs):
+    def start(self, view=None, **kwargs):
         if view:
             self.cacheLinks(view)
             self.app.stateman.setFunctor(functor=self.functor)
             view.itemPainted.connect(self.paint)
             view.redraw()
 
-    def octivate(self, view=None, **kwargs):
+    def finish(self, view=None, **kwargs):
         if view:
             self.m_hint=''
             view.itemPainted.disconnect(self.paint)
@@ -47,8 +44,8 @@ class FitzLinkHint(Plug):
         if self.m_hint in hints:
             link=hints.get(self.m_hint)
             self.select(link, model, view)
-            hinter=self.app.plugman.getPlug('Hint')
-            hinter.octivate(view=view)
+            moder=self.app.stateman.moder()
+            moder.octivate(view=view)
         for hint in hints:
             if self.checkHint(hint):
                 view.redraw()
@@ -82,9 +79,8 @@ class FitzLinkHint(Plug):
         alist = []
         for element_links in links.values():
             alist+=element_links
-        hinter=self.app.plugman.getPlug(
-                'Hint')
-        length, hints=hinter.generateHints(alist)
+        moder=self.app.stateman.moder()
+        length, hints=moder.generateHints(alist)
         self.cacheHints(hints, length, model)
         for hint, link in hints.items():
             link['hint']=hint
@@ -107,13 +103,13 @@ class FitzLinkHint(Plug):
             if math.isnan(ypos): 
                 ypos=0.
             point = element.unify((xpos, ypos))
-            normal=self.app.plugman.getPlug('Normal')
-            if normal:
-                normal.activate(
-                        action='goTo', 
-                        xrange=[page + 1], 
-                        x=point.x(), 
-                        y=point.y())
+            self.app.delegman.delegate(
+                    mode='normal',
+                    view=view,
+                    action='goTo',
+                    xrange=[page + 1], 
+                    x=point.x(), 
+                    y=point.y())
 
     def getLinks(self, model):
         links={}
@@ -164,7 +160,5 @@ class FitzLinkHint(Plug):
 
     def checkHint(self, hint):
         if self.m_hint:
-            key_length=len(self.m_hint)
-            partial_hint=hint[:key_length]
-            return partial_hint==self.m_hint
+            return self.m_hint==hint[len(self.m_hint)]
         return True

@@ -6,27 +6,13 @@ class BrowserZoom(Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
-
-    def zoomState(self, view=None, **kwargs):
-        if view:
-            page=view.page()
-            return {'scale': page.zoomFactor()}
+        self.addAgent()
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('zoom', 'BrowserView', self)
-            normal.addAgent('zoomState', 'BrowserView', self)
-
-    def activate(self, action=None, view=None, **kwargs):
-        func = getattr(self, action, None)
-        if view and func:
-            return func(view=view, **kwargs)
+        self.app.delegman.addAgent(
+                'normal', None, 'BrowserView', 'zoom', self.zoom)
+        self.app.delegman.addAgent(
+                'normal', None, 'BrowserView', 'zoomState', self.zoomState)
 
     def zoom(self, view=None, kind=None, scale=None, xrange=[1], **kwargs):
         if view:
@@ -41,6 +27,11 @@ class BrowserZoom(Plug):
             if scale:
                 page.setZoomFactor(scale)
                 self.reportStateChange(view)
+
+    def zoomState(self, view=None, **kwargs):
+        if view:
+            page=view.page()
+            return {'scale': page.zoomFactor()}
 
     def reportStateChange(self, view):
         data=self.zoomState(view)

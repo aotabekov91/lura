@@ -2,19 +2,11 @@ from plug import Plug
 
 class ElementViewNormal(Plug):
 
-    # def setup(self):
-    #     super().setup()
-    #     if self.app.running:
-    #         self.addAgent()
-    #     else:
-    #         self.app.appSoonStarts.connect(
-    #                 self.addAgent)
-
     def addAgent(self):
-        holder=self.app.plugman.getPlug('Normal')
-        if holder:
-            holder.addAgent('goTo', 'ElementView', self)
-            holder.addAgent('close', 'ElementView', self)
+        self.app.delegman.addAgent(
+                'normal', None, 'goTo', 'ElementView', self.goTo)
+        self.app.delegman.addAgent(
+                'normal', None, 'close', 'ElementView', self.close)
 
     def currentPosition(self, *args, **kwargs):
         return {}

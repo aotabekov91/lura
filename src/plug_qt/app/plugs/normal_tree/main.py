@@ -2,33 +2,41 @@ from plug import Plug, tag
 
 class TreeNormal(Plug):
 
+    def delegate(self, view=None, action=None, **kwargs):
+        if not view:
+            view=self.app.stateman.view()
+        if view and action:
+            functor=getattr(view, action, None)
+            if functor:
+                functor(**kwargs)
+
     @tag('L(normal)[TreeView]')
-    def expandAll(self, *args, **kwargs):
-        self.activate(*args, action='expandAll', **kwargs)
+    def expandAll(self, **kwargs):
+        self.delegate(action='expandAll', **kwargs)
         
     @tag('H(normal)[TreeView]')
-    def collapseAl(self, *args, **kwargs):
-        self.activate(*args, action='collapseAll', **kwargs)
+    def collapseAl(self, **kwargs):
+        self.delegate(action='collapseAll', **kwargs)
 
     @tag('pj(normal)[TreeView]')
     def parentDown(self, xrange=[1], **kwargs):
-        self.activate(xrange=xrange, action='parentDown', **kwargs)
+        self.delegate(xrange=xrange, action='parentDown', **kwargs)
 
     @tag('pk(normal)[TreeView]')
     def parentUp(self, xrange=[1], **kwargs):
-        self.activate(xrange=xrange, action='parentUp', **kwargs)
+        self.delegate(xrange=xrange, action='parentUp', **kwargs)
 
     @tag('rj(normal)[TreeView]')
     def rootDown(self, xrange=[1], **kwargs):
-        self.activate(xrange=xrange, action='rootDown', **kwargs)
+        self.delegate(xrange=xrange, action='rootDown', **kwargs)
         
     @tag('rk(normal)[TreeView]')
     def rootUp(self, xrange=[1], **kwargs):
-        self.activate(xrange=xrange, action='rootUp', **kwargs)
+        self.delegate(xrange=xrange, action='rootUp', **kwargs)
 
     @tag('sk(normal)[TreeView]')
     def siblingUp(self, xrange=[1], **kwargs):
-        self.activate(
+        self.delegate(
                 kind='up',
                 xrange=xrange, 
                 action='siblingGoTo', 
@@ -36,16 +44,8 @@ class TreeNormal(Plug):
 
     @tag('sj(normal)[TreeView]')
     def siblingDown(self, xrange=[1], **kwargs):
-        self.activate(
+        self.delegate(
                 kind='down',
                 xrange=xrange, 
                 action='siblingGoTo', 
                 **kwargs)
-
-    def activate(self, view=None, action=None, **kwargs):
-        if not view:
-            view=self.app.stateman.view()
-        if view and action:
-            functor=getattr(view, action, None)
-            if functor:
-                functor(**kwargs)

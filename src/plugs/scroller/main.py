@@ -23,8 +23,11 @@ class Scroller(Plug, QtCore.QObject):
         self.m_timer = QtCore.QTimer(self)
         self.m_timer.timeout.connect(self.scrollDown)
 
-    def scrollDown(self):
-        view=self.app.stateman.view()
-        normal=self.app.plugman.getPlug('Normal')
-        if normal and view:
-            normal.goBlockdown()
+    def scrollDown(self, view=None):
+        if not view:
+            view=self.app.stateman.view()
+        self.app.delegman.delegate(
+                mode='normal', 
+                view=view, 
+                action='goTo', 
+                kind='blockdown')

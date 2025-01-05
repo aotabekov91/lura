@@ -20,11 +20,12 @@ class Quickmark(Plug):
         return True
 
     @tag("m(normal)")
-    def setQuickmark(self):
-        view=self.app.stateman.view()
-        normal=self.app.plugman.getPlug('Normal')
-        agent=normal.getAgent(action='goTo', view=view)
-        if agent:
+    def setQuickmark(self, view=None):
+        if not view:
+            view=self.app.stateman.view()
+        functor=self.app.delegman.getAgent(
+                'normal', None, view, 'goTo')
+        if functor:
             self.app.stateman.activate(
                 submode="mark",
                 mode="quickmark",
@@ -32,11 +33,12 @@ class Quickmark(Plug):
                 functor=self.functor)
 
     @tag("`/''(normal)")
-    def goToQuickmark(self):
-        view=self.app.stateman.view()
-        normal=self.app.plugman.getPlug('Normal')
-        agent=normal.getAgent(action='goTo', view=view)
-        if agent:
+    def goToQuickmark(self, view=None):
+        if not view:
+            view=self.app.stateman.view()
+        functor=self.app.delegman.getAgent(
+                'normal', None, view, 'goTo')
+        if functor:
             self.app.stateman.activate(
                 submode="jump",
                 mode="quickmark",
@@ -64,13 +66,13 @@ class Quickmark(Plug):
             quickmarks[text]=position
 
     def add(self, text, view):
-        normal=self.app.plugman.getPlug('Normal')
-        position=normal.getState(state='goTo', view=view)
+        position=self.app.delegman.delegate(
+                mode='normal', view=view, action='goToState')
         self.saveQuickmark(view, text, position)
 
     def jump(self, text, view):
-        normal=self.app.plugman.getPlug('Normal')
         quickmarks=self.getQuickmark(view)
         if quickmarks:
             data=quickmarks.get(text, {})
-            normal.activate(action='goTo', view=view, **data)
+            self.app.delegman.delegate(
+                    mode='normal', action='goTo', view=view, **data)

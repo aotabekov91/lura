@@ -4,33 +4,36 @@ class FitzRotate(plug.Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.addAgent()
+        self.addAgent()
+        if self.app.running: 
+            self.updateFitzModel()
         else:
             self.app.appSoonStarts.connect(
-                    self.addAgent)
+                    self.updateFitzModel)
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('rotate', 'FitzView', self)
-            normal.addAgent('rotateState', 'FitzView', self)
-            modeller=self.app.buffman.modeller('FitzModel')
-            if modeller:
-                element_klass=modeller.element_class
-                element_klass.addFunctor(
-                        'renderMatrix', self.renderMatrix)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'rotate', self.rotate)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'rotateState', self.rotateState)
+
+    def updateFitzModel(self):
+        modeller=self.app.buffman.modeller('FitzModel')
+        if modeller:
+            element_klass=modeller.element_class
+            element_klass.addFunctor(
+                    'renderMatrix', self.renderMatrix)
+
+    def renderMatrix(self, keys, matrix):
+        rotate=keys.get('rotate', False)
+        if rotate:
+            matrix.prerotate(rotate % 360)
 
     def rotateState(self, view=None, **kwargs):
         if view:
             rotation=view.getAttr('rotate', custom=True, default=0)
             return {'rotate': rotation} 
         return {}
-
-    def renderMatrix(self, keys, matrix):
-        rotate=keys.get('rotate', False)
-        if rotate:
-            matrix.prerotate(rotate % 360)
 
     def rotate(self, view=None, kind=None, xrange=[1], rotate=None, **kwargs):
         if view:
@@ -59,16 +62,6 @@ class FitzRotate(plug.Plug):
         if normal:
             data=self.rotateState(view=view)
             normal.stateChanged.emit('rotate', view, data)
-
-    def activate(
-            self, 
-            action=None, 
-            view=None, 
-            **kwargs):
-        if action and view:
-            func=getattr(self, action, None)
-            if func:
-                func(view=view, **kwargs)
 
     def rotateView(self, view, rotate):
         for idx, item in view.getItems():

@@ -18,11 +18,11 @@ class Bookmark(Plug, QtCore.QObject):
         return self.m_models.get(model, None)
 
     def createModel(self, view):
-        normal=self.app.plugman.getPlug('Normal')
-        if view and normal:
+        if view:
             model=view.model()
-            agent=normal.getAgent(action='goTo', view=view)
-            if model and agent:
+            functor=self.app.delegman.getAgent(
+                    'normal', None, view, 'goTo')
+            if functor and model:
                 bookmark_model=BookmarkModel(source=model)
                 self.m_models[model]=bookmark_model
                 self.modelCreated.emit(bookmark_model)
@@ -47,15 +47,14 @@ class Bookmark(Plug, QtCore.QObject):
         view=self.app.stateman.view()
         model=view.model()
         bookmark_model=self.getModel(model)
-        normal=self.app.plugman.getPlug('Normal')
         editor=self.app.plugman.getPlug('Editline')
+        position=self.app.delegman.delegate(
+                mode='normal', view=view, action='goToState')
+        bookmark=bookmark_model.getBookmark(
+                position, by="position")
         text=''
-        if normal:
-            position=normal.getState(state='goTo', view=view)
-            bookmark=bookmark_model.getBookmark(
-                    position, by="position")
-            if bookmark:
-                text=bookmark.data("text")
+        if bookmark:
+            text=bookmark.data("text")
         editor.activate(edit=text, mode='bookmark')
 
     def octivate(self):
@@ -71,9 +70,9 @@ class Bookmark(Plug, QtCore.QObject):
         bookmark_model=self.getModel(model)
         editline=self.app.plugman.getPlug('Editline')
         bookmark=editline.text()
-        normal=self.app.plugman.getPlug('Normal')
-        position=normal.getState(view=view, state='goTo')
-        if normal and bookmark_model:
+        position=self.app.delegman.delegate(
+                'normal', action='goToState', view=view)
+        if position and bookmark_model:
             data={
                     'text': bookmark,
                     'position': position,

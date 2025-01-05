@@ -25,15 +25,16 @@ class BrowserNormal(Plug):
         return False
 
     def addAgent(self):
-        holder=self.app.plugman.getPlug('Normal')
-        if holder:
-            holder.addAgent('goTo', 'BrowserView', self)
-            holder.addAgent('goToState', 'BrowserView', self)
+        self.app.delegman.addAgent(
+                'normal', None, 'goTo', 'BrowserView', self.goTo)
+        self.app.delegman.addAgent(
+                'normal', None, 'goToState', 'BrowserView', self.goToState)
 
-    def activate(self, action=None, view=None, **kwargs):
-        func=getattr(self, action, None)
-        if view and func:
-            return func(view=view, **kwargs)
+    def delegate(self, action=None, **kwargs):
+        if action:
+            func = getattr(self, action, None)
+            if func:
+                return func(**kwargs)
 
     def goTo(
             self, 

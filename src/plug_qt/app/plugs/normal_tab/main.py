@@ -28,52 +28,53 @@ class TabNormal(Plug):
             view=manager
         return None, None 
 
-    def activate(self, view=None, action=None, kind='goTo', **kwargs):
+    def delegate(self, view=None, action=None, kind='goTo', **kwargs):
         if not view:
             view=self.app.stateman.view()
         agent, window=self.findAgent(action, view)
         if agent:
-            agent.activate(window=window, kind=kind, action=action, **kwargs)
+            agent.delegate(
+                    window=window, kind=kind, action=action, **kwargs)
 
     @tag("gg(normal)")
     def goFirst(self, **kwargs):
-        self.activate(action='goTo', kind="first", **kwargs)
+        self.delegate(action='goTo', kind="first", **kwargs)
 
     @tag("G(normal)")
     def goToLast(self, xrange=None, **kwargs):
         kind=None
         if not xrange:
             kind='last'
-        self.activate(action='goTo', kind=kind, xrange=xrange, **kwargs)
+        self.delegate(action='goTo', kind=kind, xrange=xrange, **kwargs)
 
     @tag("h/p(normal)")
     def goLeft(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="left", xrange=xrange, **kwargs)
+        self.delegate(action='goTo', kind="left", xrange=xrange, **kwargs)
 
     @tag("l/n(normal)")
     def goRight(self, xrange=[1], **kwargs):
-        self.activate(action='goTo', kind="right", xrange=xrange, **kwargs)
+        self.delegate(action='goTo', kind="right", xrange=xrange, **kwargs)
 
     @tag("J/K(normal)")
     def moveTo(self, xrange=[1], **kwargs):
-        self.activate(action='moveTo', xrange=xrange, **kwargs)
+        self.delegate(action='moveTo', xrange=xrange, **kwargs)
 
     @tag("H(normal)")
     def moveToLeft(self, xrange=[1], **kwargs):
-        self.activate(action='moveTo', kind="left", xrange=xrange, **kwargs)
+        self.delegate(action='moveTo', kind="left", xrange=xrange, **kwargs)
 
     @tag("L(normal)")
     def moveToRight(self, xrange=[1], **kwargs):
-        self.activate(action='moveTo', kind="right", xrange=xrange, **kwargs)
+        self.delegate(action='moveTo', kind="right", xrange=xrange, **kwargs)
 
     @tag("t(normal)")
     def create(self, focus=True, **kwargs):
-        return self.activate(action='create', focus=focus, **kwargs)
+        return self.delegate(action='create', focus=focus, **kwargs)
 
     @tag("c(normal)")
     def close(self, **kwargs):
-        self.activate(action='close', **kwargs)
+        self.delegate(action='close', **kwargs)
 
     @tag("x/X(normal)")
     def flipTo(self, **kwargs):
-        self.activate(action='flipTo', **kwargs)
+        self.delegate(action='flipTo', **kwargs)

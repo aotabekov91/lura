@@ -398,5 +398,17 @@ window.browserviewscripts.elements = (function() {
         elem.remove();
     };
 
+	funcs.get_selection = () => {
+		var frame=null,
+			ranges=[],
+			selection=window.getSelection();
+
+		if (selection.isCollapsed) {
+			return [];
+		}
+		return selection.startOffset;
+		// return serialize_elem(selection.endContainer);
+	};
+
     return funcs;
 })();

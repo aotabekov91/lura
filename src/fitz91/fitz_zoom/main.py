@@ -7,24 +7,19 @@ class FitzZoom(Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
         self.app.buffman.viewCreated.connect(
                 self.connectView)
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('zoom', 'FitzView', self)
-            normal.addAgent('zoomState', 'FitzView', self)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'zoom', self.zoom)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'zoomState', self.zoom)
 
-    def activate(self, action=None, view=None, **kwargs):
-        func = getattr(self, action, None)
-        if view and func:
-            return func(view=view, **kwargs)
+    def connectView(self, view):
+        if view and view.__class__.__name__=='FitzView':
+            view.resized.connect(self.updateZoom)
 
     def zoomState(self, view, **kwargs):
         zoom_kind=view.getAttr('zoom_kind', custom=True)
@@ -32,16 +27,6 @@ class FitzZoom(Plug):
         if zoom_kind:
             return {'kind': zoom_kind, 'scale': zoom_scale}
         return {}
-
-    def connectView(self, view):
-        if view and view.__class__.__name__=='FitzView':
-            view.resized.connect(self.updateZoom)
-
-    def updateZoom(self, view):
-        state=self.zoomState(view)
-        kind=state.get('kind', None)
-        if kind in ['width', 'height']:
-            self.activate(action='zoom', view=view, kind=kind)
 
     def zoom(self, view=None, kind=None, xrange=[1], scale=None, **kwargs):
         if view:
@@ -76,6 +61,12 @@ class FitzZoom(Plug):
                     item.setScale(item_scale)
             view.redraw()
             self.reportStateChange(view)
+
+    def updateZoom(self, view):
+        state=self.zoomState(view)
+        kind=state.get('kind', None)
+        if kind in ['width', 'height']:
+            self.zoom(view=view, kind=kind)
 
     def reportStateChange(self, view):
         normal=self.app.plugman.getPlug('Normal')

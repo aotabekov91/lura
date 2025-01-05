@@ -38,7 +38,6 @@ class States(Plug):
 
     def waitAndSet(self):
         views=self.app.buffman.views()
-        normal=self.app.plugman.getPlug('Normal')
         stater=self.app.plugman.getPlug('StatesTable')
         for view in views:
             model=view.model()
@@ -50,8 +49,11 @@ class States(Plug):
                         data=data[0]
                         value=data['value'].replace("'", '"')
                         value=json.loads(value)
-                        normal.activate(
-                                action=state, view=view, **value)
+                        self.app.delegman.delegate(
+                                mode='normal', 
+                                action=state, 
+                                view=view, 
+                                **value)
         if not self.activated:
             self.activate()
             self.connectStates()

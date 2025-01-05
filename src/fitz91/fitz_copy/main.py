@@ -16,12 +16,16 @@ class FitzCopy(Plug):
                     view.__class__, 
                     config=view.config(),
                     )
-            normal=self.app.plugman.getPlug('Normal')
             copy.setModel(view.model())
             copy.setManager(view.manager())
-            if normal:
-                zoom=normal.getState(state='zoom', view=view)
-                position=normal.getState(state='goTo', view=view)
-                normal.activate(action='goTo', view=copy, **position)
-                normal.activate(action='zoom', view=copy, **zoom)
+            zoom=self.app.delegman.delegate(
+                    'normal', None, view=view, action='zoomState')
+            if zoom:
+                zoom=self.app.delegman.delegate(
+                        'normal', None, view=copy, action='zoom', **zoom)
+            goTo=self.app.delegman.delegate(
+                    'normal', None, view=view, action='goToState')
+            if goTo:
+                goTo=self.app.delegman.delegate(
+                        'normal', None, view=copy, action='goTo', **goTo)
             return copy

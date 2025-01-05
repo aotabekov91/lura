@@ -5,23 +5,13 @@ class BrowserRotate(plug.Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('rotate', 'BrowserView', self)
-            normal.addAgent('rotateState', 'BrowserView', self)
-
-    def rotateState(self, view=None, **kwargs):
-        if view:
-            rotation=view.getAttr('rotate', custom=True, default=0)
-            return {'rotate': rotation} 
-        return {}
+        self.app.delegman.addAgent(
+                'normal', None, 'BrowserView', 'rotate', self.rotate)
+        self.app.delegman.addAgent(
+                'normal', None, 'BrowserView', 'rotateState', self.rotateState)
 
     def rotate(self, view=None, kind=None, xrange=[1], rotate=None, **kwargs):
         if view:
@@ -44,18 +34,18 @@ class BrowserRotate(plug.Plug):
             view.redraw()
             self.reportStateChange(view)
 
+    def rotateState(self, view=None, **kwargs):
+        if view:
+            rotation=view.getAttr('rotate', custom=True, default=0)
+            return {'rotate': rotation} 
+        return {}
+
     def reportStateChange(self, view):
         normal=self.app.plugman.getPlug('Normal')
         if normal:
             data=self.rotateState(view=view)
             normal.stateChanged.emit('rotate', view, data)
 
-    def activate(self, action=None, view=None, **kwargs):
-        if action and view:
-            func=getattr(self, action, None)
-            if func:
-                func(view=view, **kwargs)
-                    
     def updateRotate(self, result, *, view, rotate):
         view.setAttr('rotate', rotate, custom=True)
 

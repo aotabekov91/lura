@@ -16,19 +16,17 @@ class SelectionModel(vimo.Model, QtCore.QObject):
 
     element_class=SelectionElement
 
-    def __init__(self, agent, *args, **kwargs):
+    def __init__(self, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.m_agent=agent
+        self.app=app
         self.m_selection=SelectionElement()
 
     def set(self, selection=None, **kwargs):
         if selection:
             view=self.source()
-            model=view.model()
             self.m_selection=selection
-            if view:
-                selector=self.m_agent.getAgent(view=view)
-                selector.select(view, self.m_selection)
+            self.app.delegman.delegate(
+                    view=view, action='select', selection=selection)
         elif kwargs:
             self.update(**kwargs)
         else:
@@ -38,16 +36,16 @@ class SelectionModel(vimo.Model, QtCore.QObject):
         for key, value in kwargs.items():
             self.m_selection[key]=value
         view=self.source()
-        selector=self.m_agent.getAgent(view=view)
-        selector.select(view, self.m_selection)
+        self.app.delegman.delegate(
+                view=view, action='select', selection=self.m_selection)
 
     def clear(self, **kwargs):
         view=self.source()
         self.m_selection=self.create()
-        selector=self.m_agent.getAgent(view=view)
-        selector.select(view, self.m_selection)
+        self.app.delegman.delegate(
+                view=view, action='select', selection=self.m_selection)
 
-    def getSelection(self, **kwargs):
+    def get(self, **kwargs):
         return self.m_selection
 
     def create(self, data={}, **kwargs):

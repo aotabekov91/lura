@@ -1,27 +1,17 @@
 from plug import Plug
 
-class FitzNormal(Plug):
+class FitzNormalGoTo(Plug):
 
     def setup(self):
         super().setup()
         self.m_positions={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('goTo', 'FitzView', self)
-            normal.addAgent('goToState', 'FitzView', self)
-            self.app.buffman.viewIsDrawn.connect(self.restorePosition)
-
-    def activate(self, action=None, view=None, **kwargs):
-        func = getattr(self, action, None)
-        if view and func:
-            return func(view=view, **kwargs)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'goTo', self.goTo)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'goToState', self.goToState)
 
     def goToState(self, view=None, **kwargs):
         data={}
@@ -47,21 +37,29 @@ class FitzNormal(Plug):
             count=view.count()
             idx=view.currentIndex()
             if kind=='blockLeft':
-                self.moveScreen("left", view=view, xrange=xrange, **kwargs)
+                self.moveScreen(
+                        "left", view=view, xrange=xrange, **kwargs)
             elif kind=='blockRight':
-                self.moveScreen("right", view=view, xrange=xrange, **kwargs)
+                self.moveScreen(
+                        "right", view=view, xrange=xrange, **kwargs)
             elif kind=='blockUp':
-                self.moveScreen("up", view=view, xrange=xrange, **kwargs)
+                self.moveScreen(
+                        "up", view=view, xrange=xrange, **kwargs)
             elif kind=='blockDown':
-                self.moveScreen("down", view=view, xrange=xrange, **kwargs)
+                self.moveScreen(
+                        "down", view=view, xrange=xrange, **kwargs)
             elif kind=='down':
-                self.moveLine("down", view=view, xrange=xrange, **kwargs)
+                self.moveLine(
+                        "down", view=view, xrange=xrange, **kwargs)
             elif kind=='up':
-                self.moveLine("up", view=view, xrange=xrange, **kwargs)
+                self.moveLine(
+                        "up", view=view, xrange=xrange, **kwargs)
             elif kind=='left':
-                self.moveLine("left", view=view, xrange=xrange, **kwargs)
+                self.moveLine(
+                        "left", view=view, xrange=xrange, **kwargs)
             elif kind=='right':
-                self.moveLine("right", view=view, xrange=xrange, **kwargs)
+                self.moveLine(
+                        "right", view=view, xrange=xrange, **kwargs)
             elif kind=='next':
                 idx = min(idx + xrange[-1], count)
                 self.goToRange(view=view, xrange=[idx], **kwargs)

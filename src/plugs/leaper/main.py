@@ -9,13 +9,13 @@ class Leaper(Plug):
     def setup(self):
         super().setup()
         self.m_leaps={}
-        self.app.buffman.viewCreated.connect(
-                self.saveView)
         if self.app.running:
             self.connectLeaper()
         else:
             self.app.appIsLaunched.connect(
                     self.connectLeaper)
+        self.app.buffman.viewCreated.connect(
+                self.saveView)
 
     def connectLeaper(self, kind='connect'):
         normal=self.app.plugman.getPlug('Normal')
@@ -25,12 +25,11 @@ class Leaper(Plug):
             normal.stateChanged.disconnect(self.setNode)
 
     def saveView(self, view):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            agent=normal.getAgent(action='goTo', view=view)
-            if agent:
-                node=self.createNode()
-                self.saveNode(view, node)
+        functor=self.app.delegman.getAgent(
+                'normal', None, view, 'goTo')
+        if functor:
+            node=self.createNode()
+            self.saveNode(view, node)
 
     def setNode(self, state, view, data):
         if state=='goTo' and view in self.m_leaps:
@@ -75,8 +74,7 @@ class Leaper(Plug):
                     view=view,
                     node=node,
                     kind='prev',
-                    xrange=xrange,
-                    )
+                    xrange=xrange)
             self.connectLeaper()
 
     def activate(
@@ -86,7 +84,6 @@ class Leaper(Plug):
             node=None, 
             xrange=[1], 
             ):
-        normal=self.app.plugman.getPlug('Normal')
         for i in range(xrange[-1]):
             node = self.getNode(view)
             if kind == "next":
@@ -95,7 +92,11 @@ class Leaper(Plug):
                     break
                 data=ascendent.data
                 self.saveNode(view, ascendent)
-                normal.activate(action='goTo', view=view, **data)
+                self.app.delegman.delegate(
+                        mode='normal',
+                        action='goTo', 
+                        view=view, 
+                        **data)
             elif kind == "prev":
                 precedent=node.precedent
                 if not precedent:
@@ -104,4 +105,8 @@ class Leaper(Plug):
                 if not data:
                     break
                 self.saveNode(view, precedent)
-                normal.activate(action='goTo', view=view, **data)
+                self.app.delegman.delegate(
+                        mode='normal',
+                        action='goTo', 
+                        view=view, 
+                        **data)

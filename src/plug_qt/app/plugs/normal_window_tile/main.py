@@ -20,7 +20,7 @@ class TileWindowNormal(Plug):
             holder.addAgent('moveTo', 'TileView', self)
             holder.addAgent('splitTo', 'TileView', self)
 
-    def activate(self, window=None, action=None, **kwargs):
+    def delegate(self, window=None, action=None, **kwargs):
         if window and action:
             func=getattr(window, action, None)
             if func:

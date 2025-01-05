@@ -3,43 +3,38 @@ from plug import Plug
 class FitzYankSelection(Plug):
 
     def setup(self):
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
-
-    def activate(self, action=None, view=None, **kwargs):
-        func = getattr(self, action, None)
-        if view and func:
-            return func(view=view, **kwargs)
+        super().setup()
+        self.addAgent()
 
     def addAgent(self):
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            normal.addAgent('yank', 'FitzView', self)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'yankSelection', self.yankSelection)
+        self.app.delegman.addAgent(
+                'normal', None, 'FitzView', 'yankSelectionToClipboard', self.yankSelection)
 
-    def yank(self, view=None, kind=None, **kwargs):
+    def yankSelectionToClipboard(self, view=None, **kwargs):
         if view:
-            if kind=='selection':
-                text=self.yankSelection(view)
-                if text:
-                    clipboard = view.app.qapp.clipboard()
-                    clipboard.setText(text)
-                view.app.stateman.activate()
-                view.cleanUp()
+            text=self.yankSelection(view)
+            if text:
+                clipboard = view.app.qapp.clipboard()
+                clipboard.setText(text)
+            # view.app.stateman.activate()
+            view.cleanUp()
+            return text
 
-    def yankSelection(self, view):
-        selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view=view)
-        if selection:
-            text = []
-            item = selection.get("item")
-            element = item.element()
-            boxes = selection.get("box", [])
-            for box in boxes:
-                text+=[self.getBlockText(box, element)]
-            return " ".join(text)
+    def yankSelection(self, view=None, **kwargs):
+        if view:
+            selector=self.app.plugman.getPlug('Selection')
+            selection=selector.selection(view=view)
+            if selection:
+                text = []
+                item = selection.get("item")
+                element = item.element()
+                boxes = selection.get("box", [])
+                for box in boxes:
+                    text+=[self.getBlockText(box, element)]
+                view.cleanUp()
+                return " ".join(text)
 
     def getBlockText(self, box, element):
         block=self.app.plugman.getPlug('FitzBlockWord')

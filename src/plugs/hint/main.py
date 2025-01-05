@@ -6,21 +6,13 @@ class Hint(Plug):
 
     def setup(self):
         super().setup()
-        self.m_agents={}
+        self.m_submodes={}
 
-    def addAgent(self, action, name, hinter):
-        if not action in self.m_agents:
-            self.m_agents[action]={}
-        self.m_agents[action][name]=hinter
+    def addSubmode(self, name, agent):
+        self.m_submodes[name]=agent
 
-    def getAgent(self, action=None, view=None):
-        actions=self.m_agents.get(action, {})
-        if view and actions:
-            for klass in view.__class__.__mro__:
-                name=klass.__name__
-                agent=actions.get(name)
-                if agent: 
-                    return agent
+    def getSubmode(self, name):
+        return self.m_submodes.get(name, None)
 
     def generateHints(self, alist, kind="letter"):
 
@@ -45,34 +37,27 @@ class Hint(Plug):
             hints[hint]=data
         return number, hints
 
-    def activate(self, action=None, kind=None, view=None, **kwargs):
+    @tag('<c-f>(normal)')
+    def activate(self, view=None, submode=None, **kwargs):
+        super().activate()
         if not view:
             view=self.app.stateman.view()
-        agent=self.getAgent(action=action, view=view)
-        if agent:
-            self.app.stateman.setSubmode(
-                    submode=kind, submoder=agent)
-            agent.activate(
-                    action=action, kind=kind, view=view, **kwargs)
-
-    @tag("<c-f>(normal)")
-    def activateHint(self, **kwargs):
-        super().activate()
         self.app.stateman.activate(
-                mode="hint", delisten=True, **kwargs)
+                view=view,
+                moder=self,
+                mode='hint',
+                submode=submode,
+                **kwargs)
+        submoder=self.getSubmode(submode)
+        if submoder:
+            submoder.activate(view=view, **kwargs)
 
-    @tag("<escape>/<c-f>/<c-[>(hint[any])")
+    @tag('<c-f>/<escape>(hint[any])')
     def octivate(self, view=None, **kwargs):
         super().octivate()
+        if not view:
+            view=self.app.stateman.view()
         submoder=self.app.stateman.submoder()
         if submoder:
             submoder.octivate(view=view, **kwargs)
         self.app.stateman.activate()
-
-    @tag("<c-w>(hint)")
-    def hintWords(self, **kwargs):
-        self.activate(action='hintWord', kind='word', **kwargs)
-
-    @tag("<c-l>(hint)")
-    def hintLinks(self, *args, **kwargs):
-        self.activate(action='hintLink', kind='link', **kwargs)

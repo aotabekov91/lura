@@ -14,37 +14,33 @@ class FitzSelection(Plug):
         self.select_color.setAlpha(self.select_color_alpha)
         self.m_select_brush = QtGui.QBrush(self.select_color)
         self.m_select_pen = QtGui.QPen(self.select_color)
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selector.addAgent('FitzView', self)
+        self.app.delegman.addAgent(
+                view='FitzView', action='select', functor=self.select)
 
-    def wire(self, view, kind='connect'):
+    def connect(self, view, kind='connect'):
         item, _ =self.m_views.get(view, (None, None))
         if item and kind=='connect':
             item.painted.connect(self.paint)
         elif item and kind=='disconnect':
             item.painted.disconnect(self.paint)
 
-    def select(self, view, selection):
-        item=selection['item']
-        current_item, current_selection=self.m_views.get(view, (None, None))
-        cond1=item and current_item!=item
-        cond2=item and current_selection!=selection
-        if cond1 or cond2:
-            self.wire(view, 'disconnect')
-            self.m_views[view]=(item, selection)
-            self.wire(view, 'connect')
-        elif not item and current_item:
-            self.wire(view, 'disconnect')
-            self.m_views.pop(view, None)
-        view.redraw()
+    def select(self, view=None, selection=None):
+        if view and selection:
+            item=selection['item']
+            current_item, current_selection=self.m_views.get(view, (None, None))
+            cond1=item and current_item!=item
+            cond2=item and current_selection!=selection
+            if cond1 or cond2:
+                self.connect(view, 'disconnect')
+                self.m_views[view]=(item, selection)
+                self.connect(view, 'connect')
+            elif not item and current_item:
+                self.connect(view, 'disconnect')
+                self.m_views.pop(view, None)
+            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         view=item.view()
