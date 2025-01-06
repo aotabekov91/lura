@@ -32,7 +32,7 @@ class ViewHint(Plug):
         self.app.view.redraw()
         return True
 
-    @tag("v(hint)")
+    @tag("<c-v>(hint)")
     def toggle(self):
         submode=self.app.stateman.setSubmode(
                 submode="view", toggle_submode=True)

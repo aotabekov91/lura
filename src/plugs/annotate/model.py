@@ -10,37 +10,41 @@ class AnnotateModel(vimo.Model, QtCore.QObject):
 
     element_class=AnnotateElement
 
-    def __init__(self, agent, *args, **kwargs):
+    def __init__(self, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.m_agent=agent
+        self.app=app
 
-    def addAnnotate(self, data={}, **kwargs):
-        model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator:
-            annotation=annotator.annotate(
-                    model, data, **kwargs)
-            if annotation:
-                return self.createElement(annotation)
+    def add(self, view=None, **kwargs):
+        annotation=self.app.delegman.delegate(
+                mode='annotate', 
+                view=view, 
+                action='annotate',
+                data=kwargs)
+        if annotation:
+            return self.createElement(annotation)
 
-    def updAnnotate(self, element=None, **kwargs):
-        model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator and element:
-            self.delAnnotate(element=element)
-            self.addAnnotate(**kwargs)
+    def update(self, view=None, annotation=None, **kwargs):
+        if annotation:
+            kwargs['annotation']=annotation
+            self.app.delegman.delegate(
+                    mode='annotate', 
+                    view=view, 
+                    action='remove',
+                    data=kwargs)
+            return self.add(view=view, **kwargs)
 
-    def delAnnotate(self, element=None, data=None, **kwargs):
-        model=self.source()
-        annotator=self.m_agent.getAgent(model=model)
-        if annotator:
-            if not element and data:
-                metadata = data.get("metadata")
-                element = self.getAnnotate(metadata)
-            if element:
-                data=element.data()
-                annotator.deannotate(model, data, **kwargs)
-                return self.delElement(element)
+    def remove(self, view=None, annotation=None, data=None, **kwargs):
+        if not annotation and data:
+            metadata = data.get("metadata")
+            annotation = self.getAnnotate(metadata)
+        if annotation:
+            data=annotation.data()
+            self.app.delegman.delegate(
+                    mode='annotate', 
+                    view=view, 
+                    action='remove',
+                    data={'view': view, 'data': data})
+            return self.delElement(annotation)
 
-    def getAnnotate(self, value, by="metadata", **kwargs):
+    def get(self, value, by="metadata", **kwargs):
         return self.getElement(value, by=by, **kwargs)

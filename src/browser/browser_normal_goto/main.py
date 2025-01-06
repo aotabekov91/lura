@@ -2,18 +2,14 @@ import functools
 
 from plug import Plug
 
-class BrowserNormal(Plug):
+class BrowserNormalGoTo(Plug):
 
     views=['BrowserView']
 
     def setup(self):
         super().setup()
         self.m_states={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
         self.app.buffman.viewCreated.connect(
                 self.injectJSCode)
 
@@ -26,15 +22,9 @@ class BrowserNormal(Plug):
 
     def addAgent(self):
         self.app.delegman.addAgent(
-                'normal', None, 'goTo', 'BrowserView', self.goTo)
+                'normal', None, 'BrowserView', 'goTo', self.goTo)
         self.app.delegman.addAgent(
-                'normal', None, 'goToState', 'BrowserView', self.goToState)
-
-    def delegate(self, action=None, **kwargs):
-        if action:
-            func = getattr(self, action, None)
-            if func:
-                return func(**kwargs)
+                'normal', None, 'BrowserView', 'goToState', self.goToState)
 
     def goTo(
             self, 

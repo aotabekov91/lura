@@ -1,4 +1,4 @@
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtGui
 
 from plug import Plug, tag
 
@@ -6,65 +6,215 @@ from .model import AnnotateModel
 
 class Annotate(Plug, QtCore.QObject):
 
+    default_color='green'
     modelCreated=QtCore.pyqtSignal(object)
 
     def setup(self):
         super().setup()
         self.m_models={}
-        self.m_agents={}
-        self.app.buffman.modelCreated.connect(
+        self.app.buffman.viewCreated.connect(
                 self.createModel)
+        self.setMapping()
+        self.addAgent()
 
-    def addAgent(self, name, annotator):
-        self.m_agents[name]=annotator
+    def setDefaultColor(self):
+        rgb=QtGui.QColor(self.default_color)
+        self.m_default_color=[rgb.redF(), rgb.greenF(), rgb.blueF()]
 
-    def getAgent(self, name=None, model=None):
-        if model and not name:
-            name=model.__class__.__name__
-        return self.m_agents.get(name, None)
+    def mapping(self):
+        return self.m_functions
+
+    def setMapping(self):
+        self.m_functions={}
+        self.setDefaultColor()
+        settings=self.m_config.get('Mapping', {})
+        for kind, mapping in settings.items():
+            self.m_functions[kind.lower()]={}
+            for function, data in mapping.items():
+                key=data.get('key', None) 
+                color=data.get('color', None)
+                if color:
+                    rgb=QtGui.QColor(color)
+                    red=rgb.redF()
+                    green=rgb.greenF()
+                    blue=rgb.blueF()
+                    color=[red, green, blue]
+                else:
+                    color=self.m_default_color
+                data['color']=color
+                data['function']=function
+                self.m_functions[kind.lower()][key]=data
+
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                mode='normal',
+                action='annotate', 
+                functor=self.activate)
+        self.app.delegman.addAgent(
+                mode='annotate', 
+                action='normal', 
+                functor=self.octivate)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='addAnnotation', 
+                functor=self.addAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='getAnnotation', 
+                functor=self.getAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='removeAnnotation', 
+                functor=self.removeAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='updateAnnotation', 
+                functor=self.updateAnnotation)
 
     def getModel(self, model):
-        return self.m_models.get(model)
+        return self.m_models.get(model, None)
 
-    def createModel(self, model):
-        annotation_model=AnnotateModel(
-                self, source=model)
-        self.modelCreated.emit(annotation_model)
-        self.m_models[model]=annotation_model
-        return annotation_model
+    def createModel(self, view):
+        agent=self.app.delegman.getAgent(
+                mode='annotate', view=view, delegate='view')
+        if agent:
+            model=view.model()
+            amodel=AnnotateModel(
+                    app=self.app, source=model)
+            self.modelCreated.emit(amodel)
+            self.m_models[model]=amodel
+            return amodel
 
-    @tag(["<c-a>(normal/visual[any])", "<c-a>/<c-[>/<escape>(annotate)"])
-    def toggle(self):
-        view=self.app.stateman.view()
-        model=view.model()
-        annotator=self.getAgent(model=model)
-        if annotator:
-            self.app.stateman.activate(
-                    mode="annotate", toggle_mode=True)
+    def addAnnotation(
+            self, view=None, selection=None, **kwargs):
+        if view:
+            model=view.model()
+            amodel=self.getModel(model)
+            if selection and amodel:
+                data=selection.data()
+                return amodel.add(view=view, data=data, **kwargs)
 
-    def activate(self, action=None, model=None, selection=None, **kwargs):
-        annotation_model=self.getModel(model)
-        if selection and annotation_model:
-            data=selection.data()
-            if action=='add':
-                kind=selection.__class__.__name__
-                if kind=='AnnotateElement':
-                    annotation_model.updAnnotate(data=data, element=selection)
-                else:
-                    annotation_model.addAnnotate(data=data)
-            elif action=='del':
-                    annotation_model.delAnnotate(element=selection)
+    def updateAnnotation(
+            self, view=None, selection=None, **kwargs):
+        if view:
+            model=view.model()
+            amodel=self.getModel(model)
+            if selection and amodel:
+                return amodel.update(
+                        view=view, anntation=selection, **kwargs)
 
-    @tag("d(annotate)")
-    def deannotate(self, view=None, selection=None, **kwargs):
+    @tag('d(annotate)')
+    def removeAnnotation(
+            self, view=None, selection=None, **kwargs):
         if not view:
+            view=self.app.stateman.view()
+        if not selection:
+            selection=self.app.delegman.delegate(
+                    action='getSelection',
+                    data={'view': view})
+        if view and selection:
+            model=view.model()
+            amodel=self.getModel(model)
+            if amodel:
+                return amodel.remove(
+                        view=view, annotation=selection, **kwargs)
+                
+    def getAnnotation(self, view=None, **kwargs):
+        if view:
+            model=view.model()
+            amodel=self.getModel(model)
+            return amodel.get(view=view, **kwargs)
+
+    @tag("<c-h>(annotate)")
+    def addHighlightAnnotation(self, xrange=[1], **kwargs):
+        kwargs['annotation_kind']='highlight'
+        self.setAnnotation(xrange=xrange, **kwargs)
+
+    @tag("<c-c>(annotate)")
+    def addCaretAnnotation(self, xrange=[1], **kwargs):
+        kwargs['annotation_kind']='caret'
+        self.setAnnotation(xrange=xrange, **kwargs)
+
+    @tag("<c-s>(annotate)")
+    def addStrikeoutAnnotation(self, xrange=[1], **kwargs):
+        kwargs['annotation_kind']='strikeout'
+        self.setAnnotation(xrange=xrange, **kwargs)
+
+    @tag("<c-t>(annotate)")
+    def addTextAnnotation(self, xrange=[1], **kwargs):
+        kwargs['annotation_kind']='text'
+        self.setAnnotation(xrange=xrange, **kwargs)
+
+    @tag("<c-u>(annotate)")
+    def addUnderlineAnnotation(self, xrange=[1], **kwargs):
+        kwargs['annotation_kind']='underline'
+        self.setAnnotation(xrange=xrange, **kwargs)
+
+    @tag('<c-a>(normal/visual)')
+    def activate(self, view=None, submode=None, **kwargs):
+        super().activate()
+        if not view:
+            view=self.app.stateman.view()
+        self.app.stateman.activate(
+                moder=self,
+                mode='annotate',
+                submode=submode,
+                **kwargs)
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='annotate', 
+                submode=submode, 
+                action='activate',
+                data=data)
+
+    @tag('<c-a>/<escape>(annotate)')
+    def octivate(self, view=None, submode=None, **kwargs):
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
+        if not submode:
+            submode=self.app.stateman.submode()
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='annotate', 
+                submode=submode, 
+                action='octivate',
+                data=data)
+        self.app.stateman.activate()
+
+    def getAnnotationColor(self, xrange=[1], kind=None):
+        if xrange:
+            key=xrange[-1]
+            mapping=self.m_functions.get(kind, {})
+            data=mapping.get(key, {})
+            return data.get('color', self.m_default_color)
+        return self.m_default_color
+
+    def setAnnotation(
+            self, 
+            view=None, 
+            selection=None, 
+            xrange=[1], 
+            annotation_kind=None,
+            **kwargs
+            ):
+        annotation=None
+        if view is None:
             view=self.app.stateman.view()
         if not selection:
             selection=self.app.delegman.delegate(
                     action='getSelection', data={'view': view})
         if selection:
-            model=view.model()
-            self.activate(action='del', model=model, selection=selection)
-            selection=self.app.delegman.delegate(
-                    action='clearSelection', data={'view': view})
-        self.toggle()
+            color=self.getAnnotationColor(xrange, annotation_kind)
+            selection['annotation_color']=color
+            selection['annotation_kind']=annotation_kind
+            annotation=self.addAnnotation(
+                    view=view, selection=selection)
+            self.app.stateman.activate()
+        else:
+            self.app.delegman.delegate(
+                    action='hint',
+                    data={'view': view, 'submode': 'word'})
+        return annotation

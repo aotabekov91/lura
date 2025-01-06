@@ -1,4 +1,4 @@
-from .main import BrowserNormal
+from .main import BrowserNormalGoTo
 
 def get_plug_class():
-    return BrowserNormal
+    return BrowserNormalGoTo

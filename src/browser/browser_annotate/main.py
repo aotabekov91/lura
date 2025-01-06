@@ -21,7 +21,6 @@ class BrowserAnnotate(Plug):
         if path and self.isCompatible(view):
             view.injectJSCode(name='annotate', path=path, subframes=True)
 
-    @tag('d(normal)')
     def activate(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()

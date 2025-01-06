@@ -23,6 +23,9 @@ Picks = [
 	{plug='plugs/hint_word', base='~/code/lura/src', kind='link'},
 	{plug='plugs/hint', base='~/code/lura/src', kind='link'},
 
+	{plug='plugs/annotate_caret', base='~/code/lura/src', kind='link'},
+	{plug='plugs/annotate_highlight', base='~/code/lura/src', kind='link'},
+	{plug='plugs/annotate', base='~/code/lura/src', kind='link'},
 	{plug='plugs/bookmark', base='~/code/lura/src', kind='link'},
 	{plug='plugs/quickmark', base='~/code/lura/src', kind='link'},
 	{plug='plugs/copy_view', base='~/code/lura/src', kind='link'},
@@ -52,13 +55,13 @@ Picks = [
 	{plug='help/help_style', base='~/code/lura/src', kind='link'},
 	{plug='help/help', base='~/code/lura/src', kind='link'},
 
+	{plug='browser/browser_normal_goto', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_annotate', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_selection', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_rotate', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_copy', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_normal_goto', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_link_hint', base='~/code/lura/src', kind='link'},
 	{plug='browser/browser_js_elements', base='~/code/lura/src', kind='link'},
 ]

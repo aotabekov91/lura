@@ -10,7 +10,7 @@ class Hint(Plug):
         
     def addAgent(self):
         self.app.delegman.addAgent(
-                None, None, None, 'hint', self.activate)
+                'normal', None, None, 'hint', self.activate)
         self.app.delegman.addAgent(
                 'hint', None, None, 'normal', self.octivate)
 
@@ -43,7 +43,6 @@ class Hint(Plug):
         if not view:
             view=self.app.stateman.view()
         self.app.stateman.activate(
-                view=view,
                 moder=self,
                 mode='hint',
                 submode=submode,
@@ -56,7 +55,7 @@ class Hint(Plug):
                 action='activate',
                 data=data)
 
-    @tag('<c-f>/<escape>(hint[any])')
+    @tag('<c-f>/<escape>(hint)')
     def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()
         if not view:

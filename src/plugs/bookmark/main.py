@@ -64,19 +64,22 @@ class Bookmark(Plug, QtCore.QObject):
         self.app.stateman.activate()
 
     @tag("<enter>/<return>(bookmark)")
-    def bookmark(self):
-        view=self.app.stateman.subview()
-        model=view.model()
-        bookmark_model=self.getModel(model)
-        editline=self.app.plugman.getPlug('Editline')
-        bookmark=editline.text()
-        position=self.app.delegman.delegate(
-                'normal', action='goToState', view=view)
-        if position and bookmark_model:
-            data={
-                    'text': bookmark,
-                    'position': position,
-                    'source_id': model.id(),
-                 }
-            bookmark_model.addBookmark(data)
-        self.octivate()
+    def bookmark(self, view=None, text=None):
+        if not view:
+            view=self.app.stateman.subview()
+        if view:
+            model=view.model()
+            bmodel=self.getModel(model)
+            if not text:
+                editline=self.app.plugman.getPlug('Editline')
+                text=editline.text()
+            position=self.app.delegman.delegate(
+                    'normal', action='goToState', view=view)
+            if position and bmodel:
+                data={
+                        'text': text,
+                        'position': position,
+                        'source_id': model.id(),
+                     }
+                bmodel.addBookmark(data)
+            self.octivate()

@@ -31,7 +31,7 @@ class Delegman(Plug):
             view=None, 
             action=None, 
             delegate='action', 
-            super_view=True
+            view_approach='super',
             ):
         if delegate=='mode':
             return self.m_agents.get(mode, {})
@@ -43,11 +43,18 @@ class Delegman(Plug):
             if view is None or type(view)==str:
                 return submode.get(view, {})
             else: 
-                for klass in view.__class__.__mro__:
-                    view_name=klass.__name__
-                    views=submode.get(view_name, {})
-                    if views or not super_view:
-                        return views
+                if view_approach=='own':
+                    view_name=view.__class__.__name__
+                    return submode.get(view_name, {})
+                elif view_approach=='super':
+                    all_views={}
+                    for klass in view.__class__.__mro__:
+                        view_name=klass.__name__
+                        views=submode.get(view_name, {})
+                        all_views.update(views)
+                    return all_views
+                elif view_approach=='manager':
+                    raise
         elif delegate=='action':
             view=self.getAgent(mode=mode, submode=submode, view=view, delegate='view')
             return view.get(action, {})
@@ -70,7 +77,7 @@ class Delegman(Plug):
                 view=view, 
                 action=action, 
                 delegate=delegate,
-                super_view=super_view)
+                view_approach=super_view)
         if functor and delegate=='action':
             for field in add_fields:
                 if not field in data:
