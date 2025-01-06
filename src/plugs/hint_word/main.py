@@ -4,20 +4,23 @@ class WordHint(Plug):
 
     def setup(self):
         super().setup()
-        self.m_agents={}
-        if self.app.running:
-            self.addSubmode()
-        else:
-            self.app.appIsLaunched.connect(
-                    self.addSubmode)
+        self.addAgent()
 
-    def addSubmode(self):
-        holder=self.app.plugman.getPlug('Hint')
-        if holder:
-            holder.addSubmode('word', self)
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                mode='hint', 
+                submode='word', 
+                action='activate', 
+                functor=self.activate)
+        self.app.delegman.addAgent(
+                mode='hint', 
+                submode='word', 
+                action='octivate', 
+                functor=self.octivate)
 
     @tag("<c-w>(hint)")
     def activate(self, view=None, **kwargs):
+        super().activate()
         if not view:
             view=self.app.stateman.view()
         agent=self.app.delegman.getAgent(
@@ -25,16 +28,14 @@ class WordHint(Plug):
         if agent:
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
-            functor=agent.get('start', None)
-            if functor:
-                functor(view=view, **kwargs)
+            self.app.delegman.delegate(
+                    'hint', 'word', view, 'start', data=kwargs) 
 
     @tag("<c-w>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
+        super().octivate()
         if not view:
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
-        functor=self.app.delegman.getAgent(
-                'hint', 'word', view, 'finish') 
-        if functor:
-            functor(view=view, **kwargs)
+        self.app.delegman.delegate(
+                'hint', 'word', view, 'finish', data=kwargs) 

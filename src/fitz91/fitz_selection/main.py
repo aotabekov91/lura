@@ -27,7 +27,7 @@ class FitzSelection(Plug):
         elif item and kind=='disconnect':
             item.painted.disconnect(self.paint)
 
-    def select(self, view=None, selection=None):
+    def select(self, view=None, selection=None, **kwargs):
         if view and selection:
             item=selection['item']
             current_item, current_selection=self.m_views.get(view, (None, None))

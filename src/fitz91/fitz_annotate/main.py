@@ -20,12 +20,21 @@ class FitzAnnotate(Plug):
     def goTo(self, view, data, center=True):
         boxes = data.get("box", None)
         page = data.get("page", None)
+        data['view']=view
         if all([view, page, boxes]):
             top_left = boxes[0].topLeft()
-            selector=self.app.plugman.getPlug('Selection')
-            view.goTo(page, top_left.x(), top_left.y(), center=center)
-            if selector:
-                selector.select(view, **data)
+            self.app.delegman.delegate(
+                    mode='normal', 
+                    view=view, 
+                    action='goTo', 
+                    data={
+                        'xrange': [page],
+                        'x': top_left.x(),
+                        'y': top_left.y(),
+                        'center': True,
+                        })
+            self.app.delegman.delegate(
+                    action='setSelection', data=data)
 
     def setPage(self, model, data):
         page = data.get("page", None)

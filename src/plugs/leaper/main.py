@@ -96,7 +96,7 @@ class Leaper(Plug):
                         mode='normal',
                         action='goTo', 
                         view=view, 
-                        **data)
+                        data=data)
             elif kind == "prev":
                 precedent=node.precedent
                 if not precedent:
@@ -109,4 +109,4 @@ class Leaper(Plug):
                         mode='normal',
                         action='goTo', 
                         view=view, 
-                        **data)
+                        data=data)

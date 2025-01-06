@@ -40,3 +40,7 @@ Date: 2.12.2024-31.12.2024
 	* data={'dock': '<c-d>', 'tab': '<c-t>'}
 	* earman.updateKeyPlaceholders(data)
 	* earman.replacePlaceholder-> '<c-d>z<c-t>J(normal)'
+
+## Bugs
+
+* normal window tile goto last does not work

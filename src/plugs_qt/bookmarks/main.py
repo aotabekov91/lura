@@ -64,7 +64,7 @@ class Bookmarks(Plug):
             data=item.element().data()
             position=data.get('position')
             self.app.delegman.delegate(
-                    'normal', None, view, 'goTo', **position)
+                    'normal', None, view, 'goTo', data=position)
 
     @tag('d(normal)[BookmarkView]')
     def delete(self):

@@ -29,14 +29,13 @@ class FitzWordVisual(Plug):
         if not view:
             view=self.app.stateman.view()
         hinter=self.app.plugman.getPlug('WordHint')
-        selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view)
+        selection=self.app.delegman.delegate(
+                action='getSelection', data={'view': view})
         if not selection and hinter:
             self.app.stateman.activate(mode='hint')
             hinter.toggle(view=view, **kwargs)
 
     def go(self, view, xrange=[1], kind='last'):
-        selector=self.app.plugman.getPlug('Selection')
         if kind=='toggle':
             self.toggleDirection(view)
         elif kind=='jump':
@@ -45,7 +44,8 @@ class FitzWordVisual(Plug):
             if not self.m_blocker:
                 return
             for time in range(xrange[-1]):
-                selection=selector.selection(view)
+                selection=self.app.delegman.delegate(
+                        action='getSelection', data={'view': view})
                 if not selection:
                     return
                 item = selection['item']
@@ -54,8 +54,8 @@ class FitzWordVisual(Plug):
                 item.refresh()
 
     def toggleDirection(self, view):
-        selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view)
+        selection=self.app.delegman.delegate(
+                action='getSelection', data={'view': view})
         if selection:
             item = selection['item']
             element = item.element()
@@ -69,5 +69,6 @@ class FitzWordVisual(Plug):
         if block and data:
             element.jumpToBlock(block, data)
         elif data:
-            selector=self.app.plugman.getPlug('Selection')
-            selector.select(view, **data)
+            data['view']=view
+            self.app.delegman.delegate(
+                    action='setSelection', data=data)

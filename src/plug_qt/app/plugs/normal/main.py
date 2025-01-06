@@ -6,11 +6,11 @@ class Normal(Plug, QtCore.QObject):
 
     stateChanged=QtCore.pyqtSignal(str, object, object)
 
-    def delegate(self, view=None, **kwargs):
+    def delegate(self, action=None, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
         self.app.delegman.delegate(
-                mode='normal', view=view, **kwargs)
+                mode='normal', view=view, action=action, data=kwargs)
 
     @tag("G(normal)")
     def go(self, xrange=None, **kwargs):

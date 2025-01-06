@@ -28,9 +28,9 @@ class Textize(Plug):
     @tag("<c-t>(annotate)")
     def textize(self, xrange=[1]):
         view=self.app.stateman.view()
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selection=selector.selection(view=view)
+        selection=self.app.delegman.delegate(
+                action='getSelection', data={'view': view})
+        if selection:
             key=xrange[0]
             color=self.m_colors.get(key, self.default_color)
             textizer=self.getAgent(view=view)

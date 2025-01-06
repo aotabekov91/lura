@@ -22,10 +22,10 @@ class FitzCopy(Plug):
                     'normal', None, view=view, action='zoomState')
             if zoom:
                 zoom=self.app.delegman.delegate(
-                        'normal', None, view=copy, action='zoom', **zoom)
+                        'normal', None, view=copy, action='zoom', data=zoom)
             goTo=self.app.delegman.delegate(
                     'normal', None, view=view, action='goToState')
             if goTo:
                 goTo=self.app.delegman.delegate(
-                        'normal', None, view=copy, action='goTo', **goTo)
+                        'normal', None, view=copy, action='goTo', data=goTo)
             return copy

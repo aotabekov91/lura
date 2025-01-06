@@ -4,32 +4,46 @@ class Visual(Plug):
 
     def setup(self):
         super().setup()
-        self.m_agents={}
+        self.addAgent()
 
-    def addAgent(self, name, agent):
-        self.m_agents[name]=agent
-
-    def getAgent(self, name):
-        return self.m_agents.get(name, None)
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                None, None, None, 'visual', self.activate)
+        self.app.delegman.addAgent(
+                'visual', None, None, 'normal', self.octivate)
 
     @tag('<c-v>(normal)')
-    def activate(self, submode=None, **kwargs):
+    def activate(self, view=None, submode=None, **kwargs):
         super().activate()
-        if self.getAgent(name=submode):
-            self.app.stateman.activate(
-                    moder=self,
-                    mode='visual',
-                    submode=submode,
-                    **kwargs)
-        else:
-            self.app.stateman.activate(
-                    moder=self,
-                    mode='visual', 
-                    **kwargs)
+        if not view:
+            view=self.app.stateman.view()
+        self.app.stateman.activate(
+                view=view,
+                moder=self,
+                mode='visual',
+                submode=submode,
+                **kwargs)
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='visual', 
+                submode=submode, 
+                action='activate',
+                data=data)
 
     @tag('<c-v>/<escape>(visual[any])')
-    def octivate(self, **kwargs):
-        submoder=self.app.stateman.submoder()
-        if submoder:
-            submoder.octivate(**kwargs)
+    def octivate(self, view=None, submode=None, **kwargs):
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
+
+        if not submode:
+            submode=self.app.stateman.submode()
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode=submode, 
+                action='octivate',
+                data=data)
         self.app.stateman.activate()

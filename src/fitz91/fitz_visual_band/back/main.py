@@ -32,8 +32,8 @@ class RubberbandVisual(
             else:
                 self.cleanUpHinting()
                 if self.m_band:
-                    i = self.m_band["item"]
-                    i.selectionPainted.disconnect(self.paintVisualBand)
+                    item = self.m_band["item"]
+                    item.selectionPainted.disconnect(self.paintVisualBand)
 
     def updateVisualBandHint(self, key):
         m = self.getHintMatches(key)
@@ -60,14 +60,14 @@ class RubberbandVisual(
 
     def setVisualBand(self, band):
         if self.m_band:
-            i = self.m_band["item"]
-            i.selectionPainteddisconnect(self.paintVisualBand)
+            item = self.m_band["item"]
+            item.selectionPainteddisconnect(self.paintVisualBand)
         self.m_band = band
         self.m_band_corner = "topLeft"
         if self.m_band:
-            i = self.m_band["item"]
-            i.selectionPainted.connect(self.paintVisualBand)
-            self.select(i, band)
+            item = self.m_band["item"]
+            item.selectionPainted.connect(self.paintVisualBand)
+            self.select(item, band)
 
     def paintBandHints(self, p, o, w, i):
         self.paintBoxHints(p, o, w, i)

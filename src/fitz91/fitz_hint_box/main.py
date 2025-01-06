@@ -145,9 +145,9 @@ class FitzBoxHint(Plug):
         painter.restore()
 
     def select(self, view, data):
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selector.select(view, **data)
+        data['view']=view
+        self.app.delegman.delegate(
+                action='setSelection', data=data)
 
     def checkHint(self, hint):
         partial=hint[:len(self.m_hint)]

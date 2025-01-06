@@ -92,16 +92,16 @@ class FitzWordHint(Plug):
         return self.m_hint==hint[:len(self.m_hint)]
 
     def select(self, view, data):
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selection=selector.create(
-                    view=view, data=data)
-            selector.select(view, selection=selection) 
-        moder=self.app.stateman.moder()
-        moder.octivate(view=view)
-        visual=self.app.plugman.getPlug('Visual')
-        if visual:
-            visual.activate(view=view, submode='word')
+        selection=self.app.delegman.delegate(
+                action='createSelection', 
+                data={'view': view, 'data':data})
+        self.app.delegman.delegate(
+                action='setSelection', 
+                data={'view': view, 'selection': selection})
+        self.app.delegman.delegate(
+                mode='hint', action='normal', data={'view': view})
+        self.app.delegman.delegate(
+                action='visual', data={'view': view, 'submode': 'word'})
 
     def functor(self, key, earman):
         self.m_hint=key

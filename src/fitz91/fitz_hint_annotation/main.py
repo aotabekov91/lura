@@ -112,6 +112,6 @@ class FitzAnnotationHint(Plug):
         element = data["element"]
         idx=element.index()
         data['item']=view.item(idx)
-        selector=self.app.plugman.getPlug('Selection')
-        if selector:
-            selector.select(view, selection=annotation)
+        self.app.delegman.delegate(
+                action='setSelection', 
+                data={'view': view, 'selection': annotation})

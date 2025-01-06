@@ -35,6 +35,7 @@ Picks = [
 	{plug='plugs_qt/bookmarks', base='~/code/lura/src', kind='link'},
 	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
 
+	{plug='fitz91/fitz_annotate', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_hint_link', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_visual_word', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_selection', base='~/code/lura/src', kind='link'},

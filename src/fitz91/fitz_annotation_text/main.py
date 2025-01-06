@@ -16,16 +16,17 @@ class FitzTextize(Plug):
             holder.addAgent('FitzView', self)
 
     def activate(self, view=None, selection=None, **kwargs):
-        selector=self.app.plugman.getPlug('Selection')
         if not selection:
-            selection=selector.selection(view)
+            selection=self.app.delegman.delegate(
+                    action='getSelection', data={'view': view})
         if selection and view:
             model=view.model()
             annotator=self.app.plugman.getPlug('Annotate')
             annotation_model=annotator.getModel(model)
             data=selection.data()
             annotation_model.addAnnotate(data=data)
-            selector.clear(view)
+            self.app.delegman.delegate(
+                    action='clearSelection', data={'view': view})
         return selection
 
     def octivate(self):

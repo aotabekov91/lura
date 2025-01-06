@@ -15,7 +15,7 @@ class FitzZoom(Plug):
         self.app.delegman.addAgent(
                 'normal', None, 'FitzView', 'zoom', self.zoom)
         self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'zoomState', self.zoom)
+                'normal', None, 'FitzView', 'zoomState', self.zoomState)
 
     def connectView(self, view):
         if view and view.__class__.__name__=='FitzView':

@@ -71,15 +71,12 @@ class Annotations(Plug):
                     mode='normal',
                     action='goTo', 
                     view=view, 
-                    xrange=[page], 
-                    x=x, 
-                    y=y, 
-                    center=True)
+                    data={'xrange': [page], 'x': x, 'y': y, 'center'=True})
             if select:
                 self.app.delegman.delegate(
                         action='setSelection', 
                         view=view, 
-                        selection=element)
+                        data={'selection': element})
             if focus:
                 view.activate()
 

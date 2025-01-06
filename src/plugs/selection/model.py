@@ -26,7 +26,9 @@ class SelectionModel(vimo.Model, QtCore.QObject):
             view=self.source()
             self.m_selection=selection
             self.app.delegman.delegate(
-                    view=view, action='select', selection=selection)
+                    view=view, 
+                    action='select', 
+                    data={'selection': selection})
         elif kwargs:
             self.update(**kwargs)
         else:
@@ -37,13 +39,17 @@ class SelectionModel(vimo.Model, QtCore.QObject):
             self.m_selection[key]=value
         view=self.source()
         self.app.delegman.delegate(
-                view=view, action='select', selection=self.m_selection)
+                view=view,
+                action='select', 
+                data={'selection': self.m_selection})
 
     def clear(self, **kwargs):
         view=self.source()
         self.m_selection=self.create()
         self.app.delegman.delegate(
-                view=view, action='select', selection=self.m_selection)
+                view=view, 
+                action='select', 
+                data={'selection': self.m_selection})
 
     def get(self, **kwargs):
         return self.m_selection

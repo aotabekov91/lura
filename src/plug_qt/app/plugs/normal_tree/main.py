@@ -1,10 +1,19 @@
 from plug import Plug, tag
 
-class TreeNormal(Plug):
+class TreeNormalGoTo(Plug):
+
+    def setup(self):
+        super().setup()
+        self.addAgent()
+
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                'normal', None, 'TreeView', 'goTo', self.delegate)
 
     def delegate(self, view=None, action=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
+        print(view, action)
         if view and action:
             functor=getattr(view, action, None)
             if functor:

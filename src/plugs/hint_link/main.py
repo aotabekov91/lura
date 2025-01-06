@@ -4,17 +4,19 @@ class LinkHint(Plug):
 
     def setup(self):
         super().setup()
-        self.m_agents={}
-        if self.app.running:
-            self.addSubmode()
-        else:
-            self.app.appIsLaunched.connect(
-                    self.addSubmode)
+        self.addAgent()
 
-    def addSubmode(self):
-        holder=self.app.plugman.getPlug('Hint')
-        if holder:
-            holder.addSubmode('link', self)
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                mode='hint', 
+                submode='link', 
+                action='activate', 
+                functor=self.activate)
+        self.app.delegman.addAgent(
+                mode='hint', 
+                submode='link', 
+                action='octivate', 
+                functor=self.octivate)
 
     @tag("<c-l>(hint)")
     def activate(self, view=None, **kwargs):
@@ -25,16 +27,13 @@ class LinkHint(Plug):
         if agent:
             self.app.stateman.setSubmode(
                     submode="link", submoder=self)
-            functor=agent.get('start', None)
-            if functor:
-                functor(view=view, **kwargs)
+            self.app.delegman.delegate(
+                    'hint', 'link', view, 'start', data=kwargs) 
 
     @tag("<c-l>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
-        functor=self.app.delegman.getAgent(
-                'hint', 'link', view, 'finish') 
-        if functor:
-            functor(view=view, **kwargs)
+        self.app.delegman.delegate(
+                'hint', 'link', view, 'finish', data=kwargs) 

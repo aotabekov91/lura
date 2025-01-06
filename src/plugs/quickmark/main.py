@@ -75,4 +75,4 @@ class Quickmark(Plug):
         if quickmarks:
             data=quickmarks.get(text, {})
             self.app.delegman.delegate(
-                    mode='normal', action='goTo', view=view, **data)
+                    mode='normal', action='goTo', view=view, data=data)

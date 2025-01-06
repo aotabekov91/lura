@@ -43,7 +43,7 @@ class FitzLinkHint(Plug):
         hints=self.hints(model)
         if self.m_hint in hints:
             link=hints.get(self.m_hint)
-            self.select(link, model, view)
+            self.goTo(link, model, view)
             moder=self.app.stateman.moder()
             moder.octivate(view=view)
         for hint in hints:
@@ -85,7 +85,7 @@ class FitzLinkHint(Plug):
         for hint, link in hints.items():
             link['hint']=hint
 
-    def select(self, link, model, view):
+    def goTo(self, link, model, view):
         idx=link.get('index')
         element=model.element(idx)
         destination = link["link"].dest
@@ -107,9 +107,7 @@ class FitzLinkHint(Plug):
                     mode='normal',
                     view=view,
                     action='goTo',
-                    xrange=[page + 1], 
-                    x=point.x(), 
-                    y=point.y())
+                    data={'xrange': [page + 1], 'x': point.x(), 'y': point.y()})
 
     def getLinks(self, model):
         links={}

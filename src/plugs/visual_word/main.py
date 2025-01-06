@@ -4,56 +4,47 @@ class WordVisual(Plug):
 
     def setup(self):
         super().setup()
-        self.m_agents={}
-        if self.app.running:
-            self.addSubmode()
-        else:
-            self.app.appIsLaunched.connect(
-                    self.addSubmode)
+        self.addAgent()
 
-    def addSubmode(self):
-        visual=self.app.plugman.getPlug('Visual')
-        if visual:
-            visual.addAgent('word', self)
-
-    def addAgent(self, action, obj, agent):
-        if not obj in self.m_agents:
-            self.m_agents[obj]={}
-        self.m_agents[obj][action]=agent
-
-    def getAgent(self, action=None, view=None, only_obj=False):
-        if view:
-            for klass in view.__class__.__mro__:
-                name=klass.__name__
-                obj=self.m_agents.get(name, {})
-                if obj and only_obj:
-                    return obj
-                elif obj:
-                    actioner=obj.get(action, None)
-                    if actioner:
-                        return actioner
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                mode='visual', 
+                submode='word', 
+                action='activate', 
+                functor=self.activate)
+        self.app.delegman.addAgent(
+                mode='visual', 
+                submode='word', 
+                action='octivate', 
+                functor=self.octivate)
 
     def delegate(self, action=None, view=None, **kwargs):
         if view is None:
             view=self.app.stateman.view()
-        agent=self.getAgent(action=action, view=view)
-        if agent:
-            agent.delegate(action=action, view=view, **kwargs)
+        self.app.delegman.delegate(
+                'visual', 'word', view, action, data=kwargs)
 
     @tag("<c-w>(visual)")
     def activate(self, view=None, **kwargs):
+        super().activate()
         if not view:
             view=self.app.stateman.view()
-        agent=self.getAgent(view=view, only_obj=True)
+        agent=self.app.delegman.getAgent(
+                'visual', 'word', view, delegate='view')
         if agent:
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
-            self.delegate(action='start', view=view, **kwargs)
+            self.app.delegman.delegate(
+                    'visual', 'word', view, 'start', data=kwargs) 
 
-    @tag("<c-w>/<c-[>/<escape>(visual[word])")
-    def octivate(self, **kwargs):
+    @tag("<c-w>/<c-[>/<escape>(hint[word])")
+    def octivate(self, view=None, **kwargs):
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
         self.app.stateman.setSubmode()
-        self.delegate(action='finish', **kwargs)
+        self.app.delegman.delegate(
+                'visual', 'word', view, 'finish', data=kwargs) 
 
     @tag("<c-j>(visual[word])")
     def jump(self):

@@ -59,12 +59,12 @@ class Annotate(Plug, QtCore.QObject):
     def deannotate(self, view=None, selection=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
-        selector=self.app.plugman.getPlug('Selection')
-        if not selection and selector:
-            selection=selector.selection(view)
+        if not selection:
+            selection=self.app.delegman.delegate(
+                    action='getSelection', data={'view': view})
         if selection:
             model=view.model()
             self.activate(action='del', model=model, selection=selection)
-            if selector:
-                selector.clear(view)
+            selection=self.app.delegman.delegate(
+                    action='clearSelection', data={'view': view})
         self.toggle()

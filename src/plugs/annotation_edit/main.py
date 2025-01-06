@@ -58,11 +58,11 @@ class AnnotationEdit(Plug):
             height=200,
             **kwargs
             ):
-        selector=self.app.plugman.getPlug('Selection')
         if not view:
             view=self.app.stateman.view()
-        if not annotation and selector:
-            selection=selector.selection(view=view)
+        if not annotation:
+            selection=self.app.delegman.delegate(
+                    action='getSelection', data={'view': view})
             if selection.__class__.__name__=='AnnotateElement':
                 annotation=selection
         agent=self.getAgent(view=view)

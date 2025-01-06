@@ -53,7 +53,7 @@ class States(Plug):
                                 mode='normal', 
                                 action=state, 
                                 view=view, 
-                                **value)
+                                data=value)
         if not self.activated:
             self.activate()
             self.connectStates()

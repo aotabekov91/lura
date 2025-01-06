@@ -24,8 +24,8 @@ class FitzYankSelection(Plug):
 
     def yankSelection(self, view=None, **kwargs):
         if view:
-            selector=self.app.plugman.getPlug('Selection')
-            selection=selector.selection(view=view)
+            selection=self.app.delegman.delegate(
+                    action='getSelection', data={'view': view})
             if selection:
                 text = []
                 item = selection.get("item")

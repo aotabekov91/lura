@@ -6,13 +6,13 @@ class Hint(Plug):
 
     def setup(self):
         super().setup()
-        self.m_submodes={}
-
-    def addSubmode(self, name, agent):
-        self.m_submodes[name]=agent
-
-    def getSubmode(self, name):
-        return self.m_submodes.get(name, None)
+        self.addAgent()
+        
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                None, None, None, 'hint', self.activate)
+        self.app.delegman.addAgent(
+                'hint', None, None, 'normal', self.octivate)
 
     def generateHints(self, alist, kind="letter"):
 
@@ -48,16 +48,26 @@ class Hint(Plug):
                 mode='hint',
                 submode=submode,
                 **kwargs)
-        submoder=self.getSubmode(submode)
-        if submoder:
-            submoder.activate(view=view, **kwargs)
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode=submode, 
+                action='activate',
+                data=data)
 
     @tag('<c-f>/<escape>(hint[any])')
-    def octivate(self, view=None, **kwargs):
+    def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()
         if not view:
             view=self.app.stateman.view()
-        submoder=self.app.stateman.submoder()
-        if submoder:
-            submoder.octivate(view=view, **kwargs)
+        if not submode:
+            submode=self.app.stateman.submode()
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode=submode, 
+                action='octivate',
+                data=data)
         self.app.stateman.activate()

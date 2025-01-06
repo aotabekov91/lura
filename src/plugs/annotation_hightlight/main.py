@@ -51,8 +51,8 @@ class Highlight(Plug):
     @tag("<c-h>(annotate)")
     def highlight(self, xrange=[1]):
         view=self.app.stateman.view()
-        selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view)
+        selection=self.app.delegman.delegate(
+                action='getSelection', data={'view': view})
         if selection:
             key=xrange[0]
             data=self.m_functions.get(key, {})

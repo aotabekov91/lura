@@ -25,17 +25,16 @@ class FitzYankSelection(Plug):
         return text
 
     def yankSelection(self, view):
-        selector=self.app.plugman.getPlug('Selection')
-        selection=selector.selection(view)
-        if not selection:
-            return
-        text = []
-        item = selection.get("item")
-        element = item.element()
-        boxes = selection.get("box", [])
-        for box in boxes:
-            text+=[self.getBlockText(box, element)]
-        return " ".join(text)
+        selection=self.app.delegman.delegate(
+                action='getSelection', data={'view': view})
+        if selection:
+            text = []
+            item = selection.get("item")
+            element = item.element()
+            boxes = selection.get("box", [])
+            for box in boxes:
+                text+=[self.getBlockText(box, element)]
+            return " ".join(text)
 
     def getBlockText(self, box, element):
         blocker=self.app.plugman.getPlug(

@@ -30,4 +30,4 @@ class Scroller(Plug, QtCore.QObject):
                 mode='normal', 
                 view=view, 
                 action='goTo', 
-                kind='blockdown')
+                data={'kind': 'blockdown'})
