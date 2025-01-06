@@ -46,6 +46,8 @@ def parse_vimo(key: str) -> tp.List[tp.Tuple[str, str]]:
         if idx:
             submode_key = rest_key[0 + 1 : idx][::-1]
             rest_key = rest_key[idx + 1 :]
+            if submode_key=='None':
+                submode_key=None
         else:
             submode_key = "any"
         sup = rest_key[::-1]

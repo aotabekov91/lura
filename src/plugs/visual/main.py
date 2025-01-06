@@ -31,18 +31,17 @@ class Visual(Plug):
                 action='activate',
                 data=data)
 
-    @tag('<c-v>/<escape>(visual[any])')
+    @tag(['<c-v>/<c-[>(visual[None])', '<escape>(visual)'])
     def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()
         if not view:
             view=self.app.stateman.view()
-
         if not submode:
             submode=self.app.stateman.submode()
         data=kwargs.copy()
         data['view']=view
         self.app.delegman.delegate(
-                mode='hint', 
+                mode='visual', 
                 submode=submode, 
                 action='octivate',
                 data=data)

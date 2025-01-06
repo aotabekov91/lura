@@ -37,7 +37,7 @@ class WordVisual(Plug):
             self.app.delegman.delegate(
                     'visual', 'word', view, 'start', data=kwargs) 
 
-    @tag("<c-w>/<c-[>/<escape>(hint[word])")
+    @tag("<c-w>/<c-[>(visual[word])")
     def octivate(self, view=None, **kwargs):
         super().octivate()
         if not view:

@@ -11,15 +11,16 @@ class Outline(Plug):
     def setup(self):
         super().setup()
         self.m_agents={}
+        self.m_subview=None
         self.setupView()
 
-    def addAgent(self, name, agent):
-        self.m_agents[name]=agent
-
-    def getAgent(self, name=None, view=None):
-        if not name and view:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
+    def setupView(self):
+        self.m_view=self.app.buffman.createView(
+                OutlineView, None)
+        self.app.stateman.viewChanged.connect(
+                self.updateOutline)
+        self.m_view.resized.connect(
+                self.updateHeaderRatio)
 
     def updateOutline(self, view):
         agent=self.getAgent(view=view)
@@ -30,13 +31,22 @@ class Outline(Plug):
                 self.m_view.setModel(outline)
                 self.connectView(view)
 
-    def connectView(self, view):
-        if self.m_view:
-            self.m_view.indexChanged.disconnect(
+    def addAgent(self, name, agent):
+        self.m_agents[name]=agent
+
+    def getAgent(self, name=None, view=None):
+        if not name and view:
+            name=view.__class__.__name__
+        return self.m_agents.get(name, None)
+
+    def connectView(self, view=None):
+        if self.m_subview:
+            self.m_subview.indexChanged.disconnect(
                     self.updateOutlineIndex)
-        self.m_view=view
-        view.indexChanged.connect(
-                self.updateOutlineIndex)
+        self.m_subview=view
+        if self.m_subview:
+            self.m_subview.indexChanged.connect(
+                    self.updateOutlineIndex)
 
     def updateOutlineIndex(self, idx):
         model=self.m_view.model()
@@ -65,13 +75,6 @@ class Outline(Plug):
             header.resizeSection(
                     col, int(width*weight))
 
-    def setupView(self):
-        self.m_view=self.app.buffman.createView(
-                OutlineView, None)
-        self.app.stateman.viewChanged.connect(
-                self.updateOutline)
-        self.m_view.resized.connect(
-                self.updateHeaderRatio)
 
     @tag('<c-O>(normal/outline)')
     def toggleOutline(self):
