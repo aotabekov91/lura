@@ -13,16 +13,16 @@ class Hint(Plug):
                 'normal', None, None, 'hint', self.activate)
         self.app.delegman.addAgent(
                 'hint', None, None, 'normal', self.octivate)
+        self.app.delegman.addAgent(
+                'hint', None, None, 'generateHints', self.generateHints)
 
-    def generateHints(self, alist, kind="letter"):
-
+    def generateHints(self, alist=[], kind="letters", **kwargs):
         def mapToLetters(num, number):
             hint = []
             for _ in range(number):
                 hint.append(self.alpha[num % len(self.alpha)])
                 num = num // len(self.alpha)
             return "".join(reversed(hint))
-
         list_len = len(alist)
         alpha_len = len(self.alpha)
         number, hints = 0, {} 
@@ -30,7 +30,7 @@ class Hint(Plug):
             number += 1
         number = max(number, 1)
         for num, data in enumerate(alist):
-            if kind == "letter":
+            if kind == "letters":
                 hint = mapToLetters(num, number)
             else:
                 hint = str(num + 1)

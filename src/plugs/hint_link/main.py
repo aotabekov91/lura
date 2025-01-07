@@ -28,7 +28,7 @@ class LinkHint(Plug):
             self.app.stateman.setSubmode(
                     submode="link", submoder=self)
             self.app.delegman.delegate(
-                    'hint', 'link', view, 'start', data=kwargs) 
+                    'hint', 'link', view, 'activate', data=kwargs) 
 
     @tag("<c-l>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
@@ -36,4 +36,4 @@ class LinkHint(Plug):
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'hint', 'link', view, 'finish', data=kwargs) 
+                'hint', 'link', view, 'octivate', data=kwargs) 

@@ -29,7 +29,7 @@ class WordHint(Plug):
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
             self.app.delegman.delegate(
-                    'hint', 'word', view, 'start', data=kwargs) 
+                    'hint', 'word', view, 'activate', data=kwargs) 
 
     @tag("<c-w>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
@@ -38,4 +38,4 @@ class WordHint(Plug):
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'hint', 'word', view, 'finish', data=kwargs) 
+                'hint', 'word', view, 'octivate', data=kwargs) 

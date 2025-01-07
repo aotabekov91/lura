@@ -13,12 +13,9 @@ class FitzWordHint(Plug):
 
     def addAgent(self):
         self.app.delegman.addAgent(
-                'hint', 'word', 'FitzView', 'start', self.start)
+                'hint', 'word', 'FitzView', 'activate', self.activate)
         self.app.delegman.addAgent(
-                'hint', 'word', 'FitzView', 'finish', self.finish)
-
-    def words(self, model):
-        return self.m_cache.get(model, None)
+                'hint', 'word', 'FitzView', 'octivate', self.octivate)
 
     def cacheModel(self, model):
         if not model in self.m_cache:
@@ -58,8 +55,9 @@ class FitzWordHint(Plug):
         for hint, word in hints.items():
             word['hint']=hint
 
-    def start(self, view=None, **kwargs):
+    def activate(self, view=None, **kwargs):
         if view:
+            super().activate()
             model=view.model()
             self.cacheModel(model)
             self.assignHints(view)
@@ -67,8 +65,9 @@ class FitzWordHint(Plug):
             view.itemPainted.connect(self.paint)
             view.redraw()
 
-    def finish(self, view=None, **kwargs):
+    def octivate(self, view=None, **kwargs):
         if view:
+            super().octivate()
             self.m_hint=''
             self.app.stateman.setFunctor()
             view.itemPainted.disconnect(self.paint)

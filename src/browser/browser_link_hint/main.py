@@ -13,19 +13,21 @@ class BrowserLinkHint(Plug):
 
     def addAgent(self):
         self.app.delegman.addAgent(
-                'hint', 'link', 'BrowserView', 'start', self.start)
+                'hint', 'link', 'BrowserView', 'activate', self.activate)
         self.app.delegman.addAgent(
-                'hint', 'link', 'BrowserView', 'finish', self.finish)
+                'hint', 'link', 'BrowserView', 'octivate', self.octivate)
 
-    def start(self, view=None, **kwargs):
+    def activate(self, view=None, **kwargs):
         if view:
+            super().activate()
             selectors=self.getSelectors()
             code=view.scriptize(
                     'elements', 'find_css', selectors, False)
             callback=functools.partial(self.setLinks, view=view)
             view.runJSCode(code, resultCallback=callback)
 
-    def finish(self, view=None, **kwargs):
+    def octivate(self, view=None, **kwargs):
+        super().octivate()
         for link in self.m_hints.values():
             label=link['label']
             label.hide()

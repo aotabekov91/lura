@@ -9,52 +9,57 @@ class FitzAnnotationHint(Plug):
         self.m_hint=''
         self.m_hints={}
         self.m_element_hints={}
-        if self.app.running:
-            self.addHinter()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addHinter)
+        self.addAgent()
 
-    def addHinter(self):
-        annotator=self.app.plugman.getPlug('Annotate')
-        hinter=self.app.plugman.getPlug('AnnotationHint')
-        if hinter and annotator:
-            hinter.addAgent('FitzView', self)
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                'hint', 'annotation', 'FitzView', 'activate', self.activate)
+        self.app.delegman.addAgent(
+                'hint', 'annotation', 'FitzView', 'octivate', self.octivate)
 
-    def assignHints(self, view):
+    def assignHints(self, view=None, kind='letters'):
         annotations=[]
-        model=view.model()
-        items=view.visibleItems()
-        hinter=self.app.plugman.getPlug('Hint')
-        annotator=self.app.plugman.getPlug('Annotate')
-        annotation_model=annotator.getModel(model)
-        for item in items: 
-            element=item.element()
-            idx=element.index()
-            item_annotations=annotation_model.getAnnotate(
-                    idx, by='page', only_one=False)
-            annotations+=item_annotations
-        _, hints=hinter.generateHints(annotations)
-        self.m_hints=hints
-        self.m_element_hints={}
-        for hint, annotation in hints.items():
-            data=annotation.data()
-            data['hint']=hint
-            element=data['element']
-            idx=element.index()
-            if not idx in self.m_element_hints:
-                self.m_element_hints[idx]=[]
-            self.m_element_hints[idx]+=[data]
+        amodel=self.app.delegman.delegate(
+                mode='annotate', 
+                action='getModel',
+                data={'view': view})
+        if view and amodel:
+            items=view.visibleItems()
+            for item in items: 
+                element=item.element()
+                idx=element.index()
+                item_annotations=amodel.get(
+                        idx, by='page', only_one=False)
+                annotations+=item_annotations
+            moder=self.app.stateman.moder()
+            _, hints=moder.generateHints(annotations, kind)
+            if hints:
+                self.m_hints=hints
+                self.m_element_hints={}
+                for hint, annotation in hints.items():
+                    data=annotation.data()
+                    data['hint']=hint
+                    element=data['element']
+                    idx=element.index()
+                    if not idx in self.m_element_hints:
+                        self.m_element_hints[idx]=[]
+                    self.m_element_hints[idx]+=[data]
+                return annotations
+        self.app.delegman.delegate(
+                mode='hint', action='normal', data={'view': view})
+        return annotations
 
     def activate(self, view=None, **kwargs):
         if view:
-            self.assignHints(view)
+            super().activate()
             self.app.stateman.setFunctor(functor=self.functor)
             view.itemPainted.connect(self.paint)
+            self.assignHints(view)
             view.redraw()
 
     def octivate(self, view=None, **kwargs):
         if view:
+            super().octivate()
             self.m_hint=''
             self.m_element_hints={}
             self.app.stateman.setFunctor()
@@ -64,8 +69,7 @@ class FitzAnnotationHint(Plug):
 
     def paint(self, painter, ops, widget, item):
         painter.save()
-        pen = QtGui.QPen(
-                QtCore.Qt.GlobalColor.red, 0.0)
+        pen = QtGui.QPen(QtCore.Qt.GlobalColor.red, 0.0)
         painter.setPen(pen)
         element=item.element()
         idx=element.index()
@@ -80,16 +84,15 @@ class FitzAnnotationHint(Plug):
         painter.restore()
 
     def checkHint(self, hint):
-        partial=hint[:len(self.m_hint)]
-        return self.m_hint==partial
+        return self.m_hint==hint[:len(self.m_hint)]
 
     def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
         if key in self.m_hints:
             annotation=self.m_hints.get(key)
-            self.select(annotation, view)
-            self.edit(annotation, view)
+            self.select(view, annotation)
+            # self.edit(annotation, view)
             view.redraw()
             return True
         for hint in self.m_hints:
@@ -100,14 +103,15 @@ class FitzAnnotationHint(Plug):
         view.redraw()
         return False
 
-    def edit(self, annotation, view, **kwargs):
-        agent=self.app.plugman.getPlug('AnnotationHint')
-        agent.octivate()
-        agent=self.app.plugman.getPlug('AnnotationEdit')
-        if agent:
-            agent.activate(view=view, annotation=annotation, **kwargs)
+    # todo: move it to edit[annotation]
+    # def edit(self, annotation, view, **kwargs):
+    #     agent=self.app.plugman.getPlug('AnnotationHint')
+    #     agent.octivate()
+    #     agent=self.app.plugman.getPlug('AnnotationEdit')
+    #     if agent:
+    #         agent.activate(view=view, annotation=annotation, **kwargs)
 
-    def select(self, annotation, view):
+    def select(self, view, annotation):
         data=annotation.data()
         element = data["element"]
         idx=element.index()
@@ -115,3 +119,5 @@ class FitzAnnotationHint(Plug):
         self.app.delegman.delegate(
                 action='setSelection', 
                 data={'view': view, 'selection': annotation})
+        self.app.delegman.delegate(
+                mode='hint', action='normal', data={'view': view})

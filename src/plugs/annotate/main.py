@@ -17,6 +17,36 @@ class Annotate(Plug, QtCore.QObject):
         self.setMapping()
         self.addAgent()
 
+    def addAgent(self):
+        self.app.delegman.addAgent(
+                mode='normal',
+                action='annotate', 
+                functor=self.activate)
+        self.app.delegman.addAgent(
+                mode='annotate', 
+                action='normal', 
+                functor=self.octivate)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='addAnnotation', 
+                functor=self.addAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='getAnnotation', 
+                functor=self.getAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='removeAnnotation', 
+                functor=self.removeAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='updateAnnotation', 
+                functor=self.updateAnnotation)
+        self.app.delegman.addAgent(
+                'annotate', 
+                action='getModel', 
+                functor=self.getModel)
+
     def setDefaultColor(self):
         rgb=QtGui.QColor(self.default_color)
         self.m_default_color=[rgb.redF(), rgb.greenF(), rgb.blueF()]
@@ -45,34 +75,10 @@ class Annotate(Plug, QtCore.QObject):
                 data['function']=function
                 self.m_functions[kind.lower()][key]=data
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='normal',
-                action='annotate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='annotate', 
-                action='normal', 
-                functor=self.octivate)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='addAnnotation', 
-                functor=self.addAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='getAnnotation', 
-                functor=self.getAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='removeAnnotation', 
-                functor=self.removeAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='updateAnnotation', 
-                functor=self.updateAnnotation)
-
-    def getModel(self, model):
-        return self.m_models.get(model, None)
+    def getModel(self, view=None, **kwargs):
+        if view:
+            model=view.model()
+            return self.m_models.get(model, None)
 
     def createModel(self, view):
         agent=self.app.delegman.getAgent(
@@ -85,23 +91,17 @@ class Annotate(Plug, QtCore.QObject):
             self.m_models[model]=amodel
             return amodel
 
-    def addAnnotation(
-            self, view=None, selection=None, **kwargs):
-        if view:
-            model=view.model()
-            amodel=self.getModel(model)
-            if selection and amodel:
-                data=selection.data()
-                return amodel.add(view=view, data=data, **kwargs)
+    def addAnnotation(self, view=None, selection=None, **kwargs):
+        amodel=self.getModel(view)
+        if selection and amodel:
+            data=selection.data()
+            return amodel.add(view=view, data=data, **kwargs)
 
-    def updateAnnotation(
-            self, view=None, selection=None, **kwargs):
-        if view:
-            model=view.model()
-            amodel=self.getModel(model)
-            if selection and amodel:
-                return amodel.update(
-                        view=view, anntation=selection, **kwargs)
+    def updateAnnotation(self, view=None, selection=None, **kwargs):
+        amodel=self.getModel(view)
+        if selection and amodel:
+            return amodel.update(
+                    view=view, anntation=selection, **kwargs)
 
     @tag('d(annotate)')
     def removeAnnotation(
@@ -112,17 +112,14 @@ class Annotate(Plug, QtCore.QObject):
             selection=self.app.delegman.delegate(
                     action='getSelection',
                     data={'view': view})
-        if view and selection:
-            model=view.model()
-            amodel=self.getModel(model)
-            if amodel:
-                return amodel.remove(
-                        view=view, annotation=selection, **kwargs)
+        amodel=self.getModel(view)
+        if amodel and selection:
+            return amodel.remove(
+                    view=view, annotation=selection, **kwargs)
                 
     def getAnnotation(self, view=None, **kwargs):
-        if view:
-            model=view.model()
-            amodel=self.getModel(model)
+        amodel=self.getModel(view)
+        if amodel:
             return amodel.get(view=view, **kwargs)
 
     @tag("<c-h>(annotate)")

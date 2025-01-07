@@ -32,10 +32,11 @@ class WordVisual(Plug):
         agent=self.app.delegman.getAgent(
                 'visual', 'word', view, delegate='view')
         if agent:
+            super().activate()
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
             self.app.delegman.delegate(
-                    'visual', 'word', view, 'start', data=kwargs) 
+                    'visual', 'word', view, 'activate', data=kwargs) 
 
     @tag("<c-w>/<c-[>(visual[word])")
     def octivate(self, view=None, **kwargs):
@@ -44,7 +45,7 @@ class WordVisual(Plug):
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'visual', 'word', view, 'finish', data=kwargs) 
+                'visual', 'word', view, 'octivate', data=kwargs) 
 
     @tag("<c-j>(visual[word])")
     def jump(self):

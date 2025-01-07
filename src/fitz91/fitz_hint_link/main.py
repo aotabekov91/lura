@@ -18,19 +18,21 @@ class FitzLinkHint(Plug):
 
     def addAgent(self):
         self.app.delegman.addAgent(
-                'hint', 'link', 'FitzView', 'start', self.start)
+                'hint', 'link', 'FitzView', 'activate', self.activate)
         self.app.delegman.addAgent(
-                'hint', 'link', 'FitzView', 'finish', self.finish)
+                'hint', 'link', 'FitzView', 'octivate', self.octivate)
 
-    def start(self, view=None, **kwargs):
+    def activate(self, view=None, **kwargs):
         if view:
+            super().activate()
             self.cacheLinks(view)
             self.app.stateman.setFunctor(functor=self.functor)
             view.itemPainted.connect(self.paint)
             view.redraw()
 
-    def finish(self, view=None, **kwargs):
+    def octivate(self, view=None, **kwargs):
         if view:
+            super().octivate()
             self.m_hint=''
             view.itemPainted.disconnect(self.paint)
             self.app.stateman.setFunctor()
@@ -107,7 +109,11 @@ class FitzLinkHint(Plug):
                     mode='normal',
                     view=view,
                     action='goTo',
-                    data={'xrange': [page + 1], 'x': point.x(), 'y': point.y()})
+                    data={
+                        'xrange': [page + 1], 
+                        'x': point.x(), 
+                        'y': point.y()
+                        })
 
     def getLinks(self, model):
         links={}
