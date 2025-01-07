@@ -1,6 +1,19 @@
 import typing as tp
 from functools import wraps
 
+def deleg(deleg, **kwargs):
+    if type(deleg) != list:
+        deleg = [deleg]
+    def _deleg(func):
+        @wraps(func)
+        def inner(self, *args, **kwargs):
+            return func(self, *args, **kwargs)
+        inner.func = func
+        inner.deleg = deleg
+        inner.hasDelegate = True
+        inner.kwargs = kwargs
+        return inner
+    return _deleg
 
 def tag(
     key: tp.Union[str, tp.List[str]] = None,

@@ -12,7 +12,7 @@ class WordHint:
     @tag("<escape>/<c-[>(hint[word])[^]")
     def finishHintWordMode(self):
         self.cleanUpHinting()
-        self.cleanUpSelection()
+        self.clear()
         self.app.stateman.toggle()
 
     @tag("<c-w>(hint)[^]")

@@ -1,43 +1,44 @@
-import math
 import functools
-import subprocess
 
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtWidgets, QtCore
 
-from plug import Plug
+from plug import Plug, deleg
 
 class BrowserLinkHint(Plug):
 
     def setup(self):
         super().setup()
         self.m_hints={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
 
-    def addAgent(self):
-        holder=self.app.plugman.getPlug('LinkHint')
-        if holder:
-            holder.addAgent('BrowserView', self)
-
+    @deleg('activate@(hint[link])[BrowserView]')
     def activate(self, view=None, **kwargs):
         if view:
+            super().activate()
             selectors=self.getSelectors()
-            code=view.assemble('webelem', 'find_css', selectors, False)
+            code=view.scriptize(
+                    'elements', 'find_css', selectors, False)
             callback=functools.partial(self.setLinks, view=view)
             view.runJSCode(code, resultCallback=callback)
 
+    @deleg('octivate@(hint[link])[BrowserView]')
     def octivate(self, view=None, **kwargs):
+        super().octivate()
         for link in self.m_hints.values():
             label=link['label']
             label.hide()
             label.setParent(None)
         self.m_hints={}
 
-    def goTo(self, link):
-        print(link)
+    def goTo(self, link, *args):
+        view=link['view']
+        label=link['label']
+        pos=label.geometry().center()
+        pos= QtCore.QPointF(pos)
+        view.fakeMouseEvent('move', position=pos)
+        view.fakeMouseEvent(
+                'press', position=pos, button='LeftButton')
+        view.fakeMouseEvent(
+                'release', position=pos, button='LeftButton')
 
     def functor(self, key, earman):
         partial=False
@@ -56,12 +57,13 @@ class BrowserLinkHint(Plug):
                 label.hide()
         return partial
 
-    def assignHints(self, links, model, view):
-        hinter=self.app.plugman.getPlug('Hint')
-        _, hints=hinter.generateHints(links)
+    def assignHints(self, links, view):
+        moder=self.app.stateman.moder()
+        _, hints=moder.generateHints(links)
         for hint, link in hints.items():
             link['hint']=hint
-            label=QtWidgets.QLabel(hint)
+            link['view']=view
+            label=QtWidgets.QLabel(hint, objectName='HintLabel')
             label.setParent(view)
             rects=link.get('rects')
             link['label']=label
@@ -78,18 +80,13 @@ class BrowserLinkHint(Plug):
                 functor=self.functor)
 
     def getSelectors(self):
-        selectors=self.m_config.get(
-                'Selectors', {})
+        selectors=self.m_config.get('Selectors', {})
         link_selectors=selectors.get('Links')
         return ','.join(link_selectors)
 
     def setLinks(self, elems, *, view):
-        model=view.model()
         links=elems.get('result', [])
-        self.assignHints(links, model, view)
-
+        self.assignHints(links, view)
 
     def checkHint(self, key, hint):
-        if key:
-            return key==hint[:len(key)]
-        return False
+        return key and key==hint[:len(key)]

@@ -15,17 +15,16 @@ class Table:
             database_name='table', 
             ):
         self.loc=loc
-        self.folder=folder
         self.fields=fields
         self.idField=idField
         self.uniq=uniq.copy()
         self.table_name=table_name
         self.database_name=database_name
         self.foreign=foreign.copy()
+        self.folder=os.path.expanduser(folder)
         self.setup()
 
     def setup(self):
-        self.folder=os.path.expanduser(self.folder)
         self.addUniq()
         self.setName()
         self.setLoc()
@@ -39,9 +38,9 @@ class Table:
                 return functor(**kwargs)
 
     def addUniq(self):
-        for n, c in self.uniq.items():
-            f=f'constraint {n} unique {str(c)}'
-            self.fields+=[f]
+        for name, cons in self.uniq.items():
+            cons=tuple(cons)
+            self.fields+=[f'constraint {name} unique {str(cons)}']
 
     def setName(self):
         if not self.table_name: 

@@ -1,92 +1,78 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class WordVisual(Plug):
 
-    def setup(self):
-        super().setup()
-        self.m_agents={}
+    def delegate(self, action=None, view=None, **kwargs):
+        if view is None:
+            view=self.app.stateman.view()
+        self.app.delegman.delegate(
+                mode='visual', 
+                submode='word', 
+                view=view, 
+                action=action, 
+                data=kwargs)
 
-    def addAgent(self, name, visualizer):
-        self.m_agents[name]=visualizer
-
-    def getAgent(self, name=None, view=None):
-        if not name and view:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
-
-    @tag(["<c-w>(visual)", "<c-w>/<c-[>(visual[word])"])
-    def toggle(self):
-        view=self.app.stateman.view()
-        agent=self.getAgent(view=view)
+    @deleg('activate@(visual[word])')
+    @tag("<c-w>(visual)")
+    def activate(self, view=None, **kwargs):
+        super().activate()
+        if not view:
+            view=self.app.stateman.view()
+        agent=self.app.delegman.getAgent(
+                'visual', 'word', view, delegate='view')
         if agent:
-            submode=self.app.stateman.setSubmode(
-                    submode="word", toggle_submode=True)
-            if submode=='word':
-                if self.check('visualize', agent):
-                    agent.visualize(view)
-            else:
-                if self.check('unvisualize', agent):
-                    agent.unvisualize(view)
-                self.app.stateman.activate()
+            super().activate()
+            self.app.stateman.setSubmode(
+                    submode="word", submoder=self)
+            self.app.delegman.delegate(
+                    mode='visual', 
+                    submode='word', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
+
+    @deleg('octivate@(visual[word])')
+    @tag("<c-w>/<c-[>(visual[word])")
+    def octivate(self, view=None, **kwargs):
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
+        self.app.stateman.setSubmode()
+        self.app.delegman.delegate(
+                mode='visual', 
+                submode='word', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 
 
     @tag("<c-j>(visual[word])")
     def jump(self):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(view, kind='jump')
+        self.delegate(action='goTo', kind='jump')
 
     @tag("o(visual[word])")
     def goFirst(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='first')
+        self.delegate(action='goTo', kind='first', xrange=xrange)
 
     @tag("$(visual[word])")
     def goLast(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='last')
+        self.delegate(action='goTo', kind='last', xrange=xrange)
 
     @tag("k(visual[word])")
     def goUp(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='up')
+        self.delegate(action='goTo', kind='up', xrange=xrange)
 
     @tag("j(visual[word])")
     def goDown(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='down')
+        self.delegate(action='goTo', kind='down', xrange=xrange)
 
     @tag("l(visual[word])")
     def goRight(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='right')
+        self.delegate(action='goTo', kind='right', xrange=xrange)
 
     @tag("h(visual[word])")
     def goLeft(self, xrange=[1]):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(
-                    view, xrange=xrange, kind='left')
+        self.delegate(action='goTo', kind='left', xrange=xrange)
 
     @tag("t(visual[word])")
     def toggleDirection(self):
-        view=self.app.stateman.view()
-        visualizer=self.getAgent(view=view)
-        if visualizer:
-            visualizer.go(view, kind='toggle')
+        self.delegate(action='goTo', kind='toggle')

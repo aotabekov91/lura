@@ -53,8 +53,7 @@ class SQLiteServer(BroadcastServer):
             ):
         table=self.m_tables.get(connector_id, None)
         if not table:
-            table=Table(*args, **kwargs)
-            self.m_tables[connector_id]=table
+            self.m_tables[connector_id]=Table(*args, **kwargs)
             return {
                     'status':'ok', 
                     'info': 'created table',

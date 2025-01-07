@@ -59,14 +59,14 @@ class FitzBandVisual(Plug):
 
     def setVisualBand(self, band):
         if self.m_band:
-            i = self.m_band["item"]
-            i.selectionPainted.disconnect(self.paint)
+            item = self.m_band["item"]
+            item.selectionPainted.disconnect(self.paint)
         self.m_band = band
         self.m_band_corner = "topLeft"
         if self.m_band:
-            i = self.m_band["item"]
-            i.selectionPainted.connect(self.paint)
-            self.select(i, band)
+            item = self.m_band["item"]
+            item.selectionPainted.connect(self.paint)
+            self.select(item, band)
 
     def paintBandHints(self, p, o, w, i):
         self.paintBoxHints(p, o, w, i)

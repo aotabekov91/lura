@@ -52,17 +52,22 @@ class Bookmarks(Plug):
     def openAndFocus(self):
         self.open()
         view=self.app.stateman.subview()
-        view.activate()
+        if view:
+            view.activate()
 
     @tag('o(normal)[BookmarkView]')
-    def open(self):
+    def open(self, view=None):
+        if not view:
+            view=self.app.stateman.subview()
         item=self.view.currentItem()
-        normal=self.app.plugman.getPlug('Normal')
-        if item and normal: 
+        if item: 
             data=item.element().data()
             position=data.get('position')
-            view=self.app.stateman.subview()
-            normal.activate(action='goTo', view=view, **position)
+            self.app.delegman.delegate(
+                    mode='normal', 
+                    view=view, 
+                    action='goTo', 
+                    data=position)
 
     @tag('d(normal)[BookmarkView]')
     def delete(self):

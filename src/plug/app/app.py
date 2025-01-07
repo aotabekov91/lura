@@ -9,6 +9,7 @@ from .plugman import Plugman
 from .buffman import Buffman
 from .styleman import Styleman
 from .stateman import Stateman
+from .delegman import Delegman
 
 from ..plug import Plug
 from ..utils import Parser, tag
@@ -31,27 +32,27 @@ class App(Plug):
         self.setupParts()
 
     def setupParts(
-        self,
-        plugman: tp.Callable[
-            [...], tp.Any 
-        ] = Plugman,
-        earman: tp.Callable[[...], tp.Any] = Earman,
-        buffman: tp.Callable[
-            [...], tp.Any 
-        ] = Buffman,
-        styleman: tp.Callable[
-            [...], tp.Any 
-        ] = Styleman,
-        stateman: tp.Callable[
-            [...], tp.Any 
-        ] = Stateman,
-    ) -> None:
-         self.earman: Earman = earman(self)
-         self.stateman: Stateman = stateman(self)
-         self.buffman: Buffman = buffman(self)
-         self.plugman: Plugman = plugman(self)
-         self.styleman: Styleman = styleman(self)
-         self.earman.add(self)
+            self, 
+            delegman=Delegman,
+            plugman=Plugman, 
+            earman=Earman, 
+            buffman=Buffman, 
+            styleman=Styleman, 
+            stateman=Stateman, 
+            ) -> None:
+         self.delegman: Delegman = delegman(app=self)
+         self.earman: Earman = earman(app=self)
+         self.stateman: Stateman = stateman(app=self)
+         self.buffman: Buffman = buffman(app=self)
+         self.plugman: Plugman = plugman(app=self)
+         self.styleman: Styleman = styleman(app=self)
+         self.addObject(self)
+
+    def addObject(self, obj, view=False):
+        self.earman.add(obj)
+        self.delegman.add(obj)
+        if view:
+            self.buffman.addView(obj)
 
     def setupParser(self, parser=Parser):
         if parser:
@@ -78,7 +79,7 @@ class App(Plug):
     def wait(self, delta: int=1) -> None:
          self.wants_to_wait += delta
 
-    def startUI(self):
+    def startView(self):
          time.sleep(0.1)
          while self.wants_to_wait:
              time.sleep(0.01)
@@ -86,7 +87,7 @@ class App(Plug):
              self.ui.activate()
 
     def run(self) -> None:
-         self.startUI()
+         self.startView()
          self.running=True
          sys.exit(self.qapp.exec())
 

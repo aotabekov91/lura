@@ -1,39 +1,35 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class WordHint(Plug):
 
-    def setup(self):
-        super().setup()
-        self.m_hinters={}
-
-    def addAgent(self, name, hinter):
-        self.m_hinters[name]=hinter
-
-    def getAgent(self, name=None, view=None):
-        if not name and view:
-            name=view.__class__.__name__
-        return self.m_hinters.get(name, None)
-
-    def searchAgent(self, view=None):
+    @deleg('activate@(hint[word])')
+    @tag("<c-w>(hint)")
+    def activate(self, view=None, **kwargs):
+        super().activate()
         if not view:
             view=self.app.stateman.view()
-        return self.getAgent(view=view), view
-
-    def activate(self, view=None, **kwargs):
-        agent, view=self.searchAgent(view=view)
+        agent=self.app.delegman.getAgent(
+                'hint', 'word', view, delegate='view')
         if agent:
-            super().activate()
             self.app.stateman.setSubmode(
-                    submoder=self, submode='word')
-            agent.activate(view=view, **kwargs)
+                    submode="word", submoder=self)
+            self.app.delegman.delegate(
+                    mode='hint', 
+                    submode='word', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
+    @deleg('octivate@(hint[word])')
+    @tag("<c-w>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
-        agent, view=self.searchAgent(view=view)
-        if agent:
-            super().octivate()
-            self.app.stateman.setSubmode()
-            agent.octivate(view=view, **kwargs)
-
-    @tag(["<c-w>(hint)", "<c-w>/<c-[>(hint[word])"])
-    def toggle(self, **kwargs):
-        super().toggle(**kwargs)
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
+        self.app.stateman.setSubmode()
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode='word', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 

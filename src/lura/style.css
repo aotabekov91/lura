@@ -140,3 +140,9 @@ QWidget#HelpView:focus{
 #HelpView a { color: #5088d0; text-decoration: none; }
 #HelpView pre { word-wrap: normal; padding: 16px; overflow: auto; line-height: 1.45; background-color: #222; border-radius: 3px; font: 13px Consolas, "Liberation Mono", Menlo, Courier, monospace;}
 #HelpView p code, li code { font-size: 13px; padding: 0.2em; margin: 0; background-color: rgba(0,0,0,0.04); border-radius: 3px; }
+
+QLabel#HintLabel {
+	color: yellow;
+	font-size: 16px; 
+	background-color: transparent;
+}

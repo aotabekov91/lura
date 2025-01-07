@@ -21,13 +21,7 @@
 
 "use strict";
 
-function test_me() {
-	return true;
-}
-
-window.test_me=test_me;
-
-window._qutebrowser.webelem = (function() {
+window.browserviewscripts.elements = (function() {
     const funcs = {};
     const elements = [];
 
@@ -403,6 +397,18 @@ window._qutebrowser.webelem = (function() {
         const elem = elements[id];
         elem.remove();
     };
+
+	funcs.get_selection = () => {
+		var frame=null,
+			ranges=[],
+			selection=window.getSelection();
+
+		if (selection.isCollapsed) {
+			return [];
+		}
+		return selection.startOffset;
+		// return serialize_elem(selection.endContainer);
+	};
 
     return funcs;
 })();

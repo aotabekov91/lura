@@ -11,8 +11,25 @@ class Outline(Plug):
     def setup(self):
         super().setup()
         self.m_agents={}
-        self.m_view=None
+        self.m_subview=None
         self.setupView()
+
+    def setupView(self):
+        self.m_view=self.app.buffman.createView(
+                OutlineView, None)
+        self.app.stateman.viewChanged.connect(
+                self.updateOutline)
+        self.m_view.resized.connect(
+                self.updateHeaderRatio)
+
+    def updateOutline(self, view):
+        agent=self.getAgent(view=view)
+        if agent:
+            model=view.model()
+            outline=agent.getOutline(model)
+            if outline:
+                self.m_view.setModel(outline)
+                self.connectView(view)
 
     def addAgent(self, name, agent):
         self.m_agents[name]=agent
@@ -22,29 +39,21 @@ class Outline(Plug):
             name=view.__class__.__name__
         return self.m_agents.get(name, None)
 
-    def updateOutline(self, view):
-        agent=self.getAgent(view=view)
-        if agent:
-            model=view.model()
-            outline=agent.getOutline(model)
-            if outline:
-                self.view.setModel(outline)
-                self.connectView(view)
-
-    def connectView(self, view):
-        if self.m_view:
-            self.m_view.indexChanged.disconnect(
+    def connectView(self, view=None):
+        if self.m_subview:
+            self.m_subview.indexChanged.disconnect(
                     self.updateOutlineIndex)
-        self.m_view=view
-        view.indexChanged.connect(
-                self.updateOutlineIndex)
+        self.m_subview=view
+        if self.m_subview:
+            self.m_subview.indexChanged.connect(
+                    self.updateOutlineIndex)
 
     def updateOutlineIndex(self, idx):
-        model=self.view.model()
+        model=self.m_view.model()
         root_idx=QtCore.QModelIndex()
         found=self.find(idx, model, root_idx) 
         if found:
-            self.view.setCurrentIndex(found)
+            self.m_view.setCurrentIndex(found)
 
     def find(self, idx, model, parent):
         for row in range(model.rowCount(parent)):
@@ -60,33 +69,29 @@ class Outline(Plug):
                 return match
 
     def updateHeaderRatio(self):
-        header=self.view.header()
-        width=self.view.size().width()
+        header=self.m_view.header()
+        width=self.m_view.size().width()
         for col, weight in self.section_ratios.items():
             header.resizeSection(
                     col, int(width*weight))
 
-    def setupView(self):
-        self.view=self.app.buffman.createView(
-                OutlineView, None)
-        self.app.stateman.viewChanged.connect(
-                self.updateOutline)
-        self.view.resized.connect(
-                self.updateHeaderRatio)
 
-    @tag('<c-o>(normal/outline)')
+    @tag('<c-O>(normal/outline)')
     def toggleOutline(self):
-        self.view.toggle()
+        self.m_view.toggle()
 
     @tag('o(normal)[OutlineView]')
     def open(self, view=None, focus=False):
-        item=self.view.currentItem()
-        normal=self.app.plugman.getPlug('Normal')
         if not view:
             view=self.app.stateman.subview()
-        if item and normal:
+        item=self.m_view.currentItem()
+        if item and view:
             data=item.data()
-            normal.activate(action='goTo', view=view, **data)
+            self.app.delegman.delegate(
+                    mode='normal', 
+                    view=view, 
+                    action='goTo', 
+                    data=data)
             if focus:
                 view.activate()
 

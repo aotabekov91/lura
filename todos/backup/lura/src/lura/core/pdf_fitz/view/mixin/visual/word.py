@@ -25,7 +25,7 @@ class WordVisual:
     @tag("<escape>/<c-[>(visual[word])[^]")
     def finishVisualWordMode(self):
         self.cleanUpHinting()
-        self.cleanUpSelection()
+        self.clear()
         self.app.stateman.toggle()
 
     @tag("<c-w>(visual[any])[^]")

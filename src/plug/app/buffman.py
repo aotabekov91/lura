@@ -6,11 +6,27 @@ class Buffman(Plug):
 
     def __init__(self, app: tp.Any) -> None:
         super().__init__(app)
+        self.m_copier={}
         self.m_views: tp.Set[tp.Any] = set()
         self.m_viewers: tp.Dict[str, tp.Any] = {} 
         self.m_modellers: tp.Dict[str, tp.Any] = {} 
         self.m_models: tp.Dict[tp.Any, tp.Any] = {}
         self.m_fillers: tp.Dict[tp.Any, tp.Any] = {}
+
+    def addCopier(self, name, agent):
+        self.m_copier[name]=agent
+
+    def getCopier(self, obj):
+        for klass in obj.__class__.__mro__:
+            name=klass.__name__
+            copier=self.m_copier.get(name, None)
+            if copier:
+                return copier
+
+    def copy(self, obj, **kwargs):
+        copier=self.getCopier(obj)
+        if copier:
+            return copier.activate(obj, **kwargs)
 
     def models(self) -> tp.Dict[tp.Any, tp.Any]:
         return self.m_models
@@ -30,6 +46,7 @@ class Buffman(Plug):
 
     def create(self, klass, view_model=None, **kwargs) -> tp.Any:
         if klass:
+            kwargs["app"] = self.app
             view=klass(**kwargs)
             if view_model:
                 view.setModel(model=view_model)
@@ -48,8 +65,7 @@ class Buffman(Plug):
             pos.update(view_pos)
             loc = pos.get(view.name, None)
             if loc:
-                manager=self.app.view.child(loc)
-                return loc, manager
+                return loc, self.app.view.child(loc)
         return None, None
 
     def setup(self) -> None:
@@ -109,22 +125,25 @@ class Buffman(Plug):
         return model
 
     def createView(
-        self,
-        klass: tp.Any,
-        model: tp.Any=None,
-        **kwargs,
-    ) -> tp.Any:
+            self,
+            klass,
+            model=None,
+            manager=None,
+            location=None,
+            **kwargs,
+            ) -> tp.Any:
         conf = self.app.m_config
         spec_conf = self.getConfig(klass, conf)
         gen_conf = kwargs.get("config", {})
         gen_conf.update(spec_conf)
-        kwargs["app"] = self.app
         kwargs["config"] = gen_conf
         view = self.create(klass, view_model=model, **kwargs)
         view.resetConfigure(model=model, **kwargs)
-        loc, manager=self.locate(view=view, **kwargs)
+        xlocation, xmanager=self.locate(view=view, **kwargs)
+        manager=manager or xmanager
+        location=location or xlocation
         if manager:
-            manager.addView(view=view, loc=loc, **kwargs)
+            manager.addView(view=view, loc=location, **kwargs)
         return view
 
     def getModel(self, source: tp.Any, **kwargs) -> tp.Any:

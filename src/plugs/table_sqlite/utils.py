@@ -80,4 +80,3 @@ class Broadcast(QtCore.QObject):
         while self.activated:
             data=self.m_socket.recv_json()
             self.broadcastReceived.emit(data)
-

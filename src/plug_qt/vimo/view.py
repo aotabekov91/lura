@@ -25,9 +25,9 @@ class View(plug.View):
     def setup(self):
         super().setup()
         self.setBars()
-        if hasattr(super(), "setParent"):
+        if hasattr(self, "setParent"):
             self.setParent(self.m_parent)
-        if hasattr(super(), "setObjectName"):
+        if hasattr(self, "setObjectName"):
             oname = self.m_objectName or self.name
             self.setObjectName(oname)
 

@@ -4,36 +4,28 @@ class FitzCopy(Plug):
 
     def setup(self):
         super().setup()
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
+        self.addAgent()
 
     def addAgent(self):
-        copier=self.app.plugman.getPlug('ViewCopy')
-        if copier:
-            copier.addAgent('FitzView', self)
+        if self.app:
+            self.app.buffman.addCopier('FitzView', self)
 
-    def copy(self, view):
-        zoom=None
-        position=None
-        zoomer=self.app.plugman.getPlug('Zoom')
-        if zoomer:
-            zoom=zoomer.currentZoom(view=view)
-        normal=self.app.plugman.getPlug('Normal')
-        if normal:
-            position=normal.currentPosition(view=view)
-        manager = view.manager()
-        klass = view.__class__
-        copy = self.app.buffman.create(
-            klass,
-            app=self.app,
-            config=view.config())
-        copy.setModel(view.model())
-        copy.setManager(manager)
-        if zoom:
-            zoomer.zoomTo(view=copy, **zoom)
-        if position:
-            normal.activate(action='goTo', view=copy, **position)
-        return copy
+    def activate(self, view, **kwargs):
+        if view:
+            copy = self.app.buffman.create(
+                    view.__class__, 
+                    config=view.config(),
+                    )
+            copy.setModel(view.model())
+            copy.setManager(view.manager())
+            zoom=self.app.delegman.delegate(
+                    mode='normal', view=view, action='zoomState')
+            if zoom:
+                zoom=self.app.delegman.delegate(
+                        mode='normal', view=copy, action='zoom', data=zoom)
+            goTo=self.app.delegman.delegate(
+                    mode='normal', view=view, action='goToState')
+            if goTo:
+                goTo=self.app.delegman.delegate(
+                        mode='normal', view=copy, action='goTo', data=goTo)
+            return copy

@@ -1,9 +1,0 @@
-[Mapping]
-
-focus = {color = '#A4DE02', key = 1}
-error = {color = 'red', key = 2}  
-term = {color = '#EEFC5E', key = 3}  
-data = {color = '#0FF0FC', key = 4}
-question = {color = '#1AA7EC', key = 5}
-literature = {color = '#D3D3D3', key = 6}
-methodology = {color = '#DE73FF', key = 7}

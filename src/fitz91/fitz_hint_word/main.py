@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzWordHint(Plug):
 
@@ -9,19 +9,26 @@ class FitzWordHint(Plug):
         self.m_hint=''
         self.m_cache={}
         self.m_hints={}
-        if self.app.running:
-            self.addAgent()
-        else:
-            self.app.appSoonStarts.connect(
-                    self.addAgent)
 
-    def addAgent(self):
-        hodler=self.app.plugman.getPlug('WordHint')
-        if hodler:
-            hodler.addAgent('FitzView', self)
+    @deleg('activate@(hint[word])[FitzView]')
+    def activate(self, view=None, **kwargs):
+        if view:
+            super().activate()
+            model=view.model()
+            self.cacheModel(model)
+            self.assignHints(view)
+            self.app.stateman.setFunctor(functor=self.functor)
+            view.itemPainted.connect(self.paint)
+            view.redraw()
 
-    def words(self, model):
-        return self.m_cache.get(model, None)
+    @deleg('octivate@(hint[word])[FitzView]')
+    def octivate(self, view=None, **kwargs):
+        if view:
+            super().octivate()
+            self.m_hint=''
+            self.app.stateman.setFunctor()
+            view.itemPainted.disconnect(self.paint)
+            view.redraw()
 
     def cacheModel(self, model):
         if not model in self.m_cache:
@@ -48,8 +55,7 @@ class FitzWordHint(Plug):
         return alist
 
     def assignHints(self, view):
-        plugs=self.app.plugman.plugs
-        hinter=plugs.get('Hint')
+        moder=self.app.stateman.moder()
         items=view.visibleItems()
         all_words=[]
         for item in items: 
@@ -57,26 +63,10 @@ class FitzWordHint(Plug):
             for word in words:
                 word['item']=item
             all_words+=words
-        _, hints=hinter.generateHints(all_words)
+        _, hints=moder.generateHints(all_words)
         self.m_hints=hints
         for hint, word in hints.items():
             word['hint']=hint
-
-    def activate(self, view=None, **kwargs):
-        if view:
-            model=view.model()
-            self.cacheModel(model)
-            self.assignHints(view)
-            self.app.stateman.setFunctor(functor=self.functor)
-            view.itemPainted.connect(self.paint)
-            view.redraw()
-
-    def octivate(self, view=None, **kwargs):
-        if view:
-            self.m_hint=''
-            self.app.stateman.setFunctor()
-            view.itemPainted.disconnect(self.paint)
-            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         painter.save()
@@ -87,35 +77,35 @@ class FitzWordHint(Plug):
         for word in words:
             hint=word.get("hint")
             box = word.get("box")[0]
-            if not self.checkHint(hint):
-                continue
-            rect =item.mapToItem(box, unified=True)
-            painter.drawText(rect.topLeft(), hint)
+            if self.checkHint(hint):
+                rect =item.mapToItem(box, unified=True)
+                painter.drawText(rect.topLeft(), hint)
         painter.restore()
 
     def checkHint(self, hint):
-        partial=hint[:len(self.m_hint)]
-        return self.m_hint==partial
+        return self.m_hint==hint[:len(self.m_hint)]
+
+    def select(self, view, data):
+        selection=self.app.delegman.delegate(
+                action='createSelection', 
+                data={'view': view, 'data':data})
+        self.app.delegman.delegate(
+                action='setSelection', 
+                data={'view': view, 'selection': selection})
+        self.app.delegman.delegate(
+                mode='hint', action='normal', data={'view': view})
+        self.app.delegman.delegate(
+                action='visual', data={'view': view, 'submode': 'word'})
 
     def functor(self, key, earman):
         self.m_hint=key
         view=self.app.stateman.view()
-        hints=self.m_hints
-        if self.m_hint in hints:
-            data=hints.get(self.m_hint)
-            selector=self.app.plugman.getPlug('Selection')
-            selection=selector.createSelection(
-                    view=view, data=data)
-            selector.select(view, selection=selection) 
-            hinter=self.app.plugman.getPlug('Hint')
-            hinter.toggle()
-            word_visual=self.app.plugman.getPlug('FitzWordVisual')
-            if word_visual:
-                self.app.stateman.activate(
-                        mode='visual', submode='word')
+        if self.m_hint in self.m_hints:
+            data=self.m_hints.get(self.m_hint)
+            self.select(view, data)
             view.redraw()
             return True
-        for hint in hints:
+        for hint in self.m_hints:
             if self.checkHint(hint):
                 view.redraw()
                 return True

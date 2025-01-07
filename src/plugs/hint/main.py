@@ -1,41 +1,17 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class Hint(Plug):
 
     alpha: str = "abcdefghijklmnopqrstuvwxyz"
 
-    def setup(self):
-        super().setup()
-        self.m_agents={}
-
-    def addAgent(self, name, hinter):
-        self.m_agents[name]=hinter
-
-    def getAgents(self, name=None, view=None):
-        if name is None and view:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
-
-    def searchAgent(self, view=None):
-        if not view:
-            view=self.app.stateman.view()
-        return self.getAgents(view=view), view
-
-    def activate(self, view=None, **kwargs):
-        super().activate()
-        _, view=self.searchAgent(view=view)
-        self.app.stateman.activate(
-                mode="hint", delisten=True)
-
-    def octivate(self, view=None, **kwargs):
-        super().octivate()
-        _, view=self.searchAgent(view=view)
-        submoder=self.app.stateman.submoder()
-        if submoder:
-            submoder.octivate(view=view, **kwargs)
-        self.app.stateman.activate()
-
-    def generateHints(self, alist, kind="letter"):
+    @deleg('generateHints@(hint])')
+    def generateHints(self, alist=[], kind="letters", **kwargs):
+        def mapToLetters(num, number):
+            hint = []
+            for _ in range(number):
+                hint.append(self.alpha[num % len(self.alpha)])
+                num = num // len(self.alpha)
+            return "".join(reversed(hint))
         list_len = len(alist)
         alpha_len = len(self.alpha)
         number, hints = 0, {} 
@@ -43,20 +19,45 @@ class Hint(Plug):
             number += 1
         number = max(number, 1)
         for num, data in enumerate(alist):
-            if kind == "letter":
-                hint = self.mapToLetters(num, number)
+            if kind == "letters":
+                hint = mapToLetters(num, number)
             else:
                 hint = str(num + 1)
             hints[hint]=data
         return number, hints
 
-    def mapToLetters(self, num, number):
-        hint = []
-        for _ in range(number):
-            hint.append(self.alpha[num % len(self.alpha)])
-            num = num // len(self.alpha)
-        return "".join(reversed(hint))
+    @deleg('hint@(normal)')
+    @tag('<c-f>(normal)')
+    def activate(self, view=None, submode=None, **kwargs):
+        super().activate()
+        if not view:
+            view=self.app.stateman.view()
+        self.app.stateman.activate(
+                moder=self,
+                mode='hint',
+                submode=submode,
+                **kwargs)
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode=submode, 
+                action='activate',
+                data=data)
 
-    @tag(["<c-f>(normal)", "<escape>/<c-f>/<c-[>(hint)"])
-    def toggle(self):
-        super().toggle()
+    @deleg('normal@(hint)')
+    @tag('<c-f>/<escape>(hint)')
+    def octivate(self, view=None, submode=None, **kwargs):
+        super().octivate()
+        if not view:
+            view=self.app.stateman.view()
+        if not submode:
+            submode=self.app.stateman.submode()
+        data=kwargs.copy()
+        data['view']=view
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode=submode, 
+                action='octivate',
+                data=data)
+        self.app.stateman.activate()

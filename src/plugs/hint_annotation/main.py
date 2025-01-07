@@ -1,34 +1,35 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class AnnotationHint(Plug):
 
-    def setup(self):
-        super().setup()
-        self.m_agents={}
-
-    def addAgent(self, name, hinter):
-        self.m_agents[name]=hinter
-
-    def agent(self, name=None, view=None):
-        if not name and view:
-            name=view.__class__.__name__
-        return self.m_agents.get(name, None)
-
+    @deleg('activate@(hint[annotation])')
     @tag("<c-a>(hint)")
     def activate(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
-        agent=self.agent(view=view)
+        agent=self.app.delegman.getAgent(
+                'hint', 'annotation', view, delegate='view')
         if agent:
+            super().activate()
             self.app.stateman.setSubmode(
-                    submode='annotation', toggle_submode=True)
-            agent.activate(view=view, **kwargs)
+                    submode="annotation", submoder=self)
+            self.app.delegman.delegate(
+                    mode='hint', 
+                    submode='annotation', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
-    @tag("<c-a>/<c-[>(hint[annotation])")
+    @deleg('octivate@(hint[annotation])')
+    @tag("<c-a>/<c-[>/<escape>(hint[annotation])")
     def octivate(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
-        agent=self.agent(view=view)
-        if agent:
-            agent.octivate(view=view, **kwargs)
-            self.app.stateman.activate()
+        super().octivate()
+        self.app.stateman.setSubmode()
+        self.app.delegman.delegate(
+                mode='hint', 
+                submode='annotation', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 

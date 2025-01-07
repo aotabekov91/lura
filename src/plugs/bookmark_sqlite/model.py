@@ -32,14 +32,19 @@ class Model(vimo.Model, QtCore.QObject):
 
     def populateModel(self, model):
         rows=self.getRow(criteria={'source_id': self.source_id})
-        for row in rows: 
-            self.decodeMetadata(row)
-            model.createElement(row)
+        if rows:
+            for row in rows: 
+                self.decodeMetadata(row)
+                model.createElement(row)
 
     def decodeMetadata(self, data):
-        metadata=data.get('metadata').replace("'", '"')
-        if metadata:
-            data['position']=json.loads(metadata)
+        metadata=data.get('metadata', None)
+        if not metadata is None:
+            metadata=metadata.replace("'", '"')
+            try:
+                data['position']=json.loads(metadata)
+            except:
+                data['position']=None
 
     def encodeMetadata(self, data):
         position=data.get('position', None)

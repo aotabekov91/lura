@@ -22,17 +22,11 @@ class Buffman(plug.Buffman, QtCore.QObject):
     def setup(self) -> None:
         super().setup()
         self.setParent(self.app)
-        self.app.appIsLaunched.connect(self.checkParser)
-
-    # def setModel(self, idx: tp.Any, model: tp.Any) -> None:
-    #     super().setModel(idx, model)
-    #     if model:
-    #         self.modelCreated.emit(model)
+        self.app.appViewIsLaunched.connect(self.checkParser)
 
     def saveView(self, view: tp.Any) -> None:
         super().saveView(view)
         if view:
-            # self.viewCreated.emit(view)
             view.closeWanted.connect(self.removeView)
 
     def removeView(self, view=None, **kwargs):
@@ -46,7 +40,7 @@ class Buffman(plug.Buffman, QtCore.QObject):
         return view
 
     def addView(self, view):
-        signal = view.getAttr("posIndexChanged", "signal")
+        signal = view.getAttr("posIndexChanged")
         if signal:
             signal.connect(self.posIndexChanged)
         self.viewAdded.emit(view)

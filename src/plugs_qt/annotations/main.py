@@ -21,7 +21,7 @@ class Annotations(Plug):
         self.m_annotate=self.app.plugman.getPlug(
                 'Annotate')
         if self.m_annotate:
-            self.view=self.app.buffman.createView(
+            self.m_view=self.app.buffman.createView(
                     ElementListView, 
                     name='AnnotationsView',
                     # position=self.position,
@@ -42,12 +42,12 @@ class Annotations(Plug):
     def updateView(self, view):
         model=view.model()
         annotation_model=self.m_annotate.getModel(model)
-        if annotation_model and self.view!=view:
-            self.view.setModel(annotation_model)
+        if annotation_model and self.m_view!=view:
+            self.m_view.setModel(annotation_model)
 
     @tag('<c-A>(normal)')
     def toggleAnnotations(self):
-        self.view.toggle()
+        self.m_view.toggle()
 
     @tag('O(normal)[AnnotationsView]')
     def openAndFocus(self):
@@ -55,10 +55,8 @@ class Annotations(Plug):
 
     @tag('o(normal)[AnnotationsView]')
     def open(self, focus=False, select=True, **kwargs):
-        item=self.view.currentItem()
-        normal=self.app.plugman.getPlug('Normal')
-        selection=self.app.plugman.getPlug('Selection')
-        if item and normal: 
+        item=self.m_view.currentItem()
+        if item: 
             element=item.element()
             data=element.data()
             view=self.app.stateman.subview()
@@ -67,18 +65,24 @@ class Annotations(Plug):
             boxes=data.get('box')
             if boxes:
                 box=boxes[0]
-                x=box.x()
-                y=box.y()
+                x, y=box.x() box.y()
             data['item']=view.item(page)
-            normal.activate(action='goTo', view=view, xrange=[page], x=x, y=y, center=True)
-            if select and selection:
-                selection.select(view, selection=element)
+            self.app.delegman.delegate(
+                    mode='normal',
+                    action='goTo', 
+                    view=view, 
+                    data={'xrange': [page], 'x': x, 'y': y, 'center':True})
+            if select:
+                self.app.delegman.delegate(
+                        action='setSelection', 
+                        view=view, 
+                        data={'selection': element})
             if focus:
                 view.activate()
 
     @tag('d(normal)[AnnotationsView]')
     def delete(self):
-        item=self.view.currentItem()
+        item=self.m_view.currentItem()
         if item:
             element=item.element()
             view=self.app.stateman.subview()
@@ -88,4 +92,4 @@ class Annotations(Plug):
             annotation_model=annotator.getModel(model)
             annotation_model.delAnnotate(element)
             if selector:
-                selector.cleanUpSelection(view)
+                selector.clear(view)

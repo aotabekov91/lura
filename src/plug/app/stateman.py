@@ -56,10 +56,11 @@ class Stateman(Plug):
         if self.m_passive:
             if not self.m_mode in self.m_passive_modes:
                 return ("any",) * 4
-        view = self.view() or 'any'
-        mode = self.mode() or "any"
+        view = self.view()# or 'any' # todo: observe/decide
+        mode = self.mode()# or "any"
         submode = self.submode() or "any"
-        subview = self.app.stateman.subview() or 'any'
+        submode = self.submode()# or "any"
+        subview = self.app.stateman.subview()# or 'any'
         if not type(view) in [str, None]:
             view = view.name
         if not type(subview) in [str, None]:

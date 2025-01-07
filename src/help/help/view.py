@@ -1,6 +1,5 @@
 import os
 from PyQt6 import QtCore
-from PyQt6 import QtWebEngineCore
 
 from plug_qt import gizmo
 
@@ -17,6 +16,7 @@ class HelpView(gizmo.BrowserView):
 
     def setModel(self, model):
         if id(self.m_model) != id(model):
+            super().setModel(model)
             html=model.modelData()
             base=QtCore.QUrl.fromLocalFile(os.getcwd()+os.path.sep)
             browser=self.browser()

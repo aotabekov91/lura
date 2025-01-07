@@ -32,10 +32,9 @@ class Lookup(Plug):
         if not text:
             if not view:
                 view=self.app.stateman.view()
-            if not selection and view:
-                selector=self.app.plugman.getPlug('Selection')
-                if selector:
-                    selection=selector.selection(view=view)
+            if not selection:
+                selection=self.app.delegman.delegate(
+                        action='getSelection', data={'view': view})
             if selection:
                 text=selection['text']
         if text:

@@ -23,11 +23,11 @@ class App(
     QtCore.QObject,
 ):
 
-    app_wait: int = 1
     appSoonQuits: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appSoonStarts: QtCore.pyqtSignal = QtCore.pyqtSignal()
     appConfigChanged: QtCore.pyqtSignal = QtCore.pyqtSignal()
+    appViewIsLaunched: QtCore.pyqtSignal = QtCore.pyqtSignal()
 
     def setupApp(self):
          self.setupParser()
@@ -89,7 +89,8 @@ class App(
 
     def run(self) -> None:
          self.appSoonStarts.emit()
-         self.startUI()
+         self.startView()
+         self.appViewIsLaunched.emit()
          self.running=True
          self.appIsLaunched.emit()
          sys.exit(self.qapp.exec())

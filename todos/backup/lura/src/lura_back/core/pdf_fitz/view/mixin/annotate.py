@@ -62,7 +62,7 @@ class Annotate:
             s["function"] = func
             s = self.getLocator(s, "annotation")
             self.m_model.addAnnotation(s)
-            self.cleanUpSelection()
+            self.clear()
         self.toggleAnnotationMode()
 
     def setAnnotationKeys(self):

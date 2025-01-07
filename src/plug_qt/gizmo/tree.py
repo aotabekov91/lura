@@ -14,11 +14,13 @@ class TreeViewWidget(QtWidgets.QTreeView):
     #         super(TreeView, self).setModel(model)
 
     def count(self, idx=None):
-        idx=idx or self.currentIndex()
-        pidx=idx.parent()
-        if pidx.isValid():
-            return self.m_model.rowCount(pidx)
-        return self.m_model.rowCount()
+        if self.m_model:
+            idx=idx or self.currentIndex()
+            pidx=idx.parent()
+            if pidx.isValid():
+                return self.m_model.rowCount(pidx)
+            return self.m_model.rowCount()
+        return 0
 
     def expand(self, idx=None, select=True, **kwargs):
         idx = idx or self.currentIndex()

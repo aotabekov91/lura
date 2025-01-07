@@ -1,3 +1,8 @@
+import os
+import pathlib
+
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWebEngineCore import QWebEngineScript
 from PyQt6 import QtWebEngineWidgets, QtWidgets, QtCore, QtGui
 
@@ -64,7 +69,7 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
         page.contentsSizeChanged.connect(self.updateTransformation)
 
     @classmethod
-    def assemble(cls, module, function, *args) -> str:
+    def scriptize(cls, module, function, *args) -> str:
         js_args = ', '.join(cls.toJS(arg) for arg in args)
         if module=='':
             return '"use strict";\n{}({});'.format(
@@ -72,7 +77,7 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
         elif module == 'window':
             parts = ['window', function]
         else:
-            parts = ['window', '_qutebrowser', module, function]
+            parts = ['window', 'browserviewscripts', module, function]
         return '"use strict";\n{}({});'.format(
                 '.'.join(parts), js_args)
 
@@ -109,25 +114,83 @@ class BrowserView(vimo.View, QtWidgets.QFrame):
             text = text.replace(match, rep)
         return text
 
+    def loadJSCode(
+            self, 
+            path=None,
+            name=None,
+            ):
+
+        script="""
+        (function() {
+            "use strict";
+            if (!window.hasOwnProperty("browserviewscripts")) {
+                window.browserviewscripts = {"loaded": {}};
+            }
+            if (window.browserviewscripts.loaded["{{name}}"]) {
+                return;
+            }
+            %s
+            window.browserviewscripts.loaded["%s"] = true;
+        })();
+        """
+        if path and os.path.exists(path):
+            path=pathlib.Path(path)
+            js_code=path.read_text(encoding='utf-8')
+            return script%(js_code, name)
+
     def injectJSCode(
             self, 
-            name, 
-            code, *, 
+            name=None, 
+            code=None, 
+            path=None,
             subframes=False,
             world=QWebEngineScript.ScriptWorldId.ApplicationWorld, 
             injection_point=QWebEngineScript.InjectionPoint.DocumentCreation, 
             ):
-        script = QWebEngineScript()
-        script.setInjectionPoint(injection_point)
-        script.setSourceCode(code)
-        script.setWorldId(world)
-        script.setRunsOnSubFrames(subframes)
-        script.setName(f'browserview_{name}')
-        self.page().scripts().insert(script)
+        if not code and path:
+            code=self.loadJSCode(name=name, path=path)
+        if code:
+            script = QWebEngineScript()
+            script.setInjectionPoint(injection_point)
+            script.setSourceCode(code)
+            script.setWorldId(world)
+            script.setRunsOnSubFrames(subframes)
+            script.setName(f'{name}')
+            self.page().scripts().insert(script)
 
     def runJSCode(
             self, 
             *args, 
-            world=QWebEngineScript.ScriptWorldId.ApplicationWorld, 
+            worldId=QWebEngineScript.ScriptWorldId.ApplicationWorld, 
             **kwargs):
-        return self.page().runJavaScript(*args, worldId=world, **kwargs)
+        return self.page().runJavaScript(*args, worldId=worldId, **kwargs)
+
+    def fakeKeyEvent(self, event):
+        raise
+
+    def fakeMouseEvent(
+            self, 
+            kind=None, 
+            event=None, 
+            wait_time=5,
+            position=QtCore.QPointF(0,0), 
+            button='NoButton',
+            buttons='NoButton',
+            modifier=Qt.KeyboardModifier.NoModifier,
+            **kwargs
+            ):
+        if not event:
+            button=getattr(Qt.MouseButton, button, Qt.MouseButton.NoButton)
+            buttons=getattr(Qt.MouseButton, buttons, Qt.MouseButton.NoButton)
+            if kind=='move':
+                event=QMouseEvent(QEvent.Type.MouseMove, position, button, buttons, modifier)
+            elif kind=='press':
+                event=QMouseEvent(QEvent.Type.MouseButtonPress, position, button, buttons, modifier)
+            elif kind=='release':
+                event=QMouseEvent(QEvent.Type.MouseButtonRelease, position, button, buttons, modifier)
+
+        def sendEvent():
+            proxy=self.browser().focusProxy()
+            self.app.qapp.postEvent(proxy, event)
+        if event:
+            QtCore.QTimer.singleShot(wait_time, sendEvent) 
