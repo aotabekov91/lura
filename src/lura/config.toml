@@ -33,11 +33,9 @@ Picks = [
 	{plug='plugs/bookmark_sqlite', base='~/code/lura/src', kind='link'},
 	{plug='plugs/table_sqlite', base='~/code/lura/src', kind='link'},
 	{plug='plugs/search', base='~/code/lura/src', kind='link'},
-	{plug='plugs/zmq_server', base='~/code/lura/src', kind='link'},
-
-	{plug='plugs_qt/outline', base='~/code/lura/src', kind='link'},
-	{plug='plugs_qt/bookmarks', base='~/code/lura/src', kind='link'},
-	{plug='plugs_qt/files_tree', base='~/code/lura/src', kind='link'},
+	{plug='plugs/outline', base='~/code/lura/src', kind='link'},
+	{plug='plugs/bookmarks', base='~/code/lura/src', kind='link'},
+	{plug='plugs/files_tree', base='~/code/lura/src', kind='link'},
 
 	{plug='fitz91/fitz_hint_annotation', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_hint_link', base='~/code/lura/src', kind='link'},
