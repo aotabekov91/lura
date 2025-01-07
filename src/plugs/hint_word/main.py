@@ -1,23 +1,8 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class WordHint(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='word', 
-                action='activate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='word', 
-                action='octivate', 
-                functor=self.octivate)
-
+    @deleg('activate@(hint[word])')
     @tag("<c-w>(hint)")
     def activate(self, view=None, **kwargs):
         super().activate()
@@ -29,8 +14,13 @@ class WordHint(Plug):
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
             self.app.delegman.delegate(
-                    'hint', 'word', view, 'activate', data=kwargs) 
+                    mode='hint', 
+                    submode='word', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
+    @deleg('octivate@(hint[word])')
     @tag("<c-w>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
         super().octivate()
@@ -38,4 +28,8 @@ class WordHint(Plug):
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'hint', 'word', view, 'octivate', data=kwargs) 
+                mode='hint', 
+                submode='word', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 

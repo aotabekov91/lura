@@ -1,29 +1,18 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class WordVisual(Plug):
-
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='visual', 
-                submode='word', 
-                action='activate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='visual', 
-                submode='word', 
-                action='octivate', 
-                functor=self.octivate)
 
     def delegate(self, action=None, view=None, **kwargs):
         if view is None:
             view=self.app.stateman.view()
         self.app.delegman.delegate(
-                'visual', 'word', view, action, data=kwargs)
+                mode='visual', 
+                submode='word', 
+                view=view, 
+                action=action, 
+                data=kwargs)
 
+    @deleg('activate@(visual[word])')
     @tag("<c-w>(visual)")
     def activate(self, view=None, **kwargs):
         super().activate()
@@ -36,8 +25,13 @@ class WordVisual(Plug):
             self.app.stateman.setSubmode(
                     submode="word", submoder=self)
             self.app.delegman.delegate(
-                    'visual', 'word', view, 'activate', data=kwargs) 
+                    mode='visual', 
+                    submode='word', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
+    @deleg('octivate@(visual[word])')
     @tag("<c-w>/<c-[>(visual[word])")
     def octivate(self, view=None, **kwargs):
         super().octivate()
@@ -45,7 +39,11 @@ class WordVisual(Plug):
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'visual', 'word', view, 'octivate', data=kwargs) 
+                mode='visual', 
+                submode='word', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 
 
     @tag("<c-j>(visual[word])")
     def jump(self):

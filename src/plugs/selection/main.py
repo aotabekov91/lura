@@ -1,6 +1,6 @@
 from PyQt6 import QtCore
 
-from plug import Plug
+from plug import Plug, deleg
 
 from .model import SelectionModel
 
@@ -18,40 +18,32 @@ class Selection(Plug, QtCore.QObject):
         self.m_models={}
         self.cleanUpWanted.connect(self.clear)
         self.app.buffman.viewCreated.connect(self.createModel)
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                action='setSelection', functor=self.setSelection)
-        self.app.delegman.addAgent(
-                action='getSelection', functor=self.getSelection)
-        self.app.delegman.addAgent(
-                action='updateSelection', functor=self.updateSelection)
-        self.app.delegman.addAgent(
-                action='clearSelection', functor=self.clearSelection)
-        self.app.delegman.addAgent(
-                action='createSelection', functor=self.createSelection)
-
+    @deleg('setSelection@(any)')
     def setSelection(self, view=None, **kwargs):
         model=self.getModel(view)
         if model:
             model.set(**kwargs)
 
+    @deleg('updateSelection@(any)')
     def updateSelection(self, view=None, **kwargs):
         model=self.getModel(view)
         if model:
             model.update(**kwargs)
 
+    @deleg('clearSelection@(any)')
     def clearSelection(self, view=None, **kwargs):
         model=self.getModel(view)
         if model:
             model.clear(**kwargs)
 
+    @deleg('getSelection@(any)')
     def getSelection(self, view=None, **kwargs):
         model=self.getModel(view=view)
         if model:
             return model.get(**kwargs)
 
+    @deleg('createSelection@(any)')
     def createSelection(self, view=None, **kwargs):
         model=self.getModel(view)
         if model:

@@ -1,19 +1,15 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class ElementViewNormal(Plug):
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'goTo', 'ElementView', self.goTo)
-        self.app.delegman.addAgent(
-                'normal', None, 'close', 'ElementView', self.close)
 
     def currentPosition(self, *args, **kwargs):
         return {}
 
+    @deleg('close@(normal)[ElementView])')
     def close(self, view=None, **kwargs):
         raise
 
+    @deleg('goTo@(normal)[ElementView]')
     def goTo(self, view=None, xrange=[1], **kwargs):
         if view:
             id_widget, _=view.widget('id')

@@ -1,6 +1,6 @@
 import functools
 
-from plug import Plug
+from plug import Plug, deleg
 
 class BrowserNormalGoTo(Plug):
 
@@ -9,7 +9,6 @@ class BrowserNormalGoTo(Plug):
     def setup(self):
         super().setup()
         self.m_states={}
-        self.addAgent()
         self.app.buffman.viewCreated.connect(
                 self.injectJSCode)
 
@@ -20,12 +19,12 @@ class BrowserNormalGoTo(Plug):
                     return True
         return False
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'goTo', self.goTo)
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'goToState', self.goToState)
+    @deleg('goToState@(normal)[BrowserView]')
+    def goToState(self, view=None, **kwargs):
+        data=self.m_states.get(view, {})
+        return data.get('position', {})
 
+    @deleg('goTo@(normal)[BrowserView]')
     def goTo(
             self, 
             kind=None, 
@@ -80,9 +79,6 @@ class BrowserNormalGoTo(Plug):
             script=view.scriptize('goTo', 'set_current_position', x, y)
             view.runJSCode(script)
 
-    def goToState(self, view=None, **kwargs):
-        data=self.m_states.get(view, {})
-        return data.get('position', {})
 
     def injectJSCode(self, view):
         path=self.files.get('goto.js', None)

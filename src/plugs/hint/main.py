@@ -1,21 +1,10 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class Hint(Plug):
 
     alpha: str = "abcdefghijklmnopqrstuvwxyz"
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-        
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, None, 'hint', self.activate)
-        self.app.delegman.addAgent(
-                'hint', None, None, 'normal', self.octivate)
-        self.app.delegman.addAgent(
-                'hint', None, None, 'generateHints', self.generateHints)
-
+    @deleg('generateHints@(hint])')
     def generateHints(self, alist=[], kind="letters", **kwargs):
         def mapToLetters(num, number):
             hint = []
@@ -37,6 +26,7 @@ class Hint(Plug):
             hints[hint]=data
         return number, hints
 
+    @deleg('hint@(normal)')
     @tag('<c-f>(normal)')
     def activate(self, view=None, submode=None, **kwargs):
         super().activate()
@@ -55,6 +45,7 @@ class Hint(Plug):
                 action='activate',
                 data=data)
 
+    @deleg('normal@(hint)')
     @tag('<c-f>/<escape>(hint)')
     def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()

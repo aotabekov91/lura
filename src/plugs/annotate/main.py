@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui
 
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 from .model import AnnotateModel
 
@@ -15,37 +15,6 @@ class Annotate(Plug, QtCore.QObject):
         self.app.buffman.viewCreated.connect(
                 self.createModel)
         self.setMapping()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='normal',
-                action='annotate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='annotate', 
-                action='normal', 
-                functor=self.octivate)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='addAnnotation', 
-                functor=self.addAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='getAnnotation', 
-                functor=self.getAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='removeAnnotation', 
-                functor=self.removeAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='updateAnnotation', 
-                functor=self.updateAnnotation)
-        self.app.delegman.addAgent(
-                'annotate', 
-                action='getModel', 
-                functor=self.getModel)
 
     def setDefaultColor(self):
         rgb=QtGui.QColor(self.default_color)
@@ -75,6 +44,7 @@ class Annotate(Plug, QtCore.QObject):
                 data['function']=function
                 self.m_functions[kind.lower()][key]=data
 
+    @deleg('getModel@(annotate)')
     def getModel(self, view=None, **kwargs):
         if view:
             model=view.model()
@@ -91,18 +61,21 @@ class Annotate(Plug, QtCore.QObject):
             self.m_models[model]=amodel
             return amodel
 
+    @deleg('addAnnotation@(annotate)')
     def addAnnotation(self, view=None, selection=None, **kwargs):
         amodel=self.getModel(view)
         if selection and amodel:
             data=selection.data()
             return amodel.add(view=view, data=data, **kwargs)
 
+    @deleg('updateAnnotation@(annotate)')
     def updateAnnotation(self, view=None, selection=None, **kwargs):
         amodel=self.getModel(view)
         if selection and amodel:
             return amodel.update(
                     view=view, anntation=selection, **kwargs)
 
+    @deleg('removeAnnotation@(annotate)')
     @tag('d(annotate)')
     def removeAnnotation(
             self, view=None, selection=None, **kwargs):
@@ -117,6 +90,7 @@ class Annotate(Plug, QtCore.QObject):
             return amodel.remove(
                     view=view, annotation=selection, **kwargs)
                 
+    @deleg('getAnnotation@(annotate)')
     def getAnnotation(self, view=None, **kwargs):
         amodel=self.getModel(view)
         if amodel:
@@ -147,6 +121,7 @@ class Annotate(Plug, QtCore.QObject):
         kwargs['annotation_kind']='underline'
         self.setAnnotation(xrange=xrange, **kwargs)
 
+    @deleg('annotate@(any)')
     @tag('<c-a>(normal/visual)')
     def activate(self, view=None, submode=None, **kwargs):
         super().activate()
@@ -165,6 +140,7 @@ class Annotate(Plug, QtCore.QObject):
                 action='activate',
                 data=data)
 
+    @deleg('normal@(annotate)')
     @tag('<c-a>/<escape>(annotate)')
     def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()
@@ -209,9 +185,12 @@ class Annotate(Plug, QtCore.QObject):
             selection['annotation_kind']=annotation_kind
             annotation=self.addAnnotation(
                     view=view, selection=selection)
+            self.app.delegman.delegate(
+                    action='clearSelection', data={'view': view})
             self.app.stateman.activate()
         else:
             self.app.delegman.delegate(
+                    mode='normal',
                     action='hint',
                     data={'view': view, 'submode': 'word'})
         return annotation

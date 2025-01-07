@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzWordHint(Plug):
 
@@ -9,13 +9,26 @@ class FitzWordHint(Plug):
         self.m_hint=''
         self.m_cache={}
         self.m_hints={}
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'hint', 'word', 'FitzView', 'activate', self.activate)
-        self.app.delegman.addAgent(
-                'hint', 'word', 'FitzView', 'octivate', self.octivate)
+    @deleg('activate@(hint[word])[FitzView]')
+    def activate(self, view=None, **kwargs):
+        if view:
+            super().activate()
+            model=view.model()
+            self.cacheModel(model)
+            self.assignHints(view)
+            self.app.stateman.setFunctor(functor=self.functor)
+            view.itemPainted.connect(self.paint)
+            view.redraw()
+
+    @deleg('octivate@(hint[word])[FitzView]')
+    def octivate(self, view=None, **kwargs):
+        if view:
+            super().octivate()
+            self.m_hint=''
+            self.app.stateman.setFunctor()
+            view.itemPainted.disconnect(self.paint)
+            view.redraw()
 
     def cacheModel(self, model):
         if not model in self.m_cache:
@@ -54,24 +67,6 @@ class FitzWordHint(Plug):
         self.m_hints=hints
         for hint, word in hints.items():
             word['hint']=hint
-
-    def activate(self, view=None, **kwargs):
-        if view:
-            super().activate()
-            model=view.model()
-            self.cacheModel(model)
-            self.assignHints(view)
-            self.app.stateman.setFunctor(functor=self.functor)
-            view.itemPainted.connect(self.paint)
-            view.redraw()
-
-    def octivate(self, view=None, **kwargs):
-        if view:
-            super().octivate()
-            self.m_hint=''
-            self.app.stateman.setFunctor()
-            view.itemPainted.disconnect(self.paint)
-            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         painter.save()

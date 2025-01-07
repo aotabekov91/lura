@@ -33,20 +33,26 @@ class App(Plug):
 
     def setupParts(
             self, 
+            delegman=Delegman,
             plugman=Plugman, 
             earman=Earman, 
             buffman=Buffman, 
             styleman=Styleman, 
             stateman=Stateman, 
-            delegman=Delegman,
             ) -> None:
+         self.delegman: Delegman = delegman(app=self)
          self.earman: Earman = earman(app=self)
          self.stateman: Stateman = stateman(app=self)
          self.buffman: Buffman = buffman(app=self)
          self.plugman: Plugman = plugman(app=self)
          self.styleman: Styleman = styleman(app=self)
-         self.delegman: Delegman = delegman(app=self)
-         self.earman.add(self)
+         self.addObject(self)
+
+    def addObject(self, obj, view=False):
+        self.earman.add(obj)
+        self.delegman.add(obj)
+        if view:
+            self.buffman.addView(obj)
 
     def setupParser(self, parser=Parser):
         if parser:

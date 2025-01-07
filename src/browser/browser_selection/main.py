@@ -1,4 +1,4 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class BrowserSelection(Plug):
 
@@ -6,7 +6,6 @@ class BrowserSelection(Plug):
 
     def setup(self):
         super().setup()
-        self.addAgent()
         self.app.buffman.viewCreated.connect(
                 self.injectJSCode)
 
@@ -22,10 +21,7 @@ class BrowserSelection(Plug):
         if path and self.isCompatible(view):
             view.injectJSCode(name='xrange', path=path, subframes=True)
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                view='BrowserView', action='select', functor=self.select)
-
+    @deleg('select@(any)[BrowserView]')
     def select(self, view, selection, **kwargs):
         if view:
             box=selection['box']

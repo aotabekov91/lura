@@ -1,21 +1,14 @@
-import plug
+from plug import Plug, deleg
 
-class FitzRotate(plug.Plug):
+class FitzRotate(Plug):
 
     def setup(self):
         super().setup()
-        self.addAgent()
         if self.app.running: 
             self.updateFitzModel()
         else:
             self.app.appSoonStarts.connect(
                     self.updateFitzModel)
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'rotate', self.rotate)
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'rotateState', self.rotateState)
 
     def updateFitzModel(self):
         modeller=self.app.buffman.modeller('FitzModel')
@@ -29,12 +22,14 @@ class FitzRotate(plug.Plug):
         if rotate:
             matrix.prerotate(rotate % 360)
 
+    @deleg('rotateState@(normal)[FitzView]')
     def rotateState(self, view=None, **kwargs):
         if view:
             rotation=view.getAttr('rotate', custom=True, default=0)
             return {'rotate': rotation} 
         return {}
 
+    @deleg('rotate@(normal)[FitzView]')
     def rotate(self, view=None, kind=None, xrange=[1], rotate=None, **kwargs):
         if view:
             if rotate is None:

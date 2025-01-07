@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzAnnotationHint(Plug):
 
@@ -9,13 +9,27 @@ class FitzAnnotationHint(Plug):
         self.m_hint=''
         self.m_hints={}
         self.m_element_hints={}
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'hint', 'annotation', 'FitzView', 'activate', self.activate)
-        self.app.delegman.addAgent(
-                'hint', 'annotation', 'FitzView', 'octivate', self.octivate)
+    @deleg('activate@(hint[annotation])[FitzView]')
+    def activate(self, view=None, **kwargs):
+        if view:
+            super().activate()
+            self.app.stateman.setFunctor(functor=self.functor)
+            view.itemPainted.connect(self.paint)
+            self.assignHints(view)
+            view.redraw()
+
+    @deleg('octivate@(hint[annotation])[FitzView]')
+    def octivate(self, view=None, **kwargs):
+        if view:
+            super().octivate()
+            self.m_hint=''
+            self.m_element_hints={}
+            self.app.stateman.setFunctor()
+            view.itemPainted.disconnect(
+                    self.paint)
+            view.redraw()
+
 
     def assignHints(self, view=None, kind='letters'):
         annotations=[]
@@ -48,24 +62,6 @@ class FitzAnnotationHint(Plug):
         self.app.delegman.delegate(
                 mode='hint', action='normal', data={'view': view})
         return annotations
-
-    def activate(self, view=None, **kwargs):
-        if view:
-            super().activate()
-            self.app.stateman.setFunctor(functor=self.functor)
-            view.itemPainted.connect(self.paint)
-            self.assignHints(view)
-            view.redraw()
-
-    def octivate(self, view=None, **kwargs):
-        if view:
-            super().octivate()
-            self.m_hint=''
-            self.m_element_hints={}
-            self.app.stateman.setFunctor()
-            view.itemPainted.disconnect(
-                    self.paint)
-            view.redraw()
 
     def paint(self, painter, ops, widget, item):
         painter.save()

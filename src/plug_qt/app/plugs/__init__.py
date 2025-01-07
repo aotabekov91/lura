@@ -6,7 +6,7 @@ from .powerline import Powerline
 from .normal import Normal
 from .normal_dock import DockNormal
 from .normal_tab import TabNormal
-from .normal_tree import TreeNormalGoTo
+from .normal_tree import TreeGoToNormal
 from .normal_window import WindowNormal
 from .normal_window_tile import TileWindowNormal
 
@@ -19,7 +19,7 @@ def get_base_plugs():
             Normal,
             DockNormal,
             TabNormal,
-            TreeNormalGoTo,
+            TreeGoToNormal,
             WindowNormal,
             TileWindowNormal
             ]

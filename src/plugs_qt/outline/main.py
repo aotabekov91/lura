@@ -88,7 +88,10 @@ class Outline(Plug):
         if item and view:
             data=item.data()
             self.app.delegman.delegate(
-                    'normal', None, view, 'goTo', data=data)
+                    mode='normal', 
+                    view=view, 
+                    action='goTo', 
+                    data=data)
             if focus:
                 view.activate()
 

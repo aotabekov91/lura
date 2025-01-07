@@ -1,18 +1,10 @@
-import plug
 import functools
 
-class BrowserRotate(plug.Plug):
+from plug import Plug, deleg
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
+class BrowserRotate(Plug):
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'rotate', self.rotate)
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'rotateState', self.rotateState)
-
+    @deleg('rotate@(normal)[BrowserView]')
     def rotate(self, view=None, kind=None, xrange=[1], rotate=None, **kwargs):
         if view:
             if rotate is None:
@@ -34,6 +26,7 @@ class BrowserRotate(plug.Plug):
             view.redraw()
             self.reportStateChange(view)
 
+    @deleg('rotate@(normal)[BrowserView]')
     def rotateState(self, view=None, **kwargs):
         if view:
             rotation=view.getAttr('rotate', custom=True, default=0)

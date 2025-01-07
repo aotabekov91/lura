@@ -1,18 +1,12 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzNormalGoTo(Plug):
 
     def setup(self):
         super().setup()
         self.m_positions={}
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'goTo', self.goTo)
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'goToState', self.goToState)
-
+    @deleg('goToState@(normal)[FitzView]')
     def goToState(self, view=None, **kwargs):
         data={}
         if view:
@@ -32,6 +26,7 @@ class FitzNormalGoTo(Plug):
                 data['xrange']=[idx]
         return data
 
+    @deleg('goTo@(normal)[FitzView]')
     def goTo(self, view=None, kind=None, xrange=[1], **kwargs):
         if view:
             count=view.count()

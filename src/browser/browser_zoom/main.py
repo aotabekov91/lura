@@ -1,19 +1,10 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class BrowserZoom(Plug):
 
     zoom_factor=0.05
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'zoom', self.zoom)
-        self.app.delegman.addAgent(
-                'normal', None, 'BrowserView', 'zoomState', self.zoomState)
-
+    @deleg('zoom@(normal)[BrowserView]')
     def zoom(self, view=None, kind=None, scale=None, xrange=[1], **kwargs):
         if view:
             page=view.page()
@@ -28,6 +19,7 @@ class BrowserZoom(Plug):
                 page.setZoomFactor(scale)
                 self.reportStateChange(view)
 
+    @deleg('zoomState@(normal)[BrowserView]')
     def zoomState(self, view=None, **kwargs):
         if view:
             page=view.page()

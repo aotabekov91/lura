@@ -1,6 +1,6 @@
 from PyQt6 import QtGui
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzSelection(Plug):
 
@@ -14,11 +14,6 @@ class FitzSelection(Plug):
         self.select_color.setAlpha(self.select_color_alpha)
         self.m_select_brush = QtGui.QBrush(self.select_color)
         self.m_select_pen = QtGui.QPen(self.select_color)
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                view='FitzView', action='select', functor=self.select)
 
     def connect(self, view, kind='connect'):
         item, _ =self.m_views.get(view, (None, None))
@@ -27,6 +22,7 @@ class FitzSelection(Plug):
         elif item and kind=='disconnect':
             item.painted.disconnect(self.paint)
 
+    @deleg('select@(any)[FitzView]')
     def select(self, view=None, selection=None, **kwargs):
         if view and selection:
             item=selection['item']

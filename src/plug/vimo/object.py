@@ -40,10 +40,7 @@ class Object:
 
     def setApp(self):
         if self.app:
-            if self.checkProp("earman", self.app):
-                self.app.earman.add(self)
-            if self.checkProp("buffman", self.app):
-                self.app.buffman.addView(self)
+            self.app.addObject(self, view=True)
             if self.m_app_config:
                 app_config = self.app.m_config
                 klass_config = self.klassConfig(app_config)

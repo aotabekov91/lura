@@ -1,17 +1,8 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzYankSelection(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'yankSelection', self.yankSelection)
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'yankSelectionToClipboard', self.yankSelection)
-
+    @deleg('yankSelectionToClipboard@(normal)[FitzView]')
     def yankSelectionToClipboard(self, view=None, **kwargs):
         if view:
             text=self.yankSelection(view)
@@ -22,6 +13,7 @@ class FitzYankSelection(Plug):
             view.cleanUp()
             return text
 
+    @deleg('yankSelection@(normal)[FitzView]')
     def yankSelection(self, view=None, **kwargs):
         if view:
             selection=self.app.delegman.delegate(

@@ -1,17 +1,8 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class Visual(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                None, None, None, 'visual', self.activate)
-        self.app.delegman.addAgent(
-                'visual', None, None, 'normal', self.octivate)
-
+    @deleg('visual@(any)')
     @tag('<c-v>(normal)')
     def activate(self, view=None, submode=None, **kwargs):
         super().activate()
@@ -31,6 +22,7 @@ class Visual(Plug):
                 action='activate',
                 data=data)
 
+    @deleg('normal@(visual)')
     @tag(['<c-v>/<c-[>(visual[None])', '<escape>(visual)'])
     def octivate(self, view=None, submode=None, **kwargs):
         super().octivate()

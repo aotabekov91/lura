@@ -1,23 +1,8 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class LinkHint(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='link', 
-                action='activate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='link', 
-                action='octivate', 
-                functor=self.octivate)
-
+    @deleg('activate@(hint[link])')
     @tag("<c-l>(hint)")
     def activate(self, view=None, **kwargs):
         if not view:
@@ -28,12 +13,21 @@ class LinkHint(Plug):
             self.app.stateman.setSubmode(
                     submode="link", submoder=self)
             self.app.delegman.delegate(
-                    'hint', 'link', view, 'activate', data=kwargs) 
+                    mode='hint', 
+                    submode='link', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
+    @deleg('octivate@(hint[link])')
     @tag("<c-l>/<c-[>/<escape>(hint[word])")
     def octivate(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'hint', 'link', view, 'octivate', data=kwargs) 
+                mode='hint', 
+                submode='link', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 

@@ -1,4 +1,4 @@
-from plug import Plug
+from plug import Plug, deleg
 
 from .blocker import FitzBlockWord 
 
@@ -7,21 +7,16 @@ class FitzWordVisual(Plug):
     def setup(self):
         super().setup()
         self.m_blocker=FitzBlockWord()
-        self.addAgent()
 
     def blocker(self):
         return self.m_blocker
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'visual', 'word', 'FitzView', 'goTo', self.goTo)
-        self.app.delegman.addAgent(
-                'visual', 'word', 'FitzView', 'start', self.start)
-
-    def start(self, view=None, **kwargs):
+    @deleg('activate@(visual[word])[FitzView]')
+    def activate(self, view=None, **kwargs):
         print('start')
         # todo: if no selection, start hinting
 
+    @deleg('goTo@(visual[word])[FitzView]')
     def goTo(self, kind='last', **kwargs):
         if kind=='toggle':
             self.toggleDirection(**kwargs)

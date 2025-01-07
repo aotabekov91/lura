@@ -1,4 +1,4 @@
-from .main import TreeNormalGoTo
+from .main import TreeGoToNormal
 
 def get_plug_class():
-    return TreeNormalGoTo
+    return TreeGoToNormal

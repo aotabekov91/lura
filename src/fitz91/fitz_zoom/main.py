@@ -1,4 +1,4 @@
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzZoom(Plug):
 
@@ -7,20 +7,14 @@ class FitzZoom(Plug):
 
     def setup(self):
         super().setup()
-        self.addAgent()
         self.app.buffman.viewCreated.connect(
                 self.connectView)
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'zoom', self.zoom)
-        self.app.delegman.addAgent(
-                'normal', None, 'FitzView', 'zoomState', self.zoomState)
 
     def connectView(self, view):
         if view and view.__class__.__name__=='FitzView':
             view.resized.connect(self.updateZoom)
 
+    @deleg('zoomState@(normal)[FitzView]')
     def zoomState(self, view, **kwargs):
         zoom_kind=view.getAttr('zoom_kind', custom=True)
         zoom_scale=view.getAttr('zoom_scale', custom=True)
@@ -28,6 +22,7 @@ class FitzZoom(Plug):
             return {'kind': zoom_kind, 'scale': zoom_scale}
         return {}
 
+    @deleg('zoom@(normal)[FitzView]')
     def zoom(self, view=None, kind=None, xrange=[1], scale=None, **kwargs):
         if view:
             size = view.size()

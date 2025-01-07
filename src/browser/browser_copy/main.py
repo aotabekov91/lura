@@ -19,13 +19,13 @@ class BrowserCopy(Plug):
             copy.setModel(view.model())
             copy.setManager(view.manager())
             zoom=self.app.delegman.delegate(
-                    'normal', None, view, 'zoomState')
+                    mode='normal', view=view, action='zoomState')
             if zoom:
                 self.app.delegman.delegate(
-                        'normal', None, view, 'zoom', data=zoom)
+                        mode='normal', view=view, action='zoom', data=zoom)
             goTo=self.app.delegman.delegate(
-                    'normal', None, view, 'goToState')
+                    mode='normal', view=view, action='goToState')
             if goTo:
                 self.app.delegman.delegate(
-                        'normal', None, view, 'goTo', data=goTo)
+                        mode='normal', view=view, action='goTo', data=goTo)
             return copy

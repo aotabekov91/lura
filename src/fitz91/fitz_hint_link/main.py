@@ -4,7 +4,7 @@ import subprocess
 
 from PyQt6 import QtCore, QtGui
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzLinkHint(Plug):
 
@@ -14,14 +14,8 @@ class FitzLinkHint(Plug):
         self.m_links={}
         self.m_hints={}
         self.m_length={}
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'hint', 'link', 'FitzView', 'activate', self.activate)
-        self.app.delegman.addAgent(
-                'hint', 'link', 'FitzView', 'octivate', self.octivate)
-
+    @deleg('activate@(hint[link])[FitzView]')
     def activate(self, view=None, **kwargs):
         if view:
             super().activate()
@@ -30,6 +24,7 @@ class FitzLinkHint(Plug):
             view.itemPainted.connect(self.paint)
             view.redraw()
 
+    @deleg('octivate@(hint[link])[FitzView]')
     def octivate(self, view=None, **kwargs):
         if view:
             super().octivate()

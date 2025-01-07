@@ -1,25 +1,10 @@
 import fitz
 
-from plug import Plug
+from plug import Plug, deleg
 
 class FitzAnnotate(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='annotate', 
-                view='FitzView', 
-                action='annotate', 
-                functor=self.annotate)
-        self.app.delegman.addAgent(
-                mode='annotate', 
-                view='FitzView', 
-                action='remove', 
-                functor=self.remove)
-
+    @deleg('annotate@(annotate)[FitzView]')
     def annotate(self, view=None, data={}, **kwargs):
         if view:
             model=view.model()
@@ -53,6 +38,7 @@ class FitzAnnotate(Plug):
                     model.clearPixmapCache(idx=element.index())
                 return data
 
+    @deleg('remove@(annotate)[FitzView]')
     def remove(self, view=None, data={}, **kwargs):
         if view:
             model=view.model()

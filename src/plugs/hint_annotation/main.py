@@ -1,23 +1,8 @@
-from plug import Plug, tag
+from plug import Plug, tag, deleg
 
 class AnnotationHint(Plug):
 
-    def setup(self):
-        super().setup()
-        self.addAgent()
-
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='annotation', 
-                action='activate', 
-                functor=self.activate)
-        self.app.delegman.addAgent(
-                mode='hint', 
-                submode='annotation', 
-                action='octivate', 
-                functor=self.octivate)
-
+    @deleg('activate@(hint[annotation])')
     @tag("<c-a>(hint)")
     def activate(self, view=None, **kwargs):
         if not view:
@@ -29,8 +14,13 @@ class AnnotationHint(Plug):
             self.app.stateman.setSubmode(
                     submode="annotation", submoder=self)
             self.app.delegman.delegate(
-                    'hint', 'annotation', view, 'activate', data=kwargs) 
+                    mode='hint', 
+                    submode='annotation', 
+                    view=view, 
+                    action='activate', 
+                    data=kwargs) 
 
+    @deleg('octivate@(hint[annotation])')
     @tag("<c-a>/<c-[>/<escape>(hint[annotation])")
     def octivate(self, view=None, **kwargs):
         if not view:
@@ -38,4 +28,8 @@ class AnnotationHint(Plug):
         super().octivate()
         self.app.stateman.setSubmode()
         self.app.delegman.delegate(
-                'hint', 'annotation', view, 'octivate', data=kwargs) 
+                mode='hint', 
+                submode='annotation', 
+                view=view, 
+                action='octivate', 
+                data=kwargs) 

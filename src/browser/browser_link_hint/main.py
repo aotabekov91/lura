@@ -2,21 +2,15 @@ import functools
 
 from PyQt6 import QtWidgets, QtCore
 
-from plug import Plug
+from plug import Plug, deleg
 
 class BrowserLinkHint(Plug):
 
     def setup(self):
         super().setup()
         self.m_hints={}
-        self.addAgent()
 
-    def addAgent(self):
-        self.app.delegman.addAgent(
-                'hint', 'link', 'BrowserView', 'activate', self.activate)
-        self.app.delegman.addAgent(
-                'hint', 'link', 'BrowserView', 'octivate', self.octivate)
-
+    @deleg('activate@(hint[link])[BrowserView]')
     def activate(self, view=None, **kwargs):
         if view:
             super().activate()
@@ -26,6 +20,7 @@ class BrowserLinkHint(Plug):
             callback=functools.partial(self.setLinks, view=view)
             view.runJSCode(code, resultCallback=callback)
 
+    @deleg('octivate@(hint[link])[BrowserView]')
     def octivate(self, view=None, **kwargs):
         super().octivate()
         for link in self.m_hints.values():

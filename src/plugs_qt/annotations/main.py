@@ -71,7 +71,7 @@ class Annotations(Plug):
                     mode='normal',
                     action='goTo', 
                     view=view, 
-                    data={'xrange': [page], 'x': x, 'y': y, 'center'=True})
+                    data={'xrange': [page], 'x': x, 'y': y, 'center':True})
             if select:
                 self.app.delegman.delegate(
                         action='setSelection', 

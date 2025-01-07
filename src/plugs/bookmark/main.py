@@ -74,7 +74,7 @@ class Bookmark(Plug, QtCore.QObject):
                 editline=self.app.plugman.getPlug('Editline')
                 text=editline.text()
             position=self.app.delegman.delegate(
-                    'normal', action='goToState', view=view)
+                    mode='normal', action='goToState', view=view)
             if position and bmodel:
                 data={
                         'text': text,

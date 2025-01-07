@@ -10,6 +10,7 @@ class Plug:
     isMode: bool = False
     shortname: str = None
     activated: bool = False
+    addToApp: bool=True
 
     def __init__(
         self,
@@ -36,9 +37,12 @@ class Plug:
         self.setFiles()
         self.setSettings()
         self.updateArgs()
+        self.setApp()
+
+    def setApp(self):
         if self.app:
-            if self.check('earman', self.app):
-                self.app.earman.add(self)
+            if self.addToApp:
+                self.app.addObject(self)
             if self.check('appConfigChanged', self.app):
                 self.app.appConfigChanged.connect(self.updateConf)
 

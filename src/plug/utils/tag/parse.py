@@ -3,6 +3,26 @@ import itertools
 import typing as tp
 from collections import deque
 
+def parse_deleg(delegs):
+    # e.g., activate@(hint[annotation])[FitzView]
+    alist=[]
+    for deleg in delegs:
+        data=deleg.split('@', 1)
+        if len(data)==2:
+            action=data[0]
+            vimo=data[1]
+            tags=parse_tag(vimo)
+            for tag in tags:
+                _, (mode, submode), (view, subview) = tag
+                alist+=[{
+                    'action': action, 
+                    'mode': mode,
+                    'submode': submode,
+                    'view': view,
+                    'subview': subview,
+                    }]
+    return alist
+
 def parse_tag(
     tags: tp.Union[str, tp.List[str]] = None,
 ) -> tp.List[tp.Tuple[str, str, str]]:
