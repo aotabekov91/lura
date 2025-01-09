@@ -31,16 +31,16 @@ class FitzNormalGoTo(Plug):
         if view:
             count=view.count()
             idx=view.currentIndex()
-            if kind=='blockLeft':
+            if kind=='blockleft':
                 self.moveScreen(
                         "left", view=view, xrange=xrange, **kwargs)
-            elif kind=='blockRight':
+            elif kind=='blockright':
                 self.moveScreen(
                         "right", view=view, xrange=xrange, **kwargs)
-            elif kind=='blockUp':
+            elif kind=='blockup':
                 self.moveScreen(
                         "up", view=view, xrange=xrange, **kwargs)
-            elif kind=='blockDown':
+            elif kind=='blockdown':
                 self.moveScreen(
                         "down", view=view, xrange=xrange, **kwargs)
             elif kind=='down':
