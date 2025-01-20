@@ -77,23 +77,22 @@ class Picky(Plug):
             folder=pick['folder']
             pick_base = os.path.expanduser(base)
             path=os.path.join(self.folder, folder)
-            if os.path.exists(path):
-                continue
-            if os.path.exists(pick_base):
-                pick_path=os.path.join(pick_base, plug)
-                if os.path.exists(pick_path):
-                    kind=pick.get('kind', 'copy')
-                    if kind=='copy':
-                        shutil.copytree(pick_path, path)
-                    elif kind=='link':
-                        os.symlink(pick_path, path)
-            else:
-                url = f"{pick_base}/{plug}"
-                try:
-                    git.Repo.clone_from(url, path)
-                except:
-                    continue
-            modules+=[pick]
+            if not os.path.exists(path):
+                if os.path.exists(pick_base):
+                    pick_path=os.path.join(pick_base, plug)
+                    if os.path.exists(pick_path):
+                        kind=pick.get('kind', 'copy')
+                        if kind=='copy':
+                            shutil.copytree(pick_path, path)
+                        elif kind=='link':
+                            os.symlink(pick_path, path)
+                else:
+                    url = f"{pick_base}/{plug}"
+                    try:
+                        git.Repo.clone_from(url, path)
+                    except:
+                        continue
+                modules+=[pick]
         self.loadPicks(modules)
 
     @tag("(exec)")

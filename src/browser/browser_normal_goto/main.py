@@ -79,7 +79,6 @@ class BrowserNormalGoTo(Plug):
             script=view.scriptize('goTo', 'set_current_position', x, y)
             view.runJSCode(script)
 
-
     def injectJSCode(self, view):
         path=self.files.get('goto.js', None)
         if self.isCompatible(view):

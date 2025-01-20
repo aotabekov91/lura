@@ -1,4 +1,3 @@
-import typing as tp
 from PyQt6 import QtCore
 
 import plug
