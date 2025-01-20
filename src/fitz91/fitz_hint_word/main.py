@@ -57,6 +57,7 @@ class FitzWordHint(Plug):
     def assignHints(self, view):
         moder=self.app.stateman.moder()
         items=view.visibleItems()
+        items=sorted(items, key=lambda x: x.index())
         all_words=[]
         for item in items: 
             words=self.getWords(item)

@@ -162,6 +162,9 @@ class Exec(Plug):
             if func:
                 try:
                     func(*command[1:])
-                except:
+                except Exception as error:
                     if command[0]=='quit':
+                        raise
+                    else:
+                        print(error)
                         raise
