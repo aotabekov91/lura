@@ -20,11 +20,11 @@ class Quickmark(Plug):
         return True
 
     @tag("m(normal)")
-    def setQuickmark(self, view=None):
+    def setQuickmark(self, view=None, **kwargs):
         if not view:
             view=self.app.stateman.view()
         functor=self.app.delegman.getAgent(
-                'normal', None, view, 'goTo')
+                mode='normal', view=view, action='goTo')
         if functor:
             self.app.stateman.activate(
                 submode="mark",
@@ -37,7 +37,7 @@ class Quickmark(Plug):
         if not view:
             view=self.app.stateman.view()
         functor=self.app.delegman.getAgent(
-                'normal', None, view, 'goTo')
+                mode='normal', view=view, action='goTo')
         if functor:
             self.app.stateman.activate(
                 submode="jump",
