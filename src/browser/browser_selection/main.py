@@ -1,4 +1,4 @@
-from plug import Plug, deleg
+from plug import Plug, deleg, tag
 
 class BrowserSelection(Plug):
 
@@ -17,13 +17,22 @@ class BrowserSelection(Plug):
         return False
 
     def injectJSCode(self, view):
-        path=self.files.get('xrange.js', None)
+        path=self.files.get('selection.js', None)
         if path and self.isCompatible(view):
-            view.injectJSCode(name='xrange', path=path, subframes=True)
+            view.injectJSCode(name='selection', path=path, subframes=True)
 
-    @deleg('select@(any)[BrowserView]')
+    @deleg('select@(normal)[BrowserView]')
     def select(self, view, selection, **kwargs):
         if view:
             box=selection['box']
             script=view.scriptize('selection', 'select', box)
             view.runJSCode(script, **kwargs)
+
+    @tag('!(normal)')
+    def test(self):
+        view=self.app.stateman.view()
+        script=view.scriptize('selection', 'get_selection')
+        view.runJSCode(script, resultCallback=self.n)
+
+    def n(self, result):
+        print(result)

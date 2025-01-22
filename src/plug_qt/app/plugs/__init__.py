@@ -7,6 +7,7 @@ from .normal import Normal
 from .normal_dock import DockNormal
 from .normal_tab import TabNormal
 from .normal_tree import TreeGoToNormal
+from .normal_list import NormalListViewGoTo
 from .normal_window import WindowNormal
 from .normal_window_tile import TileWindowNormal
 
@@ -20,6 +21,7 @@ def get_base_plugs():
             DockNormal,
             TabNormal,
             TreeGoToNormal,
+            NormalListViewGoTo,
             WindowNormal,
             TileWindowNormal
             ]

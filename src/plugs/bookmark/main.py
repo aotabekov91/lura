@@ -21,7 +21,7 @@ class Bookmark(Plug, QtCore.QObject):
         if view:
             model=view.model()
             functor=self.app.delegman.getAgent(
-                    'normal', None, view, 'goTo')
+                    mode='normal', view=view, action='goTo')
             if functor and model:
                 bookmark_model=BookmarkModel(source=model)
                 self.m_models[model]=bookmark_model
