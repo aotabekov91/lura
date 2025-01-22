@@ -31,7 +31,7 @@ class BrowserSelection(Plug):
     @tag('!(normal)')
     def test(self):
         view=self.app.stateman.view()
-        script=view.scriptize('selection', 'get_selection')
+        script=view.scriptize('selection', 'getSelection')
         view.runJSCode(script, resultCallback=self.n)
 
     def n(self, result):
