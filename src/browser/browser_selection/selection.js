@@ -32,10 +32,24 @@ window.browserviewscripts.selection = (function () {
 		},
 
 		setSelection: function(srange){
+			var selection=window.getSelection();
+			if (selection.rangeCount>0){ selection.removeAllRanges(); }
 			var range=this.deserializeRange(srange);
+			if (range && range.length){ this.selectRange(range); }
 		},
 
 		deserializeRange: function(srange){
+			var result=/^([0-9a-zA-Z:]+)(?:,|%2c)([0-9a-zA-Z:]+)$/.exec(srange);
+			if (result){
+				var start_point=result[1].split(':');
+				var end_point=result[2].split(':');
+				
+			}
+			// todo
+		},
+
+		selectRange: function(range){
+			//
 		},
 
 		serializeRange: function(range){
