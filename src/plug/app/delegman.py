@@ -56,8 +56,8 @@ class Delegman(Plug):
         if delegate=='mode':
             return self.m_agents.get(mode, {})
         elif delegate=='submode':
-            mode=self.getAgent(mode=mode, delegate='mode')
-            return mode.get(submode, {})
+            modes=self.getAgent(mode=mode, delegate='mode')
+            return modes.get(submode, {})
         elif delegate=='view':
             submodes=self.getAgent(mode, submode, delegate='submode')
             if view is None or type(view)==str:
@@ -93,8 +93,8 @@ class Delegman(Plug):
                 elif subview_approach=='manager':
                     raise
         elif delegate=='action':
-            view=self.getAgent(mode, submode, view, delegate='subview')
-            return view.get(action, {})
+            subviews=self.getAgent(mode, submode, view, delegate='subview')
+            return subviews.get(action, {})
         return {}
 
     def delegate(
