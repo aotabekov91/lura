@@ -1,87 +1,233 @@
 "use strict";
 
-window.browserviewscripts.select = (function) () {
-	const funcs = {};
+window.browserviewscripts.selection = (function () {
 
-	funcs.select = (box={}) => {
-		return box;
-	};
+	Range = function(range){
+		this.range=range;
+		this.startContainer=range.startContainer;
+		this.endContainer=range.endContainer;
+		this.startOffset=range.startOffset;
+		this.endOffset=range.endOffset;
+		this.nodes=null;
+	}
 
-	funcs.serialize: function(range) {
-		var start = this.wordize(range.startContainer, range.startOffset, 'start');
-		var end = this.wordize(range.endContainer, range.endOffset, 'end');
-		if (this.options.validate) {
-			var sums = this.getRangeChecksum(range);
-			start += ':' + sums[0];
-			end += ':' + sums[1];
-		}
-		return start + ',' + end;
-	},
+	Range.prototype.toString = function(){
+		return this.range.toString();
+	}
 
-	wordize = function(container, offset, pos) {
-		// counting words in container from/untill offset position
+	const selection = {
 
-		// Skip ignored elements at the start and at the end
-		var cont = elementIterator(this.selectable, container, undefined, pos === 'end', this.isIgnored)();
-		if (cont !== container) {
-			offset = pos == 'end' ? (cont.nodeType == 3? cont.textContent.length : 0) : 0;
-			container = cont;
-		}
+		blocks: {},
+		captureCount: 0,
+		regex: new RegExp('[^\\s,;:\u2013.!?<>\u2026\\n\u00a0\\*]+', 'ig'),
 
-		if (container.nodeType == 1) {
-			container = firstTextNode(container, this.isIgnored);
-		}
-
-		//get content part, that isn't included in selection,
-		//split it with regexp and count words in it
-		var wcount = container.data.substring(0, offset).match(this.regexp);
-
-		if (wcount != null) {
-			if (pos == 'start') {wcount = wcount.length + 1;}
-			if (pos == 'end') {wcount = wcount.length;}
-		} else {
-			wcount = 1;
-		}
-
-		var node = container;
-		var selectionIndex = this.getNum(container);
-		var firstNode = this.getFirstTextNode(selectionIndex);
-
-		while (node && node != firstNode) {
-			node = this.prevNode(node, /.*/);
-			if (node !== null) {
-				node = node._container;
-				wcount += this.wordCount(node);
+		getSelection: function(selection){
+			selection = selection || window.getSelection();
+			if (selection.rangeCount>0){
+				var selrange=selection.getRangeAt(0);
+				var range=new Range(selrange);
+				var srange=this.serializeRange(range);
+				return srange;
 			}
-		}
+		},
 
-		/*
-		n = container.previousSibling;
-		// FIXME! Required word count outside of inner <b></b>
-		while (n) {
-			var onei = wordCount(n);
-			wcount += onei;
-			n = n.previousSibling;
-		}
-		*/
-		return selectionIndex + ':' + wcount;
-	},
+		setSelection: function(srange){
+			var selection=window.getSelection();
+			if (selection.rangeCount>0){ selection.removeAllRanges(); }
+			var range=this.deserializeRange(srange);
+			if (range && range.length){ this.selectRange(range); }
+		},
 
-	symbols: function(_node) {
-		var _count = 0;
-		if (_node.nodeType == 3) {
-			_count = _node.nodeValue.length;
-		} else if (_node.childNodes && _node.childNodes.length) {
-			var allnodes = textNodes(_node);
-			for (var i = allnodes.length; i--; ) {
-				_count += allnodes[i].nodeValue.length;
+		deserializeRange: function(srange){
+			var result=/^([0-9a-zA-Z:]+)(?:,|%2c)([0-9a-zA-Z:]+)$/.exec(srange);
+			if (result){
+				var start_point=result[1].split(':');
+				var end_point=result[2].split(':');
+				
 			}
-		}
-		return _count;
-	},
+			// todo
+		},
 
+		selectRange: function(range){
+			//
+		},
 
-	return funcs;
+		serializeRange: function(range){
+			var start=this.words(range, 'start');
+			var end = this.words(range, 'end');
+			var sRange = start+','+end;
+			return sRange;
+		},
+
+		words: function(range, pos){
+			var container, offset;
+			if (pos==='start'){
+				container=range.startContainer;
+				offset=range.startOffset;
+			} else if (pos==='end'){
+				container=range.endContainer;
+				offset=range.endOffset;
+			}
+			var wcount=container.data.substring(0, offset).match(this.regex);
+			if (wcount!=null){
+				if (pos==='start'){wcount=wcount.length+1;}
+				if (pos==='end'){wcount=wcount.length;}
+			} else {
+				wcount=1;
+			}
+			var selectionIndex=this.getNum(container);
+
+			// var node=container;
+			// var firstNode=this.getFirstTextNode(selectionIndex);
+
+			// while (node && node!=firstNode){
+			// 	node=this.prevNode(node, /.*/);
+			// 	if (node!=null){
+			// 		node=node._container;
+			// 		wcount+=this.wordCount(node);
+			// 	}
+			// }
+
+			return selectionIndex+':'+wcount;
+		},
+
+		prevNode: function(cont, regex){
+			return _siblingNode(cont, 1, regex);
+
+			function _siblingNode(cont, reversed, regex){
+				var node=cont;
+				if (reversed && node.previousSibling){
+					node=node.previousSibling;
+				}
+			// todo
+			}
+		},
+
+		elementIterator: function(parent, cont, end, reversed, isIgnored){
+			reversed=!!reversed;
+			cont=cont||parent[childKind];
+			var finished=!cont;
+			var up=false;
+			const childKind=reversed?'lastChild':'firstChild';
+			const siblingKind=reversed?'previousSibling':'nextSibling';
+
+			function getNext(){
+				if (cont.childNodes && cont.childNodes.length && !up){
+					cont=cont[childKind];
+				} else if (cont[siblingKind]){
+					cont=cont[siblingKind];
+					up=false;
+				} else if (cont.parentNode){
+					cont=cont.parentNode;
+					if (cont==parent || cont==end){ finished=true; }
+					up=true;
+					getNext();
+				}
+			}
+
+			function next(){
+				do {
+					if (finished) {return null;}
+					
+					var result=cont;
+					getNext();
+					alert(result);
+
+					if (result===end && !(result.nodeType==1 && result.childNodes.length && !up)){
+						finished=true;
+					}
+				} while (result!== document && result);
+				return result;
+			}
+			return next;
+		},
+
+		getFirstTextNode: function(idx){
+			if (!idx) { return null; }
+			var class_name='selection-index'+idx;
+			var tnode=document.getElementsByClassName(class_name)[0];
+
+			if (tnode){
+				var next=tnode['nextSibling'];
+				return next;
+			}
+
+			// if (tnode){
+			// 	var iter=this.elementIterator(document.body, tnode, undefined, false);
+			// 	var node=iter();
+			// 	alert(node.nodeType);
+			// 	while (node){
+			// 		if (node.nodeType===3){return node;}
+			// 		node=iter();
+			// 	}
+			// }
+
+			return null;
+		},
+
+		getNum: function(container){
+			while (container.parentNode){
+				while (container.previousSibling){
+					container=container.previousSibling;
+					while (container.nodeType==1 && container.childNodes.length){
+						container = container.lastChild;
+					}
+					if (container.nodeType==1){
+						if (container.classList.contains('selection-index')){
+							return container.getAttribute('rel');
+						}
+					}
+				}
+				container=container.parentNode;
+			}
+		},
+
+		getCompiledStyle: function(elem, strCssRule) {
+			// copypasted from Internets
+			var strValue = '';
+			if (document.defaultView && document.defaultView.getComputedStyle) {
+				strValue = document.defaultView.getComputedStyle(elem, '').getPropertyValue(strCssRule);
+			}
+			else if (elem.currentStyle) {
+				strCssRule = strCssRule.replace(/\-(\w)/g, function(strMatch, p1) {
+					return p1.toUpperCase();
+				});
+				strValue = elem.currentStyle[strCssRule];
+			}
+			return strValue;
+		},
+
+		isBlock: function(element){
+			if (element.nodeName=='BR'){return true;}
+			const test=['inline', 'none'];
+			const style=this.getCompiledStyle(element, 'display');
+			return test.includes('style')==-1;
+		},
+
+		enumerate: function(node){
+			var children=node.childNodes;
+			const regex=new RegExp('[^\\s,;:\u2013.!?<>\u2026\\n\u00a0\\*]+', 'ig');
+			for (let idx=0; idx<children.length; ++idx){
+				var child=children[idx];
+				var nodeType=child.nodeType;
+				if (nodeType==3){// && child.nodeValue.match(regex)){
+					this.blocks[this.captureCount]=child;
+					this.captureCount++;
+				}
+			}
+			for (let [idx, child] of Object.entries(this.blocks)){
+				var span=document.createElement('span');
+				span.className='selection-index selection-index' + idx;
+				span.setAttribute('rel', idx);
+				child.parentNode.insertBefore(span, child);
+			}
+		},
+
+	}
+
+	window.addEventListener('DOMContentLoaded', ()=>selection.enumerate(document.body));
+	return selection;
+
 })();
 
 
