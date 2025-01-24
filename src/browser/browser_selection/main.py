@@ -1,5 +1,6 @@
 import functools
 
+
 from plug import Plug, deleg, tag
 
 class BrowserSelection(Plug):

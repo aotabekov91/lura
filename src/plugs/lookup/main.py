@@ -20,7 +20,7 @@ class Lookup(Plug):
                 LookupView, None)
 
     @tag('(exec)')
-    def definition(self, text):
+    def lookup(self, text):
         self.lookUp(text=text)
 
     @tag(['<c-D>(normal)', '<c-D>/<c-[>/<escape>(normal)[LookupView]'])

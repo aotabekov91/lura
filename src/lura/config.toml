@@ -18,6 +18,7 @@ Picks = [
 
 	{plug='plugs/states_sqlite', base='~/code/lura/src', kind='link'},
 	{plug='plugs/states', base='~/code/lura/src', kind='link'},
+	{plug='plugs/lookup', base='~/code/lura/src', kind='link'},
 
 	{plug='plugs/hint_annotation', base='~/code/lura/src', kind='link'},
 	{plug='plugs/hint_link', base='~/code/lura/src', kind='link'},
