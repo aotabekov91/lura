@@ -44,7 +44,56 @@ window.browserviewscripts.selection = (function () {
 				var start_point=result[1].split(':');
 				var end_point=result[2].split(':');
 				
+                var start = this.deserializePosition(start_point, 'start'),
+                    end = this.deserializePosition(end_point, 'end');
+
+                if (start.node && end.node) {
+                    var range = document.createRange();
+                    range.setStart(start.node, start.offset);
+                    range.setEnd(end.node, end.offset);
+                    range = new Range(range, this);
+					return range;
+                    }
+                }
+
 			}
+			// todo
+		}, 
+
+        deserializePosition: function(bits, pos) {
+             // deserializes #OfBlock:#OfWord pair
+             // getting block
+             var node = this.blocks[parseInt(bits[0], 10)];
+
+             var offset, stepCount = 0;
+             // getting word in all text nodes
+             while (node) {
+                 var re = new RegExp(this.regexp, 'ig'), myArray;
+                 while ((myArray = re.exec(node.data )) != null) {
+                     stepCount++;
+                     if (stepCount == bits[1]) {
+                         if (pos == 'start') {offset = myArray.index;}
+                         if (pos == 'end') {offset = re.lastIndex;}
+
+                         return {node: node, offset: parseInt(offset, 10)};
+                     }
+
+                 }
+                 // word not found yet, trying next container
+                 node = this.nextNode(node, /.*/);
+                 node = node ? node._container : null;
+                 if (node && this.isFirstTextNode(node)) {
+                     node = null;
+                 }
+             }
+             return {node: null, offset: 0};
+        },
+
+		nextNode: function(){
+			// todo
+		},
+
+		isFirstTextNode: function(node){
 			// todo
 		},
 
