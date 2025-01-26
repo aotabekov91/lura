@@ -1,6 +1,5 @@
 import functools
 
-
 from plug import Plug, deleg, tag
 
 class BrowserSelection(Plug):
@@ -21,15 +20,29 @@ class BrowserSelection(Plug):
         return False
 
     def injectJSCode(self, view):
-        path=self.files.get('selection.js', None)
+        path=self.files.get('masha.js', None)
         if path and self.isCompatible(view):
-            view.injectJSCode(name='selection', path=path, subframes=True)
             browser=view.browser()
+            # func=functools.partial(self.start, view)
+            # browser.loadFinished.connect(func)
+            self.test(view, True)
             browser.selectionChanged.connect(self.updateSelection)
+
+    def start(self, view, status):
+        script=view.scriptize('selection', 'start')
+        print(script)
+        view.runJSCode(script)
+
+
+    def test(self, view, status):
+        if status:
+            path=self.files.get('masha.js', None)
+            view.injectJSCode(name='selection', path=path, subframes=True)
 
     def updateSelection(self):
         view=self.app.stateman.view()
-        script=view.scriptize('selection', 'getSelection')
+        script=view.scriptize('selection', 'get_selection')
+        print(script)
         callback=functools.partial(self._updateSelection, view)
         view.runJSCode(script, resultCallback=callback)
 
@@ -51,7 +64,7 @@ class BrowserSelection(Plug):
                 view.runJSCode(script) 
 
     @tag('!(normal)[BrowserView]')
-    def test(self):
+    def Test(self):
         box=['0:10,0:12']
         view=self.app.stateman.view()
         selection=self.app.delegman.delegate(
