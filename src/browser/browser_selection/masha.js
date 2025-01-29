@@ -500,6 +500,16 @@ window.browserviewscripts.selection = (function(){
             return hash.split(';');
         },
 
+		setSelection: function(serialized){
+            var sel = window.getSelection();
+            if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+
+            var range = this.deserializeRange(serialized);
+            if (range) {
+				sel.addRange(range.range);
+            }
+		},
+
         deserializeSelection: function(serialized) {
             var sel = window.getSelection();
             if (sel.rangeCount > 0) { sel.removeAllRanges(); }
@@ -834,6 +844,16 @@ window.browserviewscripts.selection = (function(){
             }
             return range;
         },
+
+		getSelection: function(){
+            var range = this.getFirstRange();
+			if (range){
+				range = this.checkSelection(range);
+				range = this.mergeSelections(range);
+				var srange=this.serializeRange(range);
+				return srange
+			}
+		},
 
         addSelection: function(range) {
             range = range || this.getFirstRange();
@@ -1642,23 +1662,25 @@ window.browserviewscripts.selection = (function(){
     };
     $M.bind = bind;
 
-	exports.get_selection = function(){
-		alert('hello');
-	};
-
 	if (window.addEventListener){
-		alert('adding');
 		window.addEventListener('load', sstart, false);
 	}
 
 	function sstart(){
-		alert('loading');
 		if (!window.hasOwnProperty('masha_loaded')){
 			MaSha.instance =new MaSha({'selectable':document});
 			window.masha_loaded=true;
-			alert(Object.keys(MaSha.instance.blocks).length);
 		}
 	}
+
+	exports.get_selection = function(){
+		var srange=MaSha.instance.getSelection();
+		return srange;
+	};
+
+	exports.set_selection=function(range){
+		MaSha.instance.setSelection(range);
+	};
 
     return exports;
 
