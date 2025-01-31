@@ -20,7 +20,7 @@ class BrowserSelection(Plug):
         return False
 
     def injectJSCode(self, view):
-        path=self.files.get('masha.js', None)
+        path=self.files.get('selection.js', None)
         if path and self.isCompatible(view):
             browser=view.browser()
             view.injectJSCode(name='selection', path=path, subframes=True)
