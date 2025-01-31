@@ -103,7 +103,7 @@ window.browserviewscripts.selection = (function() {
 			strValue = document.defaultView.getComputedStyle(elem, '').getPropertyValue(strCssRule);
 		}
 		else if (elem.currentStyle) {
-			strCssRule = strCssRule.replace(/\-(\w)/g, function(strMatch, p1) {
+			strCssRule = strCssRule.replace(/\-(\w)/g, function(_, p1) {
 				return p1.toUpperCase();
 			});
 			strValue = elem.currentStyle[strCssRule];
@@ -698,7 +698,7 @@ window.browserviewscripts.selection = (function() {
 			window.open(url, '', 'status=no,toolbar=no,menubar=no,width=800,height=400');
 		}
 
-		getMarkerCoords = function(marker, markerCoord) {
+		getMarkerCoords = function(markerCoord) {
 			return { 'x': markerCoord.x, 'y': markerCoord.y, 'width': markerCoord.width };
 		}
 
@@ -736,7 +736,7 @@ window.browserviewscripts.selection = (function() {
 			if (text == '' || !regexp.test(text)) { return; }
 			if (!this.rangeIsSelectable()) { return; }
 
-			var coords = this.getMarkerCoords(this.marker, markerCoord);
+			var coords = this.getMarkerCoords(markerCoord);
 
 			this.marker.style.top = coords.y + 'px';
 			//        this.marker.style.left = coords.x + 'px';
