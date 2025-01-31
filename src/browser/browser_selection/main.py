@@ -35,6 +35,7 @@ class BrowserSelection(Plug):
 
     def _updateSelection(self, view, box):
         self.m_selections[view]=[box]
+        print(box) 
         self.app.delegman.delegate(
                 action='updateSelection',
                 data={'view': view, 'box': [box]})
