@@ -1,1 +1,0 @@
-from .wlist import ListWidgetFilter

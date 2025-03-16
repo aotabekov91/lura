@@ -1,8 +1,0 @@
-from gizmo.utils import tag
-
-
-class TrimMargins:
-    @tag("t(normal)[^]")
-    def toggleTrimMargins(self):
-        for i in self.m_items.values():
-            i.toggleTrimMargins()

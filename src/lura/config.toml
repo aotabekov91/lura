@@ -1,73 +1,78 @@
 [Plugman.Settings]
 folder = '~/.config/lura'
 
-# [Styleman.Settings]
-# style = 'GreenElf'
-
 [Picky]
 base = 'https://github.com'
 Picks = [
-	# 'plugs/search',
-	# 'plugs/grayscale',
-	# {plug='fitz91/fitz_search', base='http://192.168.178.10'},
 
-	{plug='plugs/visual_word', base='~/code/lura/src', kind='link'},
-	{plug='plugs/visual', base='~/code/lura/src', kind='link'},
-	{plug='plugs/leaper', base='~/code/lura/src', kind='link'},
-	{plug='plugs/selection', base='~/code/lura/src', kind='link'},
+	# Miscellenous plugs
 
-	{plug='plugs/states_sqlite', base='~/code/lura/src', kind='link'},
-	{plug='plugs/states', base='~/code/lura/src', kind='link'},
-	{plug='plugs/lookup', base='~/code/lura/src', kind='link'},
+	{plug='plugs/visual', base='~/code', kind='link'},
+	{plug='plugs/visual_word', base='~/code', kind='link'},
 
-	{plug='plugs/hint_annotation', base='~/code/lura/src', kind='link'},
-	{plug='plugs/hint_link', base='~/code/lura/src', kind='link'},
-	{plug='plugs/hint_word', base='~/code/lura/src', kind='link'},
-	{plug='plugs/hint', base='~/code/lura/src', kind='link'},
+	{plug='plugs/hint', base='~/code', kind='link'},
+	{plug='plugs/hint_link', base='~/code', kind='link'},
+	{plug='plugs/hint_word', base='~/code', kind='link'},
+	{plug='plugs/hint_annotation', base='~/code', kind='link'},
 
-	{plug='plugs/annotate', base='~/code/lura/src', kind='link'},
-	{plug='plugs/annotate_caret', base='~/code/lura/src', kind='link'},
-	{plug='plugs/annotate_highlight', base='~/code/lura/src', kind='link'},
-	{plug='plugs/bookmark', base='~/code/lura/src', kind='link'},
-	{plug='plugs/bookmark_sqlite', base='~/code/lura/src', kind='link'},
-	{plug='plugs/quickmark', base='~/code/lura/src', kind='link'},
-	{plug='plugs/copy_view', base='~/code/lura/src', kind='link'},
-	{plug='plugs/table_sqlite', base='~/code/lura/src', kind='link'},
-	{plug='plugs/search', base='~/code/lura/src', kind='link'},
-	{plug='plugs/outline', base='~/code/lura/src', kind='link'},
-	{plug='plugs/bookmarks', base='~/code/lura/src', kind='link'},
-	{plug='plugs/files_tree', base='~/code/lura/src', kind='link'},
+	# {plug='plugs/states', base='~/code', kind='link'},
 
-	{plug='fitz91/fitz_grayscale', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_hint_annotation', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_hint_link', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_hint_word', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_annotate', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_visual_word', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_selection', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_yank', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_rotate', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_search', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_zoom', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_copy', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_pdf', base='~/code/lura/src', kind='link'},
-	{plug='fitz91/fitz_normal_goto', base='~/code/lura/src', kind='link'},
+	{plug='plugs/table_sqlite', base='~/code', kind='link'},
+	{plug='plugs/states_sqlite', base='~/code', kind='link'},
+	{plug='plugs/bookmark_sqlite', base='~/code', kind='link'},
 
-	{plug='help/help_outline', base='~/code/lura/src', kind='link'},
-	{plug='help/help_style', base='~/code/lura/src', kind='link'},
-	{plug='help/help', base='~/code/lura/src', kind='link'},
+	{plug='plugs/annotate', base='~/code', kind='link'},
+	{plug='plugs/annotate_caret', base='~/code', kind='link'},
+	{plug='plugs/annotate_highlight', base='~/code', kind='link'},
 
-	{plug='browser/browser_caret', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_visual_word', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_normal_goto', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_annotate', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_selection', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_rotate', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_copy', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_search', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_link_hint', base='~/code/lura/src', kind='link'},
-	{plug='browser/browser_js_elements', base='~/code/lura/src', kind='link'},
+	{plug='plugs/bookmark', base='~/code', kind='link'},
+	{plug='plugs/bookmarks', base='~/code', kind='link'},
+	{plug='plugs/quickmark', base='~/code', kind='link'},
+	
+	{plug='plugs/lookup', base='~/code', kind='link'},
+	{plug='plugs/leaper', base='~/code', kind='link'},
+	{plug='plugs/selection', base='~/code', kind='link'},
+	{plug='plugs/search', base='~/code', kind='link'},
+	{plug='plugs/outline', base='~/code', kind='link'},
+	{plug='plugs/files_tree', base='~/code', kind='link'},
+	{plug='plugs/copy_view', base='~/code', kind='link'},
+
+	# Vimos
+	{plug='vimos/help', base='~/code', kind='link'},
+	{plug='vimos/fitz91', base='~/code', kind='link'},
+
+	# Fitz91 plugs
+	{plug='fitz91/fitz_grayscale', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_hint_annotation', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_hint_link', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_hint_word', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_annotate', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_visual_word', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_selection', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_yank', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_rotate', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_search', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_zoom', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_copy', base='~/code/plugs/vimo_plugs', kind='link'},
+	{plug='fitz91/fitz_normal_goto', base='~/code/plugs/vimo_plugs', kind='link'},
+
+	# # Help plugs
+	# {plug='help/help_outline', base='~/code', kind='link'},
+	# {plug='help/help_style', base='~/code', kind='link'},
+
+	# # Browser plugs
+	# {plug='browser/browser_caret', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_visual_word', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_normal_goto', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_annotate', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_selection', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_rotate', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_copy', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_zoom', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_search', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_link_hint', base='~/code/lura/src', kind='link'},
+	# {plug='browser/browser_js_elements', base='~/code/lura/src', kind='link'},
+
 ]
 
 # [[Plugman.Picks]]
