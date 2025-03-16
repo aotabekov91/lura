@@ -38,6 +38,7 @@ Picks = [
 	{plug='plugs/bookmarks', base='~/code/lura/src', kind='link'},
 	{plug='plugs/files_tree', base='~/code/lura/src', kind='link'},
 
+	{plug='fitz91/fitz_grayscale', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_hint_annotation', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_hint_link', base='~/code/lura/src', kind='link'},
 	{plug='fitz91/fitz_hint_word', base='~/code/lura/src', kind='link'},

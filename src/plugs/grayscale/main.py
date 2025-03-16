@@ -12,7 +12,7 @@ class Grayscale(Plug):
     def addGrayscaler(self, name, grayscaler):
         self.m_grayscalers[name]=grayscaler
 
-    @tag("c(normal)")
+    @tag("C(normal)")
     def toggleGrayScale(self):
         view=self.app.stateman.view()
         name=view.__class__.__name__
