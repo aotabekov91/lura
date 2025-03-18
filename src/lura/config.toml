@@ -6,7 +6,7 @@ base = 'https://github.com'
 Picks = [
 
 	# Vimos
-	{plug='vimo/help', base='~/code/vimos', kind='link'},
+	{plug='vimo/marky', base='~/code/vimos', kind='link'},
 	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
 
 	# Fitz91 plugs
