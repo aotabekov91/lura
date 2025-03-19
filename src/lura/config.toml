@@ -8,6 +8,7 @@ Picks = [
 	# Vimos
 	{plug='vimo/marky', base='~/code/vimos', kind='link'},
 	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
+	{plug='vimo/mindmap', base='~/code/vimos', kind='link'},
 
 	# Fitz91 plugs
 	{plug='fitz91/fitz_grayscale', base='~/code/vimos/plug', kind='link'},
