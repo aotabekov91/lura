@@ -10,6 +10,9 @@ Picks = [
 	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
 	# {plug='vimo/mindmap', base='~/code/vimos', kind='link'},
 
+	# Editor plugs
+	{plug='editor/editor_normal_goto', base='~/code/vimos/plug', kind='link'},
+
 	# Fitz91 plugs
 	{plug='fitz91/fitz_grayscale', base='~/code/vimos/plug', kind='link'},
 	{plug='fitz91/fitz_hint_annotation', base='~/code/vimos/plug', kind='link'},
