@@ -10,6 +10,9 @@ Picks = [
 	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
 	# {plug='vimo/mindmap', base='~/code/vimos', kind='link'},
 
+	# Marky plugs
+	{plug='marky/marky_general', base='~/code/vimos/plug', kind='link'},
+
 	# Editor plugs
 	{plug='editor/editor_normal_goto', base='~/code/vimos/plug', kind='link'},
 
@@ -31,6 +34,7 @@ Picks = [
 	# Miscellenous plugs
 	# {plug='plug/core_states', base='~/code/cores', kind='link'},
 	# {plug='plug/core_table_sqlite', base='~/code/cores', kind='link'},
+	{plug='plug/core_insert', base='~/code/cores', kind='link'},
 	{plug='plug/core_visual', base='~/code/cores', kind='link'},
 	{plug='plug/core_visual_word', base='~/code/cores', kind='link'},
 	{plug='plug/core_hint', base='~/code/cores', kind='link'},
