@@ -52,6 +52,7 @@ Picks = [
 	{plug='plug/core_outline', base='~/code/cores', kind='link'},
 	{plug='plug/core_files_tree', base='~/code/cores', kind='link'},
 	{plug='plug/core_copy_view', base='~/code/cores', kind='link'},
+	{plug='plug/core_gray', base='~/code/cores', kind='link'},
 
 	# # Help plugs
 	# {plug='help/help_outline', base='~/code', kind='link'},
