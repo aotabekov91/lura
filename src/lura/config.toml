@@ -12,6 +12,8 @@ Picks = [
 
 	# Marky plugs
 	{plug='marky/marky_general', base='~/code/vimos/plug', kind='link'},
+	{plug='marky/marky_browser', base='~/code/vimos/plug', kind='link'},
+	# {plug='marky/marky_mindmap', base='~/code/vimos/plug', kind='link'},
 
 	# Editor plugs
 	{plug='editor/editor_normal_goto', base='~/code/vimos/plug', kind='link'},
