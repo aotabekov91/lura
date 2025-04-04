@@ -10,9 +10,10 @@ Picks = [
 	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
 
 	# Marky plugs
+	{plug='marky/marky_copy', base='~/code/vimos/plug', kind='link'},
 	{plug='marky/marky_general', base='~/code/vimos/plug', kind='link'},
-	{plug='marky/marky_browser', base='~/code/vimos/plug', kind='link'},
-	{plug='marky/marky_mindmap', base='~/code/vimos/plug', kind='link'},
+	# {plug='marky/marky_browser', base='~/code/vimos/plug', kind='link'},
+	# {plug='marky/marky_mindmap', base='~/code/vimos/plug', kind='link'},
 
 	# Editor plugs
 	{plug='editor/editor_normal_goto', base='~/code/vimos/plug', kind='link'},
