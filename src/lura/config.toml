@@ -5,20 +5,19 @@ folder = '~/.config/lura'
 base = 'https://github.com'
 Picks = [
 
-	# Vimos
-	{plug='vimo/marky', base='~/code/vimos', kind='link'},
-	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
-
-	# Marky plugs
-	{plug='marky/marky_copy', base='~/code/vimos/plug', kind='link'},
-	{plug='marky/marky_general', base='~/code/vimos/plug', kind='link'},
-	# {plug='marky/marky_browser', base='~/code/vimos/plug', kind='link'},
+	# Marky - md
+	{plug='vimo/texter', base='~/code/vimos', kind='link'},
+	# {plug='marky/marky_copy', base='~/code/vimos/plug', kind='link'},
+	# {plug='marky/marky_general', base='~/code/vimos/plug', kind='link'},
 	# {plug='marky/marky_mindmap', base='~/code/vimos/plug', kind='link'},
+	# {plug='marky/marky_browser', base='~/code/vimos/plug', kind='link'},
 
 	# Editor plugs
+	{plug='editor/editor_copy', base='~/code/vimos/plug', kind='link'},
 	{plug='editor/editor_normal_goto', base='~/code/vimos/plug', kind='link'},
 
-	# Fitz91 plugs
+	# Fitz91 - pdf
+	{plug='vimo/fitz91', base='~/code/vimos', kind='link'},
 	{plug='fitz91/fitz_grayscale', base='~/code/vimos/plug', kind='link'},
 	{plug='fitz91/fitz_hint_annotation', base='~/code/vimos/plug', kind='link'},
 	{plug='fitz91/fitz_hint_link', base='~/code/vimos/plug', kind='link'},
