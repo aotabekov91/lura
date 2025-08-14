@@ -26,6 +26,7 @@ Picks = [
 	{plug='fitz91/fitz_normal_goto', base='~/code/vimos/plug', kind='link'},
 
 	# Miscellenous plugs
+	# {plug='plug/core_annotate_sqlite', base='~/code/cores', kind='link'},
 	{plug='plug/core_states', base='~/code/cores', kind='link'},
 	{plug='plug/core_table_sqlite', base='~/code/cores', kind='link'},
 	{plug='plug/core_insert', base='~/code/cores', kind='link'},
