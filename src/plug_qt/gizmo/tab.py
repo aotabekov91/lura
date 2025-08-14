@@ -1,6 +1,5 @@
 from PyQt6 import QtCore, QtWidgets
 
-from plug import deleg
 from plug_qt import vimo
 
 class TabView(vimo.View, QtWidgets.QStackedWidget):
@@ -52,7 +51,6 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
             self.insertView(idx=xrange[-1], view=view, **kwargs)
             view.activate(**kwargs)
 
-    @deleg('goToTab@(normal)[TabView]')
     def goTo(self, xrange=[], kind=None, **kwargs):
         idx = self.currentIndex()
         if kind in ["prev", "left"]:
