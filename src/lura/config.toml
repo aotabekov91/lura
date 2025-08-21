@@ -24,13 +24,30 @@ Picks = [
 	{plug='fitz91/fitz_zoom', base='~/code/vimos/plug', kind='link'},
 	{plug='fitz91/fitz_copy', base='~/code/vimos/plug', kind='link'},
 	{plug='fitz91/fitz_normal_goto', base='~/code/vimos/plug', kind='link'},
+	{plug='fitz91/fitz_outline', base='~/code/vimos/plug', kind='link'},
+
+	# TODO
+	# {plug='fitz91/fitz_hint_box', base='~/code/vimos/plug', kind='link'},
+	# TODO
+	# {plug='plug/core_tabname', base='~/code/cores', kind='link'},
 
 	# Miscellenous plugs
+	{plug='plug/core_leaper', base='~/code/cores', kind='link'},
+	{plug='plug/core_overlay_clock', base='~/code/cores', kind='link'},
+
+	{plug='plug/core_hint_box', base='~/code/cores', kind='link'},
+	{plug='plug/core_hint_view', base='~/code/cores', kind='link'},
+
+	{plug='plug/core_fullscreen', base='~/code/cores', kind='link'},
+	{plug='plug/core_fullscreen_tile', base='~/code/cores', kind='link'},
+	{plug='plug/core_fullscreen_dock', base='~/code/cores', kind='link'},
+
 	{plug='plug/core_annotations', base='~/code/cores', kind='link'},
 	{plug='plug/core_annotate_sqlite', base='~/code/cores', kind='link'},
-	{plug='plug/core_tabline', base='~/code/cores', kind='link'},
 	{plug='plug/core_states', base='~/code/cores', kind='link'},
 	{plug='plug/core_table_sqlite', base='~/code/cores', kind='link'},
+
+	{plug='plug/core_tabline', base='~/code/cores', kind='link'},
 	{plug='plug/core_insert', base='~/code/cores', kind='link'},
 	{plug='plug/core_visual', base='~/code/cores', kind='link'},
 	{plug='plug/core_visual_word', base='~/code/cores', kind='link'},
@@ -47,7 +64,6 @@ Picks = [
 	{plug='plug/core_bookmarks', base='~/code/cores', kind='link'},
 	{plug='plug/core_quickmark', base='~/code/cores', kind='link'},
 	{plug='plug/core_lookup', base='~/code/cores', kind='link'},
-	{plug='plug/core_leaper', base='~/code/cores', kind='link'},
 	{plug='plug/core_selection', base='~/code/cores', kind='link'},
 	{plug='plug/core_search', base='~/code/cores', kind='link'},
 	{plug='plug/core_outline', base='~/code/cores', kind='link'},
