@@ -226,6 +226,7 @@ class TileLayout(QtCore.QObject):
     def goTo(self, kind=None, xrange=None, view=None, **kwargs):
         view = view or self.current_leaf.view
         pos = ["right", "left", "down", "up"]
+        print(xrange, kind)
         if kind in pos:
             leaf = self.findLeaf(kind)
             self.setLeaf(leaf)
@@ -242,12 +243,17 @@ class TileLayout(QtCore.QObject):
         elif kind == "last":
             views = list(self.root.views())
             next_view = views[-1] if len(views) else None
+            print(next_view, self.current)
+            # TODO: does not jump to the last tile here
+            # TEMPYSOL: Without it the current view is not activated
+            if next_view:
+                next_view.activate()
             return self.setView(next_view)
-        elif type(xrange) == int:
-            xrange[-1] -= 1
+        elif type(xrange[-1]) == int:
+            idx=xrange[-1]-1
             views = list(self.root.views())
-            if 0 <= xrange < len(views):
-                next_view = views[xrange]
+            if 0 <= idx < len(views):
+                next_view = views[idx]
                 return self.setView(view=next_view)
 
     def moveTo(
