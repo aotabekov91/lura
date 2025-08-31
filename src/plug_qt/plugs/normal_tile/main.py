@@ -4,19 +4,15 @@ class TileNormal(Plug):
 
     prefix_keys=["<c-w>(normal)"]
 
-    def delegate(
-            self, 
-            view=None, 
-            action=None, 
-            **kwargs):
+    def delegate(self, view=None, action=None, **kwargs):
         view=view or self.app.stateman.view()
-        manager=view.manager()
-        if manager: 
-            name=manager.__class__.__name__
-            if name=='TileView':
-                func=getattr(manager, action, None)
-                if func:
-                    func(**kwargs)
+        if view:
+            kwargs['view']=view
+            self.app.delegman.delegate(
+                    mode='normal',
+                    view=view.manager(),
+                    action=action,
+                    data=kwargs,)
 
     @tag("gg(normal)")
     def goFirst(self, **kwargs):
