@@ -52,24 +52,31 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
             view.activate(**kwargs)
 
     def goTo(self, xrange=[], kind=None, **kwargs):
+        count=self.count()
         idx = self.currentIndex()
         if kind in ["prev", "left"]:
-            xrange = [idx - 1]
-            if xrange[-1]<0:
-                xrange[-1] = self.count()-1
+            delta=1
+            if xrange:
+                delta=xrange[-1]
+            idx-=delta
         elif kind in ["next", "right"]:
-            xrange = [idx + 1]
-            if xrange[-1] >= self.count():
-                xrange[-1] = 0
+            delta=1
+            if xrange:
+                delta=xrange[-1]
+            idx+=delta
         elif kind == "first":
-            xrange=[0]
+            idx=0
         elif kind == "last" or xrange is None:
-            xrange = [self.count() - 1]
+            idx = count - 1
         elif not xrange:
             return
         else:
             xrange[-1] -= 1
-        view = self.widget(xrange[-1])
+        if idx<0:
+            idx=self.count()-1
+        elif idx >=count:
+            idx=0
+        view = self.widget(idx)
         if view:
             view.activate()
 
