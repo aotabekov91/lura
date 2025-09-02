@@ -227,7 +227,6 @@ class TileLayout(QtCore.QObject):
     def goTo(self, kind=None, xrange=None, view=None, **kwargs):
         view = view or self.current_leaf.view
         pos = ["right", "left", "down", "up"]
-        print(xrange, kind)
         if kind in pos:
             leaf = self.findLeaf(kind)
             self.setLeaf(leaf)
