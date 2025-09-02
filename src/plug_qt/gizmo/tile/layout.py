@@ -183,7 +183,8 @@ class TileLayout(QtCore.QObject):
                     center = x + w * 0.5
                     while n_.view is None:
                         c = n_.leaves[1].x > center
-                        if not n_.horizontal or c:
+                        # if not n_.horizontal or c: # BUGFIX?
+                        if n_.horizontal or c:
                             n_ = n_.leaves[0]
                         else:
                             n_ = n_.leaves[1]
