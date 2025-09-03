@@ -270,29 +270,31 @@ class TileLayout(QtCore.QObject):
             if nleaf and cleaf:
                 self.flipTo(nleaf.view, cleaf.view, focus=False)
             else:
-                cleaf = self.current_leaf
-                self.removeView(view=cleaf.view)
-                newroot = TileLeaf()
-                if kind in ["up", "down"]:
-                    newroot.horizontal = True
-                elif kind in ["left", "right"]:
-                    newroot.horizontal = False
-                if kind in ["up", "left"]:
-                    newroot.leaves = [
-                        cleaf,
-                        self.root,
-                    ]
-                elif kind in ["down", "right"]:
-                    newroot.leaves = [
-                        self.root,
-                        cleaf,
-                    ]
-                self.root.m_parent = newroot
-                cleaf.m_parent = newroot
-                self.root = newroot
-                cleaf.view.setManager(self.parent)
-                cleaf.view.setParent(self.parent)
-                cleaf.view.activate()
+                if self.count()>1:
+                    cleaf = self.current_leaf
+                    self.removeView(view=cleaf.view)
+                    newroot = TileLeaf()
+                    if kind in ["up", "down"]:
+                        newroot.horizontal = True
+                    elif kind in ["left", "right"]:
+                        newroot.horizontal = False
+                    if kind in ["up", "left"]:
+                        newroot.leaves = [
+                            cleaf,
+                            self.root,
+                        ]
+                    elif kind in ["down", "right"]:
+                        newroot.leaves = [
+                            self.root,
+                            cleaf,
+                        ]
+                    self.root.m_parent = newroot
+                    cleaf.m_parent = newroot
+                    self.root = newroot
+                    if cleaf.view:
+                        cleaf.view.setManager(self.parent)
+                        cleaf.view.setParent(self.parent)
+                        cleaf.view.activate()
         else:
             xrange = xrange or self.count()
             xrange[-1] -= 1
@@ -353,15 +355,19 @@ class TileLayout(QtCore.QObject):
         if view:
             prev_view = self.findSibling(kind="prev")
             next_view = self.findSibling(kind="next")
+            print(self.count())
             view.octivate()
             if prev_view and view != prev_view:
+                self.m_count-=1
                 self.removeView(view=view)
                 prev_view.activate()
                 return prev_view
             elif next_view and view!=next_view:
+                self.m_count-=1
                 self.removeView(view=view)
                 next_view.activate()
                 return next_view
             else:
                 # TODO: this message should be rendered via Message plugin
                 print('Cannot close the last view')
+            print(self.count())
