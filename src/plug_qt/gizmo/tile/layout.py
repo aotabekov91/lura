@@ -355,7 +355,6 @@ class TileLayout(QtCore.QObject):
         if view:
             prev_view = self.findSibling(kind="prev")
             next_view = self.findSibling(kind="next")
-            print(self.count())
             view.octivate()
             if prev_view and view != prev_view:
                 self.m_count-=1
@@ -370,4 +369,3 @@ class TileLayout(QtCore.QObject):
             else:
                 # TODO: this message should be rendered via Message plugin
                 print('Cannot close the last view')
-            print(self.count())
