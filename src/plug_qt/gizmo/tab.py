@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtWidgets
 
+from plug import deleg
 from plug_qt import vimo
 
 class TabView(vimo.View, QtWidgets.QStackedWidget):
@@ -26,12 +27,13 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
         self.setAttribute(
             QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
+    @deleg('flipTo@(normal)[TabView]')
     def flipTo(self, view=None, **kwargs):
-        if not view:
-            view=self.previous
+        view=view or self.previous
         if view:
             view.activate()
 
+    @deleg('moveTo@(normal)[TabView]')
     def moveTo(self, kind=None, xrange=None, view=None, **kwargs):
         if not view:
             idx = self.currentIndex()
@@ -51,6 +53,7 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
             self.insertView(idx=xrange[-1], view=view, **kwargs)
             view.activate(**kwargs)
 
+    @deleg('goTo@(normal)[Tabview]')
     def goTo(self, xrange=[], kind=None, **kwargs):
         count=self.count()
         idx = self.currentIndex()
@@ -190,6 +193,7 @@ class TabView(vimo.View, QtWidgets.QStackedWidget):
         self.viewRemoved.emit(view)
         return view, idx
 
+    @deleg('close@(normal)[Tabview]')
     def close(self, view=None, limit=1, **kwargs):
         if self.count() <= limit:
             return

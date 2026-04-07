@@ -77,7 +77,10 @@ class Normal(Plug, QtCore.QObject):
     def activateSubview(self):
         subview=self.app.stateman.subview()
         if subview:
-            subview.activate()
+            manager=subview.manager()
+            manager.activate()
+            subview.activate(recursive=True)
+            print(manager.activated, 'here')
 
     @tag("zi(normal)")
     def zoomIn(self, xrange=[1], **kwargs):

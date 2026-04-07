@@ -87,7 +87,15 @@ class Delegman(Plug):
                         all_views.update(views)
                     return all_views
                 elif view_approach=='manager':
-                    raise
+                    all_views={}
+                    manager=view.manager()
+                    while manager:
+                        name=manager.__class__.__name__
+                        views=submodes.get(name, {})
+                        all_views.update(views)
+                        if not manager: break
+                        manager=manager.manager()
+                    return all_views
         elif delegate=='subview':
             views=self.getAgent(mode, submode, view, delegate='view')
             if subview is None or type(subview)==str:
@@ -104,7 +112,15 @@ class Delegman(Plug):
                         all_views.update(views)
                     return all_views
                 elif subview_approach=='manager':
-                    raise
+                    all_views={}
+                    manager=view.manager()
+                    while manager:
+                        name=manager.__class__.__name__
+                        views=submodes.get(name, {})
+                        all_views.update(views)
+                        if not manager: break
+                        manager=manager.manager()
+                    return all_views
         elif delegate=='model':
             subviews=self.getAgent(mode, submode, view, subview, delegate='subview')
             if model is None or type(model)==str:
