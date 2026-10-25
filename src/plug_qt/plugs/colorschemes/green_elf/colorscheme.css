@@ -1,0 +1,157 @@
+QWidget {
+	color: white;
+	font-size: 16px; 
+	background-color: black;
+}
+
+QLineEdit {
+	border-width: 0px;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QDockWidget {
+	padding: 0 0 0 0;
+	border-width: 30px; 
+	border-style: solid;
+	border-color: transparent;
+	background-color: yellow;
+}
+
+QListView::item{
+	border-width: 2px; 
+	border-style: solid;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+QListView::item:selected {
+	border-color: red;
+	background-color: yellow;
+}
+
+QListWidget::item:selected {
+	background-color: transparent;
+}
+
+QMainWindow::separator {
+    width: 0px;
+    margin: 0px;
+    height: 0px;
+    padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QTreeView::branch:selected {
+	color: white;
+	background-color: green;
+}
+
+QTreeView::item:selected {
+	color: white;
+	background-color: green;
+}
+
+QToolBar {
+	padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QStatusBar {
+	padding: 0 0 0 0;
+	border-width: 0px;
+}
+
+QStatusBar::item {
+	border: none; 
+	border-width: 0px;
+}
+
+QLabel#CurrentTab{
+	color: white;
+	background-color: green;
+}
+
+QLabel#HintBoxLabel{
+	color: black;
+	border-width: 1px;
+	border-style: solid;
+	border-color: green;
+	background-color: rgb(51, 136, 34, 30);
+}
+
+QLabel#HintBoxLabel:focus{
+	color: white;
+	background-color: rgb(11, 186, 4, 90);
+}
+
+#Input {
+	color: white;
+	padding: 0 0 0 0;
+	border-width: 3px;
+	border-color: green;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: rgba(0, 0, 0, .8); 
+}
+
+#Powerline QLabel{
+	color: white;
+	padding: 0 5px 0 5px;
+	background-color: transparent;
+}
+
+#Powerline QLabel#ModeName{
+	background-color: green;
+}
+
+#Powerline QLabel#TypeName{
+	background-color: transparent;
+}
+
+#Powerline QLabel#ViewName{
+	background-color: transparent;
+}
+
+#Powerline QLabel#IndexName{
+	background-color: green;
+}
+
+#Tabline QLabel#AppIndex{
+	color: #90ee90;
+}
+
+#OverlayClock {
+	color: green;
+}
+
+#OverlayInput {
+	border-width: 5px;
+	border-color: green;
+	border-radius: 15px;
+	border-style: solid;
+	padding: 10 10 10 10;
+	background-color: rgba(5, 5, 5, 200);
+}
+
+#HelpView body {
+	background-color: #202020; 
+	color: #E4E4E4; 
+	margin: 20px; 
+	font-size: 16px; 
+	line-height: 1.6; 
+	font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#HelpView img {
+	height: auto;
+	max-width: 100%; 
+}
+
+#HelpView h1 { color: #F8F8F8; padding-bottom: 0.3em; font-size: 2.25em; line-height: 1.2; border-bottom: 1px solid #444; margin-bottom: 16px; font-weight: bold; }
+#HelpView h2 { padding-bottom: 0.3em; font-size: 1.75em; line-height: 1.225; border-bottom: 1px solid #444; }
+#HelpView h3 { font-size: 1.5em; line-height: 1.43; margin-top: 1em; margin-bottom: 16px; font-weight: bold; }
+#HelpView a { color: #5088d0; text-decoration: none; }
+#HelpView pre { word-wrap: normal; padding: 16px; overflow: auto; line-height: 1.45; background-color: #222; border-radius: 3px; font: 13px Consolas, "Liberation Mono", Menlo, Courier, monospace;}
+#HelpView p code, li code { font-size: 13px; padding: 0.2em; margin: 0; background-color: rgba(0,0,0,0.04); border-radius: 3px; }

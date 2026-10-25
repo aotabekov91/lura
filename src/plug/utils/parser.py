@@ -36,7 +36,6 @@ class Parser:
         pref=None,
         only_known=True,
     ):
-        raise
         functor = self.parser.parse_args
         if only_known:
             functor = self.parser.parse_known_args

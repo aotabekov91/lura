@@ -5,17 +5,27 @@ readme = "README.md"
 description = "A viewer"
 authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 
+packages = [
+    { include = "lura", from = "src" },
+    { include = "plug", from = "src" },
+    { include = "plug_qt", from = "src" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.9"
 PyQt6="==6.8.0"
 tomli = "==2.0"
 gitpython= '==3.1.32'
 setuptools="==75.6.0"
+pymupdf="==1.25.1"
+pyzmq=">=26.2.0"
+
 # plug_qt={path="/home/ao_ubuntu/code/cores/core/plug_qt", develop=true}
 # plug_qt={git = "ssh://git@gitlab.pi.com/aotabekov91/plug_qt.git"}
 
 [tool.poetry.scripts]
 lura = "lura.main:run"
+
 
 [build-system]
 requires = ["poetry-core"]

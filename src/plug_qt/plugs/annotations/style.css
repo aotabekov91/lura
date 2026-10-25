@@ -1,0 +1,15 @@
+#AnnotationsView QWidget{
+	padding: 0 0 0 5;
+	background-color: transparent;
+	border-width: 3px;
+	border-radius: 10px;
+	border-style: solid;
+}
+
+#AnnotationsView QLabel{
+	background-color: green;
+}
+
+#AnnotationsView QWidget:focus {
+	border-color: yellow;
+}

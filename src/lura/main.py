@@ -1,7 +1,12 @@
 from plug_qt import App
 
+from lura.plugs import get_base_plugs
+
 class Lura(App):
-    pass
+
+    def activate(self, *args, **kwargs):
+        super().activate(*args, **kwargs)
+        self.plugman.loadKlasses(get_base_plugs())
 
 def run():
     app = Lura()
