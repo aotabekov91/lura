@@ -18,7 +18,8 @@ class WindowView(vimo.View, QtWidgets.QMainWindow):
 
     def setProperties(self):
         self.setAcceptDrops(True)
-        self.setWindowFlags(
-            QtCore.Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(
-            QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setMinimumSize(800, 600)
+        #self.setWindowFlags(
+        #    QtCore.Qt.WindowType.FramelessWindowHint)
+        #self.setAttribute(
+        #    QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)

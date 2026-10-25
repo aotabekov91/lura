@@ -1,3 +1,6 @@
+import faulthandler
+faulthandler.enable()
+
 from plug_qt import App
 
 from lura.plugs import get_base_plugs
