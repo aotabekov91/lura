@@ -8,8 +8,17 @@ Lura is a document viewer written in Python, leveraging the PyQt library. This i
 * Tiled window view
 * Bookmarks and quickmarks
 * Annotations
-* Word/link/annotation hinting
+* Hinting
 * Colorschemes
+
+## Screenshots
+
+![Lura base view](docs/screenshots/lura_base.png)
+![Lura word hinting](docs/screenshots/lura_block_hinting.png)
+![Lura grayscaling](docs/screenshots/lura_grayscale.png)
+![Lura view splitting](docs/screenshots/lura_tile_split.png)
+![Lura view hinting](docs/screenshots/lura_tile_view_hinting.png)
+![Lura annotations](docs/screenshots/lura_annotations_view.png)
 
 ## Installation
 
