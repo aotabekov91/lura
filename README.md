@@ -1,4 +1,3 @@
-cat > README.md <<'EOF'
 # Lura
 
 Lura is a modal, vim-inspired document viewer written in Python and built on
