@@ -439,13 +439,29 @@ Lura reads its configuration from `src/lura/config.toml` (overridable per-user u
 ### Notable defaults:
 
 ```toml
-[Plugman.Settings] folder = '~/.config/lura'
-[View]             zoomFactor = 0.1 ; scaleFactor = 1.0
-                   continuousMode = true ; layoutMode = 'SinglePage'
-[View.Item]        xresol = 72 ; yresol = 72 ; rotation = 0
-[View.Layout]      pageSpacing = 0
-[FitzView]         convertToGrayScale = false
-[FitzView.Layout]  pageSpacing = 5 ; padding = [0, 0, 0, 0]
+[Plugman.Settings] 
+folder = '~/.config/lura'
+
+[View]             
+zoomFactor = 0.1
+scaleFactor = 1.0
+continuousMode = true 
+layoutMode = 'SinglePage'
+
+[View.Item]        
+xresol = 72 
+yresol = 72 
+rotation = 0
+
+[View.Layout]      
+pageSpacing = 0
+
+[FitzView]         
+convertToGrayScale = false
+
+[FitzView.Layout]  
+pageSpacing = 5 
+padding = [0, 0, 0, 0]
 ```
 
 Annotation color/category mappings live in `src/plug_qt/plugs/annotate/config.toml`; Picky picks are declared via a `[Picks]` array in the app config. Colorschemes are CSS files dropped under `src/plug_qt/plugs/colorschemes/<name>/colorscheme.css` (ships `green_elf`).
