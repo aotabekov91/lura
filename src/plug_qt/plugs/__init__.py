@@ -1,5 +1,6 @@
 from plug_qt.plugs.exec import Exec
 
+from plug_qt.plugs.do import Do
 from plug_qt.plugs.search import Search
 
 from plug_qt.plugs.overlay import Overlay
@@ -16,6 +17,7 @@ from plug_qt.plugs.normal_dock import DockNormal
 from plug_qt.plugs.normal_tree import TreeGoToNormal
 
 from plug_qt.plugs.yank import Yank
+from plug_qt.plugs.paste import Paste
 from plug_qt.plugs.general import General
 from plug_qt.plugs.selection import Selection
 from plug_qt.plugs.outline import Outline
@@ -40,6 +42,7 @@ from plug_qt.plugs.hint_box import BoxHint
 from plug_qt.plugs.hint_link import LinkHint
 from plug_qt.plugs.hint_view import ViewHint
 from plug_qt.plugs.hint_block import BlockHint
+from plug_qt.plugs.hint_item import ItemHint
 
 from plug_qt.plugs.annotate import Annotate
 from plug_qt.plugs.annotation_sqlite import AnnotationSQLiteTable
@@ -108,8 +111,12 @@ def get_base_plugs():
             LinkHint,
             ViewHint,
             BlockHint,
+            ItemHint,
 
             Yank,
+            Paste,
 
             SQLiteTable,
+
+            Do,
             ]

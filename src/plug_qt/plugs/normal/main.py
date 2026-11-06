@@ -107,6 +107,11 @@ class Normal(Plug, QtCore.QObject):
         self.delegate(
                 action='rotate', kind='view', xrange=xrange, **kwargs)
 
+    @tag("dd(normal)")
+    def delete(self, xrange=[1], **kwargs):
+        self.delegate(
+                action='delete', kind='view', xrange=xrange, **kwargs)
+
     @tag("R(normal)")
     def rotateItem(self, xrange=[1], **kwargs):
         self.delegate(

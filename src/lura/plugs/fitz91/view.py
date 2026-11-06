@@ -5,10 +5,8 @@ from plug_qt import vimo, gizmo
 from .item import FitzItem
 from .utils import Viewport, FitzScene
 
-class FitzView(
-    vimo.View,
-    QtWidgets.QGraphicsView,
-):
+class FitzView(vimo.View, QtWidgets.QGraphicsView):
+
     isSubview=True
     canFollow = True
     scene_color = "black"

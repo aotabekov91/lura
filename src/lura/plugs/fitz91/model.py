@@ -27,6 +27,33 @@ class FitzModel(
     elementCreated = QtCore.pyqtSignal(object)
     pixmapReady = QtCore.pyqtSignal(object, object, object)
 
+    @classmethod
+    def isCompatible(cls, source, **kwargs):
+        if type(source) != str:
+            return
+        if not cls.pattern:
+            return
+        if not os.path.exists(source):
+            return
+        return re.match(cls.pattern, source, re.I)
+
+    def load(self):
+        if not self.isLoaded:
+            self.m_data = fitz.open(self.m_source)
+            self.isLoaded = True
+        if self.element_class:
+            elements = {}
+            for idx, data in enumerate(self.m_data):
+                element = self.element_class(
+                    data=data,
+                    index=idx + 1,
+                    model=self,
+                )
+                elements[idx + 1] = element
+                self.elementCreated.emit(element)
+            self.m_elements = elements
+            self.loaded.emit(self)
+
     def elements(self):
         if not self.m_loaded:
             self.load()
@@ -81,16 +108,6 @@ class FitzModel(
                     chunk = f.read(4096)
             idx = shash.hexdigest()
             self.setId(idx)
-
-    @classmethod
-    def isCompatible(cls, source, **kwargs):
-        if type(source) != str:
-            return
-        if not cls.pattern:
-            return
-        if not os.path.exists(source):
-            return
-        return re.match(cls.pattern, source, re.I)
 
     def clearPixmapCache(self, idx=None):
         if idx is None:
