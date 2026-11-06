@@ -425,8 +425,10 @@ python3 -m venv .venv
 source .venv/bin/activate
 # Install and run the project
 pip3 install -e .
+```
 
 After installation, launch Lura with
+
 ```bash
 lura path/to/document.pdf
 ```
