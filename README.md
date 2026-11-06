@@ -431,3 +431,66 @@ After installation, launch Lura with
 ```bash
 lura path/to/document.pdf
 ```
+
+## Configuration
+
+Lura reads its configuration from `src/lura/config.toml` (overridable per-user under the configured settings folder, which defaults to `~/.config/lura`).
+
+### Notable defaults:
+
+```toml
+[Plugman.Settings] folder = '~/.config/lura'
+[View]             zoomFactor = 0.1 ; scaleFactor = 1.0
+                   continuousMode = true ; layoutMode = 'SinglePage'
+[View.Item]        xresol = 72 ; yresol = 72 ; rotation = 0
+[View.Layout]      pageSpacing = 0
+[FitzView]         convertToGrayScale = false
+[FitzView.Layout]  pageSpacing = 5 ; padding = [0, 0, 0, 0]
+```
+
+Annotation color/category mappings live in `src/plug_qt/plugs/annotate/config.toml`; Picky picks are declared via a `[Picks]` array in the app config. Colorschemes are CSS files dropped under `src/plug_qt/plugs/colorschemes/<name>/colorscheme.css` (ships `green_elf`).
+
+## Architecture
+
+Lura is split across three source roots:
+
+| Root | Role |
+| :--- | :--- |
+| `src/plug/` | Framework core: the Plug base, tag / deleg decorators, the Earman key listener, Delegman, Stateman, Buffman, Plugman, Styleman, and the parser of key(mode[submode])[view]{model} tags |
+| `src/plug_qt/` | PyQt6 implementation: App, View, Earman, Buffman, Plugman, Stateman, Styleman, the gizmo widget kit (WindowView, TabView, TileView, DockView/Docks, TreeView, ElementListView, StatusBarView, OverlayView) and the reusable plugs/ library |
+| `src/lura/` | The application: Lura(App), config.toml, style.css, and plugs/ (fitz / PDF backends) |
+
+### How key bindings work
+Each method is decorated with `@tag("KEY(mode[submode])[ViewClass]{ModelClass}")`. The parser splits the tag into key / mode / submode / view / model (any of which can be any). 
+
+* `/` separates key alternatives.
+* `{x}/{y}` is a multi-key literal group.
+* A tag with no key `((exec))` is a command-line command.
+* A plugin may set `prefix_keys=["<c-x>(mode)"]`, in which case every tagged key of that plugin is prefixed with that leader — so `prefix_keys=["<c-w>(normal)"]` plus `@tag("v(normal)")` produces the effective binding `<C-w>v`. Prefixing is skipped only for keys starting with `~`. 
+* `@deleg("action@(mode)[view]{model}")` exposes a delegation hook that fitz backends fill in.
+
+### Loaded PDF backends 
+Located in `src/lura/plugs/__init__.py::get_base_plugs()`:
+* PdfFitz
+* FitzNormalGoTo
+* FitzCopy
+* FitzAnnotate
+* FitzAnnotationEdit
+* FitzFullscreen
+* FitzGrayscale
+* FitzAnnotationHint
+* FitzLinkHint
+* FitzBoxHint
+* FitzBlockHint
+* FitzOutline
+* FitzRotate
+* FitzSearch
+* FitzSelection
+* FitzBlockVisual
+* FitzYankSelection
+* FitzZoom
+
+## License
+
+See `LICENSE` for details.
+
