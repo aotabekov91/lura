@@ -26,9 +26,6 @@ from plug_qt.plugs.fullscreen import Fullscreen
 from plug_qt.plugs.fullscreen_tile import TileViewFullscreen
 from plug_qt.plugs.fullscreen_dock import DockViewFullscreen
 
-from plug_qt.plugs.picky import Picky
-
-
 from plug_qt.plugs.grayscale import Grayscale
 from plug_qt.plugs.bookmark import Bookmark
 from plug_qt.plugs.bookmarks import Bookmarks
@@ -73,8 +70,6 @@ def get_base_plugs():
             DockNormal,
             TreeGoToNormal,
             Selection,
-
-            Picky,
 
             Visual,
             BlockVisual,
